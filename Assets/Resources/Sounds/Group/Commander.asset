@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0457edf879cc4b879b1b867b95dec8e4, type: 3}
+  m_Name: Commander
+  m_EditorClassIdentifier: 
+  forKing:
+  - {fileID: 8300000, guid: fb2da3cde396d5c448c645ff56d8ce64, type: 3}
+  - {fileID: 8300000, guid: ce0c60e466ddc4b4fbbb11df7ed29e91, type: 3}
+  forGlory:
+  - {fileID: 8300000, guid: d97f48b34479a2240b416d7b9f50f8f0, type: 3}
+  - {fileID: 8300000, guid: d37d48ff7d9be4549a73c5f1d2275ce3, type: 3}
+  forRealm:
+  - {fileID: 8300000, guid: bfb912c6864b3824eaa509eb69fda070, type: 3}
+  - {fileID: 8300000, guid: d4f60b1f4366cbd40932e71440cec4a1, type: 3}
+  forVictory:
+  - {fileID: 8300000, guid: 9004b3ae778a06243b3a9ed511f8a91a, type: 3}
+  - {fileID: 8300000, guid: c14145abbdac7174e85a1dea05973b63, type: 3}
+  fromLeftFlank:
+  - {fileID: 8300000, guid: 173534a0f4ef59540a8f89ce900e0de8, type: 3}
+  - {fileID: 8300000, guid: 07c50971b322db54d942f5f5ea068975, type: 3}
+  fromRightFlank:
+  - {fileID: 8300000, guid: 306599134052b5c439dfa04c0aad3133, type: 3}
+  - {fileID: 8300000, guid: f2a4422db55340746820d1369e8b8e9c, type: 3}
+  noneShallStopUs:
+  - {fileID: 8300000, guid: b0208e041d8e3e84eb2145d91f8ee583, type: 3}
+  - {fileID: 8300000, guid: a81985c55ff305e40943fd2d967424d1, type: 3}
+  halt:
+  - {fileID: 8300000, guid: dc29de405a5ddf94bab3f2dbe5efbd37, type: 3}
+  - {fileID: 8300000, guid: c8b94314fb3644044bc9b509d251433a, type: 3}
+  hold:
+  - {fileID: 8300000, guid: 30f05471170d99143a7badb3d59f3f8c, type: 3}
+  - {fileID: 8300000, guid: d7bcbda2c64c7e14ca2a9fcb62d62649, type: 3}
+  steady:
+  - {fileID: 8300000, guid: d42e8ce544edbd14982a7d3b519f2506, type: 3}
+  - {fileID: 8300000, guid: 1d6c2239bd7095b4ca62f7db1ab4be3f, type: 3}
+  charge:
+  - {fileID: 8300000, guid: d1687505f12231241b37da4f07202845, type: 3}
+  - {fileID: 8300000, guid: 8ea03bfc0be26e4429c8484628c4e110, type: 3}
+  - {fileID: 8300000, guid: fb30caeb3ecf3bf4f9b8ecf293c99d02, type: 3}
+  standInLine:
+  - {fileID: 8300000, guid: e0d0bb0c467bd4d4f85106181c557409, type: 3}
+  - {fileID: 8300000, guid: 4b7fde7e6f4967f43b9b909e3d09ecb9, type: 3}
+  standBack:
+  - {fileID: 8300000, guid: e4f6f0fad516957439571823a16d54fa, type: 3}
+  - {fileID: 8300000, guid: 84f398b40443cd542a77c71411e54672, type: 3}
+  forward:
+  - {fileID: 8300000, guid: 37101af73dc0edd4ab051753395437fa, type: 3}
+  - {fileID: 8300000, guid: 3e9d591abe645c840bca8e7f24ba83ae, type: 3}
+  regroup:
+  - {fileID: 8300000, guid: 661803f09bb5d6a41ba0838707b62438, type: 3}
+  - {fileID: 8300000, guid: 100e8b8684606844fab19b2c25411648, type: 3}
+  dismiss:
+  - {fileID: 8300000, guid: 31249739b8700794ab100a6e3728b150, type: 3}
+  - {fileID: 8300000, guid: 2f4a69d52df135549bc63e6a374d5ca3, type: 3}
+  prepare:
+  - {fileID: 8300000, guid: 757c8efba68cc04479cda06d98d65b4d, type: 3}
+  - {fileID: 8300000, guid: 46c8d17fb4e211a4bbd234fd160256f1, type: 3}
+  retreat:
+  - {fileID: 8300000, guid: 3c437d793146b1b46935df42dbc4d086, type: 3}
+  - {fileID: 8300000, guid: ea6adc891f390bb4ba9c9ea4640a6a66, type: 3}
+  saveYourLives:
+  - {fileID: 8300000, guid: e95e9fc5af764cf469fcfd0f11e958c8, type: 3}
+  - {fileID: 8300000, guid: 978d62fe385cf7346b326b1079b7aeb9, type: 3}
+  longLiveTheKing:
+  - {fileID: 8300000, guid: 2fbd4e566ef4d7740bda53cdab01d6b2, type: 3}
+  - {fileID: 8300000, guid: abe6142dfde300841bb1a99014d3a49b, type: 3}
+  enemyApproaching:
+  - {fileID: 8300000, guid: f4ffe412f0084754f82f4274f91c000c, type: 3}
+  - {fileID: 8300000, guid: efbd4c6308dda284599f5874589329ed, type: 3}
+  enemyIncoming:
+  - {fileID: 8300000, guid: d2b67a1cfbb3101478f81b36df4f7535, type: 3}
+  - {fileID: 8300000, guid: 84ce64ea46f203240ac497b6c48f670b, type: 3}
+  takeNoPrisoners:
+  - {fileID: 8300000, guid: 3215fcf64eab184478ceefc9ed4acc49, type: 3}
+  - {fileID: 8300000, guid: 41172ea998c84484c87ebbf7ae1329e7, type: 3}
+  formTheOrder:
+  - {fileID: 8300000, guid: d01b5a59861c46f4292cbe07fa5e7f00, type: 3}
+  - {fileID: 8300000, guid: 188675d1a4d3df4449f4daa963fbe9c2, type: 3}
+  takeYourPosition:
+  - {fileID: 8300000, guid: 4736cfdf9f2d57e4db34d473099899b9, type: 3}
+  - {fileID: 8300000, guid: 6ad4f3b1142001947acf837a03e6ebc5, type: 3}
+  toTheRightFlank:
+  - {fileID: 8300000, guid: 1dba1178956046147ad7c43e88deeb99, type: 3}
+  - {fileID: 8300000, guid: 5ab3ecd69acbad84794fa88e3db1d00b, type: 3}
+  toTheLeftFlank:
+  - {fileID: 8300000, guid: 3fd987b9d4569c1469644bd34d260651, type: 3}
+  - {fileID: 8300000, guid: 00a44ac6d1d83664895798b206978168, type: 3}
+  theyComeFromBehind:
+  - {fileID: 8300000, guid: 5f543d7b021c7ed4ab90e881c09d2d5b, type: 3}
+  - {fileID: 8300000, guid: cc74159acd6cb1142922929a577f7f36, type: 3}
+  comeBackCowards:
+  - {fileID: 8300000, guid: 3dfc8c7e6ac0ede41813e0c0455ff76b, type: 3}
+  - {fileID: 8300000, guid: 5d84b5dbf99f14a4ab1c9e0d44cc289e, type: 3}
+  inTheNameOfLord:
+  - {fileID: 8300000, guid: aff0884a057956641872f72efb71a236, type: 3}
+  - {fileID: 8300000, guid: 3fc68cc06bfd05340823c96dda9225a3, type: 3}
+  fightUntilYouDie:
+  - {fileID: 8300000, guid: dab14e29ce3200b45a703333ec947064, type: 3}
+  - {fileID: 8300000, guid: 4f91c51b4bcb20f48a33d881ed77c7ef, type: 3}
+  killThemAll:
+  - {fileID: 8300000, guid: f7fc1ae6bf29bc5439534a64c3874666, type: 3}
+  - {fileID: 8300000, guid: 94640cadfdf42c14089b9283461b1930, type: 3}
+  braceYourselves:
+  - {fileID: 8300000, guid: a0cff1dca21c2eb49bacf4fc14a80b70, type: 3}
+  - {fileID: 8300000, guid: 53c26aaf54f8b084396b2996fc6f52e5, type: 3}
+  toArms:
+  - {fileID: 8300000, guid: e50c08673df229541af96088eb9178c9, type: 3}
+  - {fileID: 8300000, guid: 3684ac64dd4ae78428194ab12a8ed6ae, type: 3}
+  victoryIsOurs:
+  - {fileID: 8300000, guid: d0200f19da92ddb4eb37ad66eb752891, type: 3}
+  - {fileID: 8300000, guid: 22228d95e5681f34fa9560ad731439c1, type: 3}
