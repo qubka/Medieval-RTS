@@ -834,6 +834,10 @@
             <e p="TreeManager.cs" t="Include" />
           </e>
           <e p="UI" t="Include">
+            <e p="Buttons" t="Include">
+              <e p="SquadButton.cs" t="Include" />
+              <e p="UnitButton.cs" t="Include" />
+            </e>
             <e p="Camera" t="Include">
               <e p="CamController.cs" t="Include" />
               <e p="CameraAligner.cs" t="Include" />
@@ -844,6 +848,7 @@
               <e p="BinarySliderController.cs" t="Include" />
               <e p="EventTriggerInvoker.cs" t="Include" />
               <e p="HighlightToggle.cs" t="Include" />
+              <e p="LayoutExpander.cs" t="Include" />
               <e p="ResourceBarController.cs" t="Include" />
               <e p="ScrollController.cs" t="Include" />
               <e p="SliderPercentController.cs" t="Include" />
@@ -858,10 +863,7 @@
               <e p="NationProperties.cs" t="Include" />
             </e>
             <e p="ExitButtonController.cs" t="Include" />
-            <e p="LayoutScaler.cs" t="Include" />
             <e p="Settings.cs" t="Include" />
-            <e p="SquadButton.cs" t="Include" />
-            <e p="UnitButton.cs" t="Include" />
             <e p="UnitManager.cs" t="Include" />
             <e p="Window" t="Include">
               <e p="AnimatedWindowController.cs" t="Include" />

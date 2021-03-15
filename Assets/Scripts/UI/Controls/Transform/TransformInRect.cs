@@ -8,6 +8,9 @@ public class TransformInRect : UIBehaviour
     public Vector2 ratio = Vector2.one;
     public Transform child;
     public Canvas canvas;
+
+    private RectTransform rectTransform;
+    
     protected override void OnRectTransformDimensionsChange()
     {
         Resize();
@@ -15,15 +18,14 @@ public class TransformInRect : UIBehaviour
 
     protected override void Awake()
     {
+        rectTransform = GetComponent<RectTransform>();
         Resize();
     }
 
     private void Resize()
     {
         if (child == null) return;
-        var rectTransform = GetComponent<RectTransform>();
-        if (hold)
-        {
+        if (hold) {
             var localScale = child.localScale;
             var childSizeBefore = localScale;
             //todo fix rectTransform
@@ -39,9 +41,7 @@ public class TransformInRect : UIBehaviour
                 z = localScale.z * position.z / childSizeBefore.z
             };
             child.localPosition = newPosition;
-        }
-        else
-        {
+        } else {
             var childScale = child.localScale;
             ratio = rectTransform.rect.size / new Vector2(childScale.x, childScale.y);
         }

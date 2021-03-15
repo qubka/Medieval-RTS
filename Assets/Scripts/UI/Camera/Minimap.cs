@@ -8,8 +8,6 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     private Camera cam;
     private CamController controller;
     private RectTransform map;
-    private Rect rect;
-    private Vector2 pivot;
 
     private float lastClickTime;
     private Vector2 lastClickPos;
@@ -19,8 +17,6 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         controller = Manager.controller;
         cam = Manager.minimapCamera;
         map = GetComponent<RawImage>().rectTransform;
-        rect = map.rect;
-        pivot = map.pivot;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -29,6 +25,8 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         if ((time - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, eventData.position) <= 1f) {
             Vector2 localPoint;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(map, eventData.position, null, out localPoint);
+            var rect = map.rect;
+            var pivot = map.pivot;
             localPoint.x = localPoint.x / rect.width + pivot.x;
             localPoint.y = localPoint.y / rect.height + pivot.y;
 
