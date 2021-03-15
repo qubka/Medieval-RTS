@@ -6,18 +6,18 @@ using UnityEngine.EventSystems;
 public class UnitButton : MonoBehaviour, IPointerDownHandler
 {
 	[ReadOnly] public Squad squad; 
-	private UnitManager unitManager;
+	private UnitManager manager;
 
 	private void Start()
 	{
 		//find button stats and turn them off
 		//stats = transform.Find("Stats").gameObject;
 		//stats.SetActive(false);
-		unitManager = Manager.unitManager;
+		manager = Manager.unitManager;
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		unitManager.SelectSquad(squad);
+		manager.SelectSquad(squad);
 	}
 }

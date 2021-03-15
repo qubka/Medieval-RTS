@@ -56,7 +56,7 @@ public class Squad : MonoBehaviour
     public Image border;
     [Space(5f)]
     public Canvas canvas;
-    public Image shadow;
+    public Image select;
     public Image fill;
     public Image icon;
     public Slider healthbar;
@@ -83,8 +83,8 @@ public class Squad : MonoBehaviour
     public int enemyCount => enemies.Count;
     public int neighbourCount => neighbours.Count;
     
-    private const float CanvasHeight = 15f;
-    private static readonly Color SelectColor = new Color32(255, 165, 0, 255);
+    private const float CanvasHeight = 10f;
+    private static readonly Color Selected = new Color32(255, 165, 0, 255);
     private static readonly Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
 
     private void Awake()
@@ -126,7 +126,6 @@ public class Squad : MonoBehaviour
         // Set the team properties
         var color = team.GetColor();
         fill.color = color;
-        shadow.color = color;
         marker.color = color;
         icon.sprite = data.canvasIcon;
     }
@@ -464,8 +463,13 @@ public class Squad : MonoBehaviour
             unit.SelectState(value);
         }
 
-        shadow.gameObject.SetActive(value);
-        border.color = value ? SelectColor : Color.black;
+        if (value) {
+            StartCoroutine(@select.FadeOut(0f, 0.15f));
+            border.color = Selected;
+        } else {
+            StartCoroutine(@select.FadeOut(1f, 0.15f));
+            border.color = Color.black;
+        }
         selection = !selection;
 
         if (selection && team == Team.Self) {
@@ -503,13 +507,6 @@ public class Squad : MonoBehaviour
             DestroyImmediate(gameObject);
         } else {
             UpdateFormation(phalanxLength);
-        }
-    }
-
-    public void CanvasClick()
-    {
-        if (units.Count > 0) {
-            unitManager.SelectSquad(this);
         }
     }
 
@@ -594,7 +591,7 @@ public class Squad : MonoBehaviour
             }
         }
     }
-    
+
     #endregion
 
     #region Utils
@@ -651,7 +648,7 @@ public class Squad : MonoBehaviour
         
         return false;
     }
-    
+
     #endregion
 }
 

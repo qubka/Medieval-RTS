@@ -8,8 +8,8 @@ public class LayoutExpander : UIBehaviour
 
     private float height;
     private RectTransform rectTransform;
-    
-    private void Awake()
+
+    protected override void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         height = rectLayout.sizeDelta.y;
@@ -17,6 +17,8 @@ public class LayoutExpander : UIBehaviour
 
     protected override void OnRectTransformDimensionsChange()
     {
-        rectLayout.sizeDelta = new Vector2(rectTransform.sizeDelta.x + extraWidth, height);
+        if (rectTransform) {
+            rectLayout.sizeDelta = new Vector2(rectTransform.sizeDelta.x + extraWidth, height);
+        }
     }
 }

@@ -47,6 +47,7 @@ public class UnitManager : MonoBehaviour
 	//variables not visible in the inspector
 	//private EntityManager entityManager;
 	//private GameObject unitList;
+	[HideInInspector] public Squad target;
 	private EventSystem eventSystem;
 	private Camera cam;
 	private CamController controller;
@@ -58,24 +59,22 @@ public class UnitManager : MonoBehaviour
 	private List<Vector3> positions;
 	private AudioSource clickAudio;
 	private AudioSource selectAudio;
-	private Squad hover;
 	private Collider[] colliders;
-	private float lastSelectTime;
 	private Squad lastSelectSquad;
+	private float lastSelectTime;
 	private float lastClickTime;
 	private Vector3 lastClickPos;
 	private Interaction onSelect;
 	private Interaction onPlace;
 	private Interaction onDrag;
-	private Ray globalRay;
-	private RaycastHit groundHit;
 	private int cursor;
 	private float maxDistance;
 	private float nextHoverTime;
-	private bool hoverState;
-	private bool castResult;
+	private RaycastHit groundHit;
+	private bool groundCast;
+	private bool aboveUI;
 
-	private bool InvalidHit => !castResult || controller.IsOutsideMap(groundHit.point) || Input.GetKey(KeyCode.Escape);
+	private bool InvalidHit => !groundCast || controller.IsOutsideMap(groundHit.point) || Input.GetKey(KeyCode.Escape);
 
 	private void Awake()
 	{
@@ -105,8 +104,9 @@ public class UnitManager : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		globalRay = cam.ScreenPointToRay(Input.mousePosition);
-		castResult = Physics.Raycast(globalRay, out groundHit, maxDistance, Manager.Ground);
+		var ray = cam.ScreenPointToRay(Input.mousePosition);
+		groundCast = Physics.Raycast(ray, out groundHit, maxDistance, Manager.Ground);
+		aboveUI = eventSystem.IsPointerOverGameObject();
 		
 		OnSelection();
 		OnPlacement();
@@ -125,7 +125,7 @@ public class UnitManager : MonoBehaviour
 		if (Input.GetMouseButtonDown(0)) {
 			onSelect.OnDown(Input.mousePosition);
 			
-			if (InvalidHit || eventSystem.IsPointerOverGameObject())
+			if (InvalidHit || aboveUI)
 				return;
 
 			var currentTime = Time.time;
@@ -150,13 +150,13 @@ public class UnitManager : MonoBehaviour
 			if (Input.GetKey(stopKey) || Input.GetKey(dragKey)) {
 				onSelect.Lock();
 			} else {
-				onSelect.OnHold(Input.mousePosition, 40f);
+				onSelect.OnHold(Input.mousePosition, aboveUI, 40f);
 			}
 		}
 		// When left mouse button comes up
 		else if (Input.GetMouseButtonUp(0)) {
 			if (!onSelect.enabled) { //single select 
-				if (InvalidHit || eventSystem.IsPointerOverGameObject())
+				if (InvalidHit || aboveUI)
 					return;
 				
 				// Try to use sphere to find nearby units
@@ -244,7 +244,7 @@ public class UnitManager : MonoBehaviour
 					return;
 				}
 
-				if (onPlace.OnHold(groundHit.point, 20f * selectedUnits.Count)) {
+				if (onPlace.OnHold(groundHit.point, aboveUI, 20f * selectedUnits.Count)) {
 					selectedUnits.Sort((a, b) => Vector.DistanceSq(onPlace.startPos, a.centroid).CompareTo(Vector.DistanceSq(onPlace.startPos, b.centroid)));
 					foreach (var squad in selectedUnits) {
 						placedFormations.Add(new Formation(squad, directionLine));
@@ -270,24 +270,28 @@ public class UnitManager : MonoBehaviour
 		// When right mouse button comes up
 		else if (Input.GetMouseButtonUp(1)) {
 			if (!onPlace.enabled) { //single place
-				if (InvalidHit || selectedUnits.Count == 0 || eventSystem.IsPointerOverGameObject())
+				if (InvalidHit || selectedUnits.Count == 0)
 					return;
 
-				var dest = groundHit.point;
-				dest.y += 0.5f;
-				
 				// If we hover on enemy units
-				if (hover) {
-					var target = hover.gameObject;
+				if (target) {
+					var obj = target.gameObject;
 					foreach (var squad in selectedUnits) {
-						AddToMovementGroup(squad, target);
+						AddToMovementGroup(squad, obj);
 					}
 					
 					clickAudio.clip = attackSound;
 					clickAudio.Play();
 					
-					Instantiate(attackParticle, dest, Quaternion.identity);
-				} else {
+					var pos = aboveUI ? target.centroid : groundHit.point;
+					pos.y += 0.5f;
+					Instantiate(attackParticle, pos, Quaternion.identity);
+					
+				} else if (!aboveUI) {
+
+					var dest = groundHit.point;
+					dest.y += 0.5f;
+				
 					var count = selectedUnits.Count;
 					if (count == 1) {
 						AddToMovementGroup(selectedUnits[0], CreateTarget(dest));
@@ -362,7 +366,7 @@ public class UnitManager : MonoBehaviour
 					return;
 				}
 				
-				if (onDrag.OnHold(groundHit.point, 5f)) {
+				if (onDrag.OnHold(groundHit.point, aboveUI, 5f)) {
 					positions.Clear();
 					foreach (var squad in selectedUnits) {
 						positions.Add(squad.worldTransform.position); // store initial positions
@@ -434,10 +438,9 @@ public class UnitManager : MonoBehaviour
 	{
 		var currentTime = Time.time;
 		if (currentTime > nextHoverTime) {
-			hoverState = HoverOnTarget();
-			if (!hoverState && hover) {
-				hover.ChangeSelectState(false);
-				hover = null;
+			if (!HoverOnTarget() && target) {
+				target.ChangeSelectState(false);
+				target = null;
 			}
 			nextHoverTime = currentTime + 0.1f;
 		}
@@ -445,7 +448,9 @@ public class UnitManager : MonoBehaviour
 
 	private void OnCursor()
 	{
-		if (InvalidHit) {
+		if (target) {
+			SetCursor(target.team == Team.Allied || selectedUnits.Count != 0 ? meleeCursor : lookCursor); // How use the range cursor ?
+		} else if (InvalidHit) {
 			SetCursor(invalidCursor);
 		} else if (onSelect.enabled) {
 			SetCursor(selectCursor);
@@ -453,8 +458,6 @@ public class UnitManager : MonoBehaviour
 			SetCursor(placeCursor);
 		} else if (onDrag.enabled || selectedUnits.Count != 0 && Input.GetKey(dragKey)) {
 			SetCursor(dragCursor);
-		} else if (hoverState) {
-			SetCursor(hover.team == Team.Allied || selectedUnits.Count != 0 ? meleeCursor : lookCursor); // How use the range cursor ?
 		} else if (Input.GetKey(inclusiveKey)) {
 			SetCursor(inclusiveCursor);
 		} else if (Input.GetKey(addKey)) {
@@ -492,8 +495,8 @@ public class UnitManager : MonoBehaviour
 			if (unit) {
 				var squad = unit.squad;
 				if (squad.team != Team.Self) {
-					hover = squad;
-					hover.ChangeSelectState(true);
+					target = squad;
+					target.ChangeSelectState(true);
 					return true;
 				}
 			}
@@ -501,7 +504,7 @@ public class UnitManager : MonoBehaviour
 
 		return false;
 	}
-	
+
 	public void RemoveSquad(Squad squad)
 	{
 		var index = selectedUnits.IndexOf(squad);
@@ -931,11 +934,11 @@ public class UnitManager : MonoBehaviour
 		public bool locked;
 		public bool enabled;
 
-		public bool OnHold(Vector3 pos, float distance)
+		public bool OnHold(Vector3 pos, bool pointer, float distance)
 		{
 			lastPos = pos;
 
-            if (!enabled && Vector.DistanceSq(startPos, lastPos) > distance * distance) {
+            if (!enabled && Vector.DistanceSq(startPos, lastPos) > distance * distance && !pointer) {
 	            enabled = true;
 	            return true;
             }

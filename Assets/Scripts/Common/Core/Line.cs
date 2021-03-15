@@ -77,15 +77,15 @@ public class Line
     public IEnumerator FadeLineRenderer(float fadeSpeed)
     {
         var lineRendererGradient = new Gradient();
-        var timeElapsed = 0f;
+        var currentTime = 0f;
 
-        while (timeElapsed < fadeSpeed) {
-            var alpha = Mathf.Lerp(1f, 0f, timeElapsed / fadeSpeed);
+        while (currentTime < fadeSpeed) {
+            var alpha = Mathf.Lerp(1f, 0f, currentTime / fadeSpeed);
  
             lineRendererGradient.SetKeys(line.colorGradient.colorKeys, new[] { new GradientAlphaKey(alpha, 1f) });
             line.colorGradient = lineRendererGradient;
  
-            timeElapsed += Time.deltaTime;
+            currentTime += Time.deltaTime;
             yield return null;
         }
  
