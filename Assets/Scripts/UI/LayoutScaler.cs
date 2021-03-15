@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LayoutScaler : MonoBehaviour
@@ -17,5 +18,10 @@ public class LayoutScaler : MonoBehaviour
     public void Update()
     {
         rectTransform.sizeDelta = new Vector2(rectLayout.sizeDelta.x + extraWidth, height);
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        throw new NotImplementedException();
     }
 }

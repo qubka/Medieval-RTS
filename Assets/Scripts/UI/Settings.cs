@@ -6,9 +6,11 @@ public class Settings : MonoBehaviour
 	public bool multiplayer;
 
 	//Variables visible in the inspector
-	[Header("Reset settings")] public bool deletePlayerPrefs;
+	[Header("Reset settings")] 
+	public bool deletePlayerPrefs;
 
-	[Header("Dropdown")] public GameObject qualityDropdown;
+	[Header("Dropdown")] 
+	public GameObject qualityDropdown;
 	public GameObject antiAliasingDropdown;
 	public GameObject VsyncDropdown;
 	public GameObject textureQualityDropdown;

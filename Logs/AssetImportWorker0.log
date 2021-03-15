@@ -15,11 +15,11 @@ C:/Users/playf/Medieval RTS
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-49921
+51044
 Successfully changed project path to: C:/Users/playf/Medieval RTS
 C:/Users/playf/Medieval RTS
 Using Asset Import Pipeline V2.
-Refreshing native plugins compatible for Editor in 108.45 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 119.60 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.3.0f1 (c7b5465681fb)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/Resources/UnitySubsystems
@@ -35,44 +35,44 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56284
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56884
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.002035 seconds.
+Registered in 0.002062 seconds.
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 97.35 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 108.03 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.099 seconds
+- Completed reload, in  1.139 seconds
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
-Registered in 0.009836 seconds.
+Registered in 0.009566 seconds.
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 115.46 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 121.05 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-TypeManager.Initialize took: 181ms
+TypeManager.Initialize took: 180ms
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  2.075 seconds
+- Completed reload, in  2.105 seconds
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
-Refreshing native plugins compatible for Editor in 1.13 ms, found 3 plugins.
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
+Refreshing native plugins compatible for Editor in 1.46 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 4689 Unused Serialized files (Serialized files now loaded: 0)
 System memory in use before: 326.2 MB.
 System memory in use after: 326.2 MB.
 
 Unloading 38 unused Assets to reduce memory usage. Loaded Objects now: 5154.
-Total: 3.835300 ms (FindLiveObjects: 0.367300 ms CreateObjectMapping: 0.225200 ms MarkObjects: 2.984900 ms  DeleteObjects: 0.257200 ms)
+Total: 4.681800 ms (FindLiveObjects: 0.529000 ms CreateObjectMapping: 0.241300 ms MarkObjects: 3.629700 ms  DeleteObjects: 0.281100 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:DOTSType/UnityEngine.EventSystems.EventSystem: 2c81b6c3f3277fcd2c81b6c3f3277fcd -> 
@@ -112,12 +112,13 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.Experimental.U2D.Animation.SpriteLibraryAssetInspector: 2406bad7a3ea6bf42406bad7a3ea6bf4 -> 
   custom:DOTSType/UnityEditor.Graphs.Graph: d35cefdd879c306cd35cefdd879c306c -> 
   custom:DOTSType/UnityEngine.CharacterController: 94fce47bfd2e2edf94fce47bfd2e2edf -> 
-  custom:DOTSType/UnityEditor.Timeline.ActivationTrackInspector: 13627869d268351113627869d2683511 -> 
+  custom:DOTSType/HighlightToggle: 5930383042e9c0955930383042e9c095 -> 
   custom:DOTSType/Animations: 464ac33e055996e1464ac33e055996e1 -> 
   custom:DOTSType/UnityStandardAssets.Vehicles.Aeroplane.JetParticleEffect: f332ef21e1d9c8abf332ef21e1d9c8ab -> 
   custom:DOTSType/UnityEditor.ModeDescriptorImporter: c65f3ccc799b85f1c65f3ccc799b85f1 -> 
   custom:DOTSType/CamController: bc8c0943405a6fc3bc8c0943405a6fc3 -> 
   custom:DOTSType/UnityEditor.GraphicsSettingsWindow+TierSettingsEditor: 082365929185a090082365929185a090 -> 
+  custom:DOTSType/UnityEditor.Timeline.ActivationTrackInspector: 13627869d268351113627869d2683511 -> 
   custom:DOTSType/UnityEditor.PluginImporterInspector: c0b3fff6e43f09e2c0b3fff6e43f09e2 -> 
   custom:DOTSType/UnityEditor.SceneTemplate.SceneTemplateAssetInspectorWindow: 056056fea4b5ede5056056fea4b5ede5 -> 
   custom:DOTSType/UnityEditor.UI.ToggleEditor: 61131e51b7392b9a61131e51b7392b9a -> 
@@ -181,6 +182,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.U2D.Animation.GenerateGeometryTool: 7e0c688b08552c3d7e0c688b08552c3d -> 
   custom:DOTSType/Unity.Scenes.EditorTriggeredLoad: 70dfd4fd509235cd70dfd4fd509235cd -> 
   custom:DOTSType/UnityEditor.UI.DropdownEditor: c442e9f29f6c6fe9c442e9f29f6c6fe9 -> 
+  custom:DOTSType/WindowController: 1f93f3edec6b28701f93f3edec6b2870 -> 
   custom:DOTSType/UnityEditor.SortingGroupEditor: a4c74f218cbfbb3da4c74f218cbfbb3d -> 
   custom:DOTSType/GPUInstancer.CrowdAnimations.NoGameObjectsDemoSceneHandler: abb96eb7a8ac44eaabb96eb7a8ac44ea -> 
   custom:DOTSType/UnityEngine.PhysicsMaterial2D: 97bd1008eeb781d197bd1008eeb781d1 -> 
@@ -207,11 +209,11 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.Experimental.U2D.Animation.SpriteLibraryInspector: 8c6eca5f54b555cd8c6eca5f54b555cd -> 
   custom:DOTSType/UnityEditor.VideoClipInspector: dcbd4e68e3da9810dcbd4e68e3da9810 -> 
   custom:DOTSType/UnityEditor.ColorPicker: 5beb2abbec75b7d35beb2abbec75b7d3 -> 
-  custom:DOTSType/UnityEditor.DistanceJoint2DEditor: ceae73ee7cb274cfceae73ee7cb274cf -> 
   custom:DOTSType/UnityStandardAssets.CrossPlatformInput.TouchPad: d0e2afa59696e73bd0e2afa59696e73b -> 
-  custom:DOTSType/Unity.Transforms.CopyTransformToGameObject: 0de3a4f749e2ffe20de3a4f749e2ffe2 -> 
+  custom:DOTSType/UnityEditor.DistanceJoint2DEditor: ceae73ee7cb274cfceae73ee7cb274cf -> 
   custom:DOTSType/UnityEditor.GameView: e3a908e55b147c77e3a908e55b147c77 -> 
   custom:DOTSType/UnityStandardAssets.Vehicles.Car.Mudguard: 3f70cc67d40d32a23f70cc67d40d32a2 -> 
+  custom:DOTSType/Unity.Transforms.CopyTransformToGameObject: 0de3a4f749e2ffe20de3a4f749e2ffe2 -> 
   custom:DOTSType/UnityEditor.Rendering.FilterWindow: 100d575e34c817db100d575e34c817db -> 
   custom:DOTSType/Unity.Entities.DefaultWorldInitializationProxy: 3bc53c9cad9070363bc53c9cad907036 -> 
   custom:DOTSType/UnityEditorInternal.BlendTree: aa01a277c8c5ee46aa01a277c8c5ee46 -> 
@@ -223,13 +225,11 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.AudioBehaviour: 923ed3e1b22d263f923ed3e1b22d263f -> 
   custom:DOTSType/UnityStandardAssets.Utility.PlatformSpecificContent: e739c9c557aee417e739c9c557aee417 -> 
   custom:DOTSType/UnityEditor.UIElements.StyleSheets.StyleSheetEditor: 471c92afe6b2efcb471c92afe6b2efcb -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.ExitButtonController: 002fd999811837e9002fd999811837e9 -> 
   custom:DOTSType/UnityEditor.Rendering.DebugWindow: cdeffa3fa96ee686cdeffa3fa96ee686 -> 
   custom:DOTSAllSystemsVersion: 68a1b3d544f472c6810f05e07287218d -> 
   custom:DOTSType/UnityEngine.Object: 4c2849a668145a9e4c2849a668145a9e -> 
   custom:DOTSType/UnityEditor.SplitView: 9fd4800815cbae499fd4800815cbae49 -> 
   custom:DOTSType/UnityEditor.Brush: 32b1c07b05c2a79532b1c07b05c2a795 -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.SliderPercentController: b2bb790eed6f5c73b2bb790eed6f5c73 -> 
   custom:DOTSType/UnityEditor.MonoImporter: d591609c256f0637d591609c256f0637 -> 
   custom:DOTSType/UnityEditor.AnimEditor: b6ea3d817af25ecbb6ea3d817af25ecb -> 
   custom:DOTSType/UnityEditor.LightProbeProxyVolumeEditor: 9514ddca767406829514ddca76740682 -> 
@@ -244,6 +244,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityStandardAssets._2D.CameraFollow: c63f6ccf807413fcc63f6ccf807413fc -> 
   custom:DOTSType/UnityEngine.Material: 4e4a5d9f029da0364e4a5d9f029da036 -> 
   custom:DOTSType/UnityEngine.Timeline.SignalEmitter: 5201f28094ec24ed5201f28094ec24ed -> 
+  custom:DOTSType/ScrollController: 8202aa3849fc3dfd8202aa3849fc3dfd -> 
   custom:DOTSType/UnityEngine.UIElements.StyleSheet: b891652858d244a8b891652858d244a8 -> 
   custom:DOTSType/UnityEngine.BoxCollider: 8e5b85c4fec088d48e5b85c4fec088d4 -> 
   custom:DOTSType/UnityEditor.ParticleSystemForceFieldInspector: 41cc751fcaf9761f41cc751fcaf9761f -> 
@@ -266,7 +267,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.TestTools.EnumerableTestState: f39f1a96f2e796bef39f1a96f2e796be -> 
   custom:DOTSType/BoidBehaviour: 729ff1e4fa56d984729ff1e4fa56d984 -> 
   custom:DOTSType/UnityEditor.AvatarPreview+ObjectSelectorOperation: 1278bb54f21602791278bb54f2160279 -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.SliderStepController: af76711631cbe8e4af76711631cbe8e4 -> 
   custom:DOTSType/IdleBehavior: d7ecff1ef6440775d7ecff1ef6440775 -> 
   custom:DOTSType/UnityEditor.ArticulationBodyEditor: 3006a51f39d2d7583006a51f39d2d758 -> 
   custom:DOTSType/UnityEditor.TestTools.TestRunner.CommandLineTest.RunData: af5d7539b9d0c28aaf5d7539b9d0c28a -> 
@@ -276,6 +276,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.Experimental.U2D.Animation.SpriteLibrary: 82d3d9e9048285e582d3d9e9048285e5 -> 
   custom:DOTSType/TMPro.TextMeshPro: 61e10d215eb1b79961e10d215eb1b799 -> 
   custom:DOTSType/UnityEditor.Animations.AnimatorState: 5db373e4ace6427b5db373e4ace6427b -> 
+  custom:DOTSType/NationPickController: cdc60f6886a57c00cdc60f6886a57c00 -> 
   custom:DOTSType/Unity.Transforms.CopyInitialTransformFromGameObject: 2e04dba9bc7f665b2e04dba9bc7f665b -> 
   custom:DOTSType/GPUInstancer.ColorVariations: 9290b4be160b312e9290b4be160b312e -> 
   custom:DOTSType/Unity.Scenes.SceneEntityReference: 44c72798deac052544c72798deac0525 -> 
@@ -291,7 +292,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.ProjectSettingsWindow: cc50e7729c43d4adcc50e7729c43d4ad -> 
   custom:DOTSType/UnityEngine.LocalizationAsset: 4688a4f979a618bc4688a4f979a618bc -> 
   custom:DOTSType/UnityEditor.VFX.VisualEffectResource: 4bcc279235523aff4bcc279235523aff -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Window.PopupWindowController: 9ab201d94494314d9ab201d94494314d -> 
   custom:DOTSType/UnityEditor.U2D.Animation.GenerateWeightsTool: e3e66fe475fc28a3e3e66fe475fc28a3 -> 
   custom:DOTSType/UnityEngine.RelativeJoint2D: 19779ef8a0d59dfe19779ef8a0d59dfe -> 
   custom:DOTSType/TMPro.EditorUtilities.TMP_SpriteAssetEditor: 73dca12273564c4e73dca12273564c4e -> 
@@ -303,13 +303,15 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.NoneTool: be089f23fb2c1579be089f23fb2c1579 -> 
   custom:DOTSType/UnityEditor.EdgeCollider2DEditor: e6deaa2b08161fd5e6deaa2b08161fd5 -> 
   custom:DOTSType/Unity.PerformanceTesting.TestReportWindow: fbee5466c113dd05fbee5466c113dd05 -> 
+  custom:DOTSType/SliderPercentController: 3146c22981192efd3146c22981192efd -> 
   custom:DOTSType/UnityEngine.UI.HorizontalLayoutGroup: 484e9da018772e27484e9da018772e27 -> 
   custom:DOTSType/UnityEditor.SceneHierarchySortingWindow: af48a4a01f89e7a4af48a4a01f89e7a4 -> 
   custom:DOTSType/UnityStandardAssets.Effects.ExplosionFireAndDebris: f811934599bcf067f811934599bcf067 -> 
   custom:DOTSType/GPUInstancer.CrowdAnimations.GPUICrowdSettings: dcfa6d74c3bf435bdcfa6d74c3bf435b -> 
   custom:DOTSType/UnityEditor.StreamingControllerEditor: c57e517d8ba15d8ec57e517d8ba15d8e -> 
-  custom:DOTSType/UnityEditor.TestTools.TestRunner.Api.CallbacksHolder: 4d071da20270dff34d071da20270dff3 -> 
   custom:DOTSType/UnityEditor.AudioMixerGroupEditor: ab3d33d7495405c7ab3d33d7495405c7 -> 
+  custom:DOTSType/PopupWindowController: 89743e8c0383002389743e8c03830023 -> 
+  custom:DOTSType/UnityEditor.TestTools.TestRunner.Api.CallbacksHolder: 4d071da20270dff34d071da20270dff3 -> 
   custom:DOTSType/UnityEditor.Rendering.LookDev.EnvironmentEditor: 3e3fb42561c387923e3fb42561c38792 -> 
   custom:DOTSType/UnityEditor.Audio.AudioMixerGroupController: d2858d4cb3bc3862d2858d4cb3bc3862 -> 
   custom:DOTSType/UnityEditor.ProfilerWindow: a10cd4f2690e2171a10cd4f2690e2171 -> 
@@ -320,7 +322,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/Unity.Entities.EntityManager+IsolateCopiedEntities: 703c8c39c22b63af703c8c39c22b63af -> 
   custom:DOTSType/Unity.Transforms.PostRotationEulerZXY: ff322c6891514de1ff322c6891514de1 -> 
   custom:DOTSType/Unity.Scenes.SceneSectionStreamingSystem+StreamingState: 26d6035e28a57e6326d6035e28a57e63 -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.HighlightToggle: 2a7ae4c35b7e09d82a7ae4c35b7e09d8 -> 
   custom:DOTSType/UnityEditor.LightProbesInspector: a4e975b1e198aba1a4e975b1e198aba1 -> 
   custom:DOTSType/UnityEditor.ScriptableWizard: b2450ec0810395bbb2450ec0810395bb -> 
   custom:DOTSType/Unity.Scenes.Editor.EditorSceneLiveLinkToPlayerSendSystem: b3a1ee40e1751a11b3a1ee40e1751a11 -> 
@@ -440,7 +441,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.CircleCollider2D: 2b61966575b571d92b61966575b571d9 -> 
   custom:DOTSType/UnityEditor.LineRendererInspector: 90ab0e90696155c890ab0e90696155c8 -> 
   custom:DOTSType/UnityEditor.Connect.ServicesEditorWindow: 0b004d4f8e950c7e0b004d4f8e950c7e -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.EventTriggerInvoker: 7e43ef716f2e47477e43ef716f2e4747 -> 
   custom:DOTSType/UnityEditor.AssemblyDefinitionImporterInspector: 0e6f2de017bf02a30e6f2de017bf02a3 -> 
   custom:DOTSType/FishSwarmBoid: 9d8ef97a57413a539d8ef97a57413a53 -> 
   custom:DOTSType/Unity.PerformanceTesting.Measurements.ProfilerMarkerMeasurement: aba786cde72bb2fcaba786cde72bb2fc -> 
@@ -507,14 +507,13 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.LightmapSettings: 926ccb43b091c5e0926ccb43b091c5e0 -> 
   custom:DOTSType/UnityEditor.WheelJoint2DEditor: 0649096b304d94b10649096b304d94b1 -> 
   custom:DOTSType/UnityEditor.CurvePresetLibraryEditor: 9cb77f475ccc53b19cb77f475ccc53b1 -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.ResourceBarController: 7361c74da45043b57361c74da45043b5 -> 
-  custom:DOTSType/UnityEditor.LightmapSnapshot: b2033d35f22f7023b2033d35f22f7023 -> 
   custom:DOTSType/UnityEngine.AI.NavMeshSurface: 301f7accc64aa913301f7accc64aa913 -> 
+  custom:DOTSType/UnityEditor.LightmapSnapshot: b2033d35f22f7023b2033d35f22f7023 -> 
   custom:DOTSType/Unity.Scenes.Editor.SceneInspector: 9234df48f7e77a189234df48f7e77a18 -> 
   custom:DOTSType/UnityEditor.Presets.AddPresetTypeWindow: d0203a42358f8875d0203a42358f8875 -> 
   custom:DOTSType/UnityEditor.HingeJointTool: 13f5196251ad747e13f5196251ad747e -> 
-  custom:DOTSType/TMPro.TMP_SubMeshUI: 9b42df3ec6f04b979b42df3ec6f04b97 -> 
   custom:DOTSType/UnityEditor.VersionControl.WindowResolve: 3124a1e045eae1583124a1e045eae158 -> 
+  custom:DOTSType/TMPro.TMP_SubMeshUI: 9b42df3ec6f04b979b42df3ec6f04b97 -> 
   custom:DOTSType/UnityEditor.Rendering.DebugStateVector2: ddf34431f18dc590ddf34431f18dc590 -> 
   custom:DOTSType/UnityEngine.Rendering.UI.DebugUIHandlerGroup: 592c0ea060250a92592c0ea060250a92 -> 
   custom:DOTSType/UnityEngine.MonoBehaviour: abf3db0b3d445ad3abf3db0b3d445ad3 -> 
@@ -608,7 +607,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.Rigidbody2D: e2c6c06519773e14e2c6c06519773e14 -> 
   custom:DOTSType/UnityEditor.U2D.Animation.SkinningCachePersistentState: 44acf0fcd564e0d344acf0fcd564e0d3 -> 
   custom:DOTSType/UnityEditor.UI.SliderEditor: 6e1b6fb09285ab6d6e1b6fb09285ab6d -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.BinarySliderController: 0ebab343a52098ca0ebab343a52098ca -> 
   custom:DOTSType/UnityStandardAssets.CrossPlatformInput.AxisTouchButton: 98d3733740214cae98d3733740214cae -> 
   custom:DOTSType/UnityEditorInternal.AssemblyDefinitionReferenceAsset: dd80274d30987257dd80274d30987257 -> 
   custom:DOTSType/UnityEditor.Physics2DSettingsInspector: 43ec275bb5054b3243ec275bb5054b32 -> 
@@ -620,12 +618,12 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.ProjectTemplateWindow: a55fb2f124ae93dca55fb2f124ae93dc -> 
   custom:DOTSType/UnityEngine.EventSystems.Physics2DRaycaster: 1836fbfffa12f9041836fbfffa12f904 -> 
   custom:DOTSType/SoxwareInteractive.AnimationConversion.AnimationConverterWindow: 873f1ef25b9d55a4873f1ef25b9d55a4 -> 
-  custom:DOTSType/GPUInstancer.CrowdAnimations.NavMeshDemoSceneGUIHandler: 7ba1373613f711717ba1373613f71171 -> 
+  custom:DOTSType/UnityEditor.DoubleCurvePresetLibraryEditor: 9de20de72ad3cf789de20de72ad3cf78 -> 
   custom:DOTSType/UnityEditorInternal.PackageManifestImporter: 22ad7255838370e222ad7255838370e2 -> 
+  custom:DOTSType/GPUInstancer.CrowdAnimations.NavMeshDemoSceneGUIHandler: 7ba1373613f711717ba1373613f71171 -> 
   custom:DOTSType/UnityEditor.CapsuleCollider2DTool: 014b4c102fadf8e8014b4c102fadf8e8 -> 
   custom:DOTSType/UnityEditor.SceneVisibilityState: e74203d239ba0c3ae74203d239ba0c3a -> 
   custom:DOTSType/UnityEditor.ContainerWindow: 83781ec686ced1e583781ec686ced1e5 -> 
-  custom:DOTSType/UnityEditor.DoubleCurvePresetLibraryEditor: 9de20de72ad3cf789de20de72ad3cf78 -> 
   custom:DOTSType/UnityEditor.SpeedTreeMaterialInspector: f570521503882bbbf570521503882bbb -> 
   custom:DOTSType/UnityStandardAssets.Vehicles.Aeroplane.AeroplaneAiControl: 439aebefeb177f3f439aebefeb177f3f -> 
   custom:DOTSType/UnityEditor.SpriteRectCache: a1f244f7d60434e9a1f244f7d60434e9 -> 
@@ -711,6 +709,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditorInternal.AnimationWindowState: 94f741479a091e1194f741479a091e11 -> 
   custom:DOTSType/Unity.Transforms.ScalePivotTranslation: 7a4d398e04699c317a4d398e04699c31 -> 
   custom:DOTSType/UnityEditor.U2D.Animation.SpriteCategoryListCacheObject: b555f2b16d6eef67b555f2b16d6eef67 -> 
+  custom:DOTSType/TransformInRect: cc21cb6c73293418cc21cb6c73293418 -> 
   custom:DOTSType/UnityEditor.TestTools.TestRunner.Api.CallbacksDelegatorListener: 782ea27efdc36c2d782ea27efdc36c2d -> 
   custom:DOTSType/Unity.Transforms.RotationPivotTranslation: bec3fbdfd35c6009bec3fbdfd35c6009 -> 
   custom:DOTSType/CompanionGameObjectActiveSystemState: ec91cec1dbc008ddec91cec1dbc008dd -> 
@@ -758,14 +757,13 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.TestTools.TestRunner.CommandLineTest.ExitCallbacks: 5cdc6cdeddd7fee35cdc6cdeddd7fee3 -> 
   custom:DOTSType/UnityEngine.CanvasRenderer: 2c4d642f145776f52c4d642f145776f5 -> 
   custom:DOTSType/TMPro.EditorUtilities.TMPro_FontAssetCreatorWindow: b963deea3f1fbb60b963deea3f1fbb60 -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Window.AnimatedWindowController: 23740b0457e16beb23740b0457e16beb -> 
   custom:DOTSType/UnityEditor.U2D.Animation.CopyTool: 6ad865d6ab36cc446ad865d6ab36cc44 -> 
   custom:DOTSType/UnityEditor.ShaderImporter: 73daaf4eb34358b773daaf4eb34358b7 -> 
   custom:DOTSType/SoxwareInteractive.AnimationConversion.AnimationConverterLogWindow: f3371b1cd9608819f3371b1cd9608819 -> 
   custom:DOTSType/UnityEditor.WebCamTextureInspector: f3ee8ae331d309c4f3ee8ae331d309c4 -> 
   custom:DOTSType/UnityEngine.Playables.PlayableDirector: 5e646bbf57f9128a5e646bbf57f9128a -> 
-  custom:DOTSType/UnityEditor.TagManagerInspector: eebcac03c368e19beebcac03c368e19b -> 
   custom:DOTSType/UnityEditor.PopupWindowWithoutFocus: a20bfe313d7f63a5a20bfe313d7f63a5 -> 
+  custom:DOTSType/UnityEditor.TagManagerInspector: eebcac03c368e19beebcac03c368e19b -> 
   custom:DOTSType/UnityEditor.TimeManagerEditor: d797300757aad311d797300757aad311 -> 
   custom:DOTSType/CTI.CTI_CustomWind: 2277b86ee6b5c2c52277b86ee6b5c2c5 -> 
   custom:DOTSType/GPUInstancer.GPUInstancerSettingsExtension: 844196c133007f19844196c133007f19 -> 
@@ -779,8 +777,8 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.ProjectWindowCallback.DoCreateFolderWithTemplates: 16cd1b26f94c367d16cd1b26f94c367d -> 
   custom:DOTSType/UnityEngine.PolygonCollider2D: 89cb2372224d6d6b89cb2372224d6d6b -> 
   custom:DOTSType/UnityEditor.Rendering.LookDev.Context: 0dcd2d3a46b7e5720dcd2d3a46b7e572 -> 
+  custom:DOTSType/SliderStepController: 2ca08000606a53252ca08000606a5325 -> 
   custom:DOTSType/TMPro.TMP_StyleSheet: e06c915eb76b5fcde06c915eb76b5fcd -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.ScrollController: 01a2012a4002dee001a2012a4002dee0 -> 
   custom:DOTSType/UnityEditor.SceneHierarchyWindow: 09baac54cd8721e909baac54cd8721e9 -> 
   custom:DOTSType/UnityEditor.TilemapRendererEditor: 748b2e8ea36ad51c748b2e8ea36ad51c -> 
   custom:DOTSType/UnityEngine.U2D.IK.FabrikSolver2D: 40e2742aa7ff9bd440e2742aa7ff9bd4 -> 
@@ -812,8 +810,9 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.TextCore.TextSettings: 15765dc761f6ef0815765dc761f6ef08 -> 
   custom:DOTSType/GPUInstancer.GPUInstancerPrefabRuntimeHandler: 029fdf63ade34f91029fdf63ade34f91 -> 
   custom:DOTSType/UnityEditor.InputManagerEditor: f410421ceacd8152f410421ceacd8152 -> 
-  custom:DOTSType/GPUInstancer.GPUInstancerTerrainSettings: 365073a226632545365073a226632545 -> 
+  custom:DOTSType/BinarySliderController: 5db2cf0baf4066c85db2cf0baf4066c8 -> 
   custom:DOTSType/UnityEngine.Tilemaps.Tile: 56e890e4bd8ddcb056e890e4bd8ddcb0 -> 
+  custom:DOTSType/GPUInstancer.GPUInstancerTerrainSettings: 365073a226632545365073a226632545 -> 
   custom:DOTSType/UnityEditor.AvatarMuscleEditor: b5e77a9157962476b5e77a9157962476 -> 
   custom:DOTSType/UnityEngine.Rendering.DebugUpdater: d75e6daeb3139528d75e6daeb3139528 -> 
   custom:DOTSType/UnityStandardAssets.Water.WaterBasic: 95a63d7368447cd895a63d7368447cd8 -> 
@@ -853,6 +852,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.BillboardAsset: 00b6bc024aa1fe7a00b6bc024aa1fe7a -> 
   custom:DOTSType/UnityEngine.UI.LayoutElement: 3f018db7f8b9e0003f018db7f8b9e000 -> 
   custom:DOTSType/UnityEditor.Rendering.UI.UIFoldoutEditor: 68cf427b670a2ecb68cf427b670a2ecb -> 
+  custom:DOTSType/ExitButtonController: b9e1e8edf2c2811db9e1e8edf2c2811d -> 
   custom:DOTSType/GPUInstancer.CrowdAnimations.GPUICrowdManagerEditor: 7be4b6f3e523a07f7be4b6f3e523a07f -> 
   custom:DOTSType/UnityEditor.Presets.DefaultPresetSelectorReceiver: 0e8686cb1e5f85bb0e8686cb1e5f85bb -> 
   custom:DOTSType/UnityEngine.Joint: efd6b1be3b6791b2efd6b1be3b6791b2 -> 
@@ -939,7 +939,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.UnityMainToolbar: e116dd364c235469e116dd364c235469 -> 
   custom:DOTSType/UnityEditor.SceneTemplate.SceneTemplateAsset: 52a5045e9a59533e52a5045e9a59533e -> 
   custom:DOTSType/UnityEditor.Rendering.LookDev.Environment: 8b96d9bc6fad4d0c8b96d9bc6fad4d0c -> 
-  custom:DOTSType/CanvasAlign: 96c7e6ac087d784796c7e6ac087d7847 -> 
   custom:DOTSType/GPUInstancer.GPUInstancerShaderBindings: 43ed9b378233070243ed9b3782330702 -> 
   custom:DOTSType/01000010110101111100001000011101101101001001010: 1ff28cc04b08b32f1ff28cc04b08b32f -> 
   custom:DOTSType/UnityEditor.PackageManager.UI.PackageEditor: c05e673b5b9f68dcc05e673b5b9f68dc -> 
@@ -1060,6 +1059,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.TestTools.TestRunner.EditModeLauncher+BackgroundListener: c80c9a2ebf99517cc80c9a2ebf99517c -> 
   custom:DOTSType/UnityEditor.Timeline.GroupTrackInspector: 58a13dd1607f091458a13dd1607f0914 -> 
   custom:DOTSType/UnityEditor.Rendering.DebugStateBool: ac68ba4843e2737aac68ba4843e2737a -> 
+  custom:DOTSType/CameraAligner: bc75b82f756a1275bc75b82f756a1275 -> 
   custom:DOTSType/UnityEditor.PackageExport: 3af3c2e9169259743af3c2e916925974 -> 
   custom:DOTSType/UnityEngine.UI.InputField: 4fb64acd35d78e664fb64acd35d78e66 -> 
   custom:DOTSType/UnityEngine.Timeline.ControlTrack: 328723e0d2b39105328723e0d2b39105 -> 
@@ -1094,7 +1094,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.Timeline.MarkerInspector: 4e5123808326322c4e5123808326322c -> 
   custom:DOTSType/UnityEditor.ShaderGraph.Drawing.SearcherProvider: abf3085380e1c766abf3085380e1c766 -> 
   custom:DOTSType/UnityEditor.AssemblyDefinitionReferenceImporterInspector: bda50e2f787cb05bbda50e2f787cb05b -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Window.NationPickController: 3e92fe1cefbe98493e92fe1cefbe9849 -> 
   custom:DOTSType/UnityEngine.AudioDistortionFilter: bc0ede47e7d2aeebbc0ede47e7d2aeeb -> 
   custom:DOTSType/UnityEditor.WindInspector: 17e94b22c00dc9b117e94b22c00dc9b1 -> 
   custom:DOTSType/UnityEditor.AssetImportInProgressProxyEditor: be9ed6e99fe31deebe9ed6e99fe31dee -> 
@@ -1166,8 +1165,9 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/Unity.Entities.RequestSceneLoaded: 62c081c918aff6ee62c081c918aff6ee -> 
   custom:DOTSType/UnityEditor.U2D.PSD.PSDImporter: 25996fe7b9a3b31425996fe7b9a3b314 -> 
   custom:DOTSType/UnityEditor.Build.Reporting.BuildReport: 6061f995376162806061f99537616280 -> 
-  custom:DOTSType/Formation: db5fd258bfd3358cdb5fd258bfd3358c -> 
+  custom:DOTSType/EventTriggerInvoker: 4d9ab23c5bcc93084d9ab23c5bcc9308 -> 
   custom:DOTSType/UnityEditor.RectTransformEditor: 69a3e998cea5fac469a3e998cea5fac4 -> 
+  custom:DOTSType/Formation: db5fd258bfd3358cdb5fd258bfd3358c -> 
   custom:DOTSType/UnityEngine.CompositeCollider2D: ec7eb3af48f3c17eec7eb3af48f3c17e -> 
   custom:DOTSType/UnityEditor.ProjectWindowCallback.DoCreateAnimatorController: 760168f2bcb93985760168f2bcb93985 -> 
   custom:DOTSType/UnityEditor.U2D.Animation.SkeletonToolWrapper: b54bc1b732e3e329b54bc1b732e3e329 -> 
@@ -1184,7 +1184,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.Font: a628af508396d5a8a628af508396d5a8 -> 
   custom:DOTSType/UnityEditor.Graphs.AnimationStateMachine.AddStateMachineBehaviourComponentWindow: 648df88e199a4ae6648df88e199a4ae6 -> 
   custom:DOTSType/UnityEngine.Audio.AudioMixerSnapshot: c0c960f90b743ffcc0c960f90b743ffc -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Window.WindowController: 5c9f4f0e0b330b975c9f4f0e0b330b97 -> 
   custom:DOTSType/UnityStandardAssets.CrossPlatformInput.Joystick: f6e62a874768bb8af6e62a874768bb8a -> 
   custom:DOTSType/Unity.Entities.ChunkHeader: edc8e390b257a4d4edc8e390b257a4d4 -> 
   custom:DOTSType/Packages.Rider.Editor.RiderScriptEditorData: 5cdf8cdade241c115cdf8cdade241c11 -> 
@@ -1214,6 +1213,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.UIElements.ThemeStyleSheet: 15abddde221ed1fe15abddde221ed1fe -> 
   custom:DOTSType/UnityEditor.EditorToolbar: 980b07db75dd1639980b07db75dd1639 -> 
   custom:DOTSType/UnityEngine.UIElements.VisualTreeAsset: ae1ca7178769546bae1ca7178769546b -> 
+  custom:DOTSType/AnimatedWindowController: f0445c0c657df39af0445c0c657df39a -> 
   custom:DOTSType/UnityEditor.VFX.VisualEffectEditorDefault: f3ecb832db58b50ef3ecb832db58b50e -> 
   custom:DOTSType/UnityEditor.ShaderGraph.Drawing.MaterialGraphEditWindow: cc8dba7bcb8b0a08cc8dba7bcb8b0a08 -> 
   custom:DOTSType/GPUInstancer.GPUInstancerPrefabManager: 850756f81d4cfd73850756f81d4cfd73 -> 
@@ -1304,6 +1304,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.Animations.AnimatorController: 66e2e4b099c9e39d66e2e4b099c9e39d -> 
   custom:DOTSType/UnityEditor.UI.InputFieldEditor: 4bf9d28403175d994bf9d28403175d99 -> 
   custom:DOTSType/UnityEngine.Timeline.TimelineAsset: 291b03b7451fcf14291b03b7451fcf14 -> 
+  custom:DOTSType/ResourceBarController: 00a96315bc8b647b00a96315bc8b647b -> 
   custom:DOTSType/UnityEditor.CanvasRendererEditor: 2462e96c9f05d9c62462e96c9f05d9c6 -> 
   custom:DOTSType/UnityEditor.MaterialEditor: 160a459559f8e8e1160a459559f8e8e1 -> 
   custom:DOTSType/UnityEditor.SaveWindowLayout: f71b5bf69a6980b7f71b5bf69a6980b7 -> 
@@ -1346,6 +1347,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/Unity.Transforms.WorldToLocal: f09a59232ebb35a6f09a59232ebb35a6 -> 
   custom:DOTSType/UnityEditorInternal.State: 12a1edf3e65a9a8f12a1edf3e65a9a8f -> 
   custom:DOTSType/UnityEditor.EventSystems.EventSystemEditor: a4ad983006d27d58a4ad983006d27d58 -> 
+  custom:DOTSType/SliderValueController: 91afa07170ec338091afa07170ec3380 -> 
   custom:DOTSType/TMPro.TMP_ProjectConversionUtility: 2111f0fcea957bd52111f0fcea957bd5 -> 
   custom:DOTSType/UnityEngine.AI.NavMeshData: 297fe9efb6841001297fe9efb6841001 -> 
   custom:DOTSType/UnityStandardAssets.Water.Displace: cb2703e2d77ff86acb2703e2d77ff86a -> 
@@ -1364,7 +1366,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.AI.NavMeshModifierEditor: fa37abc4551d5f04fa37abc4551d5f04 -> 
   custom:DOTSType/Unity.Scenes.ReferencedUnityObjects: b8073d4731436522b8073d4731436522 -> 
   custom:DOTSType/UnityEditor.UIElements.EditorWindowViewData: 955214f4629c4f5a955214f4629c4f5a -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.Transform.TransformInRect: 65d3b836646987dc65d3b836646987dc -> 
   custom:DOTSType/TMPro.TMP_SpriteAsset: f5d67a8df8ae9e39f5d67a8df8ae9e39 -> 
   custom:DOTSType/UnityEngine.RenderSettings: 12e22dc69a3db32012e22dc69a3db320 -> 
   custom:DOTSType/UnityEngine.SkinnedMeshRenderer: 3fa50744ca67e0ee3fa50744ca67e0ee -> 
@@ -1474,7 +1475,6 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityStandardAssets.Vehicles.Ball.Ball: ec4bcd89df5784b3ec4bcd89df5784b3 -> 
   custom:DOTSType/UnityEngine.Rendering.UI.DebugUIHandlerVector2: 75f52f7ebc7a71a675f52f7ebc7a71a6 -> 
   custom:DOTSType/UnityStandardAssets.Water.PlanarReflection: 65adae7b46fca4a965adae7b46fca4a9 -> 
-  custom:DOTSType/MedievalKingdomUI.Scripts.Controls.SliderValueController: 126871146797a179126871146797a179 -> 
   custom:DOTSType/GPUInstancer.CrowdAnimations.GPUICrowdAnimatorRandomizer: f1d0a4c2feecfa0bf1d0a4c2feecfa0b -> 
   custom:DOTSType/UnityEditor.UIElements.StyleSheets.ThemeStyleSheetImporter: 5147ef93d49a41e95147ef93d49a41e9 -> 
   custom:DOTSType/Autodesk.Fbx.BuildTests.ExportEmptyFbx: 24cb126828fa32a724cb126828fa32a7 -> 
@@ -1533,207 +1533,23 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.TestTools.TestRunner.CommandLineTest.LogSavingCallbacks: 146ff92bed1c3159146ff92bed1c3159 -> 
   custom:DOTSType/UnityEditor.ExternalPlayModeView: 47f4ce84766401f147f4ce84766401f1 -> 
   custom:DOTSType/TreeEditor.TreeData: 75029f79747de22b75029f79747de22b -> 
+  custom:DOTSType/UnityEditor.CircleCollider2DEditor: 2306875b29acbf472306875b29acbf47 -> 
   custom:DOTSType/Unity.Scenes.DisableLiveLink: acfec9bf12a4cae8acfec9bf12a4cae8 -> 
   custom:DOTSType/UnityEditor.U2D.Sprites.SpriteUtilityWindow: 766fc4f2b14d7b62766fc4f2b14d7b62 -> 
-  custom:DOTSType/UnityEditor.CircleCollider2DEditor: 2306875b29acbf472306875b29acbf47 -> 
   custom:DOTSType/UnitButton: d77561eb2814a466d77561eb2814a466 -> 
   custom:DOTSType/UnityEditor.NavMeshObstacleInspector: e09ab8310b8a0334e09ab8310b8a0334 -> 
 ========================================================================
 Received Import Request.
-  path: Assets/Anims
-  artifactKey: Guid(f2409ee3f17756e4db9a3150e6fc6ab9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Anims using Guid(f2409ee3f17756e4db9a3150e6fc6ab9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5e3963d5f6f617dea0e13134c21dfc70') in 0.006111 seconds
-  Import took 0.012518 seconds .
+  path: Assets/Prefabs/Squad.prefab
+  artifactKey: Guid(cdc02113d5df6864e9f6da1f44547de6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Squad.prefab using Guid(cdc02113d5df6864e9f6da1f44547de6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f08f8a6d2215b983158a4a15845758b2') in 0.253535 seconds
+  Import took 0.264520 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 61.630428 seconds.
-  path: Assets/Textures/UI/Minimap.renderTexture
-  artifactKey: Guid(3ddc832b862ec1648a4e4836bd3ccce3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/UI/Minimap.renderTexture using Guid(3ddc832b862ec1648a4e4836bd3ccce3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3a7e574c09124a8c0fa34a2d3ad181bc') in 0.066529 seconds
-  Import took 0.074250 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 11.809355 seconds.
-  path: Assets/Textures/Modular/deploy.png
-  artifactKey: Guid(d0f11fddda6ded54da22ad12fc87ac33) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/deploy.png using Guid(d0f11fddda6ded54da22ad12fc87ac33) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c62bcdd2ae3777548e2e2c6494551a09') in 0.041962 seconds
-  Import took 0.048543 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000284 seconds.
-  path: Assets/Textures/Modular/gradient.png
-  artifactKey: Guid(939fbd8efb616fe4bbaa861280e1ade7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/gradient.png using Guid(939fbd8efb616fe4bbaa861280e1ade7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8bf9f483a55d83e563009602f1231e30') in 0.005728 seconds
-  Import took 0.011891 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000301 seconds.
-  path: Assets/Textures/Modular/ringtarget.png
-  artifactKey: Guid(d767edc296554084da39908aab6cc293) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/ringtarget.png using Guid(d767edc296554084da39908aab6cc293) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a6452e5404c6bc36f1b0154010b0a613') in 0.007254 seconds
-  Import took 0.014214 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000324 seconds.
-  path: Assets/Textures/Modular/deploy_tri.png
-  artifactKey: Guid(633e7c131d1d69648a4ad653ff335563) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/deploy_tri.png using Guid(633e7c131d1d69648a4ad653ff335563) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '254d9467c498f8016a692e257a7eed4c') in 0.006653 seconds
-  Import took 0.013395 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000273 seconds.
-  path: Assets/Textures/Modular/waypointline.png
-  artifactKey: Guid(c627123ca5004da46b7fd53efc0a4b76) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/waypointline.png using Guid(c627123ca5004da46b7fd53efc0a4b76) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3fc576ef9fd46e88620d0ed63c390e28') in 0.005037 seconds
-  Import took 0.010996 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000309 seconds.
-  path: Assets/Textures/Modular/wrench.png
-  artifactKey: Guid(c787017da6e75644e9462cc83dc868ba) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/wrench.png using Guid(c787017da6e75644e9462cc83dc868ba) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5b1c9a2e09ca171249b8fa2b11a355fc') in 0.006232 seconds
-  Import took 0.012682 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000267 seconds.
-  path: Assets/Textures/Modular/deploy2.png
-  artifactKey: Guid(410a7b5333fb9a449a195175f8028af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/deploy2.png using Guid(410a7b5333fb9a449a195175f8028af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '56c52ca3d9750fb93111ad5498460b3c') in 0.006477 seconds
-  Import took 0.013000 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000239 seconds.
-  path: Assets/Textures/Modular/ring2.png
-  artifactKey: Guid(bee5b50f11b15f5458ca9896c35ca921) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/ring2.png using Guid(bee5b50f11b15f5458ca9896c35ca921) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f0997e0a6bcbb46926a2f65b5f365bcc') in 0.006720 seconds
-  Import took 0.013837 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000265 seconds.
-  path: Assets/Textures/Modular/glow.png
-  artifactKey: Guid(ad9a69ef900b14242890df8c1e76af91) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/glow.png using Guid(ad9a69ef900b14242890df8c1e76af91) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '336b48c1715e903417c30b248a27fcf2') in 0.006472 seconds
-  Import took 0.012323 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000268 seconds.
-  path: Assets/Textures/Modular/patrol.png
-  artifactKey: Guid(b4bad6c0926d56841bac8295dc926b85) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/patrol.png using Guid(b4bad6c0926d56841bac8295dc926b85) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c7b5e28613523b06634f84a9e18adcc8') in 0.006419 seconds
-  Import took 0.012731 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000270 seconds.
-  path: Assets/Textures/Modular/waypointline3.png
-  artifactKey: Guid(e4cac9d40559a0c4d98290f9eb33d8ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/waypointline3.png using Guid(e4cac9d40559a0c4d98290f9eb33d8ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9e91fed019b109e44f692e28f0054499') in 0.005157 seconds
-  Import took 0.011668 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000338 seconds.
-  path: Assets/Textures/Modular/waypointline2.png
-  artifactKey: Guid(f7d602178e070a84c8bf0ff54b207072) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/waypointline2.png using Guid(f7d602178e070a84c8bf0ff54b207072) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '03704949c6db8968942c10df4b604f3f') in 0.005035 seconds
-  Import took 0.011810 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000304 seconds.
-  path: Assets/Textures/Modular/ring.png
-  artifactKey: Guid(1012fcb51f0cdbc459f85de657a8a2a9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/ring.png using Guid(1012fcb51f0cdbc459f85de657a8a2a9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '77739b9cbb1b5e3670cb62925905d50d') in 0.006449 seconds
-  Import took 0.013138 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000288 seconds.
-  path: Assets/Textures/Modular/wrench_solid.png
-  artifactKey: Guid(e2e337e05a866934893da57e91f0e3ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/wrench_solid.png using Guid(e2e337e05a866934893da57e91f0e3ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '79aee320968996967609455c9e8e1058') in 0.006104 seconds
-  Import took 0.012779 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000283 seconds.
-  path: Assets/Textures/Modular/ring_cogwheel.png
-  artifactKey: Guid(a30e34b7dc114fa4fb4de0ac83fa35ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/ring_cogwheel.png using Guid(a30e34b7dc114fa4fb4de0ac83fa35ac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a5743d597a5944f7ca9628a441382ee3') in 0.006307 seconds
-  Import took 0.012314 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000290 seconds.
-  path: Assets/Textures/Modular/ring_rotater.png
-  artifactKey: Guid(8043489c8eb160e42af1fd0e4f1a34a8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/ring_rotater.png using Guid(8043489c8eb160e42af1fd0e4f1a34a8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '76e87fec86a8f8550a2493e7d787496b') in 0.006525 seconds
-  Import took 0.013036 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000278 seconds.
-  path: Assets/Textures/Modular/gradient2.png
-  artifactKey: Guid(139087dc1a0e57f43b03013f6f954627) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Modular/gradient2.png using Guid(139087dc1a0e57f43b03013f6f954627) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aba4b22f1b619d63a9a3902759ed6ead') in 0.005518 seconds
-  Import took 0.012003 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 7.492184 seconds.
-  path: Assets/Textures/Footsteps/footprint.png
-  artifactKey: Guid(57dd3c6ba13c16548a6884c8850d3193) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Footsteps/footprint.png using Guid(57dd3c6ba13c16548a6884c8850d3193) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '43ee427dd9b7fd9529afe8f475375525') in 0.005877 seconds
-  Import took 0.012387 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000281 seconds.
-  path: Assets/Textures/Footsteps/Shadow.psd
-  artifactKey: Guid(68386fc9897223346a683105b4dc1662) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Footsteps/Shadow.psd using Guid(68386fc9897223346a683105b4dc1662) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'be39d1718dbfa6a6a9f533f4d318bcc1') in 0.015357 seconds
-  Import took 0.021131 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000287 seconds.
-  path: Assets/Textures/Footsteps/waves_particle.png
-  artifactKey: Guid(053a0725fa84b434893e9fa9f0cee8d5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Footsteps/waves_particle.png using Guid(053a0725fa84b434893e9fa9f0cee8d5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '75085feec5047c96711ddde20aefc9b4') in 0.005376 seconds
-  Import took 0.011354 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000285 seconds.
-  path: Assets/Textures/Footsteps/water_splash.png
-  artifactKey: Guid(fe09c89c697ddd94da62c8631c990073) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Footsteps/water_splash.png using Guid(fe09c89c697ddd94da62c8631c990073) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9613a87f1ec2ac6573e749ab82b756fb') in 0.005016 seconds
-  Import took 0.011486 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000287 seconds.
-  path: Assets/Textures/Footsteps/grass_particle.png
-  artifactKey: Guid(9a3aef51aaf9bcf41a384a3a96b2f5f5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/Footsteps/grass_particle.png using Guid(9a3aef51aaf9bcf41a384a3a96b2f5f5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '02a5f28b64e1f4aca41b150dd4bc42f0') in 0.005242 seconds
-  Import took 0.011761 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 127.277672 seconds.
-  path: Assets/Textures/UI/Artworks
-  artifactKey: Guid(82f13a9495381564fa1a09fdf0222571) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/UI/Artworks using Guid(82f13a9495381564fa1a09fdf0222571) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c497660b8a3cd2e27304882f8c031a84') in 0.001652 seconds
-  Import took 0.008859 seconds .
+  Time since last request: 0.000296 seconds.
+  path: Assets/Prefabs/UI/frames/SquadFrame.prefab
+  artifactKey: Guid(4e6dea7c2b068e24299ba21c5500675a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/frames/SquadFrame.prefab using Guid(4e6dea7c2b068e24299ba21c5500675a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5ca0af63df22b28630e103d621e578d7') in 0.005304 seconds
+  Import took 0.012582 seconds .
 
