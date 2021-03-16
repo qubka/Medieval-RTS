@@ -5,7 +5,8 @@ using UnityEngine;
 using Object = ObjectExtention;
 using Random = UnityEngine.Random;
 
- public class SeekBehavior : MonoBehaviour
+//this is the script attached and active during the "moving" state
+public class SeekBehavior : MonoBehaviour
 {
     private Squad squad;
     private Squad enemy;
@@ -230,8 +231,6 @@ using Random = UnityEngine.Random;
     {
         Destroy(seek);
         Destroy(tempTarget);
-        
-        //squad.isForward = true;
         targets.Clear();
     }
 

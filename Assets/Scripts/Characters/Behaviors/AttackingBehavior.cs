@@ -53,7 +53,7 @@ public class AttackingBehavior : MonoBehaviour
     private void Update()
     {
         // Is target alive?
-        if (IsEnemyAlive()) {
+        if (enemy && enemy.hasUnits) {
             // Is target within range?
             var distance = Vector.DistanceSq(squad.centroid, enemy.centroid);
             if (distance < squad.data.attackDistance) {//yes
@@ -66,30 +66,20 @@ public class AttackingBehavior : MonoBehaviour
                 // If target out of range, return to seek state
                 squad.ChangeState(SquadFSM.Idle);
                 squad.PlaySound(squad.data.commanderSounds.dismiss);
+                squad.UpdateFormation(squad.phalanxLength);
                 DestroyImmediate(this);
             }
         } else {//no
             squad.ChangeState(SquadFSM.Idle);
             squad.PlaySound(squad.data.commanderSounds.victoryIsOurs);
+            squad.UpdateFormation(squad.phalanxLength);
             DestroyImmediate(this);
         }
     }
 
-    private bool IsEnemyAlive() 
-    {
-        return enemy && enemy.hasUnits;
-    }
-    
     private void OnDestroy()
     {
         Destroy(seek);
-
-        var terrain = Manager.terrain;
-        
-        // Update formation because after fight units can be in different locations from desired
-        if (terrain && terrain.isActiveAndEnabled && squad && squad.hasUnits) {
-            squad.UpdateFormation(squad.phalanxLength);
-        }
     }
 }
 

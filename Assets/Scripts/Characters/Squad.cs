@@ -83,7 +83,7 @@ public class Squad : MonoBehaviour
     public int unitCount => units.Count;
     public int enemyCount => enemies.Count;
     public int neighbourCount => neighbours.Count;
-    
+
     private const float BarHeight = 10f;
     private const float BarScale = 0.3f;
     private static readonly Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
@@ -250,7 +250,8 @@ public class Squad : MonoBehaviour
         // Parent a bar to the screen
         barTransform.SetParent(squadCanvas);
         barTransform.localScale = new Vector3(BarScale, BarScale, BarScale);
-
+        squadCanvas.GetComponent<SortByDistance>().AddObject(bar);
+        
         // Switch to default state
         ChangeState(SquadFSM.Idle);
     }
@@ -529,14 +530,16 @@ public class Squad : MonoBehaviour
             unitManager.RemoveSquad(this);
             DestroyImmediate(gameObject);
         } else {
-            UpdateFormation(phalanxLength);
+            if (state != SquadFSM.Attack) {
+                UpdateFormation(phalanxLength);
+            }
         }
     }
 
     private void OnDestroy()
     {
         if (squadCanvas) {
-            squadCanvas.GetComponent<SortByDistance>().RemoveSquad(bar.GetComponent<SquadButton>());
+            squadCanvas.GetComponent<SortByDistance>().RemoveObject(bar);
         }
     }
 

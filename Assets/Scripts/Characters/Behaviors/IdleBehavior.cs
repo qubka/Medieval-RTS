@@ -14,7 +14,7 @@ public class IdleBehavior : MonoBehaviour
     private void Update()
     {
         // If we find an enemy, exit idle mode
-        if (CheckForEnemy()) {
+        if (squad.enemyCount > 0) {
             squad.ChangeState(SquadFSM.Attack);
             var enemy = squad.FindClosestSquad(squad.centroid);
             squad.attackScript.enemy = enemy;
@@ -43,10 +43,5 @@ public class IdleBehavior : MonoBehaviour
 
             DestroyImmediate(this);
         }
-    }
-    
-    private bool CheckForEnemy()
-    {
-        return squad.enemyCount > 0;
     }
 }
