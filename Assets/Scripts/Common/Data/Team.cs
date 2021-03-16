@@ -15,7 +15,7 @@ public static class TeamUtils
     {
         switch (team) {
             case Team.Self:
-                return Color.yellow;
+                return Color.green;
             case Team.Allied:
                 return Color.cyan;
             case Team.Enemy:

@@ -15,7 +15,6 @@ using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
 public class Squad : MonoBehaviour
 {
     [Header("Main Information")]
-    public GPUICrowdManager crowdManager;
     public Squadron data;
     public Team team;
     public int squadSize;
@@ -43,11 +42,11 @@ public class Squad : MonoBehaviour
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform audioTransform;
-    [HideInInspector] public Transform canvasTransform;
     [HideInInspector] public Transform cameraTransform;
     [HideInInspector] public Transform particleTransform;
     [HideInInspector] public Transform minimapTransform;
-    
+    [HideInInspector] public RectTransform barTransform;
+
     [Header("Children References")] 
     public GameObject source;
     [Space(5f)]
@@ -55,7 +54,7 @@ public class Squad : MonoBehaviour
     public Image marker;
     public Image border;
     [Space(5f)]
-    public Canvas canvas;
+    public GameObject bar;
     public Image select;
     public Image fill;
     public Image icon;
@@ -64,6 +63,8 @@ public class Squad : MonoBehaviour
     public ParticleSystem particle;
     
     // Private data
+    private Camera cam;
+    private RectTransform squadCanvas;
     private UnitManager unitManager;
     private SoundManager soundManager;
     private EntityManager entityManager;
@@ -83,8 +84,8 @@ public class Squad : MonoBehaviour
     public int enemyCount => enemies.Count;
     public int neighbourCount => neighbours.Count;
     
-    private const float CanvasHeight = 10f;
-    private static readonly Color Selected = new Color32(255, 165, 0, 255);
+    private const float BarHeight = 10f;
+    private const float BarScale = 0.3f;
     private static readonly Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
 
     private void Awake()
@@ -96,13 +97,13 @@ public class Squad : MonoBehaviour
         particleShape = particle.shape;
         particleTransform = particle.transform;
         minimapTransform = minimap.transform;
-        canvasTransform = canvas.transform;
         audioTransform = source.transform; // store main one for transform
         worldTransform = transform;
+        barTransform = bar.GetComponent<RectTransform>();
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
         agentScript.maxAccel = data.squadAccel;
-        
+
         // Lond audio components
         var sources = source.GetComponents<AudioSource>();
         mainAudio = sources[0];
@@ -132,9 +133,12 @@ public class Squad : MonoBehaviour
 
     private void Start()
     {
-        // Disabling the Crowd Manager here to change prototype settings. 
+        // Get crowd manager instance
+        var modelManager = Manager.modelManager;
+        
+        // Disabling the Crowd Manager here to change prototype settings
         // Enabling it after this will make it re-initialize with the new settings for the prototypes
-        crowdManager.enabled = false;
+        modelManager.enabled = false;
 
         // Setup the first prototype in the manager
         var instances = new List<GPUInstancerPrefab>(squadSize);
@@ -227,21 +231,26 @@ public class Squad : MonoBehaviour
         }
         
         // Register the instantiated GOs to the Crowd Manager
-        GPUInstancerAPI.RegisterPrefabInstanceList(crowdManager, instances);
+        GPUInstancerAPI.RegisterPrefabInstanceList(modelManager, instances);
         //GPUInstancerAPI.InitializeGPUInstancer(crowdManager);
         
         // Enabling the Crowd Manager back; this will re-initialize it with the new settings for the prototypes
-        crowdManager.enabled = true;
+        modelManager.enabled = true;
 
         // Set children size
         UpdateCollision();
         
         // Get information from manager
-        cameraTransform = Manager.mainCamera.transform;
+        cam = Manager.mainCamera;
+        squadCanvas = Manager.squadCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
-        canvas.worldCamera = Manager.uiCamera;
+        cameraTransform = Manager.cameraTransform;
         
+        // Parent a bar to the screen
+        barTransform.SetParent(squadCanvas);
+        barTransform.localScale = new Vector3(BarScale, BarScale, BarScale);
+
         // Switch to default state
         ChangeState(SquadFSM.Idle);
     }
@@ -414,6 +423,7 @@ public class Squad : MonoBehaviour
 
     private void RepositionChildren()
     {
+        // Find absolute centroid position
         centroid = Vector3.zero;
 
         foreach (var unit in units) {
@@ -422,13 +432,26 @@ public class Squad : MonoBehaviour
         
         centroid /= units.Count;
 
+        // Place objects to the local centroid
         var center = worldTransform.InverseTransformPoint(centroid);
         collision.center = center;
         particleTransform.localPosition = center;
         audioTransform.localPosition = center;
-        var shifted = new Vector3(center.x, CanvasHeight, center.z);
-        canvasTransform.localPosition = shifted;
-        minimapTransform.localPosition = shifted;
+        minimapTransform.localPosition = new Vector3(center.x, BarHeight, center.z);
+        
+        // Calculate position for the ui bar
+        center = centroid;
+        center.y += BarHeight;
+        center = cam.WorldToScreenPoint(center);
+        
+        // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
+        if (center.z < 0f) {
+            bar.SetActive(false);
+        } else {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(squadCanvas, center, null, out var canvasPos);
+            barTransform.localPosition = canvasPos;
+            bar.SetActive(true);
+        }
     }
 
     public void SetDestination(bool append, GameObject target, float? orientation, float? length)
@@ -464,10 +487,10 @@ public class Squad : MonoBehaviour
         }
 
         if (value) {
-            StartCoroutine(@select.FadeOut(0f, 0.15f));
-            border.color = Selected;
+            StartCoroutine(select.FadeOut(0f, 0.15f));
+            border.color = Color.yellow;
         } else {
-            StartCoroutine(@select.FadeOut(1f, 0.15f));
+            StartCoroutine(select.FadeOut(1f, 0.15f));
             border.color = Color.black;
         }
         selection = !selection;
@@ -507,6 +530,13 @@ public class Squad : MonoBehaviour
             DestroyImmediate(gameObject);
         } else {
             UpdateFormation(phalanxLength);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (squadCanvas) {
+            squadCanvas.GetComponent<SortByDistance>().RemoveSquad(bar.GetComponent<SquadButton>());
         }
     }
 

@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
     
     private void Start()
     {
-        cameraTransform = Manager.mainCamera.transform;
+        cameraTransform = Manager.cameraTransform;
         
         clipTable = new Dictionary<Vector3, (Sounds, int)>(1000);
         playTable = new Dictionary<AudioSource, (Vector3, int)>(maxSounds);

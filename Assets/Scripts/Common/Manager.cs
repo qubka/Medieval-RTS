@@ -1,12 +1,14 @@
-﻿﻿using UnityEngine;
-
- [RequireComponent(typeof(Manager))]
+﻿﻿using GPUInstancer.CrowdAnimations;
+ using UnityEngine;
+ 
+[RequireComponent(typeof(Manager))]
 public class Manager : MonoBehaviour
 {
-	[Header("Camera")]
+	[Header("Refs")]
+	public GPUICrowdManager crowdManager;
+	public RectTransform squadFrames;
 	public Camera main;
 	public Camera minimap;
-	public Camera ui;
 
 	[Header("Layers")]
 	public LayerMask ground = -1;
@@ -28,8 +30,10 @@ public class Manager : MonoBehaviour
 	public static Terrain terrain;
 	public static Camera mainCamera;
 	public static Camera minimapCamera;
-	public static Camera uiCamera;
+	public static Transform cameraTransform;
+	public static RectTransform squadCanvas;
 	public static CamController controller;
+	public static GPUICrowdManager modelManager;
 	public static UnitTable unitTable;
 	public static UnitManager unitManager;
 	public static SoundManager soundManager;
@@ -38,10 +42,12 @@ public class Manager : MonoBehaviour
 	private void Awake()
 	{
 		terrain = Terrain.activeTerrain;
+		modelManager = crowdManager;
 		mainCamera = main;
-		controller = main.GetComponent<CamController>();
 		minimapCamera = minimap;
-		uiCamera = ui;
+		cameraTransform = main.transform;
+		squadCanvas = squadFrames;
+		controller = main.GetComponent<CamController>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();
 		soundManager = GetComponent<SoundManager>();
