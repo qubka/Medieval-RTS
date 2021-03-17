@@ -60,6 +60,10 @@ public class Squad : MonoBehaviour
     public Image icon;
     public Slider healthbar;
     [Space(5f)]
+    public GameObject layout;
+    public Image shadow;
+    public Text number;
+    [Space(5f)]
     public ParticleSystem particle;
     
     // Private data
@@ -116,6 +120,7 @@ public class Squad : MonoBehaviour
         unitSize = data.unitSize;
         phalanxLength = Math.Max(unitSize.width, squadSize / 3f);
         healthbar.maxValue = squadSize;
+        number.text = squadSize.ToString();
 
         // Set up lists
         units = new List<Unit>(squadSize);
@@ -248,10 +253,17 @@ public class Squad : MonoBehaviour
         cameraTransform = Manager.cameraTransform;
         
         // Parent a bar to the screen
+        bar.SetActive(true);
         barTransform.SetParent(squadCanvas);
         barTransform.localScale = new Vector3(BarScale, BarScale, BarScale);
         squadCanvas.GetComponent<SortByDistance>().AddObject(bar);
         
+        // Parent layout to the screen
+        if (team == Team.Self) {
+            layout.SetActive(true);
+            layout.transform.SetParent(Manager.layoutCanvas);
+        }
+
         // Switch to default state
         ChangeState(SquadFSM.Idle);
     }
@@ -490,9 +502,11 @@ public class Squad : MonoBehaviour
         if (value) {
             StartCoroutine(select.FadeOut(0f, 0.15f));
             border.color = Color.yellow;
+            shadow.color = Color.yellow;
         } else {
             StartCoroutine(select.FadeOut(1f, 0.15f));
             border.color = Color.black;
+            shadow.color = Color.clear;
         }
         selection = !selection;
 
@@ -522,8 +536,10 @@ public class Squad : MonoBehaviour
     public void RemoveUnit(Unit unit)
     {
         units.Remove(unit);
-        
-        healthbar.value = units.Count;
+
+        var count = units.Count;
+        healthbar.value = count;
+        number.text = count.ToString();
         
         if (units.Count == 0) {
             entityManager.DestroyEntity(squadEntity);

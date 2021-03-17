@@ -631,8 +631,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 0, y: -200}
+  m_AnchoredPosition: {x: 0, y: 125}
+  m_SizeDelta: {x: 0, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5643031462128550367
 GameObject:
@@ -770,7 +770,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4547066671283328804}
+  - {fileID: 3690181674185045524}
   m_Father: {fileID: 5643031460506189643}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -858,7 +858,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 90
+  m_Spacing: -150
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -1135,8 +1135,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.9148, y: 0}
-  m_SizeDelta: {x: 118.5238, y: 200}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8275896141636872169
 CanvasRenderer:
@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1001 &2391291422063922676
+--- !u!1001 &3243672849586056388
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1213,11 +1213,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2176927380647664336, guid: 7574c614e7c8a3f4d8d48d5a5518151b, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1759.2
       objectReference: {fileID: 0}
     - target: {fileID: 2176927380647664336, guid: 7574c614e7c8a3f4d8d48d5a5518151b, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 454.57
       objectReference: {fileID: 0}
     - target: {fileID: 2176927380647664336, guid: 7574c614e7c8a3f4d8d48d5a5518151b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1273,8 +1273,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7574c614e7c8a3f4d8d48d5a5518151b, type: 3}
---- !u!224 &4547066671283328804 stripped
+--- !u!224 &3690181674185045524 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2176927380647664336, guid: 7574c614e7c8a3f4d8d48d5a5518151b, type: 3}
-  m_PrefabInstance: {fileID: 2391291422063922676}
+  m_PrefabInstance: {fileID: 3243672849586056388}
   m_PrefabAsset: {fileID: 0}

@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
- 
-[RequireComponent(typeof(Button))]
+
 public class UnitButton : MonoBehaviour, IPointerDownHandler
 {
-	[ReadOnly] public Squad squad; 
+	public Squad squad; 
 	private UnitManager manager;
 
 	private void Start()

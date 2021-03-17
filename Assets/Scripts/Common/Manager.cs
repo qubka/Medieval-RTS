@@ -7,6 +7,7 @@ public class Manager : MonoBehaviour
 	[Header("Refs")]
 	public GPUICrowdManager crowdManager;
 	public RectTransform squadFrames;
+	public RectTransform unitLayout;
 	public Camera main;
 	public Camera minimap;
 
@@ -32,6 +33,7 @@ public class Manager : MonoBehaviour
 	public static Camera minimapCamera;
 	public static Transform cameraTransform;
 	public static RectTransform squadCanvas;
+	public static RectTransform layoutCanvas;
 	public static CamController controller;
 	public static GPUICrowdManager modelManager;
 	public static UnitTable unitTable;
@@ -47,6 +49,7 @@ public class Manager : MonoBehaviour
 		minimapCamera = minimap;
 		cameraTransform = main.transform;
 		squadCanvas = squadFrames;
+		layoutCanvas = unitLayout;
 		controller = main.GetComponent<CamController>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();
