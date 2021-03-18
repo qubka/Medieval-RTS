@@ -56,6 +56,7 @@ public class Squad : MonoBehaviour
     [Space(5f)]
     public GameObject bar;
     public Image select;
+    public Image inner;
     public Image fill;
     public Image icon;
     public Slider healthbar;
@@ -88,8 +89,7 @@ public class Squad : MonoBehaviour
     public int enemyCount => enemies.Count;
     public int neighbourCount => neighbours.Count;
 
-    private const float BarHeight = 10f;
-    private const float BarScale = 0.3f;
+    private const float CanvasHeight = 10f;
     private static readonly Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
 
     private void Awake()
@@ -120,6 +120,7 @@ public class Squad : MonoBehaviour
         unitSize = data.unitSize;
         phalanxLength = Math.Max(unitSize.width, squadSize / 3f);
         healthbar.maxValue = squadSize;
+        healthbar.value = squadSize;
         number.text = squadSize.ToString();
 
         // Set up lists
@@ -255,7 +256,6 @@ public class Squad : MonoBehaviour
         // Parent a bar to the screen
         bar.SetActive(true);
         barTransform.SetParent(squadCanvas);
-        barTransform.localScale = new Vector3(BarScale, BarScale, BarScale);
         squadCanvas.GetComponent<SortByDistance>().AddObject(bar);
         
         // Parent layout to the screen
@@ -450,11 +450,11 @@ public class Squad : MonoBehaviour
         collision.center = center;
         particleTransform.localPosition = center;
         audioTransform.localPosition = center;
-        minimapTransform.localPosition = new Vector3(center.x, BarHeight, center.z);
+        minimapTransform.localPosition = new Vector3(center.x, CanvasHeight, center.z);
         
         // Calculate position for the ui bar
         center = centroid;
-        center.y += BarHeight;
+        center.y += CanvasHeight;
         center = cam.WorldToScreenPoint(center);
         
         // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
@@ -500,13 +500,19 @@ public class Squad : MonoBehaviour
         }
 
         if (value) {
+            // Bar effect
             StartCoroutine(select.FadeOut(0f, 0.15f));
-            border.color = Color.yellow;
+            StartCoroutine(inner.FadeOut(0f, 0.15f));
+            // Minimap effect
             shadow.color = Color.yellow;
+            border.color = Color.yellow;
         } else {
+            // Bar effect
             StartCoroutine(select.FadeOut(1f, 0.15f));
-            border.color = Color.black;
+            StartCoroutine(inner.FadeOut(1f, 0.15f));
+            // Minimap effect
             shadow.color = Color.clear;
+            border.color = Color.black;
         }
         selection = !selection;
 

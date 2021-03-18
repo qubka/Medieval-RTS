@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -172,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 0
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -204,11 +206,12 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.63
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3035116815155786371}
+        m_TargetAssemblyTypeName: ResourceBarController, Assembly-CSharp
         m_MethodName: ApplyValue
         m_Mode: 0
         m_Arguments:
@@ -266,8 +269,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 132.31, y: 14.03}
-  m_SizeDelta: {x: 245.466, y: 243.74802}
+  m_AnchoredPosition: {x: 306.81378, y: 231.39072}
+  m_SizeDelta: {x: 716.7502, y: 707.8157}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3035116815243033412
 CanvasRenderer:
@@ -292,6 +295,7 @@ MonoBehaviour:
   m_Material: {fileID: 2100000, guid: eb32aa65ea8c76b45b99d7c3e9ea89f0, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
