@@ -35,13 +35,13 @@ public class SortByDistance : MonoBehaviour
         }
     }
 
-    public void AddObject(GameObject obj)
+    public void AddButton(SquadButton button)
     {
-        buttons.Add(obj.GetComponent<SquadButton>());
+        buttons.Add(button);
     }
     
-    public void RemoveObject(GameObject obj)
+    public void RemoveButton(SquadButton button)
     {
-        buttons.Remove(obj.GetComponent<SquadButton>());
+        buttons.Remove(button);
     }
 }

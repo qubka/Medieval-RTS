@@ -11,7 +11,8 @@ public class Manager : MonoBehaviour
 	public Camera main;
 	public Camera minimap;
 
-	[Header("Layers")]
+	[Header("Layers")] 
+	public LayerMask ui = -1;
 	public LayerMask ground = -1;
 	public LayerMask unit = -1;
 	public LayerMask obstacle = -1;
@@ -19,7 +20,8 @@ public class Manager : MonoBehaviour
 	public LayerMask squad = -1;
 	public LayerMask manager = -1;
 	public LayerMask water = -1;
-	
+
+	public static int UI;
 	public static int Ground;
 	public static int Unit;
 	public static int Obstacle;
@@ -56,6 +58,7 @@ public class Manager : MonoBehaviour
 		soundManager = GetComponent<SoundManager>();
 		objectPooler = GetComponent<ObjectPooler>();
 
+		UI = ui.value;
 		Ground = ground.value;
 		Unit = unit.value;
 		Obstacle = obstacle.value;

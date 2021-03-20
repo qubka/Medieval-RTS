@@ -12,7 +12,7 @@ Properties {
 	_BumpDirection ("Foam movement", Vector) = (1.0 ,1.0, -1.0, 1.0) 
 
 	_Foam ("Foam (intensity, cutoff)", Vector) = (0.1, 0.375, 0.0, 0.0) 
-	[MaterialToggle] _isInnerAlphaBlendOrColor("Fade inner to color or alpha?", Float) = 0 
+	[MaterialToggle] _isInnerAlphaBlendOrColor("Fade barInner to color or alpha?", Float) = 0 
 }
 
 

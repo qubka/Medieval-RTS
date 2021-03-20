@@ -51,19 +51,24 @@ public class Squad : MonoBehaviour
     public GameObject source;
     [Space(5f)]
     public GameObject minimap;
-    public Image marker;
-    public Image border;
+    public Image mapMarker;
+    public Image mapBorder;
     [Space(5f)]
-    public GameObject bar;
-    public Image select;
-    public Image inner;
-    public Image fill;
-    public Image icon;
-    public Slider healthbar;
+    public GameObject squadBar;
+    public Image barSelect;
+    public Image barInner;
+    public Image barFill;
+    public Image barIcon;
+    public Slider barHealth;
     [Space(5f)]
-    public GameObject layout;
-    public Image shadow;
-    public Text number;
+    public GameObject unitLayout;
+    public Slider layoutHealth;
+    public Slider layoutAmmo;
+    public Image layoutIcon;
+    public Image layoutIndicator;
+    public Image layoutSelect;
+    public Text layoutNumber;
+    
     [Space(5f)]
     public ParticleSystem particle;
     
@@ -90,6 +95,7 @@ public class Squad : MonoBehaviour
     public int neighbourCount => neighbours.Count;
 
     private const float CanvasHeight = 10f;
+    private static readonly Vector3 BarScale = new Vector3(1.15f, 1.15f, 1.15f);
     private static readonly Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
 
     private void Awake()
@@ -103,7 +109,7 @@ public class Squad : MonoBehaviour
         minimapTransform = minimap.transform;
         audioTransform = source.transform; // store main one for transform
         worldTransform = transform;
-        barTransform = bar.GetComponent<RectTransform>();
+        barTransform = squadBar.GetComponent<RectTransform>();
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
         agentScript.maxAccel = data.squadAccel;
@@ -114,27 +120,30 @@ public class Squad : MonoBehaviour
         fightAudio = sources[1];
         runAudio = sources[2];
         chargeSound = sources[3];
-        
+
         // TODO: rework to be compatible with save system
+        // Set the team properties
         //squadSize = data.squadSize;
         unitSize = data.unitSize;
         phalanxLength = Math.Max(unitSize.width, squadSize / 3f);
-        healthbar.maxValue = squadSize;
-        healthbar.value = squadSize;
-        number.text = squadSize.ToString();
-
+        barHealth.maxValue = squadSize;
+        barHealth.value = squadSize;
+        layoutHealth.maxValue = squadSize;
+        layoutHealth.value = squadSize;
+        
+        layoutNumber.text = squadSize.ToString();
+        var color = team.GetColor();
+        barFill.color = color;
+        mapMarker.color = color;
+        barIcon.sprite = data.canvasIcon;
+        layoutIcon.sprite = data.layoutIcon;
+        
         // Set up lists
         units = new List<Unit>(squadSize);
         positions = new List<Vector3>(squadSize);
         neighbours = new List<Squad>();
         enemies = new List<Squad>();
         obstacles = new List<Obstacle>();
-
-        // Set the team properties
-        var color = team.GetColor();
-        fill.color = color;
-        marker.color = color;
-        icon.sprite = data.canvasIcon;
     }
 
     private void Start()
@@ -254,14 +263,15 @@ public class Squad : MonoBehaviour
         cameraTransform = Manager.cameraTransform;
         
         // Parent a bar to the screen
-        bar.SetActive(true);
-        barTransform.SetParent(squadCanvas);
-        squadCanvas.GetComponent<SortByDistance>().AddObject(bar);
+        squadBar.SetActive(true);
+        barTransform.SetParent(squadCanvas, false);
+        barTransform.localScale = BarScale;
+        squadCanvas.GetComponent<SortByDistance>().AddButton(squadBar.GetComponent<SquadButton>()); // add bar to the screen distance sort system
         
-        // Parent layout to the screen
+        // Parent unitLayout to the screen
         if (team == Team.Self) {
-            layout.SetActive(true);
-            layout.transform.SetParent(Manager.layoutCanvas);
+            unitLayout.SetActive(true);
+            unitLayout.transform.SetParent(Manager.layoutCanvas, false);
         }
 
         // Switch to default state
@@ -459,11 +469,11 @@ public class Squad : MonoBehaviour
         
         // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
         if (center.z < 0f) {
-            bar.SetActive(false);
+            squadBar.SetActive(false);
         } else {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(squadCanvas, center, null, out var canvasPos);
             barTransform.localPosition = canvasPos;
-            bar.SetActive(true);
+            squadBar.SetActive(true);
         }
     }
 
@@ -500,19 +510,15 @@ public class Squad : MonoBehaviour
         }
 
         if (value) {
-            // Bar effect
-            StartCoroutine(select.FadeOut(0f, 0.15f));
-            StartCoroutine(inner.FadeOut(0f, 0.15f));
-            // Minimap effect
-            shadow.color = Color.yellow;
-            border.color = Color.yellow;
+            StartCoroutine(layoutSelect.Fade(0f, 0.15f));
+            StartCoroutine(barSelect.Fade(0f, 0.15f));
+            StartCoroutine(barInner.Fade(0f, 0.15f));
+            mapBorder.color = Color.yellow;
         } else {
-            // Bar effect
-            StartCoroutine(select.FadeOut(1f, 0.15f));
-            StartCoroutine(inner.FadeOut(1f, 0.15f));
-            // Minimap effect
-            shadow.color = Color.clear;
-            border.color = Color.black;
+            StartCoroutine(layoutSelect.Fade(1f, 0.15f));
+            StartCoroutine(barSelect.Fade(1f, 0.15f));
+            StartCoroutine(barInner.Fade(1f, 0.15f));
+            mapBorder.color = Color.black;
         }
         selection = !selection;
 
@@ -544,24 +550,21 @@ public class Squad : MonoBehaviour
         units.Remove(unit);
 
         var count = units.Count;
-        healthbar.value = count;
-        number.text = count.ToString();
+        barHealth.value = count;
+        layoutHealth.value = count;
+        layoutNumber.text = count.ToString();
         
-        if (units.Count == 0) {
+        if (count == 0) {
+            squadCanvas.GetComponent<SortByDistance>().RemoveButton(squadBar.GetComponent<SquadButton>());
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
+            Destroy(squadBar);
+            Destroy(unitLayout);
             DestroyImmediate(gameObject);
         } else {
             if (state != SquadFSM.Attack) {
                 UpdateFormation(phalanxLength);
             }
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (squadCanvas) {
-            squadCanvas.GetComponent<SortByDistance>().RemoveObject(bar);
         }
     }
 
@@ -707,7 +710,7 @@ public class Squad : MonoBehaviour
     #endregion
 }
 
-public enum SquadFSM : byte //states
+public enum SquadFSM
 {
     Idle,
     Seek,

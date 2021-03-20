@@ -1,21 +1,23 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
+public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    private DragCell cell;
     private Vector3 startPosition;
     private Transform worldTransform;
-    private DragOrderContainer container;
+    private UnitManager manager;
  
-    private void Start() 
+    private void Start()
     {
-        container = GetComponentInParent<DragOrderContainer>();
+        manager = Manager.unitManager;
         worldTransform = transform;
+        cell = worldTransform.parent.GetComponent<DragCell>();
     }
  
     public void OnBeginDrag(PointerEventData eventData)
     {
-        container.objectBeingDragged = this;
+        //container.objectBeingDragged = this;
         startPosition = worldTransform.position;
     }
     
@@ -26,20 +28,6 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (container.objectBeingDragged == this) {
-            container.objectBeingDragged = null;
-            worldTransform.position = startPosition;
-        }
-    }
- 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        var objectBeingDragged = container.objectBeingDragged;
-        if (objectBeingDragged != null && objectBeingDragged != this) {
-            objectBeingDragged.worldTransform.SetSiblingIndex(worldTransform.GetSiblingIndex());
-            
-            startPosition = objectBeingDragged.startPosition;
-            objectBeingDragged.startPosition = worldTransform.position;
-        }
+        worldTransform.position = startPosition;
     }
 }

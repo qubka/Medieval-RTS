@@ -25,6 +25,7 @@ public class Squadron : ScriptableObject
     public Group groupSounds;
     public Commander commanderSounds;
     public Sprite canvasIcon;
+    public Sprite layoutIcon;
 
     [Space(10)]
     

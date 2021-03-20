@@ -29,9 +29,10 @@ public class UnitManager : MonoBehaviour
 	public Texture2D invalidCursor;
 	public Texture2D meleeCursor;
 	public Texture2D rangeCursor;
+	public Texture2D dragCursor;
 	public Texture2D selectCursor;
 	public Texture2D placeCursor;
-	public Texture2D dragCursor;
+	public Texture2D shiftCursor;
 	public Texture2D addCursor;
 	public Texture2D inclusiveCursor;
 	public Texture2D lookCursor;
@@ -64,15 +65,16 @@ public class UnitManager : MonoBehaviour
 	private float lastSelectTime;
 	private float lastClickTime;
 	private Vector3 lastClickPos;
+	private Interaction onDrag;
 	private Interaction onSelect;
 	private Interaction onPlace;
-	private Interaction onDrag;
+	private Interaction onShift;
 	private int cursor;
 	private float maxDistance;
 	private float nextHoverTime;
 	private RaycastHit groundHit;
 	private bool groundCast;
-	private bool aboveUI;
+	private bool pointerUI;
 
 	private bool InvalidHit => !groundCast || controller.IsOutsideMap(groundHit.point) || Input.GetKey(KeyCode.Escape);
 
@@ -106,26 +108,35 @@ public class UnitManager : MonoBehaviour
 	{
 		var ray = cam.ScreenPointToRay(Input.mousePosition);
 		groundCast = Physics.Raycast(ray, out groundHit, maxDistance, Manager.Ground);
-		aboveUI = eventSystem.IsPointerOverGameObject();
+		pointerUI = eventSystem.IsPointerOverGameObject();
 		
+		OnDragging();
 		OnSelection();
 		OnPlacement();
-		OnDragging();
+		OnShifting();
 		OnMovement();
 		OnHover();
 		OnCursor();
 	}
 
+	private void OnDragging()
+	{
+		if (onSelect.enabled || onPlace.enabled || onShift.enabled)
+			return;
+		
+		
+	}
+	
 	private void OnSelection()
 	{
-		if (onPlace.enabled || onDrag.enabled)
+		if (onDrag.enabled || onPlace.enabled || onShift.enabled)
 			return;
 
 		// When left mouse button clicked (but not released)
 		if (Input.GetMouseButtonDown(0)) {
-			onSelect.OnDown(Input.mousePosition);
+			onSelect.OnDown(Input.mousePosition, pointerUI);
 			
-			if (InvalidHit || aboveUI)
+			if (InvalidHit)
 				return;
 
 			var currentTime = Time.time;
@@ -150,20 +161,20 @@ public class UnitManager : MonoBehaviour
 			if (Input.GetKey(stopKey) || Input.GetKey(dragKey)) {
 				onSelect.Lock();
 			} else {
-				onSelect.OnHold(Input.mousePosition, aboveUI, 40f);
+				onSelect.OnHold(Input.mousePosition, pointerUI, 40f);
 			}
 		}
 		// When left mouse button comes up
 		else if (Input.GetMouseButtonUp(0)) {
-			if (!onSelect.enabled) { //single select 
-				if (InvalidHit || aboveUI)
+			if (!onSelect.enabled) { //single barSelect 
+				if (InvalidHit || pointerUI)
 					return;
 				
 				// Try to use sphere to find nearby units
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
 					var unit = unitTable.GetUnit(colliders[0].gameObject);
 					if (unit) {
-						if (Input.GetKey(inclusiveKey)) { //inclusive select
+						if (Input.GetKey(inclusiveKey)) { //inclusive barSelect
 							AddSelected(unit.squad, true);
 						} else { //exclusive selected
 							DeselectAllExcept(unit.squad);
@@ -176,7 +187,7 @@ public class UnitManager : MonoBehaviour
 						DeselectAll();
 					}
 				}
-			} else { //marquee select
+			} else { //marquee barSelect
 				onSelect.enabled = false;
 				
 				if (!Input.GetKey(inclusiveKey)) {
@@ -219,12 +230,12 @@ public class UnitManager : MonoBehaviour
 
 	private void OnPlacement()
 	{
-		if (onSelect.enabled || onDrag.enabled)
+		if (onDrag.enabled || onSelect.enabled || onShift.enabled)
 			return;
 		
 		// When right mouse button clicked (but not released)
 		if (Input.GetMouseButtonDown(1)) {
-			onPlace.OnDown(groundHit.point);
+			onPlace.OnDown(groundHit.point, pointerUI);
 		}
 		// When right mouse button not locked
 		else if (onPlace.locked) 
@@ -244,7 +255,7 @@ public class UnitManager : MonoBehaviour
 					return;
 				}
 
-				if (onPlace.OnHold(groundHit.point, aboveUI, 20f * selectedUnits.Count)) {
+				if (onPlace.OnHold(groundHit.point, pointerUI, 20f * selectedUnits.Count)) {
 					selectedUnits.Sort((a, b) => Vector.DistanceSq(onPlace.startPos, a.centroid).CompareTo(Vector.DistanceSq(onPlace.startPos, b.centroid)));
 					foreach (var squad in selectedUnits) {
 						placedFormations.Add(new Formation(squad, directionLine));
@@ -283,11 +294,11 @@ public class UnitManager : MonoBehaviour
 					clickAudio.clip = attackSound;
 					clickAudio.Play();
 					
-					var pos = aboveUI ? target.centroid : groundHit.point;
+					var pos = pointerUI ? target.centroid : groundHit.point;
 					pos.y += 0.5f;
 					Instantiate(attackParticle, pos, Quaternion.identity);
 					
-				} else if (!aboveUI) {
+				} else if (!pointerUI) {
 
 					var dest = groundHit.point;
 					dest.y += 0.5f;
@@ -339,24 +350,24 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 
-	private void OnDragging()
+	private void OnShifting()
 	{
-		if (onSelect.enabled || onPlace.enabled)
+		if (onDrag.enabled || onSelect.enabled || onPlace.enabled)
 			return;
 		
 		// When left mouse button clicked (but not released)
 		if (Input.GetMouseButtonDown(0)) {
-			onDrag.OnDown(groundHit.point);
+			onShift.OnDown(groundHit.point, pointerUI);
 		}
 		// When left mouse button not locked
-		else if (onDrag.locked) 
+		else if (onShift.locked) 
 			return;
 		
 		// While left mouse button held
 		if (Input.GetMouseButton(0)) {
 			if (Input.GetKey(stopKey) || !Input.GetKey(dragKey) || selectedUnits.Count == 0) {
 				RemoveFormations(false);
-				onDrag.Lock();
+				onShift.Lock();
 			} else {
 				if (InvalidHit || Vector.DistanceSq(groundHit.point, onPlace.lastPos) <= 0.25f)
 					return;
@@ -366,7 +377,7 @@ public class UnitManager : MonoBehaviour
 					return;
 				}
 				
-				if (onDrag.OnHold(groundHit.point, aboveUI, 5f)) {
+				if (onShift.OnHold(groundHit.point, pointerUI, 5f)) {
 					positions.Clear();
 					foreach (var squad in selectedUnits) {
 						positions.Add(squad.worldTransform.position); // store initial positions
@@ -374,17 +385,17 @@ public class UnitManager : MonoBehaviour
 					}
 				}
 				
-				if (onDrag.enabled) {
+				if (onShift.enabled) {
 					for (var i = 0; i < selectedUnits.Count; i++) {
-						placedFormations[i].Shift(positions[i], onDrag.lastPos - onDrag.startPos);
+						placedFormations[i].Shift(positions[i], onShift.lastPos - onShift.startPos);
 					}
 				}
 			}
 		}
 		// When right mouse button comes up
 		else if (Input.GetMouseButtonUp(0)) {
-			if (onDrag.enabled) {
-				onDrag.enabled = false;
+			if (onShift.enabled) {
+				onShift.enabled = false;
 
 				var playSound = false;
 				foreach (var formation in placedFormations) {
@@ -402,9 +413,9 @@ public class UnitManager : MonoBehaviour
 			}
 		}
 		// Should be locked if happens
-		else if (onDrag.enabled) {
+		else if (onShift.enabled) {
 			RemoveFormations(false);
-			onDrag.Lock();
+			onShift.Lock();
 		}
 	}
 
@@ -452,12 +463,14 @@ public class UnitManager : MonoBehaviour
 			SetCursor(target.team == Team.Allied || selectedUnits.Count != 0 ? meleeCursor : lookCursor); // How use the range cursor ?
 		} else if (InvalidHit) {
 			SetCursor(invalidCursor);
+		} else if (onDrag.enabled) {
+			SetCursor(dragCursor);
 		} else if (onSelect.enabled) {
 			SetCursor(selectCursor);
 		} else if (onPlace.enabled) {
 			SetCursor(placeCursor);
-		} else if (onDrag.enabled || selectedUnits.Count != 0 && Input.GetKey(dragKey)) {
-			SetCursor(dragCursor);
+		} else if (onShift.enabled || selectedUnits.Count != 0 && Input.GetKey(dragKey)) {
+			SetCursor(shiftCursor);
 		} else if (Input.GetKey(inclusiveKey)) {
 			SetCursor(inclusiveCursor);
 		} else if (Input.GetKey(addKey)) {
@@ -487,7 +500,7 @@ public class UnitManager : MonoBehaviour
 	private bool HoverOnTarget()
 	{
 		//stop if some interaction is on
-		if (onSelect.enabled || onPlace.enabled || onDrag.enabled || InvalidHit)
+		if (onDrag.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit)
 			return false;
 
 		if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
@@ -522,7 +535,7 @@ public class UnitManager : MonoBehaviour
 	
 	public void SelectSquad(Squad squad)
 	{
-		if (Input.GetKey(inclusiveKey)) { //inclusive select
+		if (Input.GetKey(inclusiveKey)) { //inclusive barSelect
 			AddSelected(squad, true);
 		} else { //exclusive selected
 			DeselectAllExcept(squad);
@@ -575,9 +588,9 @@ public class UnitManager : MonoBehaviour
 
 		var time = Time.time;
 		if ((time - lastSelectTime < 0.5f) && lastSelectSquad == filter) {
-			var gameObject = filter.gameObject;
-			if (controller.target != gameObject) {
-				controller.SetTarget(gameObject);
+			var obj = filter.gameObject;
+			if (controller.target != obj) {
+				controller.SetTarget(obj);
 				clickAudio.clip = targetSound;
 				clickAudio.Play();
 			}
@@ -605,7 +618,9 @@ public class UnitManager : MonoBehaviour
 	private void SetCursor(Texture2D texture)
 	{
 		var id = texture.GetInstanceID();
-		if (cursor == id) return;
+		if (cursor == id) 
+			return;
+		
 		cursor = id;
 		Cursor.SetCursor(texture, Vector2.zero, CursorMode.Auto);
 	}
@@ -938,7 +953,7 @@ public class UnitManager : MonoBehaviour
 		{
 			lastPos = pos;
 
-            if (!enabled && Vector.DistanceSq(startPos, lastPos) > distance * distance && !pointer) {
+            if (!enabled && !locked && Vector.DistanceSq(startPos, lastPos) > distance * distance && !pointer) {
 	            enabled = true;
 	            return true;
             }
@@ -946,11 +961,11 @@ public class UnitManager : MonoBehaviour
             return false;
 		}
 		
-		public void OnDown(Vector3 pos)
+		public void OnDown(Vector3 pos, bool pointer)
 		{
 			startPos = pos;
 			lastPos = pos;
-			locked = false;
+			locked = pointer;
 		}
 		
 		public void Lock()

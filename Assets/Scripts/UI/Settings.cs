@@ -124,15 +124,15 @@ public class Settings : MonoBehaviour
 		AudioListener.volume = PlayerPrefs.GetFloat("volume");
 		volumeSlider.value = PlayerPrefs.GetFloat("volume");
 
-		//Set shadow distance and set slider to it's value
+		//Set layoutSelect distance and set slider to it's value
 		QualitySettings.shadowDistance = PlayerPrefs.GetInt("shadowDistance");
 		shadowDistanceSlider.value = PlayerPrefs.GetInt("shadowDistance");
 
-		//Set shadow cascades and show it in the dropdown list
+		//Set layoutSelect cascades and show it in the dropdown list
 		QualitySettings.shadowCascades = PlayerPrefs.GetInt("shadowCascades") * 2;
 		shadowCascadesDropdown.GetComponent<Dropdown>().value = PlayerPrefs.GetInt("shadowCascades");
 
-		//Set shadow projection option and show it in dropdown list
+		//Set layoutSelect projection option and show it in dropdown list
 		switch (PlayerPrefs.GetInt("shadowProjection")) {
 			case 0:
 				QualitySettings.shadowProjection = ShadowProjection.CloseFit;
@@ -330,7 +330,7 @@ public class Settings : MonoBehaviour
 		volumeSlider.value = 0f;
 	}
 
-	//This happens when you move the slider handle, it sets shadow distance and saves it
+	//This happens when you move the slider handle, it sets layoutSelect distance and saves it
 	public void SetShadowDistance()
 	{
 		QualitySettings.shadowDistance = shadowDistanceSlider.value;
@@ -382,7 +382,7 @@ public class Settings : MonoBehaviour
 		}
 	}
 
-	//Set general panel active when you click the gear icon
+	//Set general panel active when you click the gear barIcon
 	public void GeneralPanelActive()
 	{
 		musicPanel.SetActive(false);
@@ -391,7 +391,7 @@ public class Settings : MonoBehaviour
 		generalPanel.SetActive(true);
 	}
 
-	//Set music panel active when you click the music icon
+	//Set music panel active when you click the music barIcon
 	public void MusicPanelActive()
 	{
 		generalPanel.SetActive(false);
@@ -400,7 +400,7 @@ public class Settings : MonoBehaviour
 		musicPanel.SetActive(true);
 	}
 
-	//Set lighting panel active when you click the light icon
+	//Set lighting panel active when you click the light barIcon
 	public void LightningPanelActive()
 	{
 		musicPanel.SetActive(false);
@@ -417,7 +417,7 @@ public class Settings : MonoBehaviour
 		cameraPanel.SetActive(true);
 	}
 
-	//Open whole settings menu when gear icon in top left corner is clicked
+	//Open whole settings menu when gear barIcon in top left corner is clicked
 	public void OpenSettingsMenu()
 	{
 		if (!multiplayer) {
@@ -427,7 +427,7 @@ public class Settings : MonoBehaviour
 		settingsMenu.SetActive(true);
 	}
 
-	//Close whole settings menu when arrow icon in top left corner is clicked
+	//Close whole settings menu when arrow barIcon in top left corner is clicked
 	public void CloseSettingsMenu()
 	{
 		if (!multiplayer) {
