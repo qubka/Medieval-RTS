@@ -46,7 +46,8 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform particleTransform;
     [HideInInspector] public Transform minimapTransform;
     [HideInInspector] public Transform barTransform;
-
+    [HideInInspector] public Transform layoutTransform;
+    
     [Header("Children References")] 
     public GameObject source;
     [Space(5f)]
@@ -61,8 +62,7 @@ public class Squad : MonoBehaviour
     public Image barIcon;
     public Slider barHealth;
     [Space(5f)]
-    public GameObject layoutObject;
-    public UnitLayout unitLayout;
+    public GameObject unitLayout;
     public Slider layoutHealth;
     public Slider layoutAmmo;
     public Image layoutIcon;
@@ -70,7 +70,7 @@ public class Squad : MonoBehaviour
     public Image layoutSelect;
     public Text layoutNumber;
     public GameObject layoutCell;
-    
+
     [Space(5f)]
     public ParticleSystem particle;
     
@@ -111,6 +111,7 @@ public class Squad : MonoBehaviour
         minimapTransform = minimap.transform;
         audioTransform = source.transform; // store main one for transform
         barTransform = squadBar.transform;
+        layoutTransform = unitLayout.transform;
         worldTransform = transform;
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
@@ -271,8 +272,8 @@ public class Squad : MonoBehaviour
         
         // Parent unit to the screen
         if (team == Team.Self) {
-            layoutObject.transform.SetParent(Manager.layoutCanvas, false);
             layoutCell.transform.SetParent(Manager.gridCanvas, false);
+            layoutTransform.SetParent(Manager.layoutCanvas, false);
         }
 
         // Switch to default state
@@ -560,8 +561,8 @@ public class Squad : MonoBehaviour
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
             DestroyImmediate(squadBar);
+            DestroyImmediate(unitLayout);
             DestroyImmediate(layoutCell);
-            DestroyImmediate(layoutObject);
             DestroyImmediate(gameObject);
         } else {
             if (state != SquadFSM.Attack) {

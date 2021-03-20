@@ -278,7 +278,7 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
-    //allow other objects to change the state of the unitLayout
+    //allow other objects to change the state of the unit
     protected void ChangeState(UnitFSM newState)
     {
         switch (newState) {

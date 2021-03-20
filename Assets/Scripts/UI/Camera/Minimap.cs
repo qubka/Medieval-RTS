@@ -16,6 +16,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     {
         controller = Manager.controller;
         cam = Manager.minimapCamera;
+        animator = GetComponent<>()
         map = GetComponent<RawImage>().rectTransform;
     }
 
@@ -42,5 +43,10 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 
         lastClickTime = time;
         lastClickPos = eventData.position;
+    }
+
+    public void OnButtonPressed()
+    {
+        
     }
 }

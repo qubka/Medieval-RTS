@@ -11,11 +11,7 @@ public class BinarySliderController : MonoBehaviour
 
     private void Start()
     {
-        if (values.Length != 2 
-            || titleColors.Length != 2
-            || valueTitle == null
-            || slider == null)
-        {
+        if (values.Length != 2 || titleColors.Length != 2 || valueTitle == null || slider == null) {
             gameObject.SetActive(false);
         }
     }
