@@ -11,7 +11,7 @@ public static class MathExtention
         var sqy = q.y * q.y;
         var sqz = q.z * q.z;
 
-        // If quaternion is normalised the unit is one, otherwise it is the correction factor
+        // If quaternion is normalised the unitLayout is one, otherwise it is the correction factor
         var unit = sqx + sqy + sqz + sqw;
         var test = q.x * q.y + q.z * q.w;
 

@@ -8,6 +8,7 @@ public class Manager : MonoBehaviour
 	public GPUICrowdManager crowdManager;
 	public RectTransform squadFrames;
 	public RectTransform unitLayout;
+	public RectTransform unitGrid;
 	public Camera main;
 	public Camera minimap;
 
@@ -36,6 +37,7 @@ public class Manager : MonoBehaviour
 	public static Transform cameraTransform;
 	public static RectTransform squadCanvas;
 	public static RectTransform layoutCanvas;
+	public static RectTransform gridCanvas;
 	public static CamController controller;
 	public static GPUICrowdManager modelManager;
 	public static UnitTable unitTable;
@@ -52,6 +54,7 @@ public class Manager : MonoBehaviour
 		cameraTransform = main.transform;
 		squadCanvas = squadFrames;
 		layoutCanvas = unitLayout;
+		gridCanvas = unitGrid;
 		controller = main.GetComponent<CamController>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();

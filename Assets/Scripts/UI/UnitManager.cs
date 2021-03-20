@@ -49,10 +49,12 @@ public class UnitManager : MonoBehaviour
 	//private EntityManager entityManager;
 	//private GameObject unitList;
 	[HideInInspector] public Squad target;
+	[HideInInspector] public UnitLayout unitLayout;
 	private EventSystem eventSystem;
 	private Camera cam;
 	private CamController controller;
 	private UnitTable unitTable;
+	private RectTransform unitGrid;
 	//private Dictionary<Entity, GameObject> unitButtons;
 	private Dictionary<Squad, Movement> movementGroup;
 	private List<Formation> placedFormations;
@@ -95,6 +97,7 @@ public class UnitManager : MonoBehaviour
 		eventSystem = EventSystem.current;
 		var size = Manager.terrain.terrainData.size;
 		maxDistance = Mathf.Max(size.x, size.z) * 2f;
+		unitGrid = Manager.gridCanvas;
 		unitTable = Manager.unitTable;
 		cam = Manager.mainCamera;
 		controller = Manager.controller;
@@ -123,8 +126,33 @@ public class UnitManager : MonoBehaviour
 	{
 		if (onSelect.enabled || onPlace.enabled || onShift.enabled)
 			return;
-		
-		
+
+		if (unitLayout) {
+			if (!onDrag.enabled) {
+				onDrag.enabled = true;
+				unitGrid.gameObject.SetActive(true);
+			}
+
+			var pos = Input.mousePosition;
+			unitLayout.worldTransform.position = pos; 
+
+			foreach (var squad in selectedUnits) {
+				if (squad.unitLayout != unitLayout) {
+					pos.x -= unitLayout.width;
+					squad.unitLayout.worldTransform.position = pos;
+				}
+			}
+		} else if (onDrag.enabled) {
+			onDrag.enabled = false;
+			unitGrid.gameObject.SetActive(false);
+			
+			/*var index = unitLayout.parentTransform.GetSiblingIndex(); // use parent transform as frame layout
+			foreach (var squad in selectedUnits) {
+				if (squad.unitLayout != unitLayout) {
+					squad.unitLayout.parentTransform.SetSiblingIndex(++index);
+				}
+			}*/
+		}
 	}
 	
 	private void OnSelection()
@@ -542,7 +570,7 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 
-	private void AddSelected(Squad squad, bool toggle = false)
+	public void AddSelected(Squad squad, bool toggle = false)
 	{
 		if (squad.team == Team.Self) {
 			if (!selectedUnits.Contains(squad)) {
@@ -624,6 +652,7 @@ public class UnitManager : MonoBehaviour
 		cursor = id;
 		Cursor.SetCursor(texture, Vector2.zero, CursorMode.Auto);
 	}
+
 
 	#region Formation
 	

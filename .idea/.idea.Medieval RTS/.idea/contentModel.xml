@@ -835,10 +835,6 @@
             <e p="TreeManager.cs" t="Include" />
           </e>
           <e p="UI" t="Include">
-            <e p="Buttons" t="Include">
-              <e p="SquadButton.cs" t="Include" />
-              <e p="UnitButton.cs" t="Include" />
-            </e>
             <e p="Camera" t="Include">
               <e p="CamController.cs" t="Include" />
               <e p="CameraAttacher.cs" t="Include" />
@@ -849,7 +845,6 @@
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />
               <e p="DragCell.cs" t="Include" />
-              <e p="DragHandler.cs" t="Include" />
               <e p="EventTriggerInvoker.cs" t="Include" />
               <e p="HighlightToggle.cs" t="Include" />
               <e p="LayoutExpander.cs" t="Include" />
@@ -858,9 +853,11 @@
               <e p="SliderPercentController.cs" t="Include" />
               <e p="SliderStepController.cs" t="Include" />
               <e p="SliderValueController.cs" t="Include" />
+              <e p="SquadBar.cs" t="Include" />
               <e p="Transform" t="Include">
                 <e p="TransformInRect.cs" t="Include" />
               </e>
+              <e p="UnitLayout.cs" t="Include" />
             </e>
             <e p="Domain" t="Include">
               <e p="Nation.cs" t="Include" />

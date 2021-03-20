@@ -35,7 +35,7 @@ public class FormationSystem : SystemBase
 
 public static class FormationUtils
 {
-    //get the relative location of the slot for a unit in the formation
+    //get the relative location of the slot for a unitLayout in the formation
     public static float3 LocalToWorld(float4x4 local, float3 slotPos)
     {
         var anchor = new float3(local.c3.x, local.c3.y, local.c3.z);

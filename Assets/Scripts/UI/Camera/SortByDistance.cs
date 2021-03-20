@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class SortByDistance : MonoBehaviour
 {
-    [ReadOnly] public List<SquadButton> buttons;
+    [ReadOnly] public List<SquadBar> buttons;
     private Transform worldTransform;
     private Transform cameraTranform;
     private float nextUpdateTime;
 
     private void Awake()
     {
-        buttons = new List<SquadButton>();
+        buttons = new List<SquadBar>();
     }
 
     private void Start()
@@ -25,23 +25,23 @@ public class SortByDistance : MonoBehaviour
         var currentTime = Time.time;
         if (currentTime > nextUpdateTime) {
             var pos = cameraTranform.position;
-            var i = 0;
-            foreach (var button in buttons.OrderBy(b => Vector.DistanceSq(b.squad.centroid, pos)).Reverse()) {
+            var i = buttons.Count - 1;
+            foreach (var button in buttons.OrderBy(b => Vector.DistanceSq(b.squad.centroid, pos))) {
                 button.transform.SetSiblingIndex(i);
-                i++;
+                i--;
             }
             worldTransform.SetAsFirstSibling();
             nextUpdateTime = currentTime + 0.1f;
         }
     }
 
-    public void AddButton(SquadButton button)
+    public void AddButton(SquadBar bar)
     {
-        buttons.Add(button);
+        buttons.Add(bar);
     }
     
-    public void RemoveButton(SquadButton button)
+    public void RemoveButton(SquadBar bar)
     {
-        buttons.Remove(button);
+        buttons.Remove(bar);
     }
 }

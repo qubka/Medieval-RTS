@@ -23,8 +23,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     {
         var time = Time.time;
         if ((time - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, eventData.position) <= 1f) {
-            Vector2 localPoint;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(map, eventData.position, null, out localPoint);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(map, eventData.position, null, out var localPoint);
             var rect = map.rect;
             var pivot = map.pivot;
             localPoint.x = localPoint.x / rect.width + pivot.x;

@@ -47,7 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963738b1cb50887478c799f88002b2c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 20000010603398430, guid: e147fccc01f9099449a15012d80c6966, type: 3}
+  crowdManager: {fileID: 0}
+  squadFrames: {fileID: 0}
+  unitLayout: {fileID: 0}
+  unitGrid: {fileID: 0}
+  main: {fileID: 0}
+  minimap: {fileID: 0}
+  ui:
+    serializedVersion: 2
+    m_Bits: 32
   ground:
     serializedVersion: 2
     m_Bits: 512
@@ -163,9 +171,10 @@ MonoBehaviour:
   invalidCursor: {fileID: 2800000, guid: 11ced191b585af049981750de4f6125d, type: 3}
   meleeCursor: {fileID: 2800000, guid: 78bdc1d51cd53a648ac0c56ff5aaf59f, type: 3}
   rangeCursor: {fileID: 2800000, guid: 867f8a289a5fcd547a64768b400584ea, type: 3}
+  dragCursor: {fileID: 2800000, guid: 6d3fc80206b127d469d54dc4512be56c, type: 3}
   selectCursor: {fileID: 2800000, guid: bb57a4c5a1ec38a41949d0975ede9ac1, type: 3}
   placeCursor: {fileID: 2800000, guid: e43eb6dc9e9ce1f47bac91c53a5246fc, type: 3}
-  dragCursor: {fileID: 2800000, guid: aa6499af552f37a42826f5dfb9efc3e6, type: 3}
+  shiftCursor: {fileID: 2800000, guid: aa6499af552f37a42826f5dfb9efc3e6, type: 3}
   addCursor: {fileID: 2800000, guid: daf580b39fe978f4f93d2871853610b2, type: 3}
   inclusiveCursor: {fileID: 2800000, guid: 0b33dddc53e18b94da2ecdfc515574aa, type: 3}
   lookCursor: {fileID: 2800000, guid: 9cda48e378d35dc4ab62c87729c084dd, type: 3}
@@ -173,6 +182,8 @@ MonoBehaviour:
   inclusiveKey: 306
   dragKey: 308
   stopKey: 27
+  target: {fileID: 0}
+  unitCard: {fileID: 0}
 --- !u!114 &3693780334876467564
 MonoBehaviour:
   m_ObjectHideFlags: 0

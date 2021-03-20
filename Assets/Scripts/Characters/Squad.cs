@@ -45,7 +45,7 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform cameraTransform;
     [HideInInspector] public Transform particleTransform;
     [HideInInspector] public Transform minimapTransform;
-    [HideInInspector] public RectTransform barTransform;
+    [HideInInspector] public Transform barTransform;
 
     [Header("Children References")] 
     public GameObject source;
@@ -61,13 +61,15 @@ public class Squad : MonoBehaviour
     public Image barIcon;
     public Slider barHealth;
     [Space(5f)]
-    public GameObject unitLayout;
+    public GameObject layoutObject;
+    public UnitLayout unitLayout;
     public Slider layoutHealth;
     public Slider layoutAmmo;
     public Image layoutIcon;
     public Image layoutIndicator;
     public Image layoutSelect;
     public Text layoutNumber;
+    public GameObject layoutCell;
     
     [Space(5f)]
     public ParticleSystem particle;
@@ -108,8 +110,8 @@ public class Squad : MonoBehaviour
         particleTransform = particle.transform;
         minimapTransform = minimap.transform;
         audioTransform = source.transform; // store main one for transform
+        barTransform = squadBar.transform;
         worldTransform = transform;
-        barTransform = squadBar.GetComponent<RectTransform>();
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
         agentScript.maxAccel = data.squadAccel;
@@ -263,15 +265,14 @@ public class Squad : MonoBehaviour
         cameraTransform = Manager.cameraTransform;
         
         // Parent a bar to the screen
-        squadBar.SetActive(true);
         barTransform.SetParent(squadCanvas, false);
         barTransform.localScale = BarScale;
-        squadCanvas.GetComponent<SortByDistance>().AddButton(squadBar.GetComponent<SquadButton>()); // add bar to the screen distance sort system
+        squadCanvas.GetComponent<SortByDistance>().AddButton(squadBar.GetComponent<SquadBar>()); // add bar to the screen distance sort system
         
-        // Parent unitLayout to the screen
+        // Parent unit to the screen
         if (team == Team.Self) {
-            unitLayout.SetActive(true);
-            unitLayout.transform.SetParent(Manager.layoutCanvas, false);
+            layoutObject.transform.SetParent(Manager.layoutCanvas, false);
+            layoutCell.transform.SetParent(Manager.gridCanvas, false);
         }
 
         // Switch to default state
@@ -555,11 +556,12 @@ public class Squad : MonoBehaviour
         layoutNumber.text = count.ToString();
         
         if (count == 0) {
-            squadCanvas.GetComponent<SortByDistance>().RemoveButton(squadBar.GetComponent<SquadButton>());
+            squadCanvas.GetComponent<SortByDistance>().RemoveButton(squadBar.GetComponent<SquadBar>());
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
-            Destroy(squadBar);
-            Destroy(unitLayout);
+            DestroyImmediate(squadBar);
+            DestroyImmediate(layoutCell);
+            DestroyImmediate(layoutObject);
             DestroyImmediate(gameObject);
         } else {
             if (state != SquadFSM.Attack) {
