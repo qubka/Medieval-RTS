@@ -6,7 +6,6 @@ using UnityEngine;
 public class Squadron : ScriptableObject
 {
     [Header("Unit")]
-    public GameObject[] unitPrefabs;
     public GameObject selectorPrefab;
     public float selectorHeight;
     public UnitSize unitSize;

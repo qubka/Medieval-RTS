@@ -7,18 +7,21 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Animations : ScriptableObject
 {
-    public List<AnimationData> idle;
+    public List<AnimationData> idleNormal;
     public List<AnimationData> idleCombat;
-    public List<AnimationData> attack;
+    public List<AnimationData> idleCrouch;
+    public List<AnimationData> attackNormal;
     public List<AnimationData> attackStep;
-    public List<AnimationData> attackLongStep;
+    public List<AnimationData> attackCharge;
     public List<AnimationData> kick;
     public List<AnimationData> rage;
     public List<AnimationData> charge;
     public List<AnimationData> forwardWalk;
     public List<AnimationData> forwardRun;
+    public List<AnimationData> forwardCrouch;
     public List<AnimationData> backwardWalk;
     public List<AnimationData> backwardRun;
+    public List<AnimationData> backwardCrouch;
     public List<AnimationData> blockLeftUp;
     public List<AnimationData> blockLeftDown;
     public List<AnimationData> blockRightUp;
@@ -29,10 +32,11 @@ public class Animations : ScriptableObject
     public List<AnimationData> counterRight;
     public List<AnimationData> counterShield;
     public List<AnimationData> knockdown;
-    public List<AnimationData> death;
-    public List<AnimationData> hit;
-    
-    
+    public List<AnimationData> deathNormal;
+    public List<AnimationData> deathCombat;
+    public List<AnimationData> hitNormal;
+    public List<AnimationData> hitCombat;
+
     public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
     {
         switch (side) {
@@ -52,7 +56,7 @@ public class Animations : ScriptableObject
     public List<AnimationData> GetAttackAnimation(Weapon weapon, float distance)
     {
         if (distance > weapon.distant) {
-            return attackLongStep;
+            return attackCharge;
         }
 
         if (Random.Range(0, 2) == 0 && distance < weapon.kick) {
@@ -60,10 +64,15 @@ public class Animations : ScriptableObject
         }
         
         if (distance < weapon.normal) {
-            return attack;
+            return attackNormal;
         }
         
         return attackStep;
+    }
+
+    public List<AnimationData> GetMoveAnimation(bool isForward, bool isRunning, bool run)
+    {
+        return (isForward ? (run || isRunning) ? forwardRun : forwardWalk : (run || isRunning) ? backwardRun : backwardWalk);
     }
 }
 

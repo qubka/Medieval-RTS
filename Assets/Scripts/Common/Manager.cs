@@ -1,5 +1,5 @@
 ﻿﻿using GPUInstancer.CrowdAnimations;
- using UnityEngine;
+using UnityEngine;
  
 [RequireComponent(typeof(Manager))]
 public class Manager : MonoBehaviour
@@ -8,7 +8,7 @@ public class Manager : MonoBehaviour
 	public GPUICrowdManager crowdManager;
 	public RectTransform squadFrames;
 	public RectTransform unitLayout;
-	public RectTransform unitGrid;
+	public RectTransform unitCard;
 	public Camera main;
 	public Camera minimap;
 
@@ -37,13 +37,14 @@ public class Manager : MonoBehaviour
 	public static Transform cameraTransform;
 	public static RectTransform squadCanvas;
 	public static RectTransform layoutCanvas;
-	public static RectTransform gridCanvas;
+	public static RectTransform cardCanvas;
 	public static CamController controller;
 	public static GPUICrowdManager modelManager;
 	public static UnitTable unitTable;
 	public static UnitManager unitManager;
 	public static SoundManager soundManager;
 	public static ObjectPooler objectPooler;
+	public static AudioSource[] cameraSources;
 	
 	private void Awake()
 	{
@@ -54,8 +55,9 @@ public class Manager : MonoBehaviour
 		cameraTransform = main.transform;
 		squadCanvas = squadFrames;
 		layoutCanvas = unitLayout;
-		gridCanvas = unitGrid;
+		cardCanvas = unitCard;
 		controller = main.GetComponent<CamController>();
+		cameraSources = main.GetComponents<AudioSource>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();
 		soundManager = GetComponent<SoundManager>();

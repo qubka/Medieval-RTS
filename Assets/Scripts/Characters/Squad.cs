@@ -16,6 +16,7 @@ public class Squad : MonoBehaviour
 {
     [Header("Main Information")]
     public Squadron data;
+    public GameObject[] unitPrefabs;
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
@@ -47,6 +48,7 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform minimapTransform;
     [HideInInspector] public Transform barTransform;
     [HideInInspector] public Transform layoutTransform;
+    [HideInInspector] public Transform cardTransform;
     
     [Header("Children References")] 
     public GameObject source;
@@ -62,14 +64,14 @@ public class Squad : MonoBehaviour
     public Image barIcon;
     public Slider barHealth;
     [Space(5f)]
+    public GameObject unitCard;
+    public Slider cardHealth;
+    public Slider cardAmmo;
+    public Image cardIcon;
+    public Image cardIndicator;
+    public Image cardSelect;
+    public Text cardNumber;
     public GameObject unitLayout;
-    public Slider layoutHealth;
-    public Slider layoutAmmo;
-    public Image layoutIcon;
-    public Image layoutIndicator;
-    public Image layoutSelect;
-    public Text layoutNumber;
-    public GameObject layoutCell;
 
     [Space(5f)]
     public ParticleSystem particle;
@@ -87,14 +89,17 @@ public class Squad : MonoBehaviour
     private AudioSource mainAudio;
     private AudioSource fightAudio;
     private AudioSource runAudio;
-    private AudioSource chargeSound;
-    private bool selection;
+    private AudioSource chargeAudio;
+    private AudioSource selectAudio;
+    private bool select;
     private bool clipCache;
 
-    public bool hasUnits => units.Count > 0;
-    public int unitCount => units.Count;
-    public int enemyCount => enemies.Count;
-    public int neighbourCount => neighbours.Count;
+    public bool IsSelect => select;
+    public bool HasUnits => units.Count > 0;
+    public bool HasEnemies => enemies.Count > 0;
+    public int UnitCount => units.Count;
+    //public int EnemyCount => enemies.Count;
+    //public int NeighbourCount => neighbours.Count;
 
     private const float CanvasHeight = 10f;
     private static readonly Vector3 BarScale = new Vector3(1.15f, 1.15f, 1.15f);
@@ -112,6 +117,7 @@ public class Squad : MonoBehaviour
         audioTransform = source.transform; // store main one for transform
         barTransform = squadBar.transform;
         layoutTransform = unitLayout.transform;
+        cardTransform = unitCard.transform;
         worldTransform = transform;
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
@@ -122,7 +128,7 @@ public class Squad : MonoBehaviour
         mainAudio = sources[0];
         fightAudio = sources[1];
         runAudio = sources[2];
-        chargeSound = sources[3];
+        chargeAudio = sources[3];
 
         // TODO: rework to be compatible with save system
         // Set the team properties
@@ -131,15 +137,15 @@ public class Squad : MonoBehaviour
         phalanxLength = Math.Max(unitSize.width, squadSize / 3f);
         barHealth.maxValue = squadSize;
         barHealth.value = squadSize;
-        layoutHealth.maxValue = squadSize;
-        layoutHealth.value = squadSize;
+        cardHealth.maxValue = squadSize;
+        cardHealth.value = squadSize;
         
-        layoutNumber.text = squadSize.ToString();
+        cardNumber.text = squadSize.ToString();
         var color = team.GetColor();
         barFill.color = color;
         mapMarker.color = color;
         barIcon.sprite = data.canvasIcon;
-        layoutIcon.sprite = data.layoutIcon;
+        cardIcon.sprite = data.layoutIcon;
         
         // Set up lists
         units = new List<Unit>(squadSize);
@@ -193,7 +199,7 @@ public class Squad : MonoBehaviour
 
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(data.unitPrefabs[Random.Range(0, data.unitPrefabs.Length)]);
+            var unitObject = Instantiate(unitPrefabs[Random.Range(0, unitPrefabs.Length)]);
 
             // Create a formation attractor entity
             var formationEntity = entityManager.CreateEntity(formation);
@@ -264,20 +270,28 @@ public class Squad : MonoBehaviour
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
         cameraTransform = Manager.cameraTransform;
+        selectAudio = Manager.cameraSources[1];
         
         // Parent a bar to the screen
         barTransform.SetParent(squadCanvas, false);
         barTransform.localScale = BarScale;
-        squadCanvas.GetComponent<SortByDistance>().AddButton(squadBar.GetComponent<SquadBar>()); // add bar to the screen distance sort system
+        squadCanvas.GetComponent<SortByDistance>().Add(squadBar.GetComponent<SquadBar>()); // add bar to the screen distance sort system
         
         // Parent unit to the screen
         if (team == Team.Self) {
-            layoutCell.transform.SetParent(Manager.gridCanvas, false);
+            cardTransform.SetParent(Manager.cardCanvas, false);
             layoutTransform.SetParent(Manager.layoutCanvas, false);
+            StartCoroutine(RepositionCard()); // fix for re-parenting
         }
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
+    }
+
+    private IEnumerator RepositionCard()
+    {
+        yield return new WaitForEndOfFrame();
+        cardTransform.position = layoutTransform.position;
     }
 
     //allow other objects to change the state of the squad
@@ -375,10 +389,10 @@ public class Squad : MonoBehaviour
                 runAudio.Play();
                 
                 if (IsUnitsCharging()) {
-                    if (!chargeSound.isPlaying) {
-                        chargeSound.clip = data.groupSounds.chargeSounds.GetRandom();
-                        chargeSound.pitch = Random.Range(0.995f, 1.005f);
-                        chargeSound.Play();
+                    if (!chargeAudio.isPlaying) {
+                        chargeAudio.clip = data.groupSounds.chargeSounds.GetRandom();
+                        chargeAudio.pitch = Random.Range(0.995f, 1.005f);
+                        chargeAudio.Play();
                     }
                 }
                 
@@ -504,7 +518,7 @@ public class Squad : MonoBehaviour
 
     public void ChangeSelectState(bool value)
     {
-        if (selection == value)
+        if (select == value)
             return;
         
         foreach (var unit in units) {
@@ -512,20 +526,25 @@ public class Squad : MonoBehaviour
         }
 
         if (value) {
-            StartCoroutine(layoutSelect.Fade(0f, 0.15f));
+            StartCoroutine(cardSelect.Fade(0f, 0.15f));
             StartCoroutine(barSelect.Fade(0f, 0.15f));
             StartCoroutine(barInner.Fade(0f, 0.15f));
             mapBorder.color = Color.yellow;
         } else {
-            StartCoroutine(layoutSelect.Fade(1f, 0.15f));
+            StartCoroutine(cardSelect.Fade(1f, 0.15f));
             StartCoroutine(barSelect.Fade(1f, 0.15f));
             StartCoroutine(barInner.Fade(1f, 0.15f));
             mapBorder.color = Color.black;
         }
-        selection = !selection;
+        select = !select;
 
-        if (selection && team == Team.Self) {
+        if (select && team == Team.Self) {
             PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.formTheOrder : data.commanderSounds.longLiveTheKing);
+            
+            if (!selectAudio.isPlaying) {
+                selectAudio.clip = data.groupSounds.selectSounds.GetRandom();
+                selectAudio.Play();
+            }
         }
     }
 
@@ -553,16 +572,16 @@ public class Squad : MonoBehaviour
 
         var count = units.Count;
         barHealth.value = count;
-        layoutHealth.value = count;
-        layoutNumber.text = count.ToString();
+        cardHealth.value = count;
+        cardNumber.text = count.ToString();
         
         if (count == 0) {
-            squadCanvas.GetComponent<SortByDistance>().RemoveButton(squadBar.GetComponent<SquadBar>());
+            squadCanvas.GetComponent<SortByDistance>().Remove(squadBar.GetComponent<SquadBar>());
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
             DestroyImmediate(squadBar);
+            DestroyImmediate(unitCard);
             DestroyImmediate(unitLayout);
-            DestroyImmediate(layoutCell);
             DestroyImmediate(gameObject);
         } else {
             if (state != SquadFSM.Attack) {

@@ -78,7 +78,8 @@ public class UnitManager : MonoBehaviour
 	private bool pointerUI;
 
 	private bool InvalidHit => !groundCast || controller.IsOutsideMap(groundHit.point) || Input.GetKey(KeyCode.Escape);
-
+	public int selectedCount => selectedUnits.Count;
+	
 	private void Awake()
 	{
 		colliders = new Collider[1];
@@ -99,9 +100,7 @@ public class UnitManager : MonoBehaviour
 		unitTable = Manager.unitTable;
 		cam = Manager.mainCamera;
 		controller = Manager.controller;
-		var audioSources = cam.GetComponents<AudioSource>();
-		clickAudio = audioSources[0]; // for interaction
-		selectAudio = audioSources[1]; // for voice
+		clickAudio = Manager.cameraSources[0];
 		SetCursor(basicCursor);
 	}
 
@@ -137,7 +136,7 @@ public class UnitManager : MonoBehaviour
 		if (Input.GetMouseButtonDown(0)) {
 			onSelect.OnDown(Input.mousePosition, pointerUI);
 			
-			if (InvalidHit)
+			if (InvalidHit || pointerUI)
 				return;
 
 			var currentTime = Time.time;
@@ -167,7 +166,7 @@ public class UnitManager : MonoBehaviour
 		}
 		// When left mouse button comes up
 		else if (Input.GetMouseButtonUp(0)) {
-			if (!onSelect.enabled) { //single barSelect 
+			if (!onSelect.enabled) { //single select 
 				if (InvalidHit || pointerUI)
 					return;
 				
@@ -175,7 +174,7 @@ public class UnitManager : MonoBehaviour
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
 					var unit = unitTable.GetUnit(colliders[0].gameObject);
 					if (unit) {
-						if (Input.GetKey(inclusiveKey)) { //inclusive barSelect
+						if (Input.GetKey(inclusiveKey)) { //inclusive select
 							AddSelected(unit.squad, true);
 						} else { //exclusive selected
 							DeselectAllExcept(unit.squad);
@@ -188,7 +187,7 @@ public class UnitManager : MonoBehaviour
 						DeselectAll();
 					}
 				}
-			} else { //marquee barSelect
+			} else { //marquee select
 				onSelect.enabled = false;
 				
 				if (!Input.GetKey(inclusiveKey)) {
@@ -219,7 +218,7 @@ public class UnitManager : MonoBehaviour
 				selectionBox.convex = true;
 				selectionBox.isTrigger = true;
 
-				// Destroy our selection box after 1/50th of a second
+				// Destroy our selected box after 1/50th of a second
 				Destroy(selectionBox, 0.02f);
 			}
 		}
@@ -533,15 +532,6 @@ public class UnitManager : MonoBehaviour
 			}
 		}
 	}
-	
-	public void SelectSquad(Squad squad)
-	{
-		if (Input.GetKey(inclusiveKey)) { //inclusive barSelect
-			AddSelected(squad, true);
-		} else { //exclusive selected
-			DeselectAllExcept(squad);
-		}
-	}
 
 	public void AddSelected(Squad squad, bool toggle = false)
 	{
@@ -580,11 +570,6 @@ public class UnitManager : MonoBehaviour
 		} else {
 			selectedUnits.Clear();
 			AddSelected(filter);
-			
-			if (!selectAudio.isPlaying) {
-				selectAudio.clip = filter.data.groupSounds.selectSounds.GetRandom();
-				selectAudio.Play();
-			}
 		}
 
 		var time = Time.time;
@@ -652,8 +637,8 @@ public class UnitManager : MonoBehaviour
 			controller = Manager.controller;
 			objectPool = Manager.objectPooler;
 
-			selectors = new List<GameObject>(squad.unitCount);
-			for (var i = 0; i < squad.unitCount; i++) {
+			selectors = new List<GameObject>(squad.UnitCount);
+			for (var i = 0; i < squad.UnitCount; i++) {
 				selectors.Add(objectPool.SpawnFromPool("selector", Vector3.zero, Quaternion.identity));
 			}
 
@@ -662,10 +647,10 @@ public class UnitManager : MonoBehaviour
 
 		public void Expand(List<Vector3> positions, Vector3 start, Vector3 end, Vector3 center, float angle, float length)
 		{
-			var totalLength = squad.unitCount * squad.unitSize.width;
+			var totalLength = squad.UnitCount * squad.unitSize.width;
 			length = Mathf.Clamp(length, totalLength / 12f, totalLength);
 
-			var shift = FormationUtils.GetFormation(positions, squad.formationShape, squad.unitSize, squad.unitCount, length, true);
+			var shift = FormationUtils.GetFormation(positions, squad.formationShape, squad.unitSize, squad.UnitCount, length, true);
 			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			if (shift != 0f) {
 				FormationUtils.GetPositions(positions, center, angle);
@@ -768,7 +753,7 @@ public class UnitManager : MonoBehaviour
 			line.SetActive(state);
 			
 			// Remove selectors if no more units available
-			var count = squad.unitCount;
+			var count = squad.UnitCount;
 			for (var i = selectors.Count - 1; i > -1; i--) {
 				var selector = selectors[i];
 				if (count > i) {
@@ -787,7 +772,7 @@ public class UnitManager : MonoBehaviour
 			if (effect && active) {
 				squad.StartCoroutine(line.FadeLineRenderer(0.5f));
 
-				var count = squad.unitCount;
+				var count = squad.UnitCount;
 				for (var i = 0; i < selectors.Count; i++) {
 					var selector = selectors[i];
 					if (count > i) {

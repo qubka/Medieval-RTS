@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72a0f955e64c4b6e971e55f90417cc3b, type: 3}
   m_Name: Longsword
   m_EditorClassIdentifier: 
-  idle:
+  idleNormal:
   - clip: {fileID: 7400000, guid: e85e154ffdf940a458f8f08b12ee00a2, type: 3}
     frame1: 28
     frame2: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 4cba2c8e72ceb704eb5cb22e820a4676, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  attack:
+  attackNormal:
   - clip: {fileID: 7400014, guid: fb07a934dbc1969468121112ca048964, type: 3}
     frame1: 42
     frame2: 0
@@ -184,7 +184,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c3f71ebb2226dd947a1ada1c24633682, type: 2}
-  attackLongStep:
+  attackCharge:
   - clip: {fileID: 7400038, guid: fb07a934dbc1969468121112ca048964, type: 3}
     frame1: 22
     frame2: 60
@@ -468,7 +468,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
     sound2: {fileID: 0}
-  death:
+  deathNormal: []
+  deathCombat:
   - clip: {fileID: 7400018, guid: 7c3c4d895ee89ce43b0e1138cc8994e0, type: 3}
     frame1: 0
     frame2: 0
@@ -504,7 +505,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
     sound2: {fileID: 0}
-  hit:
+  hitNormal: []
+  hitCombat:
   - clip: {fileID: 7400016, guid: 1bdc2ef74b0fc8b459c915473007e656, type: 3}
     frame1: 0
     frame2: 0

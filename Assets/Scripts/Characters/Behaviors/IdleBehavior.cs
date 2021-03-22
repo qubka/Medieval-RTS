@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
-//this is the script attached and active during the "idle" state
+//this is the script attached and active during the "idleNormal" state
 public class IdleBehavior : MonoBehaviour
 {
     private Squad squad;
@@ -13,8 +13,8 @@ public class IdleBehavior : MonoBehaviour
 
     private void Update()
     {
-        // If we find an enemy, exit idle mode
-        if (squad.enemyCount > 0) {
+        // If we find an enemy, exit idleNormal mode
+        if (squad.HasEnemies) {
             squad.ChangeState(SquadFSM.Attack);
             var enemy = squad.FindClosestSquad(squad.centroid);
             squad.attackScript.enemy = enemy;

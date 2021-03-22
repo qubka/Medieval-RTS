@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72a0f955e64c4b6e971e55f90417cc3b, type: 3}
   m_Name: Spear And Halberd
   m_EditorClassIdentifier: 
-  idle:
+  idleNormal:
   - clip: {fileID: 7400004, guid: 74f9f7091b46f314f84f6e24efc0d59b, type: 3}
     frame1: 170
     frame2: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  attack:
+  attackNormal:
   - clip: {fileID: 7400002, guid: 963c602205c554940aa8cac531de90a5, type: 3}
     frame1: 9
     frame2: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
-  attackLongStep:
+  attackCharge:
   - clip: {fileID: 7400046, guid: 963c602205c554940aa8cac531de90a5, type: 3}
     frame1: 23
     frame2: 0
@@ -223,7 +223,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
     sound2: {fileID: 0}
-  death:
+  deathNormal: []
+  deathCombat:
   - clip: {fileID: 7400126, guid: 53b1914c23d3e11498ab4125bfaa431c, type: 3}
     frame1: 0
     frame2: 0
@@ -238,7 +239,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
     sound2: {fileID: 0}
-  hit:
+  hitNormal: []
+  hitCombat:
   - clip: {fileID: 7400046, guid: 53b1914c23d3e11498ab4125bfaa431c, type: 3}
     frame1: 0
     frame2: 0

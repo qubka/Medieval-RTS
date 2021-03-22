@@ -605,7 +605,7 @@ Animator:
   m_GameObject: {fileID: 1477075998045333415}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d99449535fbcbdd4cb69f5b8eddbd299, type: 3}
-  m_Controller: {fileID: 9100000, guid: 1814c5ba2bc97b641a5d1a1e5779ce07, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9828ddd7dbc70834ba5d31fff445725d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -718,7 +718,10 @@ MonoBehaviour:
   nextDamage2Time: 0
   nextBlockTime: 0
   nextBlock2Time: 0
+  lastDamageTime: 0
+  currentTime: 0
   isRunning: 0
+  health: 0
   squad: {fileID: 0}
   worldTransform: {fileID: 0}
   animator: {fileID: 0}

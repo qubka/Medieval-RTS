@@ -9,9 +9,8 @@ public class ResourceBarController : MonoBehaviour
     public void ApplyValue(float value)
     {
         if (image == null)
-        {
             return;
-        }
+        
         image.material.SetFloat(FillLevel, value);
     }
 }

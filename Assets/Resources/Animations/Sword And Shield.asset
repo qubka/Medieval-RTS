@@ -12,37 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72a0f955e64c4b6e971e55f90417cc3b, type: 3}
   m_Name: Sword And Shield
   m_EditorClassIdentifier: 
-  idle:
-  - clip: {fileID: 7400000, guid: cef590e6ff1175643bf6da35cd48b2c8, type: 2}
+  idleNormal:
+  - clip: {fileID: 7400002, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
     frame1: 10
     frame2: 0
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  - clip: {fileID: 7400000, guid: 8f9aa0f708aacdd449d79e001ce52ab3, type: 2}
-    frame1: 16
+  - clip: {fileID: 7400004, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 10
     frame2: 0
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  - clip: {fileID: 7400000, guid: 670371f828e3bab4ea8f7bc9ce751dde, type: 2}
-    frame1: 203
+  - clip: {fileID: 7400006, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 112
     frame2: 0
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  - clip: {fileID: 7400000, guid: b12f681b43a7d7a47b0cabd5001bd0f9, type: 2}
-    frame1: 15
+  - clip: {fileID: 7400008, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 282
     frame2: 0
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  - clip: {fileID: 7400006, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
-    frame1: 21
+  - clip: {fileID: 7400010, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 347
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+  - clip: {fileID: 7400002, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 90
     frame2: 0
     side1: 0
     side2: 0
@@ -56,7 +63,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-  attack:
+  idleCrouch: []
+  attackNormal:
   - clip: {fileID: 7400030, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
     frame1: 17
     frame2: 0
@@ -191,7 +199,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c3f71ebb2226dd947a1ada1c24633682, type: 2}
-  attackLongStep:
+  attackCharge:
   - clip: {fileID: 7400012, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
     frame1: 35
     frame2: 62
@@ -238,10 +246,32 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
     sound2: {fileID: 0}
+  - clip: {fileID: 7400012, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 10
+    frame2: 23
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
   forwardRun:
   - clip: {fileID: 7400048, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 7
     frame2: 17
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400036, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 7
+    frame2: 19
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+  forwardCrouch:
+  - clip: {fileID: 7400020, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 8
+    frame2: 19
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
@@ -254,10 +284,32 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
     sound2: {fileID: 0}
+  - clip: {fileID: 7400010, guid: 72bc559d4b44eb14bb687cefb4d1c638, type: 3}
+    frame1: 5
+    frame2: 19
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
   backwardRun:
   - clip: {fileID: 7400050, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 7
     frame2: 17
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400050, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 8
+    frame2: 19
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+  backwardCrouch:
+  - clip: {fileID: 7400028, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 7
+    frame2: 18
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
@@ -405,7 +457,22 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
     sound2: {fileID: 0}
-  death:
+  deathNormal:
+  - clip: {fileID: 7400038, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400040, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+  deathCombat:
   - clip: {fileID: 7400100, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0
@@ -420,7 +487,22 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
     sound2: {fileID: 0}
-  hit:
+  hitNormal:
+  - clip: {fileID: 7400028, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400030, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 0}
+  hitCombat:
   - clip: {fileID: 7400102, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0

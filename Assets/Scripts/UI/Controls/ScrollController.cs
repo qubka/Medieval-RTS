@@ -17,12 +17,12 @@ public class ScrollController : MonoBehaviour
     public void Increase()
     {
         if (Math.Abs(_scrollbar.value - 1f) < 0.05) return;
-        _scrollbar.value = _scrollbar.value + step;
+        _scrollbar.value += step;
     }
     
     public void Decrease()
     {
         if (Math.Abs(_scrollbar.value) < 0.05) return;
-        _scrollbar.value = _scrollbar.value - step;
+        _scrollbar.value -= step;
     }
 }

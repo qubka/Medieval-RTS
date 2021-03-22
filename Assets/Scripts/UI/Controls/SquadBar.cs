@@ -24,7 +24,11 @@ public class SquadBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         if (squad.team == Team.Self) {
-            manager.SelectSquad(squad);
+            /*if (Input.GetKey(inclusiveKey)) { //inclusive select
+			    AddSelected(squad, true);
+		    } else { //exclusive selected
+			    DeselectAllExcept(squad);
+		    }*/
         }
     }
 }

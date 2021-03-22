@@ -79,6 +79,7 @@ MonoBehaviour:
   minimapTransform: {fileID: 0}
   barTransform: {fileID: 0}
   layoutTransform: {fileID: 0}
+  cardTransform: {fileID: 0}
   source: {fileID: 8722389834154966228}
   minimap: {fileID: 5867832890474363471}
   mapMarker: {fileID: 6858779381314954999}
@@ -89,14 +90,14 @@ MonoBehaviour:
   barFill: {fileID: 3543860962736082837}
   barIcon: {fileID: 7842411533348424172}
   barHealth: {fileID: 2898608414806701085}
-  unitLayout: {fileID: 8813902152914402162}
-  layoutHealth: {fileID: 5109925758691993862}
-  layoutAmmo: {fileID: 53074502980264524}
-  layoutIcon: {fileID: 906182540386681171}
-  layoutIndicator: {fileID: 4571844024778709337}
-  layoutSelect: {fileID: 4025681471821123706}
-  layoutNumber: {fileID: 4863836836886744743}
-  layoutCell: {fileID: 6634118863436267813}
+  unitCard: {fileID: 8813902152914402162}
+  cardHealth: {fileID: 5109925758691993862}
+  cardAmmo: {fileID: 53074502980264524}
+  cardIcon: {fileID: 906182540386681171}
+  cardIndicator: {fileID: 4571844024778709337}
+  cardSelect: {fileID: 4025681471821123706}
+  cardNumber: {fileID: 4863836836886744743}
+  unitLayout: {fileID: 6634118863436267813}
   particle: {fileID: 4542322576374665223}
 --- !u!65 &2053806470803109941
 BoxCollider:
@@ -142,8 +143,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 6201476748431213121}
-  - {fileID: 1701923373215235829}
   - {fileID: 6464902127453613541}
+  - {fileID: 1701923373215235829}
   m_Father: {fileID: 1294250876125567412}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5660,10 +5661,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2947358682695094657}
     m_Modifications:
-    - target: {fileID: 642380061377123323, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
-      propertyPath: squad
-      value: 
-      objectReference: {fileID: 268292594806127551}
     - target: {fileID: 3555647917030549214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -5686,7 +5683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4512846238213538214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4512846238213538214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5760,13 +5757,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5468770028542901778, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
-      propertyPath: squad
-      value: 
-      objectReference: {fileID: 268292594806127551}
     - target: {fileID: 6012286516238468129, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_Name
-      value: UnitLayout
+      value: UnitCard
       objectReference: {fileID: 0}
     - target: {fileID: 9221162128324540227, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5875,7 +5868,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8258147614423000980, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8258147614423000980, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5951,18 +5944,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8591804096878496596, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
       propertyPath: m_Name
-      value: LayoutCell
+      value: UnitLayout
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
---- !u!1 &6634118863436267813 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8591804096878496596, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
-  m_PrefabInstance: {fileID: 3111186601878096497}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6464902127453613541 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8258147614423000980, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
+  m_PrefabInstance: {fileID: 3111186601878096497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6634118863436267813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8591804096878496596, guid: 74b2bcef4b5b0f34e94375817733fcdb, type: 3}
   m_PrefabInstance: {fileID: 3111186601878096497}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6728550406346350890

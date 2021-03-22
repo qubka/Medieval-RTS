@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class LayoutExpander : UIBehaviour
 {
-    public Rectangle[] rectangles;
+    public List<Rectangle> rectangles;
     private RectTransform rectTransform;
 
     [Serializable]
@@ -27,18 +29,13 @@ public class LayoutExpander : UIBehaviour
             foreach (var rect in rectangles) {
                 var trans = rect.transform;
                 var width = Mathf.Max(rect.minWidth, size.x);
-                if (width <= 0f) {
-                    trans.gameObject.SetActive(false);
-                } else {
-                    trans.gameObject.SetActive(true);
-                    
-                    var sizeDelta = trans.sizeDelta;
-                    sizeDelta.x = width;
-                    if (rect.setHeight) {
-                        sizeDelta.y = size.y;
-                    }
-                    trans.sizeDelta = sizeDelta;
+                var sizeDelta = trans.sizeDelta;
+                sizeDelta.x = width;
+                if (rect.setHeight) {
+                    sizeDelta.y = size.y;
                 }
+                trans.sizeDelta = sizeDelta;
+                trans.gameObject.SetActive(width > 0f);
             }
         }
     }
