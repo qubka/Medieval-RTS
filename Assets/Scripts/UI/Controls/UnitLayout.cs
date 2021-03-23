@@ -15,7 +15,7 @@ public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
 		worldTransform = transform;
 		parentTransform = worldTransform.parent;
 		cardTransform = squad.cardTransform;
-		cardPursue = cardTransform.GetComponent<LayoutPursue>();
+		cardPursue = squad.unitCard.GetComponent<LayoutPursue>();
 		manager = Manager.unitManager;
 	}
 
@@ -87,9 +87,10 @@ public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
 	
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		if (manager.unitLayout && manager.unitLayout != this) {
-			manager.unitLayout.worldTransform.SetSiblingIndex(worldTransform.GetSiblingIndex());
-		}
+		var unitLayout = manager.unitLayout;
+        if (unitLayout && unitLayout != this) {
+        	unitLayout.worldTransform.SetSiblingIndex(worldTransform.GetSiblingIndex());
+        }
 	}
 
 	private void OnDestroy()

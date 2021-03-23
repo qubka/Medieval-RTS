@@ -1,20 +1,26 @@
-﻿using UnityEngine;
+﻿using DigitalRuby.Tween;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(RawImage))]
 public class Minimap : MonoBehaviour, IPointerDownHandler
 {
-    public float hideSpeed = 5f;
+    public GameObject icon;
+    public Sprite active;
+    public Sprite disable;
     
     private Camera cam;
     private CamController controller;
+    private RectTransform iconTransform;
     private RectTransform rectTransform;
     private RectTransform mapTransform;
-
+    private Image iconImage;
+    
     private float lastClickTime;
     private Vector2 lastClickPos;
     private bool toggle = true;
+    private bool rotate = true;
 
     private void Start()
     {
@@ -22,6 +28,8 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         cam = Manager.minimapCamera;
         mapTransform = GetComponent<RawImage>().rectTransform;
         rectTransform = GetComponent<RectTransform>();
+        iconTransform = icon.GetComponent<RectTransform>();
+        iconImage = icon.GetComponent<Image>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -49,17 +57,40 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         lastClickPos = eventData.position;
     }
 
-    private void Update()
-    {
-        var current = rectTransform.localPosition;
-        var target = current;
-        target.y = toggle ? 0f : rectTransform.sizeDelta.y;
-        current = Vector3.MoveTowards(current, target, hideSpeed);
-        rectTransform.localPosition = current;
-    }
-
     public void OnButtonPressed()
     {
         toggle = !toggle;
+        iconImage.sprite = toggle ? active : disable;
+        
+        var current = rectTransform.localPosition;
+        var target = current;
+        target.y = toggle ? 0f : rectTransform.sizeDelta.y;
+
+        gameObject.Tween("MapMove", current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, MapMove);
+        
+        if (rotate) {
+            var start = iconTransform.localEulerAngles.z;
+            var end = start + 360.0f;
+
+            icon.Tween("MapRotate", start, end, 1.0f, TweenScaleFunctions.CubicEaseInOut, MapRotate, TweenDone);
+            rotate = false;
+        }
+    }
+
+    private void TweenDone(ITween<float> obj)
+    {
+        rotate = true;
+    }
+
+    private void MapRotate(ITween<float> obj)
+    {
+        // start rotation from identity to ensure no stuttering
+        iconTransform.rotation = Quaternion.identity;
+        iconTransform.Rotate(Vector3.forward, obj.CurrentValue);
+    }
+    
+    private void MapMove(ITween<Vector3> obj)
+    {
+        rectTransform.localPosition = obj.CurrentValue;
     }
 }

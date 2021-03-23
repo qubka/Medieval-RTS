@@ -22,8 +22,8 @@ MonoBehaviour:
   pbrWorkflow: 0
   hash: -1469507584
   splatArray: {fileID: 0}
-  diffuseArray: {fileID: 0}
-  normalSAOArray: {fileID: 0}
+  diffuseArray: {fileID: 18700000, guid: 6966c6a2271704eeaa4697428c97b571, type: 2}
+  normalSAOArray: {fileID: 18700000, guid: ca49526f427194c41b515c21c5dbe465, type: 2}
   smoothAOArray: {fileID: 18700000, guid: 0e0057bf31ae543788cf58b0a4e58809, type: 2}
   specularArray: {fileID: 0}
   diffuseArray2: {fileID: 0}
@@ -89,14 +89,14 @@ MonoBehaviour:
   allTextureChannelSmoothness: 1
   allTextureChannelAO: 1
   sourceTextures:
-  - diffuse: {fileID: 2800000, guid: 1d6b5702e2d7947a6aca898081729d0f, type: 3}
-    height: {fileID: 2800000, guid: a4803915ed20f45f5a61eac0bbe3e477, type: 3}
+  - diffuse: {fileID: 2800000, guid: c0337ce6b11f9cd4b93b54ef792ed4c8, type: 3}
+    height: {fileID: 2800000, guid: de0a40675109e9847a1903820c0c0fa6, type: 3}
     heightChannel: 1
-    normal: {fileID: 2800000, guid: 294f7637e9ef54b21a1b1ea883dfea32, type: 3}
-    smoothness: {fileID: 2800000, guid: 4a3982fcc24514da1b539cfb39014206, type: 3}
+    normal: {fileID: 2800000, guid: dd94988cdb7b4004d832d25fa6841fd6, type: 3}
+    smoothness: {fileID: 2800000, guid: c1ff0cafdd674204ca9e2f8531988a70, type: 3}
     smoothnessChannel: 1
-    isRoughness: 0
-    ao: {fileID: 2800000, guid: f32b234bd5bb84e928d73cbcc11df72b, type: 3}
+    isRoughness: 1
+    ao: {fileID: 2800000, guid: e24cc3a5ae16df64d94563ca5d2c347b, type: 3}
     aoChannel: 1
     emis: {fileID: 0}
     metal: {fileID: 0}
@@ -145,14 +145,14 @@ MonoBehaviour:
     traxAO: {fileID: 0}
     traxAOChannel: 1
     splat: {fileID: 0}
-  - diffuse: {fileID: 2800000, guid: a4a9376fca9114840bb973b6693e7ff5, type: 3}
-    height: {fileID: 2800000, guid: 1a8d14e5cac49403e9e88b64d384e29a, type: 3}
+  - diffuse: {fileID: 2800000, guid: 1d6b5702e2d7947a6aca898081729d0f, type: 3}
+    height: {fileID: 2800000, guid: a4803915ed20f45f5a61eac0bbe3e477, type: 3}
     heightChannel: 1
-    normal: {fileID: 2800000, guid: 0d626c878590d42eca75516512f93565, type: 3}
-    smoothness: {fileID: 2800000, guid: ccdddcfa22e924bb5bde6a40b8ef78df, type: 3}
+    normal: {fileID: 2800000, guid: 294f7637e9ef54b21a1b1ea883dfea32, type: 3}
+    smoothness: {fileID: 2800000, guid: 4a3982fcc24514da1b539cfb39014206, type: 3}
     smoothnessChannel: 1
     isRoughness: 0
-    ao: {fileID: 2800000, guid: d171d477d7bec40a68abb6b20cde67ec, type: 3}
+    ao: {fileID: 2800000, guid: f32b234bd5bb84e928d73cbcc11df72b, type: 3}
     aoChannel: 1
     emis: {fileID: 0}
     metal: {fileID: 0}
@@ -173,14 +173,14 @@ MonoBehaviour:
     traxAO: {fileID: 0}
     traxAOChannel: 1
     splat: {fileID: 0}
-  - diffuse: {fileID: 2800000, guid: b2e5c511fff7f41559554175e2005252, type: 3}
-    height: {fileID: 2800000, guid: 369894f65d5984c138a718772bb1c747, type: 3}
+  - diffuse: {fileID: 2800000, guid: a4a9376fca9114840bb973b6693e7ff5, type: 3}
+    height: {fileID: 2800000, guid: 1a8d14e5cac49403e9e88b64d384e29a, type: 3}
     heightChannel: 1
-    normal: {fileID: 2800000, guid: 0d8f0ee1a15194978ab3e6702762460f, type: 3}
-    smoothness: {fileID: 2800000, guid: 6e74c61dcec3a4dd5ba7d5e40b4ae422, type: 3}
+    normal: {fileID: 2800000, guid: 0d626c878590d42eca75516512f93565, type: 3}
+    smoothness: {fileID: 2800000, guid: ccdddcfa22e924bb5bde6a40b8ef78df, type: 3}
     smoothnessChannel: 1
     isRoughness: 0
-    ao: {fileID: 2800000, guid: f331a9e993c1b48ad9e9f64f4f9013ba, type: 3}
+    ao: {fileID: 2800000, guid: d171d477d7bec40a68abb6b20cde67ec, type: 3}
     aoChannel: 1
     emis: {fileID: 0}
     metal: {fileID: 0}

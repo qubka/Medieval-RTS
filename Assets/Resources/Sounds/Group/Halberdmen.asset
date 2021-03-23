@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eec12d722174c0289ce2bc983c19222, type: 3}
+  m_Name: Halberdmen
+  m_EditorClassIdentifier: 
+  runSounds:
+  - {fileID: 8300000, guid: 6169934f8bb37c448a2a98ba48f9b606, type: 3}
+  walkSounds:
+  - {fileID: 8300000, guid: 4a93c8e1d49f65842958bd1cf00b5557, type: 3}
+  chargeSounds:
+  - {fileID: 8300000, guid: 31f56334f9fc86848999cfa4a131c097, type: 3}
+  closeFightSounds:
+  - {fileID: 8300000, guid: 6dfb7ea405c74ba49ac2cf2543c27f92, type: 3}
+  distantFightSounds:
+  - {fileID: 8300000, guid: 4863617afb7365e46b7ee7147fc21aec, type: 3}
+  selectSounds:
+  - {fileID: 8300000, guid: dac630a9228c64f42bfddf5789f47a2a, type: 3}
+  celebrationSounds:
+  - {fileID: 8300000, guid: 2a39680aa761b2f47ba8a90933babd35, type: 3}
+  - {fileID: 8300000, guid: c8a2b0cd72a61514b8e405958cfed8e2, type: 3}
+  - {fileID: 8300000, guid: f0d4b5f4ed3a67d4ab82059db189841e, type: 3}
+  - {fileID: 8300000, guid: f06c979ab38844841a8eee9bbc2e3084, type: 3}
+  battleCrySounds:
+  - {fileID: 8300000, guid: c14140c6fecf9394f9a07119f6ffce0f, type: 3}
+  - {fileID: 8300000, guid: 1b2391a2af45d154f8dca26cbd712008, type: 3}
+  - {fileID: 8300000, guid: 46530c0a9dc6dd049b7f00c7673f7f58, type: 3}
+  - {fileID: 8300000, guid: 5671c419079e66e43b4e7411d59cb348, type: 3}
+  - {fileID: 8300000, guid: 7f84223e65ea09d428b8a3b755f93162, type: 3}
+  goSounds:
+  - {fileID: 8300000, guid: 64c70f2a99501de4a87b0708fdeaab5c, type: 3}
+  stopSounds:
+  - {fileID: 8300000, guid: 4b9a4fb45452b5c4398ae5031a754ff9, type: 3}
+  - {fileID: 8300000, guid: d51447a5a64a5a148a478286f94c04a0, type: 3}

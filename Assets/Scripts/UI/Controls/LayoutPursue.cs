@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using DigitalRuby.Tween;
+using UnityEngine;
 
 public class LayoutPursue : MonoBehaviour
 {
-    public float speed = 10f;
-    public Transform cellTransform;
+    public Transform layoutTransform;
     private Transform rectTransform;
+    private bool move;
 
     private void Awake()
     {
@@ -13,6 +14,19 @@ public class LayoutPursue : MonoBehaviour
 
     private void Update()
     {
-        rectTransform.position = Vector3.MoveTowards(rectTransform.position, cellTransform.position, speed);
+        if (!move && rectTransform.position != layoutTransform.position) {
+            gameObject.Tween("CardMove_" + GetInstanceID(), rectTransform.position, layoutTransform.position, 0.5f, TweenScaleFunctions.CubicEaseInOut, CardMove, TweenDone);
+            move = true;
+        }
+    }
+    
+    private void TweenDone(ITween<Vector3> obj)
+    {
+        move = false;
+    }
+
+    private void CardMove(ITween<Vector3> obj)
+    {
+        rectTransform.position = obj.CurrentValue;
     }
 }

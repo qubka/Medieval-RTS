@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 951dddef9f0aaf0468c0734964c35e93, type: 2}
+  unitPrefabs: []
   team: 0
   squadSize: 100
   formationShape: 0
@@ -5661,6 +5662,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2947358682695094657}
     m_Modifications:
+    - target: {fileID: -5031871199184503831, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: cellTransform
+      value: 
+      objectReference: {fileID: 6464902127453613541}
+    - target: {fileID: -5031871199184503831, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: layoutTransform
+      value: 
+      objectReference: {fileID: 6464902127453613541}
     - target: {fileID: 3555647917030549214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1

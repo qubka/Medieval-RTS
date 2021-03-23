@@ -42,6 +42,28 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+  idleCrouch:
+  - clip: {fileID: 7400120, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 60
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+  - clip: {fileID: 7400118, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 11
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400122, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 8
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 0}
   attackNormal:
   - clip: {fileID: 6490296231833927595, guid: 189fa279a95ea2941b9915a294638ee1, type: 3}
     frame1: 10
@@ -144,7 +166,7 @@ MonoBehaviour:
     sound2: {fileID: 0}
   backwardRun:
   - clip: {fileID: 9128918799655052268, guid: 4d87a0b85ca997e4d904ec91aec01852, type: 3}
-    frame1: 5
+    frame1: 8
     frame2: 19
     side1: 0
     side2: 0
@@ -264,7 +286,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
-  knockdown:
+  knockdownCombat:
   - clip: {fileID: 7400118, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0
@@ -293,8 +315,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
     sound2: {fileID: 0}
-  deathNormal: []
-  deathCombat:
+  deathNormal:
   - clip: {fileID: -3332131236326761211, guid: 871a59cd4f914f14bbe4f16caa575136, type: 3}
     frame1: 0
     frame2: 0
@@ -302,8 +323,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
     sound2: {fileID: 0}
-  hitNormal: []
-  hitCombat:
+  deathCombat: []
+  hitNormal:
   - clip: {fileID: 7400102, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0
@@ -332,3 +353,4 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
     sound2: {fileID: 0}
+  hitCombat: []

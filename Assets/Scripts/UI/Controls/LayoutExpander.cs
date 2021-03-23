@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class LayoutExpander : UIBehaviour
 {
-    public List<Rectangle> rectangles;
+    public List<Rect> rectangles;
     private RectTransform rectTransform;
 
     [Serializable]
-    public class Rectangle
+    public class Rect
     {
         public RectTransform transform;
         public float minWidth;

@@ -279,6 +279,7 @@ public class Squad : MonoBehaviour
         
         // Parent unit to the screen
         if (team == Team.Self) {
+            unitCard.SetActive(false);
             cardTransform.SetParent(Manager.cardCanvas, false);
             layoutTransform.SetParent(Manager.layoutCanvas, false);
             StartCoroutine(RepositionCard()); // fix for re-parenting
@@ -291,6 +292,7 @@ public class Squad : MonoBehaviour
     private IEnumerator RepositionCard()
     {
         yield return new WaitForEndOfFrame();
+        unitCard.SetActive(true);
         cardTransform.position = layoutTransform.position;
     }
 

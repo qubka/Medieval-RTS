@@ -747,6 +747,13 @@
               </e>
             </e>
           </e>
+          <e p="Tween" t="Include">
+            <e p="Demo" t="Include">
+              <e p="TweenDemo.cs" t="Include" />
+            </e>
+            <e p="Readme.txt" t="Include" />
+            <e p="Tween.cs" t="Include" />
+          </e>
         </e>
         <e p="Editor" t="Include">
           <e p="AutoNameAnimations.cs" t="Include" />
@@ -772,6 +779,7 @@
             <e p="Squad.cs" t="Include" />
             <e p="Unit.cs" t="Include" />
             <e p="Units" t="Include">
+              <e p="Bowmen.cs" t="Include" />
               <e p="HeavyInfantry.cs" t="Include" />
               <e p="HeavySpearmen.cs" t="Include" />
               <e p="LongSwordmen.cs" t="Include" />
@@ -845,8 +853,8 @@
             </e>
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />
-              <e p="ButtonToggle.cs" t="Include" />
               <e p="EventTriggerInvoker.cs" t="Include" />
+              <e p="HideButton.cs" t="Include" />
               <e p="HighlightToggle.cs" t="Include" />
               <e p="LayoutExpander.cs" t="Include" />
               <e p="LayoutPursue.cs" t="Include" />
