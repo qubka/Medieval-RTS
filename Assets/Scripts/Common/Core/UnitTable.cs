@@ -25,14 +25,9 @@ public class UnitTable : MonoBehaviour, IEnumerable<Unit>
         return unitTable[obj.GetInstanceID()];
     }
 
-    public bool ContainsId(int id)
+    public void RemoveEntry(GameObject obj)
     {
-        return unitTable.ContainsKey(id);
-    }
-
-    public void RemoveEntry(int id)
-    {
-        unitTable.Remove(id);
+        unitTable.Remove(obj.GetInstanceID());
     }
 
     public IEnumerator<Unit> GetEnumerator()

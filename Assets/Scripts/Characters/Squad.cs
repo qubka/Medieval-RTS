@@ -16,7 +16,7 @@ public class Squad : MonoBehaviour
 {
     [Header("Main Information")]
     public Squadron data;
-    public GameObject[] unitPrefabs;
+    public GameObject meleePrefab;
     public GameObject rangePrefab;
     public Team team;
     public int squadSize;
@@ -79,9 +79,11 @@ public class Squad : MonoBehaviour
     public ParticleSystem particle;
     
     // Private data
+    private GPUICrowdManager modelManager;
     private Camera cam;
     private RectTransform squadCanvas;
     private UnitManager unitManager;
+    private UnitTable unitTable;
     private SoundManager soundManager;
     private EntityManager entityManager;
     private Entity squadEntity;
@@ -159,8 +161,16 @@ public class Squad : MonoBehaviour
 
     private void Start()
     {
-        // Get crowd manager instance
-        var modelManager = Manager.modelManager;
+        // Get information from manager
+        modelManager = Manager.modelManager;
+        unitTable = Manager.unitTable;
+        cam = Manager.mainCamera;
+        squadCanvas = Manager.squadCanvas;
+        unitManager = Manager.unitManager;
+        soundManager = Manager.soundManager;
+        cameraTransform = Manager.cameraTransform;
+        selectAudio = Manager.cameraSources[1];
+        var terrain = Manager.terrain;
         
         // Disabling the Crowd Manager here to change prototype settings
         // Enabling it after this will make it re-initialize with the new settings for the prototypes
@@ -190,14 +200,13 @@ public class Squad : MonoBehaviour
         phalanxHeight = FormationUtils.GetFormation(positions, formationShape, unitSize, squadSize, phalanxLength);
 
         // Create units
-        var unitTable = Manager.unitTable;
         var unitBuffer = new NativeArray<UnitBuffer>(squadSize, Allocator.Temp);
         for (var i = 0; i < positions.Count; i++) {
             float3 slotPos = positions[i];
 
             // Get world positions
             Vector3 pos = FormationUtils.LocalToWorld(local, slotPos);
-            pos.y = Manager.terrain.SampleHeight(pos);
+            pos.y = terrain.SampleHeight(pos);
 
             // Create a formation attractor entity
             var formationEntity = entityManager.CreateEntity(formation);
@@ -207,7 +216,7 @@ public class Squad : MonoBehaviour
             
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(unitPrefabs[Random.Range(0, unitPrefabs.Length)]);
+            var unitObject = Instantiate(meleePrefab);
             
             // Use unit components to store in the entity
             var trans = unitObject.transform;
@@ -215,6 +224,7 @@ public class Squad : MonoBehaviour
             var boid = unitObject.AddComponent<BoidBehaviour>();
             var animator = unitObject.GetComponent<GPUICrowdPrefab>();
             var unit = unitObject.GetComponent<Unit>();
+            unit.health = data.hitPoints;
             unit.entityManager = entityManager;
             unit.entity = unitEntity;
             unit.formation = formationEntity;
@@ -265,14 +275,6 @@ public class Squad : MonoBehaviour
 
         // Set children size
         UpdateCollision();
-        
-        // Get information from manager
-        cam = Manager.mainCamera;
-        squadCanvas = Manager.squadCanvas;
-        unitManager = Manager.unitManager;
-        soundManager = Manager.soundManager;
-        cameraTransform = Manager.cameraTransform;
-        selectAudio = Manager.cameraSources[1];
         
         // Parent a bar to the screen
         barTransform.SetParent(squadCanvas, false);
@@ -592,6 +594,23 @@ public class Squad : MonoBehaviour
                 UpdateFormation(phalanxLength);
             }
         }
+    }
+    
+    public void SwapUnit(Unit oldUnit, GameObject newPrefab)
+    {
+        var index = units.IndexOf(oldUnit);
+        var newUnit = oldUnit.Clone(newPrefab);
+        modelManager.RemovePrefabInstance(oldUnit.animator);
+        modelManager.AddPrefabInstance(newUnit.animator);
+        var obj = oldUnit.gameObject;
+        Destroy(obj);
+        unitTable.RemoveEntry(obj);
+        unitTable.AddUnit(newUnit.gameObject, newUnit);
+        units[index] = newUnit;
+        
+        var anim = newUnit.currentAnim;
+        var startTime = anim.frame1 / anim.FrameRate;
+        newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, true, startTime);
     }
 
     #region Sounds

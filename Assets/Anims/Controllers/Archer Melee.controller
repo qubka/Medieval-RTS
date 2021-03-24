@@ -1394,6 +1394,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -2490111193634448607}
     m_Position: {x: 600, y: 4660, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 3750530081475713433}
+    m_Position: {x: 600, y: 4700, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -1401,7 +1404,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 620, y: 70, z: 0}
   m_EntryPosition: {x: 620, y: 120, z: 0}
-  m_ExitPosition: {x: 630, y: 4710, z: 0}
+  m_ExitPosition: {x: 630, y: 4770, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -1250663575744394541}
 --- !u!1102 &-4947186637801849527
@@ -3527,6 +3530,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400034, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &3750530081475713433
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Bow_Equip_Faster
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400006, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

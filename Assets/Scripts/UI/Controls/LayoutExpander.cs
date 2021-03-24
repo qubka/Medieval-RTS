@@ -24,7 +24,7 @@ public class LayoutExpander : UIBehaviour
 
     protected override void OnRectTransformDimensionsChange()
     {
-        if (gameObject.activeSelf) {
+        if (gameObject.activeInHierarchy) {
             StartCoroutine(AfterRectTransformDimensionsChange());
         }
     }

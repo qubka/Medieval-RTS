@@ -8,7 +8,7 @@ using UnityEngine;
 
 public abstract class Unit : MonoBehaviour
 {
-    // ESC
+	// ESC
     public EntityManager entityManager;
     public Entity entity;
     public Entity formation;
@@ -29,8 +29,7 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public bool isRunning;
     [ReadOnly] public bool isRange;
     [ReadOnly] public int health;
-    //public AnimType blockType;
-    
+
     // Misc
     [ReadOnly] public Squad squad;
     [ReadOnly] public Transform worldTransform;
@@ -39,14 +38,12 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public List<Obstacle> obstacles;
     [ReadOnly] public GameObject selector;
     [ReadOnly] public Unit target;
-    //[ReadOnly] public GameObject minimap;
 
     // Steering cache valuers
     [Space(10)]
     [ReadOnly] public float arrivalWeight;
     [ReadOnly] public float arrivalRadius = 1f; // initial value
     [ReadOnly] public Unit seekingTarget;
-    //[ReadOnly] public Unit shootingTarget;
     [ReadOnly] public BoidBehaviour boid;
 
     protected float RotationSpeed => squad.data.unitRotation * Time.deltaTime;
@@ -54,8 +51,8 @@ public abstract class Unit : MonoBehaviour
     protected bool HasSpeed => math.lengthsq(boid.velocity) > 0f;
     protected bool HadDamage => squad.HasEnemies || currentTime < lastDamageTime + 10f;
     
-    protected Animations animations;
-    protected AnimationData DefaultIdle => (HadDamage ? animations.idleCombat : animations.idleNormal)[0];
+    protected Animations animations => squad.data.animations;
+    protected AnimationData DefaultIdle => (HadDamage ? isRange ? animations.idleRange : animations.idleCombat : animations.idleNormal)[0];
     protected AnimationData AttackIdle => (isRange ? animations.idleRange : animations.idleCombat)[0];
 
     private static readonly float A90 = math.cos(math.radians(90f));
@@ -66,15 +63,9 @@ public abstract class Unit : MonoBehaviour
     {
         collisions = new List<Transform>();
         obstacles = new List<Obstacle>();
+        ChangeState(UnitFSM.Idle);
     }
 
-    private void Start()
-    {
-        ChangeState(UnitFSM.Idle);
-        health = squad.data.hitPoints;
-        animations = squad.data.animations;
-    }
-    
     private void Update()
     {
         currentTime = Time.time;
@@ -165,7 +156,7 @@ public abstract class Unit : MonoBehaviour
             //####
             
             case UnitFSM.Wait:
-	            Waiting();
+	            WaitA();
 	            break;
 
             case UnitFSM.Counter:
@@ -192,6 +183,10 @@ public abstract class Unit : MonoBehaviour
                 Death();
                 break;
             
+            case UnitFSM.Equip:
+	            Equip();
+	            break;
+            
             case UnitFSM.MeleeToRange:
 	            MeleeToRange();
 	            break;
@@ -199,7 +194,7 @@ public abstract class Unit : MonoBehaviour
             case UnitFSM.RangeToMelee:
 	            RangeToMelee();
 	            break;
-				
+
             //####
             
             default:
@@ -256,6 +251,10 @@ public abstract class Unit : MonoBehaviour
             case UnitFSM.Death:
                 Death();
                 break;
+            
+            case UnitFSM.Equip:
+	            Equip();
+	            break;
 
             case UnitFSM.MeleeToRange:
 	            MeleeToRange();
@@ -486,9 +485,9 @@ public abstract class Unit : MonoBehaviour
         return Physics.SphereCast(ray, radius, radius, Manager.Unit);
     }
     
-    protected void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, bool sound = true)
+    public void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, bool sound = true, float startTime = -1f)
     {
-        animator.StartAnimation(anim.clip, -1f, speed, transition);
+        animator.StartAnimation(anim.clip, startTime, speed, transition);
         currentAnim = anim;
         nextAnimTime = currentTime + duration;
         if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
@@ -712,17 +711,19 @@ public abstract class Unit : MonoBehaviour
     {
 	    if (squad.isRange) {
 		    if (!isRange) {
-			    ChangeState(UnitFSM.MeleeToRange);
-			    var anim = animations.holster[0];
-			    PlayAnimation(anim, anim.Length, 1f, 0.5f);
-			    nextModeTime = currentTime + anim.frame1 / anim.FrameRate;
+			    var anim = animations.idleNormal[0];
+			    if (currentAnim != anim) {
+				    PlayAnimation(anim, 1f, 1f, 0.5f);
+			    }
+			    ChangeState(UnitFSM.Equip);
 		    }
 	    } else {
 		    if (isRange) {
-			    ChangeState(UnitFSM.RangeToMelee);
-			    var anim = animations.holster[1];
-			    PlayAnimation(anim, anim.Length);
-			    nextModeTime = currentTime + anim.frame1 / anim.FrameRate;
+			    var anim = animations.idleNormal[0];
+			    if (currentAnim != anim) {
+				    PlayAnimation(anim, 1f, 1f, 0.5f);
+			    }
+			    ChangeState(UnitFSM.Equip);
 		    }
 	    }
     }
@@ -770,7 +771,7 @@ public abstract class Unit : MonoBehaviour
 						var anim = animations.rage.GetRandom();
 						PlayAnimation(anim, anim.Length);
 					} else {
-						var anim = animations.idleCombat.GetRandom();
+						var anim = (isRange ? animations.idleRange : animations.idleCombat).GetRandom();
 						PlayAnimation(anim, anim.Length);
 					}
 				}
@@ -912,7 +913,7 @@ public abstract class Unit : MonoBehaviour
 		}
 	}
 	
-	protected void Waiting() // Attack
+	protected void WaitA() // Attack
 	{
 		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToRotation(), 2f * RotationSpeed);
 		
@@ -947,6 +948,8 @@ public abstract class Unit : MonoBehaviour
 
 	protected void Idle()
 	{
+		SwitchRangeMode();
+
 		if (HasSpeed) {
 			ChangeState(UnitFSM.Turn);
 			var anim = DefaultIdle;
@@ -1111,28 +1114,46 @@ public abstract class Unit : MonoBehaviour
 			ChangeState(UnitFSM.Idle);
 		}
 	}
+	
+	protected void Equip()
+	{
+		if (currentTime > nextAnimTime) {
+			ChangeState(isRange ? UnitFSM.RangeToMelee : UnitFSM.MeleeToRange);
+			var anim = animations.equip[isRange ? 1 : 0];
+			PlayAnimation(anim, anim.Length, 1f, 0.5f);
+			nextModeTime = currentTime + anim.frame1 / anim.FrameRate;
+		}
+	}
 
 	protected void MeleeToRange()
 	{
 		if (currentTime > nextModeTime) {
-			
+			isRange = true;
 			nextModeTime = float.MaxValue;
+			squad.SwapUnit(this, squad.rangePrefab);
 		}
 		
 		if (currentTime > nextAnimTime) {
-			
+			ChangeState(UnitFSM.Idle);
+			var anim = AttackIdle;
+			PlayAnimation(anim, anim.Length);
+			lastDamageTime = currentTime;
 		}
 	}
 
 	protected void RangeToMelee()
 	{
 		if (currentTime > nextModeTime) {
-			
+			isRange = false;
 			nextModeTime = float.MaxValue;
+			squad.SwapUnit(this, squad.meleePrefab);
 		}
 		
 		if (currentTime > nextAnimTime) {
-			
+			ChangeState(UnitFSM.Idle);
+			var anim = AttackIdle;
+			PlayAnimation(anim, anim.Length);
+			lastDamageTime = currentTime;
 		}
 	}
 
@@ -1150,6 +1171,55 @@ public abstract class Unit : MonoBehaviour
         Right,
         Left,
         Backward
+    }
+    
+    public Unit Clone(GameObject prefab)
+    {
+	    // Create an unit entity
+	    var unitObject = Instantiate(prefab);
+
+	    // Use unit components to store in the entity
+	    var trans = unitObject.transform;
+	    trans.SetPositionAndRotation(worldTransform.position, worldTransform.rotation);
+	    var boid = unitObject.AddComponent<BoidBehaviour>();
+	    var animator = unitObject.GetComponent<GPUICrowdPrefab>();
+	    var unit = unitObject.GetComponent<Unit>();
+	    selector.transform.SetParent(trans);
+		    
+	    unit.entityManager = entityManager;
+	    unit.entity = entity;
+	    unit.formation = formation;
+	    unit.selector = selector;
+	    unit.boid = boid;
+	    unit.animator = animator;
+	    unit.state = state;
+	    unit.worldTransform = trans;
+	    unit.currentAnim = currentAnim;
+	    unit.prevAnim = prevAnim;
+	    unit.nextAnimTime = nextAnimTime;
+	    unit.nextTargetTime = nextTargetTime;
+	    unit.nextModeTime = nextModeTime;
+	    unit.nextDamageTime = nextDamageTime;
+	    unit.nextDamage2Time = nextDamage2Time;
+	    unit.nextBlockTime = nextBlockTime;
+	    unit.nextBlock2Time = nextBlock2Time;
+	    unit.lastDamageTime = lastDamageTime;
+	    unit.currentTime = currentTime;
+	    unit.isRunning = isRunning;
+	    unit.isRange = isRange;
+	    unit.health = health;
+	    unit.squad = squad;
+	    unit.collisions = collisions;
+	    unit.obstacles = obstacles;
+	    unit.target = target;
+	    unit.arrivalWeight = arrivalWeight;
+	    unit.arrivalRadius = arrivalRadius;
+	    unit.seekingTarget = seekingTarget;
+
+	    entityManager.AddComponentObject(entity, trans);
+	    entityManager.AddComponentObject(entity, boid);
+	    
+	    return unit;
     }
 }
 
@@ -1194,6 +1264,7 @@ public enum UnitFSM
     Counter,
     Hit,
     Knockdown,
+    Equip,
     RangeToMelee,
     MeleeToRange,
     Death,

@@ -498,6 +498,36 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 3115b0cc462efb4469373da9b63939e3, type: 2}
     sound2: {fileID: 0}
+  equip:
+  - clip: {fileID: 7400054, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 14
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 544f5fbba1e65b5479c7226e9b021d91, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400006, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
+    frame1: 66
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 775262736f065eb4188a19f1ac6a9a9c, type: 2}
+    sound2: {fileID: 0}
+  holster:
+  - clip: {fileID: 7400056, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 40
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 544f5fbba1e65b5479c7226e9b021d91, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400004, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
+    frame1: 88
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: c1403dd1d4163904d86d4a62bbb99607, type: 2}
+    sound2: {fileID: 0}
   kick:
   - clip: {fileID: 7400040, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
     frame1: 19
@@ -1207,35 +1237,6 @@ MonoBehaviour:
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
-    sound2: {fileID: 0}
-  stateChange:
-  - clip: {fileID: 7400004, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
-    frame1: 88
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: c1403dd1d4163904d86d4a62bbb99607, type: 2}
-    sound2: {fileID: 0}
-  - clip: {fileID: 7400006, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
-    frame1: 66
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 775262736f065eb4188a19f1ac6a9a9c, type: 2}
-    sound2: {fileID: 0}
-  - clip: {fileID: 7400056, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
-    frame1: 29
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 544f5fbba1e65b5479c7226e9b021d91, type: 2}
-    sound2: {fileID: 0}
-  - clip: {fileID: 7400054, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
-    frame1: 14
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 544f5fbba1e65b5479c7226e9b021d91, type: 2}
     sound2: {fileID: 0}
   hasMultiCombatKnockback: 0
   hasMultiRangeKnockback: 1

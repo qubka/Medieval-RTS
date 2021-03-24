@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 7608900701821375290}
   - component: {fileID: 2183786742188451878}
   m_Layer: 10
-  m_Name: archer_b
+  m_Name: archer_range_b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -711,6 +711,7 @@ MonoBehaviour:
     sound2: {fileID: 0}
   nextAnimTime: 0
   nextTargetTime: 0
+  nextModeTime: 0
   nextDamageTime: 3.4028235e+38
   nextDamage2Time: 3.4028235e+38
   nextBlockTime: 3.4028235e+38
@@ -726,6 +727,7 @@ MonoBehaviour:
   collisions: []
   obstacles: []
   selector: {fileID: 0}
+  target: {fileID: 0}
   arrivalWeight: 0
   arrivalRadius: 1
   seekingTarget: {fileID: 0}
@@ -742,7 +744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383841de6da8ff64dbf29c40801408a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPrototype: {fileID: 11400000, guid: f61249a7c039ce048a07c83c7de3ed9e, type: 2}
+  prefabPrototype: {fileID: 11400000, guid: f74ecc22e2e1a5f49b6e3d17c6b2c44a, type: 2}
   gpuInstancerID: 0
   state: 0
   animatorRef: {fileID: 0}
