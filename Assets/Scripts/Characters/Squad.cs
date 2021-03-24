@@ -17,6 +17,7 @@ public class Squad : MonoBehaviour
     [Header("Main Information")]
     public Squadron data;
     public GameObject[] unitPrefabs;
+    public GameObject rangePrefab;
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
@@ -198,16 +199,16 @@ public class Squad : MonoBehaviour
             Vector3 pos = FormationUtils.LocalToWorld(local, slotPos);
             pos.y = Manager.terrain.SampleHeight(pos);
 
-            // Create an unit entity
-            var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(unitPrefabs[Random.Range(0, unitPrefabs.Length)]);
-
             // Create a formation attractor entity
             var formationEntity = entityManager.CreateEntity(formation);
             entityManager.SetName(formationEntity, "formation");
             entityManager.SetComponentData(formationEntity, new Translation { Value = pos });
-            entityManager.SetComponentData(formationEntity, new Formation { Position = slotPos, Squad = squadEntity/*, Unit = unitEntity*/ });
-
+            entityManager.SetComponentData(formationEntity, new Formation { Position = slotPos, Squad = squadEntity });
+            
+            // Create an unit entity
+            var unitEntity = entityManager.CreateEntity(character);
+            var unitObject = Instantiate(unitPrefabs[Random.Range(0, unitPrefabs.Length)]);
+            
             // Use unit components to store in the entity
             var trans = unitObject.transform;
             trans.SetPositionAndRotation(pos, rot);

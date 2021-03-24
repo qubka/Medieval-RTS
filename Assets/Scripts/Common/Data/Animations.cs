@@ -17,6 +17,8 @@ public class Animations : ScriptableObject
     public List<AnimationData> rangeHold;
     public List<AnimationData> rangeRelease;
     public List<AnimationData> reload;
+    public List<AnimationData> equip;
+    public List<AnimationData> holster;
     public List<AnimationData> kick;
     public List<AnimationData> rage;
     public List<AnimationData> charge;
@@ -41,7 +43,6 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitNormal;
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
-    public List<AnimationData> stateChange;
     public bool hasMultiCombatKnockback;
     public bool hasMultiRangeKnockback;
 

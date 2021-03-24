@@ -19,6 +19,7 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public AnimationData prevAnim;
     [ReadOnly] public float nextAnimTime;
     [ReadOnly] public float nextTargetTime;
+    [ReadOnly] public float nextModeTime;
     [ReadOnly] public float nextDamageTime = float.MaxValue;
     [ReadOnly] public float nextDamage2Time = float.MaxValue;
     [ReadOnly] public float nextBlockTime = float.MaxValue;
@@ -37,6 +38,7 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public List<Transform> collisions;
     [ReadOnly] public List<Obstacle> obstacles;
     [ReadOnly] public GameObject selector;
+    [ReadOnly] public Unit target;
     //[ReadOnly] public GameObject minimap;
 
     // Steering cache valuers
@@ -44,6 +46,7 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public float arrivalWeight;
     [ReadOnly] public float arrivalRadius = 1f; // initial value
     [ReadOnly] public Unit seekingTarget;
+    //[ReadOnly] public Unit shootingTarget;
     [ReadOnly] public BoidBehaviour boid;
 
     protected float RotationSpeed => squad.data.unitRotation * Time.deltaTime;
@@ -77,54 +80,52 @@ public abstract class Unit : MonoBehaviour
         currentTime = Time.time;
         switch (squad.state) {
             case SquadFSM.Seek:
-                nextTargetTime = 0f;
-                SetSeekingTarget(null);
-                SetArrivalWeight(1f);
-                DefaultBehavior();
+	            SetArrivalWeight(1f);
+	            SetSeeking(null);
+	            target = null;
+	            nextTargetTime = 0f;
+	            DefaultBehavior();
                 break;
 
             case SquadFSM.Idle:
-                nextTargetTime = 0f;
-                SetSeekingTarget(null);
-                SetArrivalWeight(obstacles.Count > 0 ? 0f : 1f);
-                DefaultBehavior();
+	            SetArrivalWeight(obstacles.Count == 0 ? 1f : 0f);
+	            SetSeeking(null);
+	            target = null;
+	            nextTargetTime = 0f;
+	            DefaultBehavior();
                 break;
 
             case SquadFSM.Attack:
-	            
-                SetArrivalWeight(0f);
-                if (currentTime > nextTargetTime) {
-                    var target = squad.FindClosestEnemy(worldTransform.position);
-                    if (target) {
-                        SetSeekingTarget(target);
-                        nextTargetTime = currentTime + Random.Range(3f, 6f);
+	            SetArrivalWeight(squad.isRange ? 1f : 0f);
+	            if (currentTime > nextTargetTime || !target) {
+                    var enemy = squad.FindClosestEnemy(worldTransform.position);
+                    if (enemy) {
+	                    target = enemy;
+	                    SetSeeking(squad.isRange ? target : null);
+	                    nextTargetTime = currentTime + Random.Range(3f, 6f);
                     } else {
                         nextTargetTime = 1f;
                     }
                 }
-                
-                AttackBehavior();
-                break;
+	            
+	            if (target) {
+		            MeleeBehavior();
+	            } else {
+		            DefaultBehavior();
+	            }
+	            break;
         }
-        
-        //SelectorAdjustment();
     }
 
     #region FSM
 
-    protected void AttackBehavior()
+    protected void MeleeBehavior()
     {
-        // Target are died, switch to another
-        if (!seekingTarget) {
-            nextTargetTime = 0f;
-            return;
-        }
-
-        switch (state) {
+	    switch (state) {
             case UnitFSM.Idle:
                 IdleA();
                 break;
-
+            
             case UnitFSM.Charge:
                 Charge();
                 break;
@@ -267,12 +268,12 @@ public abstract class Unit : MonoBehaviour
             //####
 
             default:
-                ChangeState(UnitFSM.Idle);
+	            ChangeState(UnitFSM.Idle);
                 var anim = DefaultIdle;
                 if (currentAnim != anim) {
 	                PlayAnimation(anim, anim.Length, 1f, 0.5f);
                 }
-                break;
+	            break;
         }
     }
 
@@ -363,7 +364,7 @@ public abstract class Unit : MonoBehaviour
 
     protected bool OnBlock(Unit inflictor, AnimSide side, bool counting)
     {
-        if (!seekingTarget || !squad.data.canBlock || !IsFacing(inflictor, Side.Forward, A60))
+        if (!target || !squad.data.canBlock || !IsFacing(inflictor, Side.Forward, A60))
             return false;
 
         switch (state) {
@@ -485,12 +486,12 @@ public abstract class Unit : MonoBehaviour
         return Physics.SphereCast(ray, radius, radius, Manager.Unit);
     }
     
-    protected void PlayAnimation(AnimationData data, float duration, float speed = 1f, float transition = 0f, bool sound = true)
+    protected void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, bool sound = true)
     {
-        animator.StartAnimation(data.clip, -1f, speed, transition);
-        currentAnim = data;
+        animator.StartAnimation(anim.clip, -1f, speed, transition);
+        currentAnim = anim;
         nextAnimTime = currentTime + duration;
-        if (sound) squad.RequestPlaySound(worldTransform.position, data.sound1);
+        if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
     }
 
     #region Damage
@@ -519,7 +520,7 @@ public abstract class Unit : MonoBehaviour
         if (currentTime > nextBlockTime) {
             var rnd = Random.Range(0, 3);
             if (rnd > 0) {
-                if (seekingTarget.OnBlock(this, currentAnim.side1, rnd == 1)) {
+                if (target.OnBlock(this, currentAnim.side1, rnd == 1)) {
                     nextDamageTime = float.MaxValue;
                 }
             }
@@ -527,7 +528,7 @@ public abstract class Unit : MonoBehaviour
         } else if (currentTime > nextBlock2Time) {
             var rnd = Random.Range(0, 3);
             if (rnd > 0) {
-                if (seekingTarget.OnBlock(this, currentAnim.side2, rnd == 1)) {
+                if (target.OnBlock(this, currentAnim.side2, rnd == 1)) {
                     nextDamage2Time = float.MaxValue;
                 }
             }
@@ -536,17 +537,17 @@ public abstract class Unit : MonoBehaviour
         
         if (currentTime > nextDamageTime) {
 	        var current = worldTransform.position;
-	        var target = seekingTarget.worldTransform.position;
-            if (Vector.DistanceSq(target, current) <= squad.data.meleeDistance) {
-                seekingTarget.OnDamage(this, damage);
+	        var desired = target.worldTransform.position;
+            if (Vector.DistanceSq(desired, current) <= squad.data.meleeDistance) {
+	            target.OnDamage(this, damage);
                 squad.RequestPlaySound(current, currentAnim.sound2);
             }
             nextDamageTime = float.MaxValue;
         } else if (currentTime > nextDamage2Time) {
 	        var current = worldTransform.position;
-	        var target = seekingTarget.worldTransform.position;
-            if (Vector.DistanceSq(target, current) <= squad.data.meleeDistance) {
-                seekingTarget.OnDamage(this, damage);
+	        var desired = target.worldTransform.position;
+            if (Vector.DistanceSq(desired, current) <= squad.data.meleeDistance) {
+	            target.OnDamage(this, damage);
                 squad.RequestPlaySound(current, currentAnim.sound2);
             }
             nextDamage2Time = float.MaxValue;
@@ -643,6 +644,16 @@ public abstract class Unit : MonoBehaviour
     #endregion
     
     #region DOTS
+    
+    private void SetArrivalRadius(float radius)
+    {
+	    if (arrivalWeight > 0f && radius != arrivalRadius) {
+		    var arrival = entityManager.GetComponentData<Arrival>(entity);
+		    arrival.TargetRadius = radius;
+		    entityManager.SetComponentData(entity, arrival);
+		    arrivalRadius = radius;
+	    }
+    }
 
     private void SetArrivalWeight(float weight)
     {
@@ -662,18 +673,8 @@ public abstract class Unit : MonoBehaviour
             arrivalWeight = weight;
         }
     }
-    
-    private void SetArrivalRadius(float radius)
-    {
-        if (arrivalWeight > 0f && radius != arrivalRadius) {
-            var arrival = entityManager.GetComponentData<Arrival>(entity);
-            arrival.TargetRadius = radius;
-            entityManager.SetComponentData(entity, arrival);
-            arrivalRadius = radius;
-        }
-    }
-    
-    private void SetSeekingTarget(Unit target)
+
+    private void SetSeeking(Unit target)
     {
         if (target != seekingTarget) {
             if (target) {
@@ -686,7 +687,7 @@ public abstract class Unit : MonoBehaviour
                     entityManager.AddComponentData(entity, new Seeking { Target = target.entity, Weight = 1f, TargetRadius = squad.data.meleeDistance - 2f });
                 }
             } else {
-                entityManager.RemoveComponent<Seeking>(entity);
+	            entityManager.RemoveComponent<Seeking>(entity);
             }
             seekingTarget = target;
         }
@@ -706,6 +707,25 @@ public abstract class Unit : MonoBehaviour
             entityManager.RemoveComponent<Avoidance>(entity);
         }
     }
+
+    public void SwitchRangeMode()
+    {
+	    if (squad.isRange) {
+		    if (!isRange) {
+			    ChangeState(UnitFSM.MeleeToRange);
+			    var anim = animations.holster[0];
+			    PlayAnimation(anim, anim.Length, 1f, 0.5f);
+			    nextModeTime = currentTime + anim.frame1 / anim.FrameRate;
+		    }
+	    } else {
+		    if (isRange) {
+			    ChangeState(UnitFSM.RangeToMelee);
+			    var anim = animations.holster[1];
+			    PlayAnimation(anim, anim.Length);
+			    nextModeTime = currentTime + anim.frame1 / anim.FrameRate;
+		    }
+	    }
+    }
     
     #endregion
     
@@ -713,37 +733,15 @@ public abstract class Unit : MonoBehaviour
 
 	protected void IdleA()
 	{
+		SwitchRangeMode();
+		
 		if (HasSpeed) {
-			if (squad.isRange) {
-				if (!isRange) {
-					ChangeState(UnitFSM.MeleeToRange);
-					var anim = AttackIdle;
-					if (currentAnim != anim) {
-						PlayAnimation(anim, anim.Length);
-					}
-					nextAnimTime = 0f;
-					isRange = true;
-					return;
-				}
-			} else {
-				if (isRange) {
-					ChangeState(UnitFSM.RangeToMelee);
-					var anim = AttackIdle;
-					if (currentAnim != anim) {
-						PlayAnimation(anim, anim.Length);
-					}
-					nextAnimTime = 0f;
-					isRange = false;
-					return;
-				}
-			}
-			
 			var current = worldTransform.position;
-			var target = seekingTarget.worldTransform.position;
-			var distance = Vector.DistanceSq(current, target);
+			var desired = target.worldTransform.position;
+			var distance = Vector.DistanceSq(current, desired);
 
 			if (squad.isRange && squad.data.rangeDistance <= distance) {
-				ChangeState(isRange ? UnitFSM.RangeReload : UnitFSM.MeleeToRange);
+				ChangeState(UnitFSM.RangeReload);
 				var anim = AttackIdle;
 				if (currentAnim != anim) {
 					PlayAnimation(anim, anim.Length);
@@ -764,7 +762,7 @@ public abstract class Unit : MonoBehaviour
 				}
 				nextAnimTime = 0f;
 			} else {
-				worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target - current).ToRotation(), RotationSpeed);
+				worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (desired - current).ToRotation(), RotationSpeed);
 
 				if (currentTime > nextAnimTime) {
 					if (Random.Range(0, 10) == 0) {
@@ -852,8 +850,8 @@ public abstract class Unit : MonoBehaviour
 			}
 		} else {
 			var current = worldTransform.rotation;
-			var target = (seekingTarget.worldTransform.position - worldTransform.position).ToRotation();
-			if (Mathf.Abs(Quaternion.Dot(current, target)) < 0.999999f) {
+			var desired = (target.worldTransform.position - worldTransform.position).ToRotation();
+			if (Mathf.Abs(Quaternion.Dot(current, desired)) < 0.999999f) {
 				ChangeState(UnitFSM.Rotate);
 			} else {
 				MeleeStart();
@@ -864,9 +862,9 @@ public abstract class Unit : MonoBehaviour
 	protected void Rotate()
 	{
 		var current = worldTransform.rotation;
-		var target = (seekingTarget.worldTransform.position - worldTransform.position).ToRotation();
-		if (Mathf.Abs(Quaternion.Dot(current, target)) < 0.999999f) {
-			worldTransform.rotation = Quaternion.RotateTowards(current, target, RotationSpeed * 2f);
+		var desired = (target.worldTransform.position - worldTransform.position).ToRotation();
+		if (Mathf.Abs(Quaternion.Dot(current, desired)) < 0.999999f) {
+			worldTransform.rotation = Quaternion.RotateTowards(current, desired, RotationSpeed * 2f);
 		} else {
 			if (currentTime > nextAnimTime) {
 				MeleeStart();
@@ -876,7 +874,7 @@ public abstract class Unit : MonoBehaviour
 
 	protected void MeleeStart()
 	{
-		switch (seekingTarget.state) {
+		switch (target.state) {
 			/*case UnitFSM.Melee: {
 				ChangeState(UnitFSM.Wait);
 				var anim = AttackIdle;
@@ -893,7 +891,7 @@ public abstract class Unit : MonoBehaviour
 
 			default: {
 				ChangeState(UnitFSM.Melee);
-				var distance = Vector.DistanceSq(seekingTarget.worldTransform.position, worldTransform.position);
+				var distance = Vector.DistanceSq(target.worldTransform.position, worldTransform.position);
 				var anim = animations.GetAttackAnimation(squad.data.melee, distance).GetRandom(prevAnim);
 				PlayAnimation(anim, anim.Length);
 				prevAnim = currentAnim;
@@ -916,7 +914,7 @@ public abstract class Unit : MonoBehaviour
 	
 	protected void Waiting() // Attack
 	{
-		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (seekingTarget.worldTransform.position - worldTransform.position).ToRotation(), 2f * RotationSpeed);
+		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToRotation(), 2f * RotationSpeed);
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Idle);
@@ -1086,7 +1084,7 @@ public abstract class Unit : MonoBehaviour
 	protected void KnockdownWait()
 	{
 		// TODO: Rework
-		if (currentTime > nextAnimTime || seekingTarget.state != UnitFSM.Knockdown) {
+		if (currentTime > nextAnimTime || target.state != UnitFSM.Knockdown) {
 			ChangeState(UnitFSM.Attack);
 		}
 	}
@@ -1116,12 +1114,26 @@ public abstract class Unit : MonoBehaviour
 
 	protected void MeleeToRange()
 	{
+		if (currentTime > nextModeTime) {
+			
+			nextModeTime = float.MaxValue;
+		}
 		
+		if (currentTime > nextAnimTime) {
+			
+		}
 	}
 
 	protected void RangeToMelee()
 	{
+		if (currentTime > nextModeTime) {
+			
+			nextModeTime = float.MaxValue;
+		}
 		
+		if (currentTime > nextAnimTime) {
+			
+		}
 	}
 
 	#endregion
