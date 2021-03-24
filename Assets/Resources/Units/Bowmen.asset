@@ -29,18 +29,21 @@ MonoBehaviour:
   squadRotation: 5
   attackDistance: 900
   meleeDistance: 14
+  rangeDistance: 100
   groupSounds: {fileID: 11400000, guid: 62b857e1d5aa9014cb3a25baf4563ebe, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
   canvasIcon: {fileID: 21300000, guid: affcefc39d3dcee46a4037045597e73b, type: 3}
   layoutIcon: {fileID: 21300000, guid: 9eb8c5e59dc48aa49b67a71dcef18646, type: 3}
   attack: 15
   chargeBonus: 0
-  weapon: {fileID: 11400000, guid: 2381f9aad354c7b47b110ddbc5b8687f, type: 2}
+  melee: {fileID: 11400000, guid: a253b233f4fb2c943a2c2af98e195c35, type: 2}
+  range: {fileID: 11400000, guid: 2381f9aad354c7b47b110ddbc5b8687f, type: 2}
   canKnockdown: 0
   armour: 2
   defenceSkill: 0
   shield: 0
   hitPoints: 1
   morale: 3
-  canBlock: 0
+  canBlock: 1
+  canCounter: 0
   hasShield: 0

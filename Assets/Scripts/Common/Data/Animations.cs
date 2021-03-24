@@ -42,8 +42,9 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
     public List<AnimationData> stateChange;
-    public bool hasMultiKnockback;
-    
+    public bool hasMultiCombatKnockback;
+    public bool hasMultiRangeKnockback;
+
 
     public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
     {
@@ -81,6 +82,15 @@ public class Animations : ScriptableObject
     public List<AnimationData> GetMoveAnimation(bool isForward, bool isRunning, bool run)
     {
         return (isForward ? (run || isRunning) ? forwardRun : forwardWalk : (run || isRunning) ? backwardRun : backwardWalk);
+    }
+
+    public AnimationData GetKnockdownAnimation(bool isRange)
+    {
+        if (isRange) {
+            return hasMultiRangeKnockback? knockdownRange.GetRandom(1) : knockdownRange.GetRandom();
+        } else {
+            return hasMultiCombatKnockback ? knockdownCombat.GetRandom(1) : knockdownCombat.GetRandom();
+        }
     }
 }
 

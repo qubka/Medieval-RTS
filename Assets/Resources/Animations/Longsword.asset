@@ -473,6 +473,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
     sound2: {fileID: 0}
+  knockdownRange: []
   deathNormal:
   - clip: {fileID: 7400018, guid: 7c3c4d895ee89ce43b0e1138cc8994e0, type: 3}
     frame1: 0
@@ -556,4 +557,6 @@ MonoBehaviour:
     sound2: {fileID: 0}
   hitCombat: []
   hitRange: []
-  hasMultiKnockback: 1
+  stateChange: []
+  hasMultiCombatKnockback: 1
+  hasMultiRangeKnockback: 0

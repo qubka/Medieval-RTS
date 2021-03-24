@@ -20,7 +20,11 @@ public class Squadron : ScriptableObject
     public float squadAccel;
     public float squadRotation;
     public float attackDistance;
+    //public float shootDistance;
+    
     public float meleeDistance;
+    public float chargeDistance;
+    public float rangeDistance;
     public Group groupSounds;
     public Commander commanderSounds;
     public Sprite canvasIcon;
@@ -31,7 +35,8 @@ public class Squadron : ScriptableObject
     [Header("Attack")]
     public int attack;
     public int chargeBonus;
-    public Weapon weapon;
+    public Weapon melee;
+    public Weapon range;
     public bool canKnockdown;
 
     [Header("Defense")]
@@ -41,5 +46,6 @@ public class Squadron : ScriptableObject
     public int hitPoints;
     public int morale;
     public bool canBlock;
+    public bool canCounter;
     public bool hasShield;
 }

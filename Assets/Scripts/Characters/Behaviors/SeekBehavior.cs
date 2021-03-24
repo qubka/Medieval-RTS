@@ -16,7 +16,8 @@ public class SeekBehavior : MonoBehaviour
     private Queue<(GameObject, float?, float?)> targets;
     private Quaternion? targetOrientation;
     //private Collider[] colliders;
-    
+
+    private Agent agent;
     private Transform worldTransform;
     private Transform targetTransform;
     
@@ -32,8 +33,11 @@ public class SeekBehavior : MonoBehaviour
         
         tempTarget = new GameObject();
         tempTarget.AddComponent<Agent>();
-
+        
         worldTransform = squad.worldTransform;
+        
+        agent = squad.agentScript;
+        agent.enabled = true;
     }
 
     private void Start()
@@ -44,8 +48,8 @@ public class SeekBehavior : MonoBehaviour
     private void Update()
     {
         // Apply our rotation
-        if (math.lengthsq(squad.agentScript.velocity) > 0f) {
-            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (squad.isForward ? squad.agentScript.velocity : -squad.agentScript.velocity).ToRotation(), rotationSpeed * Time.deltaTime);
+        if (math.lengthsq(agent.velocity) > 0f) {
+            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (squad.isForward ? agent.velocity : -agent.velocity).ToRotation(), rotationSpeed * Time.deltaTime);
         }
 
         if (enemy) {

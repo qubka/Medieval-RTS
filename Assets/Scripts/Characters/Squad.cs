@@ -23,6 +23,7 @@ public class Squad : MonoBehaviour
     public bool isRunning;
     //public bool isRotating;
     public bool isForward;
+    public bool isRange;
     
     [Space(10)]
     [ReadOnly] public SquadFSM state;

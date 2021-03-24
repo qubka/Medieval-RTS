@@ -16,13 +16,15 @@ public class AttackingBehavior : MonoBehaviour
     private void Awake() 
     {
         squad = gameObject.GetComponent<Squad>();
-        worldTransform = squad.worldTransform;
+        squad.agentScript.enabled = true;
         
         target = new GameObject();
         target.AddComponent<Agent>();
         seek = gameObject.AddComponent<Seek>();
         seek.SetTarget(target);
+        
         targetTransform = target.transform;
+        worldTransform = squad.worldTransform;
     }
 
     private void Start()
@@ -62,6 +64,11 @@ public class AttackingBehavior : MonoBehaviour
                 
                 // Move our fake target to the centroid
                 targetTransform.position = squad.centroid - worldTransform.forward * squad.phalanxHeight;
+
+                // ...
+                var movement = !(distance < squad.data.attackDistance * 0.85f && squad.isRange);
+                squad.agentScript.enabled = movement;
+                seek.enabled = movement;
             } else {
                 // If target out of range, return to seek state
                 squad.ChangeState(SquadFSM.Idle);

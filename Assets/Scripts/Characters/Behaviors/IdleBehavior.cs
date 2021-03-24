@@ -9,6 +9,7 @@ public class IdleBehavior : MonoBehaviour
     private void Awake()
     {
         squad = gameObject.GetComponent<Squad>();
+        squad.agentScript.enabled = false;
     }
 
     private void Update()

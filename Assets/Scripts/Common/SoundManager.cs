@@ -70,8 +70,12 @@ public class SoundManager : MonoBehaviour
                     }
                 }
             }*/
-            
-            clipTable.Add(position, (sounds, type));
+
+            if (clipTable.ContainsKey(position)) {
+                clipTable[position] = (sounds, type);
+            } else {
+                clipTable.Add(position, (sounds, type));
+            }
         }
     }
     
