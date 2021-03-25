@@ -13,7 +13,7 @@ public class SoundManager : MonoBehaviour
     public float playRange = 22500f;
     public float soundRange = 100f;
 
-    private Transform cameraTransform;
+    private Transform camTransform;
     
     private Dictionary<Vector3, (Sounds, int)> clipTable;
     private Dictionary<AudioSource, (Vector3, int)> playTable;
@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
     
     private void Start()
     {
-        cameraTransform = Manager.cameraTransform;
+        camTransform = Manager.camTransform;
         
         clipTable = new Dictionary<Vector3, (Sounds, int)>(1000);
         playTable = new Dictionary<AudioSource, (Vector3, int)>(maxSounds);
@@ -44,7 +44,7 @@ public class SoundManager : MonoBehaviour
 
     public void RequestPlaySound(Vector3 position, Sounds sounds)
     {
-        var listener = cameraTransform.position;
+        var listener = camTransform.position;
         
         if (Vector.DistanceSq(listener, position) <= playRange) {
             var type = sounds.name.GetHashCode();
@@ -92,7 +92,7 @@ public class SoundManager : MonoBehaviour
         if (index >= 0) {
             //var currentTime = AudioSettings.dspTime;
             
-            var listener = cameraTransform.position;
+            var listener = camTransform.position;
             foreach (var pair in clipTable.OrderBy(p => Vector.DistanceSq(listener, p.Key))) {
                 var pos = pair.Key;
                 var (sounds, type) = pair.Value;

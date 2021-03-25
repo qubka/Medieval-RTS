@@ -9,7 +9,8 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     public GameObject icon;
     public Sprite active;
     public Sprite disable;
-    
+
+    private TerrainBorder border;
     private Camera cam;
     private CamController controller;
     private RectTransform iconTransform;
@@ -24,7 +25,8 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 
     private void Start()
     {
-        controller = Manager.controller;
+        controller = Manager.camController;
+        border = Manager.border;
         cam = Manager.minimapCamera;
         mapTransform = GetComponent<RawImage>().rectTransform;
         rectTransform = GetComponent<RectTransform>();
@@ -47,7 +49,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
             plane.Raycast(ray, out var distance);
             var hit = ray.GetPoint(distance);
        
-            if (controller.IsOutsideMap(hit))
+            if (border.IsOutsideBorder(hit))
                 return;
 
             controller.SetTarget(UnitManager.CreateTarget(hit));

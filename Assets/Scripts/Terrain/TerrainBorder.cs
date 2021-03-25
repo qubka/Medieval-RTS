@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Terrain))]
 public class TerrainBorder : MonoBehaviour
 {
+	public float limitX = 300f;
+	public float limitZ = 300f;
 	public GameObject borderPrefab;
 	private Line line;
 	
@@ -15,13 +17,11 @@ public class TerrainBorder : MonoBehaviour
 	{
 		line = new Line(borderPrefab);
 
-		var cam = Manager.controller;
-		
-		var corner1 = new Vector3(cam.limitX, 0f, cam.limitZ);
-		var corner2 = new Vector3(cam.limitX, 0f, -cam.limitZ);
-		var corner3 = new Vector3(-cam.limitX, 0f, -cam.limitZ);
-		var corner4 = new Vector3(-cam.limitX, 0f, cam.limitZ);
-		var corner5 = new Vector3(cam.limitX, 0f, cam.limitZ - 10f);
+		var corner1 = new Vector3(limitX, 0f, limitZ);
+		var corner2 = new Vector3(limitX, 0f, -limitZ);
+		var corner3 = new Vector3(-limitX, 0f, -limitZ);
+		var corner4 = new Vector3(-limitX, 0f, limitZ);
+		var corner5 = new Vector3(limitX, 0f, limitZ - 10f);
 		
 		line.AddPoint(corner1);
 		line.AddLine(corner1, corner2);
@@ -35,5 +35,10 @@ public class TerrainBorder : MonoBehaviour
 	private void OnDestroy()
 	{
 		line.Destroy();
+	}
+	
+	public bool IsOutsideBorder(Vector3 point)
+	{
+		return Mathf.Abs(point.x) > limitX || Mathf.Abs(point.z) > limitZ;
 	}
 }

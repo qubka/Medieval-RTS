@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
+using Metadesc.CameraShake;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -45,12 +46,13 @@ public class Squad : MonoBehaviour
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform audioTransform;
-    [HideInInspector] public Transform cameraTransform;
+    [HideInInspector] public Transform camTransform;
     [HideInInspector] public Transform particleTransform;
     [HideInInspector] public Transform minimapTransform;
     [HideInInspector] public Transform barTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
+    [HideInInspector] public ShakeManager shakeManager;
     
     [Header("Children References")] 
     public GameObject source;
@@ -133,7 +135,6 @@ public class Squad : MonoBehaviour
         fightAudio = sources[1];
         runAudio = sources[2];
         chargeAudio = sources[3];
-
         // TODO: rework to be compatible with save system
         // Set the team properties
         //squadSize = data.squadSize;
@@ -162,13 +163,14 @@ public class Squad : MonoBehaviour
     private void Start()
     {
         // Get information from manager
+        shakeManager = Metadesc.CameraShake.ShakeManager.I;
         modelManager = Manager.modelManager;
         unitTable = Manager.unitTable;
         cam = Manager.mainCamera;
         squadCanvas = Manager.squadCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
-        cameraTransform = Manager.cameraTransform;
+        camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
         var terrain = Manager.terrain;
         
@@ -350,7 +352,7 @@ public class Squad : MonoBehaviour
     private void PlaySound()
     {
         if (IsUnitsFighting()) {
-            var listener = cameraTransform.position;
+            var listener = camTransform.position;
             
             // Play group footstep sound
             var isFarAway = soundManager.playRange < Vector.DistanceSq(listener, centroid);

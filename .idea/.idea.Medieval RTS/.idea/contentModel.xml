@@ -28,6 +28,35 @@
               </e>
             </e>
           </e>
+          <e p="CameraShake" t="Include">
+            <e p="Scenes" t="Include">
+              <e p="MyCameraScript.cs" t="Include" />
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="Clock" t="Include">
+                <e p="Clock.cs" t="Include" />
+                <e p="ClockTarget.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="ClockEditor.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Pool" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="IPoolEditor.cs" t="Include" />
+                </e>
+                <e p="IPool.cs" t="Include" />
+              </e>
+              <e p="ShakeInfo.cs" t="Include" />
+              <e p="ShakeManager.cs" t="Include" />
+              <e p="ShakeProcessor.cs" t="Include" />
+              <e p="Tester" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="ShakeTesterEditor.cs" t="Include" />
+                </e>
+                <e p="ShakeTester.cs" t="Include" />
+              </e>
+            </e>
+          </e>
           <e p="Conifers [BOTD]" t="Include">
             <e p="Conifers [BOTD] URP Readme.txt" t="Include" />
             <e p="Getting started.txt" t="Include" />
@@ -846,10 +875,10 @@
           <e p="UI" t="Include">
             <e p="Camera" t="Include">
               <e p="CamController.cs" t="Include" />
-              <e p="CameraAttacher.cs" t="Include" />
+              <e p="CameraAttach.cs" t="Include" />
               <e p="Minimap.cs" t="Include" />
               <e p="SortByDistance.cs" t="Include" />
-              <e p="WorldCanvasAligner.cs" t="Include" />
+              <e p="WorldCanvasAlign.cs" t="Include" />
             </e>
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />

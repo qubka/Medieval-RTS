@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Metadesc.CameraShake;
+using UnityEngine;
 using Object = ObjectExtention; 
 
 [RequireComponent(typeof(Camera))]
@@ -20,17 +21,12 @@ public class CamController : MonoBehaviour
 		public bool inputSettingsFoldout;
 	*/
 #endif
-
-	#endregion
-
-	#region Private
-	
-	private float rotationX;
-	private float rotationY;
 	private Transform worldTransform;
+	private ShakeManager shakeManager;
+	private TerrainBorder border;
 	
 	#endregion
-	
+
 	#region Movement
 
 	public float keyboardMovementSpeed = 80f; //speed with keyboard movement
@@ -40,6 +36,8 @@ public class CamController : MonoBehaviour
 	public float panningSpeed = 50f;
 	public float mouseRotationSpeed = 80f;
 	public Vector2 clampRotationAngle = new Vector2(10f, 45f);
+	private float rotationX;
+	private float rotationY;
 	
 	#endregion
 
@@ -59,8 +57,8 @@ public class CamController : MonoBehaviour
 
 	//public bool canRotate = true;
 	public bool limitMap = true;
-	public float limitX = 50f; //x limit of map
-	public float limitZ = 50f; //z limit of map
+	//private float limitX; //x limit of map
+	//private float limitZ; //z limit of map
 
 	#endregion
 
@@ -172,11 +170,23 @@ public class CamController : MonoBehaviour
 		var euler = worldTransform.eulerAngles;
 		rotationX = euler.x;
 		rotationY = euler.y;
+		border = Manager.border;
+		shakeManager = ShakeManager.I;
 	}
 
 	private void LateUpdate()
 	{
 		PcCamera();
+		
+		// After this just set the shake position and rotation changes.
+		// If your camera script modifies the rotation and position in LateUpdate, 
+		// then move this to LateUpdate after changing these attributes.
+		// This call add a shake offset to the camera position and rotation, that the reason why this works.
+		var shakeResult = shakeManager.UpdateAndGetShakeResult();
+		if (shakeResult.DoProcessShake) {
+			worldTransform.localPosition += shakeResult.ShakeLocalPos;
+			worldTransform.localRotation *= shakeResult.ShakeLocalRot;
+		}
 	}
 	
 	#endregion
@@ -293,7 +303,7 @@ public class CamController : MonoBehaviour
 			return;
 
 		var position = worldTransform.position;
-		position = new Vector3(Mathf.Clamp(position.x, -limitX, limitX), position.y, Mathf.Clamp(position.z, -limitZ, limitZ));
+		position = new Vector3(Mathf.Clamp(position.x, -border.limitX, border.limitX), position.y, Mathf.Clamp(position.z, -border.limitZ, border.limitZ));
 		worldTransform.position = position;
 	}
 	
@@ -330,14 +340,6 @@ public class CamController : MonoBehaviour
 	{
 		Object.DestroyIfNamed(target, "wayPointer");
 		target = null;
-	}
-	
-	/// <summary>
-	/// validate that point are outside the given limits
-	/// </summary>
-	public bool IsOutsideMap(Vector3 point)
-	{
-		return Mathf.Abs(point.x) > limitX || Mathf.Abs(point.z) > limitZ;
 	}
 
 	#endregion

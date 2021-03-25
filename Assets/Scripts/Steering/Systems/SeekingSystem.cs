@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 public struct Seeking : IComponentData
 {
@@ -29,9 +30,10 @@ public class SeekingSystem : SystemBase
                     var distance = math.lengthsq(direction);
                     
                     // If we close, do nothing
-                    if (distance < seeking.TargetRadius)
+                    if (distance < seeking.TargetRadius) {
                         return;
-                    
+                    }
+
                     direction = math.normalize(direction);
                     direction *= boid.MaxAccel;
                     velocity.Linear += (seeking.Weight * direction);

@@ -51,6 +51,7 @@ public class UnitManager : MonoBehaviour
 	[HideInInspector] public Squad target;
 	[HideInInspector] public UnitLayout unitLayout;
 	private EventSystem eventSystem;
+	private TerrainBorder border;
 	private Camera cam;
 	private CamController controller;
 	private UnitTable unitTable;
@@ -77,7 +78,7 @@ public class UnitManager : MonoBehaviour
 	private bool groundCast;
 	private bool pointerUI;
 
-	private bool InvalidHit => !groundCast || controller.IsOutsideMap(groundHit.point) || Input.GetKey(KeyCode.Escape);
+	private bool InvalidHit => !groundCast || border.IsOutsideBorder(groundHit.point) || Input.GetKey(KeyCode.Escape);
 	public int selectedCount => selectedUnits.Count;
 	
 	private void Awake()
@@ -98,8 +99,9 @@ public class UnitManager : MonoBehaviour
 		var size = Manager.terrain.terrainData.size;
 		maxDistance = Mathf.Max(size.x, size.z) * 2f;
 		unitTable = Manager.unitTable;
+		border = Manager.border;
 		cam = Manager.mainCamera;
-		controller = Manager.controller;
+		controller = Manager.camController;
 		clickAudio = Manager.cameraSources[0];
 		SetCursor(basicCursor);
 	}
@@ -250,7 +252,7 @@ public class UnitManager : MonoBehaviour
 				if (InvalidHit || Vector.DistanceSq(groundHit.point, onPlace.lastPos) <= 0.25f)
 					return;
 
-				if (controller.IsOutsideMap(onPlace.startPos)) {
+				if (border.IsOutsideBorder(onPlace.startPos)) {
 					onPlace.startPos = groundHit.point;
 					return;
 				}
@@ -372,7 +374,7 @@ public class UnitManager : MonoBehaviour
 				if (InvalidHit || Vector.DistanceSq(groundHit.point, onPlace.lastPos) <= 0.25f)
 					return;
 
-				if (controller.IsOutsideMap(onPlace.startPos)) {
+				if (border.IsOutsideBorder(onPlace.startPos)) {
 					onPlace.startPos = groundHit.point;
 					return;
 				}
@@ -624,7 +626,7 @@ public class UnitManager : MonoBehaviour
 		public bool active;
 		
 		private Line line;
-		private CamController controller;
+		private TerrainBorder border;
 		private ObjectPooler objectPool;
 		
 		private const float DefaultAngle = 45f;
@@ -634,7 +636,7 @@ public class UnitManager : MonoBehaviour
 			squad = squads;
 			line = new Line(directionLine);
 			
-			controller = Manager.controller;
+			border = Manager.border;
 			objectPool = Manager.objectPooler;
 
 			selectors = new List<GameObject>(squad.UnitCount);
@@ -655,7 +657,7 @@ public class UnitManager : MonoBehaviour
 			if (shift != 0f) {
 				FormationUtils.GetPositions(positions, center, angle);
 				for (var j = positions.Count - 1; j > -1; j--) {
-					if (controller.IsOutsideMap(positions[j])) {
+					if (border.IsOutsideBorder(positions[j])) {
 						return;
 					}
 				}
@@ -727,7 +729,7 @@ public class UnitManager : MonoBehaviour
 				var selector = selectors[i];
 				if (count > i) {
 					var pos = squad.worldTransform.TransformPoint(squad.positions[i]) + shift;
-					if (controller.IsOutsideMap(pos)) {
+					if (border.IsOutsideBorder(pos)) {
 						SetActive(false);
 						return;
 					}

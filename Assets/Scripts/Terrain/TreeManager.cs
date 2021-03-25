@@ -8,7 +8,7 @@ public class TreeManager : MonoBehaviour
     private void Start()
     {
         // Grab the terrain data and store
-        var cam = Manager.controller;
+        var border = Manager.border;
         var terrain = Manager.terrain;
         var trans = terrain.transform;
         var data = terrain.terrainData;
@@ -18,7 +18,7 @@ public class TreeManager : MonoBehaviour
             var position = Vector3.Scale(tree.position, data.size) + trans.position;
             
             // Skip if exceed map limits
-            if (cam.IsOutsideMap(position))
+            if (border.IsOutsideBorder(position))
                 continue;
 
             // Make connection between tree position and entity

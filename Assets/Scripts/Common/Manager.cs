@@ -32,13 +32,14 @@ public class Manager : MonoBehaviour
 	public static int Water;
 	
 	public static Terrain terrain;
+	public static TerrainBorder border;
 	public static Camera mainCamera;
 	public static Camera minimapCamera;
-	public static Transform cameraTransform;
+	public static Transform camTransform;
+	public static CamController camController;
 	public static RectTransform squadCanvas;
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
-	public static CamController controller;
 	public static GPUICrowdManager modelManager;
 	public static UnitTable unitTable;
 	public static UnitManager unitManager;
@@ -49,14 +50,15 @@ public class Manager : MonoBehaviour
 	private void Awake()
 	{
 		terrain = Terrain.activeTerrain;
+		border = terrain.GetComponent<TerrainBorder>();
 		modelManager = crowdManager;
 		mainCamera = main;
 		minimapCamera = minimap;
-		cameraTransform = main.transform;
+		camTransform = main.transform;
+		camController = main.GetComponent<CamController>();
 		squadCanvas = squadFrames;
 		layoutCanvas = unitLayout;
 		cardCanvas = unitCard;
-		controller = main.GetComponent<CamController>();
 		cameraSources = main.GetComponents<AudioSource>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();

@@ -11,7 +11,7 @@ public class SortByDistance : ListBehavior<SquadBar>
     private void Start()
     {
         worldTransform = transform;
-        cameraTranform = Manager.cameraTransform;
+        cameraTranform = Manager.camTransform;
     }
 
     private void LateUpdate()
