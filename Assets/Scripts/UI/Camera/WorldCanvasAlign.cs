@@ -18,8 +18,8 @@ public class WorldCanvasAlign : MonoBehaviour
 
     public void Update()
     {
-        var direction = worldTransform.position - camTransform.position;;
-        var scale = Mathf.Clamp(direction.magnitude / scaleFactor, minScale, maxScale);
+        var direction = worldTransform.position - camTransform.position;
+        var scale = Mathf.Clamp(direction.Magnitude() / scaleFactor, minScale, maxScale);
         worldTransform.localScale = new Vector3(scale, scale, 1f);
         worldTransform.forward = direction;
     }

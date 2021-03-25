@@ -28,35 +28,6 @@
               </e>
             </e>
           </e>
-          <e p="CameraShake" t="Include">
-            <e p="Scenes" t="Include">
-              <e p="MyCameraScript.cs" t="Include" />
-            </e>
-            <e p="Scripts" t="Include">
-              <e p="Clock" t="Include">
-                <e p="Clock.cs" t="Include" />
-                <e p="ClockTarget.cs" t="Include" />
-                <e p="Editor" t="Include">
-                  <e p="ClockEditor.cs" t="Include" />
-                </e>
-              </e>
-              <e p="Pool" t="Include">
-                <e p="Editor" t="Include">
-                  <e p="IPoolEditor.cs" t="Include" />
-                </e>
-                <e p="IPool.cs" t="Include" />
-              </e>
-              <e p="ShakeInfo.cs" t="Include" />
-              <e p="ShakeManager.cs" t="Include" />
-              <e p="ShakeProcessor.cs" t="Include" />
-              <e p="Tester" t="Include">
-                <e p="Editor" t="Include">
-                  <e p="ShakeTesterEditor.cs" t="Include" />
-                </e>
-                <e p="ShakeTester.cs" t="Include" />
-              </e>
-            </e>
-          </e>
           <e p="Conifers [BOTD]" t="Include">
             <e p="Conifers [BOTD] URP Readme.txt" t="Include" />
             <e p="Getting started.txt" t="Include" />
@@ -531,70 +502,16 @@
             </e>
           </e>
           <e p="Standard Assets" t="Include">
-            <e p="2D" t="Include">
-              <e p="Scripts" t="Include">
-                <e p="Camera2DFollow.cs" t="Include" />
-                <e p="CameraFollow.cs" t="Include" />
-                <e p="Platformer2DUserControl.cs" t="Include" />
-                <e p="PlatformerCharacter2D.cs" t="Include" />
-                <e p="Restarter.cs" t="Include" />
-              </e>
-            </e>
             <e p="Cameras" t="Include">
               <e p="CameraGuidelines.txt" t="Include" />
               <e p="Scripts" t="Include">
                 <e p="AbstractTargetFollower.cs" t="Include" />
                 <e p="AutoCam.cs" t="Include" />
-                <e p="FreeLookCam.cs" t="Include" />
                 <e p="HandHeldCam.cs" t="Include" />
                 <e p="LookatTarget.cs" t="Include" />
                 <e p="PivotBasedCameraRig.cs" t="Include" />
                 <e p="ProtectCameraFromWallClip.cs" t="Include" />
                 <e p="TargetFieldOfView.cs" t="Include" />
-              </e>
-            </e>
-            <e p="Characters" t="Include">
-              <e p="FirstPersonCharacter" t="Include">
-                <e p="FirstPersonCharacterGuidelines.txt" t="Include" />
-                <e p="Scripts" t="Include">
-                  <e p="FirstPersonController.cs" t="Include" />
-                  <e p="HeadBob.cs" t="Include" />
-                  <e p="MouseLook.cs" t="Include" />
-                  <e p="RigidbodyFirstPersonController.cs" t="Include" />
-                </e>
-              </e>
-              <e p="RollerBall" t="Include">
-                <e p="RollerBallGuidelines.txt" t="Include" />
-                <e p="Scripts" t="Include">
-                  <e p="Ball.cs" t="Include" />
-                  <e p="BallUserControl.cs" t="Include" />
-                </e>
-              </e>
-              <e p="ThirdPersonCharacter" t="Include">
-                <e p="Scripts" t="Include">
-                  <e p="AICharacterControl.cs" t="Include" />
-                  <e p="ThirdPersonCharacter.cs" t="Include" />
-                  <e p="ThirdPersonUserControl.cs" t="Include" />
-                </e>
-                <e p="ThirdPersonCharacterGuidelines.txt" t="Include" />
-              </e>
-            </e>
-            <e p="CrossPlatformInput" t="Include">
-              <e p="CrossPlatformInputGuidelines.txt" t="Include" />
-              <e p="Scripts" t="Include">
-                <e p="AxisTouchButton.cs" t="Include" />
-                <e p="ButtonHandler.cs" t="Include" />
-                <e p="CrossPlatformInputManager.cs" t="Include" />
-                <e p="InputAxisScrollbar.cs" t="Include" />
-                <e p="Joystick.cs" t="Include" />
-                <e p="MobileControlRig.cs" t="Include" />
-                <e p="PlatformSpecific" t="Include">
-                  <e p="MobileInput.cs" t="Include" />
-                  <e p="StandaloneInput.cs" t="Include" />
-                </e>
-                <e p="TiltInput.cs" t="Include" />
-                <e p="TouchPad.cs" t="Include" />
-                <e p="VirtualInput.cs" t="Include" />
               </e>
             </e>
             <e p="Editor" t="Include">
@@ -701,11 +618,6 @@
                 <e p="PriorityParticleAlpha.shader" t="Include" />
               </e>
             </e>
-            <e p="Prototyping" t="Include">
-              <e p="Shaders" t="Include">
-                <e p="WorldCoordDiffuse.shader" t="Include" />
-              </e>
-            </e>
             <e p="Utility" t="Include">
               <e p="ActivateTrigger.cs" t="Include" />
               <e p="AlphaButtonClickMask.cs" t="Include" />
@@ -717,7 +629,6 @@
               <e p="DynamicShadowSettings.cs" t="Include" />
               <e p="EventSystemChecker.cs" t="Include" />
               <e p="FollowTarget.cs" t="Include" />
-              <e p="ForcedReset.cs" t="Include" />
               <e p="FOVKick.cs" t="Include" />
               <e p="FPSCounter.cs" t="Include" />
               <e p="LerpControlledBob.cs" t="Include" />
@@ -725,48 +636,11 @@
               <e p="ParticleSystemDestroyer.cs" t="Include" />
               <e p="PlatformSpecificContent.cs" t="Include" />
               <e p="SimpleActivatorMenu.cs" t="Include" />
-              <e p="SimpleMouseRotator.cs" t="Include" />
               <e p="SmoothFollow.cs" t="Include" />
               <e p="TimedObjectActivator.cs" t="Include" />
               <e p="TimedObjectDestructor.cs" t="Include" />
               <e p="WaypointCircuit.cs" t="Include" />
               <e p="WaypointProgressTracker.cs" t="Include" />
-            </e>
-            <e p="Vehicles" t="Include">
-              <e p="Aircraft" t="Include">
-                <e p="AircraftGuidelines.txt" t="Include" />
-                <e p="Scripts" t="Include">
-                  <e p="AeroplaneAiControl.cs" t="Include" />
-                  <e p="AeroplaneAudio.cs" t="Include" />
-                  <e p="AeroplaneController.cs" t="Include" />
-                  <e p="AeroplaneControlSurfaceAnimator.cs" t="Include" />
-                  <e p="AeroplanePropellerAnimator.cs" t="Include" />
-                  <e p="AeroplaneUserControl2Axis.cs" t="Include" />
-                  <e p="AeroplaneUserControl4Axis.cs" t="Include" />
-                  <e p="JetParticleEffect.cs" t="Include" />
-                  <e p="LandingGear.cs" t="Include" />
-                </e>
-              </e>
-              <e p="Car" t="Include">
-                <e p="CarGuidelines.txt" t="Include" />
-                <e p="Scripts" t="Include">
-                  <e p="BrakeLight.cs" t="Include" />
-                  <e p="CarAIControl.cs" t="Include" />
-                  <e p="CarAudio.cs" t="Include" />
-                  <e p="CarController.cs" t="Include" />
-                  <e p="CarSelfRighting.cs" t="Include" />
-                  <e p="CarUserControl.cs" t="Include" />
-                  <e p="Mudguard.cs" t="Include" />
-                  <e p="SkidTrail.cs" t="Include" />
-                  <e p="Suspension.cs" t="Include" />
-                  <e p="WheelEffects.cs" t="Include" />
-                </e>
-                <e p="Shaders" t="Include">
-                  <e p="DiffuseReflectiveShader.shader" t="Include" />
-                  <e p="ReflectiveDiffuseSpec.shader" t="Include" />
-                  <e p="ReflectiveDiffuseSpecTransp.shader" t="Include" />
-                </e>
-              </e>
             </e>
           </e>
           <e p="Terrain Tools" t="Include">

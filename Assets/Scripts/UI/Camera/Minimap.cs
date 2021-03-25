@@ -12,7 +12,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 
     private TerrainBorder border;
     private Camera cam;
-    private CamController controller;
+    private CamController camController;
     private RectTransform iconTransform;
     private RectTransform rectTransform;
     private RectTransform mapTransform;
@@ -25,9 +25,9 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 
     private void Start()
     {
-        controller = Manager.camController;
         border = Manager.border;
         cam = Manager.minimapCamera;
+        camController = Manager.camController;
         mapTransform = GetComponent<RawImage>().rectTransform;
         rectTransform = GetComponent<RectTransform>();
         iconTransform = icon.GetComponent<RectTransform>();
@@ -52,7 +52,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
             if (border.IsOutsideBorder(hit))
                 return;
 
-            controller.SetTarget(UnitManager.CreateTarget(hit));
+            camController.SetTarget(UnitManager.CreateTarget(hit).transform);
         }
 
         lastClickTime = time;

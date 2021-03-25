@@ -1,5 +1,5 @@
-﻿using Metadesc.CameraShake;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityStandardAssets.Cameras;
 using Object = ObjectExtention; 
 
 [RequireComponent(typeof(Camera))]
@@ -21,14 +21,15 @@ public class CamController : MonoBehaviour
 		public bool inputSettingsFoldout;
 	*/
 #endif
-	private Transform worldTransform;
-	private ShakeManager shakeManager;
+	private Transform worldTrasnform;
+	private Transform camTransform;
 	private TerrainBorder border;
 	
 	#endregion
 
 	#region Movement
 
+	[Header("Movement")]
 	public float keyboardMovementSpeed = 80f; //speed with keyboard movement
 	public float screenEdgeMovementSpeed = 40f; //spee with screen edge movement
 	public float followingSpeed = 50f; //speed when following a target
@@ -43,18 +44,20 @@ public class CamController : MonoBehaviour
 
 	#region Height
 	
+	[Header("Height")]
 	public float maxHeight = 40f; //maximal height
 	public float minHeight = 5f; //minimnal height
 	public float keyboardZoomingSensitivity = 2f;
 	public float scrollWheelZoomingSensitivity = 40f;
 	public float zoomPos = 0.5f; //value in range (0, 1) used as t in Matf.Lerp
-	public float smoothTime = 0.1f; //Mathf.SmoothDamp interpolation
-	private float currentVelocity; // Mathf.SmoothDamp needs this for interpolation
+	public float smoothZoomTime = 0.1f; //Mathf.SmoothDamp interpolation
+	private float currentZoomVelocity; // Mathf.SmoothDamp needs this for interpolation
 	
 	#endregion
 
 	#region MapLimits
 
+	[Header("Map Limits")]
 	//public bool canRotate = true;
 	public bool limitMap = true;
 	//private float limitX; //x limit of map
@@ -64,40 +67,53 @@ public class CamController : MonoBehaviour
 
 	#region Targeting
 
-	public GameObject target; //target to follow
+	[Header("Targeting")]
+	public Transform target; //target to follow
+	public float distance = 10.0f;
+	public float smoothRotationTime = 0.0001f;
+	private float currentRotationVelocity;
+	private bool lookAtTarget;
 
-	/// <summary>
-	/// are we following target
-	/// </summary>
-	public bool FollowingTarget => target;
+	#endregion
+
+	#region Shake
+
+	[Header("Shake")]
+	public float TraumaExponent = 1f;
+	public Vector3 MaximumAngularShake = new Vector3(0.25f, 0.25f, 0.25f);
+	public Vector3 MaximumTranslationShake = new Vector3(0.005f,  0.005f,  0.005f);
+	private float trauma;
+    private Vector3 lastPosition;
+    private Vector3 lastRotation;
 
 	#endregion
 
 	#region Input
 
+	[Header("Input")]
 	public bool useScreenEdgeInput = true;
 	public float screenEdgeBorder = 10f;
-
+	[Space]
 	public bool useKeyboardInput = true;
 	public string horizontalAxis = "Horizontal";
 	public string verticalAxis = "Vertical";
-
+	[Space]
 	public bool useKeyboardZooming = true;
 	public KeyCode zoomInKey = KeyCode.Z;
 	public KeyCode zoomOutKey = KeyCode.X;
-
+	[Space]
 	public bool useScrollwheelZooming = true;
 	public string zoomingAxis = "Mouse ScrollWheel";
-
+	[Space]
 	public bool useKeyboardRotation = true;
 	public KeyCode rotateRightKey = KeyCode.E;
 	public KeyCode rotateLeftKey = KeyCode.Q;
 	public KeyCode rotateUpKey = KeyCode.R;
 	public KeyCode rotateDownKey = KeyCode.F;
-
+	[Space]
 	public bool useMousePanning = true;
 	public KeyCode mousePanningKey = KeyCode.Mouse3;
-
+	[Space]
 	public bool useMouseRotation = true;
 	public KeyCode mouseRotationKey = KeyCode.Mouse2;
 
@@ -166,27 +182,17 @@ public class CamController : MonoBehaviour
 
 	private void Start()
 	{
-		worldTransform = transform;
-		var euler = worldTransform.eulerAngles;
+		worldTrasnform = transform;
+		camTransform = worldTrasnform.parent;
+		var euler = camTransform.eulerAngles;
 		rotationX = euler.x;
 		rotationY = euler.y;
 		border = Manager.border;
-		shakeManager = ShakeManager.I;
 	}
 
 	private void LateUpdate()
 	{
 		PcCamera();
-		
-		// After this just set the shake position and rotation changes.
-		// If your camera script modifies the rotation and position in LateUpdate, 
-		// then move this to LateUpdate after changing these attributes.
-		// This call add a shake offset to the camera position and rotation, that the reason why this works.
-		var shakeResult = shakeManager.UpdateAndGetShakeResult();
-		if (shakeResult.DoProcessShake) {
-			worldTransform.localPosition += shakeResult.ShakeLocalPos;
-			worldTransform.localRotation *= shakeResult.ShakeLocalRot;
-		}
 	}
 	
 	#endregion
@@ -198,7 +204,7 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	private void PcCamera()
 	{
-		if (FollowingTarget) 
+		if (target) 
 			FollowTarget();
 		else
 			Move();
@@ -206,6 +212,7 @@ public class CamController : MonoBehaviour
 		HeightCalculation();
 		Rotation();
 		LimitPosition();
+		Shake();
 	}
 
 	/// <summary>
@@ -218,34 +225,37 @@ public class CamController : MonoBehaviour
 
 			desiredMove *= keyboardMovementSpeed;
 			desiredMove *= Time.deltaTime;
-			desiredMove = Quaternion.Euler(new Vector3(0f, worldTransform.eulerAngles.y, 0f)) * desiredMove;
-			worldTransform.position += desiredMove;
+			desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
+			camTransform.position += desiredMove;
 		}
 
 		if (useScreenEdgeInput) {
 			var desiredMove = new Vector3();
 
-			var leftRect = new Rect(0f, 0f, screenEdgeBorder, Screen.height);
-			var rightRect = new Rect(Screen.width - screenEdgeBorder, 0f, screenEdgeBorder, Screen.height);
-			var upRect = new Rect(0f, Screen.height - screenEdgeBorder, Screen.width, screenEdgeBorder);
-			var downRect = new Rect(0f, 0f, Screen.width, screenEdgeBorder);
+			float height = Screen.height;
+			float width = Screen.width;
+			
+			var leftRect = new Rect(0f, 0f, screenEdgeBorder, height);
+			var rightRect = new Rect(Screen.width - screenEdgeBorder, 0f, screenEdgeBorder, height);
+			var upRect = new Rect(0f, height - screenEdgeBorder, width, screenEdgeBorder);
+			var downRect = new Rect(0f, 0f, width, screenEdgeBorder);
 
 			desiredMove.x = leftRect.Contains(MouseInput) ? -1f : rightRect.Contains(MouseInput) ? 1f : 0f;
 			desiredMove.z = upRect.Contains(MouseInput) ? 1f : downRect.Contains(MouseInput) ? -1f : 0f;
 
 			desiredMove *= screenEdgeMovementSpeed;
 			desiredMove *= Time.deltaTime;
-			desiredMove = Quaternion.Euler(new Vector3(0f, worldTransform.eulerAngles.y, 0f)) * desiredMove;
-			worldTransform.position += desiredMove;
+			desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
+			camTransform.position += desiredMove;
 		}
 
-		if (useMousePanning && Input.GetKey(mousePanningKey) && MouseAxis.sqrMagnitude > 0f) {
+		if (useMousePanning && Input.GetKey(mousePanningKey) && MouseAxis.SqMagnitude() > 0f) {
 			var desiredMove = new Vector3(-MouseAxis.x, 0f, -MouseAxis.y);
 
 			desiredMove *= panningSpeed;
 			desiredMove *= Time.deltaTime;
-			desiredMove = Quaternion.Euler(new Vector3(0f, worldTransform.eulerAngles.y, 0f)) * desiredMove;
-			worldTransform.position += desiredMove;
+			desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
+			camTransform.position += desiredMove;
 		}
 	}
 
@@ -261,12 +271,12 @@ public class CamController : MonoBehaviour
 
 		zoomPos = Mathf.Clamp01(zoomPos);
 		
-		var position = worldTransform.position;
+		var position = camTransform.position;
 		var ray = new Ray(position, Vector3.down);
 		if (Physics.Raycast(ray, out var hit, 1000f, Manager.Ground | Manager.Water)) {
-			var targetHeight = hit.point.y + Mathf.Lerp(minHeight, maxHeight, zoomPos);
-			position.y = Mathf.SmoothDamp(position.y, targetHeight, ref currentVelocity, smoothTime);
-			worldTransform.position = position;
+			var desiredHeight = hit.point.y + Mathf.Lerp(minHeight, maxHeight, zoomPos);
+			position.y = Mathf.SmoothDamp(position.y, desiredHeight, ref currentZoomVelocity, smoothZoomTime);
+			camTransform.position = position;
 		}
 	}
 
@@ -281,7 +291,7 @@ public class CamController : MonoBehaviour
 			rotationY += HorizontalRotation * speed;
 			
 			rotationX = Mathf.Clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
-			worldTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
+			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 
 		if (useMouseRotation && Input.GetKey(mouseRotationKey)) {
@@ -290,7 +300,7 @@ public class CamController : MonoBehaviour
 			rotationY += axis.x;
 			
 			rotationX = Mathf.Clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
-			worldTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
+			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 	}
 
@@ -302,9 +312,57 @@ public class CamController : MonoBehaviour
 		if (!limitMap)
 			return;
 
-		var position = worldTransform.position;
+		var position = camTransform.position;
 		position = new Vector3(Mathf.Clamp(position.x, -border.limitX, border.limitX), position.y, Mathf.Clamp(position.z, -border.limitZ, border.limitZ));
-		worldTransform.position = position;
+		camTransform.position = position;
+	}
+
+	// TODO:
+	private void Shake()
+	{
+		var shake = Mathf.Pow(trauma, TraumaExponent);
+		
+		/* Only apply this when there is active shake */
+		if(shake > 0f) {
+			var time = Time.time;
+			var previousRotation = lastRotation;
+			var previousPosition = lastPosition;
+			
+			/* In order to avoid affecting the transform current position and rotation each frame we substract the previous translation and rotation */
+			lastPosition = new Vector3(
+				MaximumTranslationShake.x * (Mathf.PerlinNoise(0f, time * 25f) * 2f - 1f),
+				MaximumTranslationShake.y * (Mathf.PerlinNoise(1f, time * 25f) * 2f - 1f),
+				MaximumTranslationShake.z * (Mathf.PerlinNoise(2f, time * 25f) * 2f - 1f)
+			) * shake;
+
+			lastRotation = new Vector3(
+				MaximumAngularShake.x * (Mathf.PerlinNoise(3f, time * 25f) * 2f - 1f),
+				MaximumAngularShake.y * (Mathf.PerlinNoise(4f, time * 25f) * 2f - 1f),
+				MaximumAngularShake.z * (Mathf.PerlinNoise(5f, time * 25f) * 2f - 1f)
+			) * shake;
+
+			worldTrasnform.localPosition += lastPosition - previousPosition;
+			worldTrasnform.localRotation = Quaternion.Euler(worldTrasnform.localRotation.eulerAngles + lastRotation - previousRotation);
+			trauma = Mathf.Clamp01(trauma - Time.deltaTime);
+		} else {
+			if (lastPosition == Vector3.zero && lastRotation == Vector3.zero)
+				return;
+			
+			/* Clear the transform of any left over translation and rotations */
+			worldTrasnform.localPosition -= lastPosition;
+			worldTrasnform.localRotation = Quaternion.Euler(worldTrasnform.localRotation.eulerAngles - lastRotation);
+			lastPosition = Vector3.zero;
+			lastRotation = Vector3.zero;
+		}
+	}
+	
+	/// <summary>
+	///  Applies a shake value to the camera.
+	/// </summary>
+	/// <param name="shake">[0,1] Amount of shake to apply to the object</param>
+	public void InduceShake(float shake)
+	{
+		trauma = Mathf.Clamp01(trauma + shake);
 	}
 	
 	/// <summary>
@@ -312,13 +370,34 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	private void FollowTarget()
 	{
-		var position = worldTransform.position;
-		var followPos = target.transform.position;
-		var targetPos = new Vector3(followPos.x, position.y, followPos.z);
-		position = Vector3.MoveTowards(position, targetPos, Time.deltaTime * followingSpeed);
-		worldTransform.position = position;
+		// Calculate the current rotation angles
+		var desiredRotationAngle = target.eulerAngles.y;
+		var desiredPosition = target.position;
+		var currentRotationAngle = camTransform.eulerAngles.y;
+		var currentPosition = camTransform.position;
 
-		if (KeyboardInput.sqrMagnitude > 0f) {
+		// Damp the rotation around the y-axis
+		currentRotationAngle = Mathf.SmoothDampAngle(currentRotationAngle, desiredRotationAngle, ref currentRotationVelocity, smoothRotationTime);
+
+		// Convert the angle into a rotation
+		var currentRotation = Quaternion.Euler(0f, currentRotationAngle, 0f);
+
+		// Set the position of the camera on the x-z plane to:
+		// distance meters behind the target
+		desiredPosition -= currentRotation * Vector3.forward * distance;
+
+		// Move to the desired position
+		desiredPosition = new Vector3(desiredPosition.x, currentPosition.y, desiredPosition.z);
+		currentPosition = Vector3.MoveTowards(currentPosition, desiredPosition,  followingSpeed * Time.deltaTime);
+		camTransform.position = currentPosition;
+
+		// Always look at the target
+		/*if (lookAtTarget) {
+			worldTrasnform.LookAt(target);
+		}*/
+
+		// Reset target if press any key
+		if (KeyboardInput.SqMagnitude() > 0f) {
 			ResetTarget();
 		}
 	}
@@ -326,11 +405,14 @@ public class CamController : MonoBehaviour
 	/// <summary>
 	/// set the target
 	/// </summary>
-	/// <param name="gameObject"></param>
-	public void SetTarget(GameObject gameObject)
+	/// <param name="trans">Any object transform to follow</param>
+	/// <param name="lookAt">True to use look at feature on the target transform.</param>
+	public void SetTarget(Transform trans, bool lookAt = false)
 	{
-		Object.DestroyIfNamed(target, "wayPointer");
-		target = gameObject;
+		if (target) Object.DestroyIfNamed(target.gameObject, "wayPointer");
+		//worldTrasnform.localRotation = Quaternion.identity;
+		target = trans;
+		lookAtTarget = lookAt;
 	}
 
 	/// <summary>
@@ -338,8 +420,10 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	public void ResetTarget()
 	{
-		Object.DestroyIfNamed(target, "wayPointer");
+		if (target) Object.DestroyIfNamed(target.gameObject, "wayPointer");
+		//worldTrasnform.localRotation = Quaternion.identity;
 		target = null;
+		lookAtTarget = false;
 	}
 
 	#endregion
@@ -383,8 +467,8 @@ public class CamController : MonoBehaviour
 		var mouseX = touch.deltaPosition.x;
 		var mouseY = -touch.deltaPosition.y;
 		
-		rotationY += mouseX * mouseSensitivity * Time.deltaTime * 0.02f;
-		rotationX += mouseY * mouseSensitivity * Time.deltaTime * 0.02f;	
+		rotationY += mouseX * mouseSensitivity * deltaTime * 0.02f;
+		rotationX += mouseY * mouseSensitivity * deltaTime * 0.02f;	
 		rotationX = Mathf.Clamp(rotationX, -clampAngle, clampAngle);
 		worldTransform.rotation = Quaternion.Euler(rotationX, rotationY, 0f);
 	}
@@ -400,8 +484,8 @@ public class CamController : MonoBehaviour
 		var touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
 		var touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-		var prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-		var touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+		var prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).Magnitude();
+		var touchDeltaMag = (touchZero.position - touchOne.position).Magnitude();
 
 		var z = (prevTouchDeltaMag - touchDeltaMag) * 0.001f * scrollWheelZoomingSensitivity;
 

@@ -48,13 +48,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557c62007fd94b9588aed3172fc67952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 951dddef9f0aaf0468c0734964c35e93, type: 2}
-  unitPrefabs: []
+  data: {fileID: 11400000, guid: d70968b7483b9ad4087d48a552944439, type: 2}
+  meleePrefab: {fileID: 7321627843164406229, guid: 4ee148d463c36084c8530bbf705397a8, type: 3}
+  rangePrefab: {fileID: 1733150063720338491, guid: 44bddaaa8df3d8243a70d52225459396, type: 3}
   team: 0
   squadSize: 100
   formationShape: 0
   isRunning: 0
   isForward: 1
+  isRange: 0
   state: 0
   agentScript: {fileID: 0}
   idleScript: {fileID: 0}
@@ -75,7 +77,7 @@ MonoBehaviour:
     radius: 1
   worldTransform: {fileID: 0}
   audioTransform: {fileID: 0}
-  cameraTransform: {fileID: 0}
+  camTransform: {fileID: 0}
   particleTransform: {fileID: 0}
   minimapTransform: {fileID: 0}
   barTransform: {fileID: 0}
@@ -100,6 +102,11 @@ MonoBehaviour:
   cardNumber: {fileID: 4863836836886744743}
   unitLayout: {fileID: 6634118863436267813}
   particle: {fileID: 4542322576374665223}
+  MaximumShake: 0.25
+  ShakeRange: 2000
+  CanvasHeight: 10
+  BarScale: {x: 1.15, y: 1.15, z: 1.15}
+  BoundCollision: {x: 1.25, y: 5, z: 1.1}
 --- !u!65 &2053806470803109941
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5672,11 +5679,11 @@ PrefabInstance:
       objectReference: {fileID: 6464902127453613541}
     - target: {fileID: 3555647917030549214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3555647917030549214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4348412866860825059, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: cellTransform
@@ -5772,11 +5779,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9221162128324540227, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9221162128324540227, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
@@ -6064,11 +6071,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8281210735288856069, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8281210735288856069, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8298332230461461322, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: squad

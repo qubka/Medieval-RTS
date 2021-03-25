@@ -53,7 +53,7 @@ public class UnitManager : MonoBehaviour
 	private EventSystem eventSystem;
 	private TerrainBorder border;
 	private Camera cam;
-	private CamController controller;
+	private CamController camController;
 	private UnitTable unitTable;
 	//private Dictionary<Entity, GameObject> unitButtons;
 	private Dictionary<Squad, Movement> movementGroup;
@@ -101,7 +101,7 @@ public class UnitManager : MonoBehaviour
 		unitTable = Manager.unitTable;
 		border = Manager.border;
 		cam = Manager.mainCamera;
-		controller = Manager.camController;
+		camController = Manager.camController;
 		clickAudio = Manager.cameraSources[0];
 		SetCursor(basicCursor);
 	}
@@ -144,7 +144,7 @@ public class UnitManager : MonoBehaviour
 			var currentTime = Time.time;
 			if ((currentTime - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, groundHit.point) <= 1f) {
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Squad) == 0) {
-					controller.SetTarget(CreateTarget(groundHit.point));
+					camController.SetTarget(CreateTarget(groundHit.point).transform);
 					//clickAudio.clip = targetSound;
 					//clickAudio.Play();
 					onSelect.locked = true;
@@ -271,7 +271,7 @@ public class UnitManager : MonoBehaviour
 					var (start, end) = segments[i];
 					
 					var direction = end - start; // of line from left to right
-					var length = direction.magnitude; // size of line
+					var length = direction.Magnitude(); // size of line
 					var center = (end + start) / 2f; // center between end and pos
 					var angle = -Vector.SignedAngle(direction.normalized, Vector3.right, Vector3.up);
 					
@@ -576,9 +576,9 @@ public class UnitManager : MonoBehaviour
 
 		var time = Time.time;
 		if ((time - lastSelectTime < 0.5f) && lastSelectSquad == filter) {
-			var obj = filter.gameObject;
-			if (controller.target != obj) {
-				controller.SetTarget(obj);
+			var trans = filter.audioTransform;
+			if (camController.target != trans) {
+				camController.SetTarget(trans, true);
 				clickAudio.clip = targetSound;
 				clickAudio.Play();
 			}

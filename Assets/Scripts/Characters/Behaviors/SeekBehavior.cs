@@ -209,7 +209,7 @@ public class SeekBehavior : MonoBehaviour
             var diff = targetOrientation.Value.eulerAngles.y - worldTransform.rotation.eulerAngles.y;
             if (!(diff <= 22.5f && diff > -22.5f)) {
                 worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * squad.phalanxHeight, targetOrientation.Value);
-            } else if (direction.magnitude <= 30.0f) {
+            } else if (direction.Magnitude() <= 30.0f) {
                 targetOrientation = worldTransform.rotation;
                 if (dir == Direction.Backward) {
                     forwardMove = false; // disable when enemies nearby

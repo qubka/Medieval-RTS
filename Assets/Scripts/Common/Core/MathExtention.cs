@@ -44,9 +44,29 @@ public static class MathExtention
     {
         return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, vector, Vector3.up), 0f);
     }
-    
-    public static Quaternion ToRotation(this float2 vector)
+
+    public static Quaternion ToRotation(this float2 vector) 
     {
         return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, new Vector3(vector.x, 0f, vector.y), Vector3.up), 0f);
+    }
+
+    public static float SqMagnitude(this Vector3 vector) 
+    {
+        return vector.x * vector.x + vector.y * vector.y + vector.z * vector.z;
+    }
+    
+    public static float Magnitude(this Vector3 vector) 
+    {
+        return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+    }
+    
+    public static float SqMagnitude(this Vector2 vector) 
+    {
+        return vector.x * vector.x + vector.y * vector.y;
+    }
+    
+    public static float Magnitude(this Vector2 vector) 
+    {
+        return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
     }
 }

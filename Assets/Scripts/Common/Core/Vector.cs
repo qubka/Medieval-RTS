@@ -93,7 +93,7 @@ public static class Vector // MathExtension ?
 			var p2 = new Vector3(start.x + i * x, start.y + i * y, start.z + i * z);
 			if (i != 1) {
 				//var vec = p2 - p1;
-				//vec *= (space / vec.magnitude);
+				//vec *= (space / vec.Magnitude());
 				lines.Add((p1, p2));
 			}
 

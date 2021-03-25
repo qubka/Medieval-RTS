@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
-using Metadesc.CameraShake;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -52,8 +51,7 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform barTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
-    [HideInInspector] public ShakeManager shakeManager;
-    
+
     [Header("Children References")] 
     public GameObject source;
     [Space(5f)]
@@ -80,9 +78,20 @@ public class Squad : MonoBehaviour
     [Space(5f)]
     public ParticleSystem particle;
     
+    [Header("Misc")]
+    public float MaximumShake = 0.5f;
+    public float ShakeRange = 2000f;
+    //[Tooltip()]
+    public float CanvasHeight = 10f;
+    //[Tooltip()]
+    public Vector3 BarScale = new Vector3(1.15f, 1.15f, 1.15f);
+    //[Tooltip()]
+    public Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
+    
     // Private data
-    private GPUICrowdManager modelManager;
     private Camera cam;
+    private CamController camController;
+    private GPUICrowdManager modelManager;
     private RectTransform squadCanvas;
     private UnitManager unitManager;
     private UnitTable unitTable;
@@ -106,10 +115,6 @@ public class Squad : MonoBehaviour
     public int UnitCount => units.Count;
     //public int EnemyCount => enemies.Count;
     //public int NeighbourCount => neighbours.Count;
-
-    private const float CanvasHeight = 10f;
-    private static readonly Vector3 BarScale = new Vector3(1.15f, 1.15f, 1.15f);
-    private static readonly Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
 
     private void Awake()
     {
@@ -163,10 +168,10 @@ public class Squad : MonoBehaviour
     private void Start()
     {
         // Get information from manager
-        shakeManager = Metadesc.CameraShake.ShakeManager.I;
         modelManager = Manager.modelManager;
         unitTable = Manager.unitTable;
         cam = Manager.mainCamera;
+        camController = Manager.camController;
         squadCanvas = Manager.squadCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
@@ -614,6 +619,17 @@ public class Squad : MonoBehaviour
         var startTime = anim.frame1 / anim.FrameRate;
         newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, true, startTime);
     }
+    
+    public void CreateShake(Vector3 position)
+    {
+        var distance = Vector.DistanceSq(position, camTransform.position);
+        if (distance > ShakeRange)
+            return;
+
+        var scale = Mathf.Clamp01(distance / ShakeRange);
+        var stress = (1f - scale * scale) * MaximumShake;
+        camController.InduceShake(stress);
+    }
 
     #region Sounds
     
@@ -746,7 +762,7 @@ public class Squad : MonoBehaviour
             return false;
         
         foreach (var unit in units) {
-            if (unit.state >= UnitFSM.Attack) {
+            if (unit.target) {
                 return true;
             }
         }

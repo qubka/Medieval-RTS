@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &161274
+--- !u!1 &256117660280261492
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,72 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 407706}
-  - component: {fileID: 20000010603398430}
-  - component: {fileID: 124000012984772364}
-  - component: {fileID: 81000013907916122}
-  - component: {fileID: 7856718673901726512}
-  - component: {fileID: 7368091049026583159}
-  - component: {fileID: 11470582}
+  - component: {fileID: 3955035760925036409}
   m_Layer: 0
   m_Name: Main camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &407706
+--- !u!4 &3955035760925036409
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -147.31322, y: 5, z: -33.967255}
+  m_GameObject: {fileID: 256117660280261492}
+  m_LocalRotation: {x: 0.12278779, y: -0.6963643, z: 0.12278779, w: 0.6963643}
+  m_LocalPosition: {x: 74.2, y: 70, z: 149}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 6796195854703585693}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!20 &20000010603398430
+  m_LocalEulerAnglesHint: {x: 20, y: -90, z: 0}
+--- !u!1 &6796195854703305981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6796195854703585693}
+  - component: {fileID: 6780167007369548825}
+  - component: {fileID: 6910906969377814027}
+  - component: {fileID: 6867766275445662813}
+  - component: {fileID: 3699808381654530615}
+  - component: {fileID: 4039807868695096176}
+  - component: {fileID: 6796195854697879537}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6796195854703585693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6796195854703305981}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3955035760925036409}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &6780167007369548825
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
+  m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -79,29 +110,29 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!124 &124000012984772364
+--- !u!124 &6910906969377814027
 Behaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
+  m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
---- !u!81 &81000013907916122
+--- !u!81 &6867766275445662813
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
+  m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
---- !u!82 &7856718673901726512
+--- !u!82 &3699808381654530615
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
+  m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -191,13 +222,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!82 &7368091049026583159
+--- !u!82 &4039807868695096176
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
+  m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -287,13 +318,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &11470582
+--- !u!114 &6796195854697879537
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161274}
+  m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50e786fe815803e4fb7ab98295f44969, type: 3}
@@ -313,9 +344,12 @@ MonoBehaviour:
   zoomPos: 0.5
   smoothTime: 0.1
   limitMap: 1
-  limitX: 300
-  limitZ: 300
   target: {fileID: 0}
+  distance: 15
+  rotationDamping: 0.01
+  TraumaExponent: 1
+  MaximumAngularShake: {x: 0.25, y: 0.25, z: 0.25}
+  MaximumTranslationShake: {x: 0.01, y: 0.01, z: 0.01}
   useScreenEdgeInput: 1
   screenEdgeBorder: 10
   useKeyboardInput: 1
