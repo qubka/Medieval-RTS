@@ -21,14 +21,13 @@ public class TerrainBorder : MonoBehaviour
 		var corner2 = new Vector3(limitX, 0f, -limitZ);
 		var corner3 = new Vector3(-limitX, 0f, -limitZ);
 		var corner4 = new Vector3(-limitX, 0f, limitZ);
-		var corner5 = new Vector3(limitX, 0f, limitZ - 10f);
-		
+
 		line.AddPoint(corner1);
 		line.AddLine(corner1, corner2);
 		line.AddLine(corner2, corner3);
 		line.AddLine(corner3, corner4);
 		line.AddLine(corner4, corner1);
-		line.AddLine(corner1, corner5);
+		line.Simplify();
 		line.Render();
 	}
 

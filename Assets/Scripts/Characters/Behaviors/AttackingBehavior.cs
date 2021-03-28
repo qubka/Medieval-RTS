@@ -55,7 +55,7 @@ public class AttackingBehavior : MonoBehaviour
     private void Update()
     {
         // Is target alive?
-        if (enemy && enemy.HasUnits) {
+        if (enemy && enemy.hasUnits) {
             // Is target within range?
             var distance = Vector.DistanceSq(squad.centroid, enemy.centroid);
             if (distance < squad.data.attackDistance) {//yes

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
-using Object = ObjectExtention;
 
 [RequireComponent(typeof(Manager))]
 public class UnitManager : MonoBehaviour 
@@ -13,6 +12,7 @@ public class UnitManager : MonoBehaviour
 	public GameObject movementLine;
 	public GameObject arrowLine;
 	public GameObject directionLine;
+	public GameObject drawLine;
 	public GameObject moveParticle;
 	public GameObject attackParticle;
 	
@@ -30,6 +30,7 @@ public class UnitManager : MonoBehaviour
 	public Texture2D meleeCursor;
 	public Texture2D rangeCursor;
 	public Texture2D dragCursor;
+	public Texture2D drawCursor;
 	public Texture2D selectCursor;
 	public Texture2D placeCursor;
 	public Texture2D shiftCursor;
@@ -42,7 +43,8 @@ public class UnitManager : MonoBehaviour
 	[Header("Hot Keys")]
 	public KeyCode addKey = KeyCode.LeftShift;
 	public KeyCode inclusiveKey = KeyCode.LeftControl;
-	public KeyCode dragKey = KeyCode.LeftAlt;
+	public KeyCode shiftKey = KeyCode.LeftAlt;
+	public KeyCode drawKey = KeyCode.LeftAlt;
 	public KeyCode stopKey = KeyCode.Escape;
 
 	//variables not visible in the inspector
@@ -55,19 +57,21 @@ public class UnitManager : MonoBehaviour
 	private Camera cam;
 	private CamController camController;
 	private UnitTable unitTable;
+	private ObjectPool objectPool;
 	//private Dictionary<Entity, GameObject> unitButtons;
 	private Dictionary<Squad, Movement> movementGroup;
 	private List<Formation> placedFormations;
 	private List<Squad> selectedUnits;
 	private List<Vector3> positions;
+	private Line drawedLine;
 	private AudioSource clickAudio;
-	private AudioSource selectAudio;
 	private Collider[] colliders;
 	private Squad lastSelectSquad;
 	private float lastSelectTime;
 	private float lastClickTime;
 	private Vector3 lastClickPos;
 	private Interaction onDrag;
+	private Interaction onDraw;
 	private Interaction onSelect;
 	private Interaction onPlace;
 	private Interaction onShift;
@@ -99,6 +103,7 @@ public class UnitManager : MonoBehaviour
 		var size = Manager.terrain.terrainData.size;
 		maxDistance = Mathf.Max(size.x, size.z) * 2f;
 		unitTable = Manager.unitTable;
+		objectPool = Manager.objectPool;
 		border = Manager.border;
 		cam = Manager.mainCamera;
 		camController = Manager.camController;
@@ -116,6 +121,7 @@ public class UnitManager : MonoBehaviour
 		OnSelection();
 		OnPlacement();
 		OnShifting();
+		OnDrawing();
 		OnMovement();
 		OnHover();
 		OnCursor();
@@ -131,7 +137,7 @@ public class UnitManager : MonoBehaviour
 	
 	private void OnSelection()
 	{
-		if (onDrag.enabled || onPlace.enabled || onShift.enabled)
+		if (onDraw.enabled || onDrag.enabled || onPlace.enabled || onShift.enabled)
 			return;
 
 		// When left mouse button clicked (but not released)
@@ -144,7 +150,7 @@ public class UnitManager : MonoBehaviour
 			var currentTime = Time.time;
 			if ((currentTime - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, groundHit.point) <= 1f) {
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Squad) == 0) {
-					camController.SetTarget(CreateTarget(groundHit.point).transform);
+					camController.SetTarget(objectPool.SpawnFromPool("Way", groundHit.point).transform);
 					//clickAudio.clip = targetSound;
 					//clickAudio.Play();
 					onSelect.locked = true;
@@ -160,7 +166,7 @@ public class UnitManager : MonoBehaviour
 
 		// While left mouse button held
 		if (Input.GetMouseButton(0)) {
-			if (Input.GetKey(stopKey) || Input.GetKey(dragKey)) {
+			if (Input.GetKey(stopKey) || Input.GetKey(shiftKey)) {
 				onSelect.Lock();
 			} else {
 				onSelect.OnHold(Input.mousePosition, pointerUI, 40f);
@@ -174,7 +180,7 @@ public class UnitManager : MonoBehaviour
 				
 				// Try to use sphere to find nearby units
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
-					var unit = unitTable.GetUnit(colliders[0].gameObject);
+					var unit = unitTable[colliders[0].gameObject];
 					if (unit) {
 						if (Input.GetKey(inclusiveKey)) { //inclusive select
 							AddSelected(unit.squad, true);
@@ -232,7 +238,7 @@ public class UnitManager : MonoBehaviour
 
 	private void OnPlacement()
 	{
-		if (onDrag.enabled || onSelect.enabled || onShift.enabled)
+		if (onDraw.enabled || onDrag.enabled || onSelect.enabled || onShift.enabled)
 			return;
 		
 		// When right mouse button clicked (but not released)
@@ -245,7 +251,7 @@ public class UnitManager : MonoBehaviour
 			
 		// While right mouse button held
 		if (Input.GetMouseButton(1)) {
-			if (Input.GetKey(stopKey) || selectedUnits.Count == 0) {
+			if (Input.GetKey(stopKey)  || Input.GetKey(drawKey) || selectedUnits.Count == 0) {
 				RemoveFormations(false);
 				onPlace.Lock();
 			} else {
@@ -273,7 +279,7 @@ public class UnitManager : MonoBehaviour
 					var direction = end - start; // of line from left to right
 					var length = direction.Magnitude(); // size of line
 					var center = (end + start) / 2f; // center between end and pos
-					var angle = -Vector.SignedAngle(direction.normalized, Vector3.right, Vector3.up);
+					var angle = -Vector.SignedAngle(direction.Normalized(), Vector3.right, Vector3.up);
 					
 					placedFormations[i].Expand(positions, start, end, center, angle, length);
 				}
@@ -283,14 +289,14 @@ public class UnitManager : MonoBehaviour
 		// When right mouse button comes up
 		else if (Input.GetMouseButtonUp(1)) {
 			if (!onPlace.enabled) { //single place
-				if (InvalidHit || selectedUnits.Count == 0)
+				if (InvalidHit || selectedUnits.Count == 0 || Input.GetKey(drawKey))
 					return;
 
 				// If we hover on enemy units
 				if (target) {
 					var obj = target.gameObject;
 					foreach (var squad in selectedUnits) {
-						AddToMovementGroup(squad, obj);
+						AddToDynamicGroup(squad, obj);
 					}
 					
 					clickAudio.clip = attackSound;
@@ -307,7 +313,8 @@ public class UnitManager : MonoBehaviour
 				
 					var count = selectedUnits.Count;
 					if (count == 1) {
-						AddToMovementGroup(selectedUnits[0], CreateTarget(dest));
+						var squad = selectedUnits[0];
+						AddToDynamicGroup(squad, objectPool.SpawnFromPool("Way", dest));
 					} else {
 						var position = Vector3.zero;
 						foreach (var squad in selectedUnits) {
@@ -317,7 +324,7 @@ public class UnitManager : MonoBehaviour
 						
 						var shift = dest - position;
 						foreach (var squad in selectedUnits) {
-							AddToMovementGroup(squad, CreateTarget(squad.worldTransform.position + shift));
+							AddToDynamicGroup(squad, objectPool.SpawnFromPool("Way", squad.worldTransform.position + shift));
 						}
 					}
 					
@@ -332,7 +339,7 @@ public class UnitManager : MonoBehaviour
 				var playSound = false;
 				foreach (var formation in placedFormations) {
 					if (formation.active) {
-						AddToMovementGroup(formation.squad, CreateTarget(formation.centroid), formation.targetOrientation, formation.phalanxLength);
+						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool("Way", formation.centroid), formation.targetOrientation, formation.phalanxLength);
 						playSound = true;
 					}
 				}
@@ -354,7 +361,7 @@ public class UnitManager : MonoBehaviour
 
 	private void OnShifting()
 	{
-		if (onDrag.enabled || onSelect.enabled || onPlace.enabled)
+		if (onDraw.enabled || onDrag.enabled || onSelect.enabled || onPlace.enabled)
 			return;
 		
 		// When left mouse button clicked (but not released)
@@ -367,7 +374,7 @@ public class UnitManager : MonoBehaviour
 		
 		// While left mouse button held
 		if (Input.GetMouseButton(0)) {
-			if (Input.GetKey(stopKey) || !Input.GetKey(dragKey) || selectedUnits.Count == 0) {
+			if (Input.GetKey(stopKey) || !Input.GetKey(shiftKey) || selectedUnits.Count == 0) {
 				RemoveFormations(false);
 				onShift.Lock();
 			} else {
@@ -402,7 +409,7 @@ public class UnitManager : MonoBehaviour
 				var playSound = false;
 				foreach (var formation in placedFormations) {
 					if (formation.active) {
-						AddToMovementGroup(formation.squad, CreateTarget(formation.centroid), formation.targetOrientation);
+						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool("Way", formation.centroid), formation.targetOrientation);
 						playSound = true;
 					}
 				}
@@ -418,6 +425,68 @@ public class UnitManager : MonoBehaviour
 		else if (onShift.enabled) {
 			RemoveFormations(false);
 			onShift.Lock();
+		}
+	}
+
+	private void OnDrawing()
+	{
+		if (onShift.enabled || onDrag.enabled || onSelect.enabled || onPlace.enabled)
+			return;
+		
+		// When left mouse button clicked (but not released)
+		if (Input.GetMouseButtonDown(1)) {
+			onDraw.OnDown(groundHit.point, pointerUI);
+		}
+		// When left mouse button not locked
+		else if (onDraw.locked) 
+			return;
+		
+		// While left mouse button held
+		if (Input.GetMouseButton(1)) {
+			if (Input.GetKey(stopKey) || !Input.GetKey(drawKey) || selectedUnits.Count != 1) {
+				drawedLine?.Destroy();
+				onDraw.Lock();
+			} else {
+				if (InvalidHit ||  Vector.DistanceSq(groundHit.point, onDraw.lastPos) <= 1f)
+					return;
+				
+				if (border.IsOutsideBorder(onDraw.startPos)) {
+					onDraw.startPos = groundHit.point;
+					return;
+				}
+				
+				if (onDraw.OnHold(groundHit.point, pointerUI, 10f)) {
+					drawedLine = new Line(drawLine);
+				}
+				
+				if (onDraw.enabled) {
+					var pos = onDraw.lastPos;
+					pos.y += 0.5f;
+					if (!drawedLine.Contains(pos)) {
+						drawedLine.Add(pos);
+						drawedLine.Render();
+					}
+				}
+			}
+		}
+		// When right mouse button comes up
+		else if (Input.GetMouseButtonUp(1)) {
+			if (onDraw.enabled) {
+				onDraw.enabled = false;
+
+				var squad = selectedUnits[0];
+				AddToStaticGroup(squad, drawedLine.Points);
+
+				clickAudio.clip = placeSound;
+				clickAudio.Play();
+				
+				drawedLine.Destroy();
+			}
+		}
+		// Should be locked if happens
+		else if (onDraw.enabled) {
+			drawedLine?.Destroy();
+			onDraw.Lock();
 		}
 	}
 
@@ -467,11 +536,13 @@ public class UnitManager : MonoBehaviour
 			SetCursor(invalidCursor);
 		} else if (onDrag.enabled) {
 			SetCursor(dragCursor);
+		} else if (onDraw.enabled) {
+			SetCursor(drawCursor);
 		} else if (onSelect.enabled) {
 			SetCursor(selectCursor);
 		} else if (onPlace.enabled) {
 			SetCursor(placeCursor);
-		} else if (onShift.enabled || selectedUnits.Count != 0 && Input.GetKey(dragKey)) {
+		} else if (onShift.enabled || selectedUnits.Count != 0 && Input.GetKey(shiftKey)) {
 			SetCursor(shiftCursor);
 		} else if (Input.GetKey(inclusiveKey)) {
 			SetCursor(inclusiveCursor);
@@ -486,7 +557,7 @@ public class UnitManager : MonoBehaviour
 
 	private void OnTriggerEnter(Collider collider)
 	{
-		var unit = unitTable.GetUnit(collider.gameObject);
+		var unit = unitTable[collider.gameObject];
 		if (unit) {
 			AddSelected(unit.squad);
 		}
@@ -502,11 +573,11 @@ public class UnitManager : MonoBehaviour
 	private bool HoverOnTarget()
 	{
 		//stop if some interaction is on
-		if (onDrag.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit)
+		if (onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit)
 			return false;
 
 		if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
-			var unit = unitTable.GetUnit(colliders[0].gameObject);
+			var unit = unitTable[colliders[0].gameObject];
 			if (unit) {
 				var squad = unit.squad;
 				if (squad.team != Team.Self) {
@@ -588,17 +659,38 @@ public class UnitManager : MonoBehaviour
 		lastSelectSquad = filter;
 	}
 
-	private void AddToMovementGroup(Squad squad, GameObject target, float? orientation = null, float? length = null)
+	private void AddToDynamicGroup(Squad squad, GameObject target, float? orientation = null, float? length = null)
 	{
 		if (movementGroup.ContainsKey(squad)) {
-			if (Input.GetKey(addKey)) {
-				movementGroup[squad].Append(target, orientation, length);
+			var movement = movementGroup[squad];
+			if (movement is DynamicMovement) {
+				if (Input.GetKey(addKey)) {
+					movement.Append(target, orientation, length);
+				} else {
+					movement.Reset(target, orientation, length);
+				}
 			} else {
-				movementGroup[squad].Reset(target, orientation, length);
+				movement.DestroyAll();
+				movement = new DynamicMovement(squad, movementLine, arrowLine);
+				movement.Reset(target, orientation, length);
+				movementGroup[squad] = movement;
 			}
 		} else {
-			var movement = new Movement(squad, movementLine, arrowLine);
+			var movement = new DynamicMovement(squad, movementLine, arrowLine);
 			movement.Reset(target, orientation, length);
+			movementGroup.Add(squad, movement);
+		}
+	}
+	
+	private void AddToStaticGroup(Squad squad, List<Vector3> points)
+	{
+		if (movementGroup.ContainsKey(squad)) {
+			var movement = movementGroup[squad];
+			movement.DestroyAll();
+			movement = new StaticMovement(squad, movementLine, arrowLine, points);
+			movementGroup[squad] = movement;
+		} else {
+			var movement = new StaticMovement(squad, movementLine, arrowLine, points);
 			movementGroup.Add(squad, movement);
 		}
 	}
@@ -613,7 +705,6 @@ public class UnitManager : MonoBehaviour
 		Cursor.SetCursor(texture, Vector2.zero, CursorMode.Auto);
 	}
 
-
 	#region Formation
 	
 	private class Formation
@@ -626,9 +717,10 @@ public class UnitManager : MonoBehaviour
 		public bool active;
 		
 		private Line line;
+		private Terrain terrain;
 		private TerrainBorder border;
-		private ObjectPooler objectPool;
-		
+		private ObjectPool objectPool;
+
 		private const float DefaultAngle = 45f;
 		
 		public Formation(Squad squads, GameObject directionLine)
@@ -636,12 +728,13 @@ public class UnitManager : MonoBehaviour
 			squad = squads;
 			line = new Line(directionLine);
 			
+			terrain = Manager.terrain;
 			border = Manager.border;
-			objectPool = Manager.objectPooler;
+			objectPool = Manager.objectPool;
 
-			selectors = new List<GameObject>(squad.UnitCount);
-			for (var i = 0; i < squad.UnitCount; i++) {
-				selectors.Add(objectPool.SpawnFromPool("selector", Vector3.zero, Quaternion.identity));
+			selectors = new List<GameObject>(squad.unitCount);
+			for (var i = 0; i < squad.unitCount; i++) {
+				selectors.Add(objectPool.SpawnFromPool("Selector"));
 			}
 
 			active = true;
@@ -649,10 +742,10 @@ public class UnitManager : MonoBehaviour
 
 		public void Expand(List<Vector3> positions, Vector3 start, Vector3 end, Vector3 center, float angle, float length)
 		{
-			var totalLength = squad.UnitCount * squad.unitSize.width;
+			var totalLength = squad.unitCount * squad.unitSize.width;
 			length = Mathf.Clamp(length, totalLength / 12f, totalLength);
 
-			var shift = FormationUtils.GetFormation(positions, squad.formationShape, squad.unitSize, squad.UnitCount, length, true);
+			var shift = FormationUtils.GetFormation(positions, squad.formationShape, squad.unitSize, squad.unitCount, length, true);
 			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			if (shift != 0f) {
 				FormationUtils.GetPositions(positions, center, angle);
@@ -675,7 +768,7 @@ public class UnitManager : MonoBehaviour
 				if (count > i) {
 					selector.transform.SetPositionAndRotation(positions[i], rot);
 				} else {
-					objectPool.ReturnToPool("selector", selector);
+					objectPool.ReturnToPool("Selector", selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -733,10 +826,10 @@ public class UnitManager : MonoBehaviour
 						SetActive(false);
 						return;
 					}
-					pos.y = Manager.terrain.SampleHeight(pos) + 0.5f;
+					pos.y = terrain.SampleHeight(pos) + 0.5f;
 					selector.transform.SetPositionAndRotation(pos, rot);
 				} else {
-					objectPool.ReturnToPool("selector", selector);
+					objectPool.ReturnToPool("Selector", selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -755,13 +848,13 @@ public class UnitManager : MonoBehaviour
 			line.SetActive(state);
 			
 			// Remove selectors if no more units available
-			var count = squad.UnitCount;
+			var count = squad.unitCount;
 			for (var i = selectors.Count - 1; i > -1; i--) {
 				var selector = selectors[i];
 				if (count > i) {
 					selector.SetActive(state);
 				} else {
-					objectPool.ReturnToPool("selector", selector);
+					objectPool.ReturnToPool("Selector", selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -774,20 +867,20 @@ public class UnitManager : MonoBehaviour
 			if (effect && active) {
 				squad.StartCoroutine(line.FadeLineRenderer(0.5f));
 
-				var count = squad.UnitCount;
+				var count = squad.unitCount;
 				for (var i = 0; i < selectors.Count; i++) {
 					var selector = selectors[i];
 					if (count > i) {
 						var trans = selector.transform;
-						objectPool.SpawnFromPool("pointer", trans.position, trans.rotation);
+						objectPool.SpawnFromPool("Pointer", trans.position, trans.rotation);
 					}
-					objectPool.ReturnToPool("selector", selector);
+					objectPool.ReturnToPool("Selector", selector);
 				}
 			} else {
 				line.Destroy();
 				
 				foreach (var selector in selectors) {
-					objectPool.ReturnToPool("selector", selector);
+					objectPool.ReturnToPool("Selector", selector);
 				}
 			}
 		}
@@ -807,27 +900,110 @@ public class UnitManager : MonoBehaviour
 
 	#region Movement
 
-	private class Movement
+	private class StaticMovement : Movement 
 	{
 		private Line line;
 		private Line head;
+		
+		private Squad squad;
 
+		private static readonly Quaternion Left = Quaternion.Euler(0, -150, 0);
+		private static readonly Quaternion Right = Quaternion.Euler(0, 150, 0);
+		
+		public StaticMovement(Squad squads, GameObject movementLine, GameObject arrowLine, List<Vector3> points)
+		{
+			squad = squads;
+			line = new Line(movementLine);
+			head = new Line(arrowLine);
+			
+			if (points.Count > 0) {
+				line.AddLine(squad.centroid, points[0]);
+				for (var i = 1; i < points.Count; i++) {
+					line.Add(points[i]);
+				}
+				
+				var origin = line.Last;
+				var direction = (origin - line.PreLast).Normalized() * 2.5f;
+				var left = origin + Left * direction;
+				var right = origin + Right * direction;
+
+				head.Clear();
+				head.AddPoint(left);
+				head.AddLine(left, origin);
+				head.AddLine(origin, right);
+				head.Render();
+			}
+			//line.Smooth(0.15f);
+			line.Render();
+
+			var output = new List<Vector3>();
+			LineUtility.Simplify(points, 10f, output);
+			if (output.Count > 0) {
+				var objectPool = Manager.objectPool;
+				
+				squad.SetDestination(false, objectPool.SpawnFromPool("Way", output[0]));
+				for (var i = 1; i < output.Count; i++) {
+					squad.SetDestination(true, objectPool.SpawnFromPool("Way", output[i]));
+				}
+			}
+		}
+		
+		public void Append(GameObject target, float? orientation = null, float? length = null)
+		{
+		}
+
+		public void Reset(GameObject target, float? orientation = null, float? length = null)
+		{
+		}
+
+		public void SetActive(bool value)
+		{
+			line.SetActive(value);
+			head.SetActive(value);
+		}
+
+		public bool Update()
+		{
+			if (line.IsActive && line.Count > 1) {
+				var position = squad.worldTransform.position;
+				if (Vector.DistanceSq(position, line.First) > Vector.DistanceSq(position, line.Second)) {
+					line.RemoveAt(0);
+					line.Render();
+				}
+			}
+			
+			return squad.state != SquadFSM.Idle;
+		}
+
+		public void DestroyAll()
+		{
+			line.Destroy();
+			head.Destroy();
+		}
+	}
+	
+	private class DynamicMovement : Movement
+	{
+		private Line line;
+		private Line head;
 		private Squad squad;
 
 		private List<GameObject> targets;
 		private Dictionary<GameObject, Squad> cache;
+		private ObjectPool objectPool;
 		private float nextUpdateTime;
 
 		private static readonly Quaternion Left = Quaternion.Euler(0, -150, 0);
 		private static readonly Quaternion Right = Quaternion.Euler(0, 150, 0);
 
-		public Movement(Squad squads, GameObject movementLine, GameObject arrowLine)
+		public DynamicMovement(Squad squads, GameObject movementLine, GameObject arrowLine)
 		{
 			squad = squads;
 			line = new Line(movementLine);
 			head = new Line(arrowLine);
 			targets = new List<GameObject>();
 			cache = new Dictionary<GameObject, Squad>();
+			objectPool = Manager.objectPool;
 		}
 
 		public void SetActive(bool value)
@@ -836,13 +1012,16 @@ public class UnitManager : MonoBehaviour
 			head.SetActive(value);
 		}
 		
-		public void Append(GameObject target, float? orientation, float? length)
+		public void Append(GameObject target, float? orientation = null, float? length = null)
 		{
+			if (targets.Count > 10)
+				return;
+			
 			AddTarget(target);
 			squad.SetDestination(true, target, orientation, length);
 		}
 		
-		public void Reset(GameObject target, float? orientation, float? length)
+		public void Reset(GameObject target, float? orientation = null, float? length = null)
 		{
 			ClearAll();
 			AddTarget(target);
@@ -856,37 +1035,64 @@ public class UnitManager : MonoBehaviour
 			if (enemy) {
 				cache.Add(target, enemy);
 			}
+			nextUpdateTime = 0.1f;
 		}
 
 		public bool Update()
 		{
-			if (line.IsActive) {
+			if (line.IsActive && targets.Count > 0) {
 				var currentTime = Time.time;
 				if (currentTime > nextUpdateTime) {
-					var start = squad.state == SquadFSM.Attack ? squad.centroid : squad.worldTransform.position;
-				
 					line.Clear();
-					line.AddPoint(start);
-				
+					
 					GameObject toRemove = null;
-					foreach (var target in targets) {
+					var toSmooth = true;
+					
+					if (squad.state == SquadFSM.Attack) {
+						var start = squad.centroid;
+						line.AddPoint(start);
+						
+						var target = targets[0];
+						
 						if (target) {
 							var end = cache.ContainsKey(target) ? cache[target].centroid : target.transform.position;
-							line.AddLine(start, end);
-							start = end;
+							if (squad.isRange) {
+								line.AddCurve(start, end, 20f);
+								toSmooth = false;
+							} else {
+								line.AddPoint(end);
+							}
 						} else {
 							toRemove = target;
 						}
+					} else {
+						var start = squad.worldTransform.position;
+						line.AddPoint(start);
+						
+						foreach (var target in targets) {
+							if (target && target.activeInHierarchy) {
+								var end = cache.ContainsKey(target) ? cache[target].centroid : target.transform.position;
+								line.AddPoint(end);
+							} else {
+								toRemove = target;
+							}
+						}
 					}
+					
 					if (toRemove) {
 						targets.Remove(toRemove);
 						cache.Remove(toRemove);
 					}
-				
-					line.Render();
-					DrawArrow();
 
-					nextUpdateTime = currentTime + 0.1f;
+					if (toSmooth) {
+						line.Smooth(0.15f);
+					}
+					
+					line.Render();
+					
+					DrawArrow();
+					
+					nextUpdateTime = currentTime + 1f;
 				}
 			}
 			
@@ -896,9 +1102,9 @@ public class UnitManager : MonoBehaviour
 		private void DrawArrow()
 		{
 			int count = line.Count;
-			if (count > 2) {
+			if (count > 1) {
 				var origin = line.Last;
-				var direction = (origin - line.PreLast).normalized * 2.5f;
+				var direction = (origin - line.PreLast).Normalized() * 2.5f;
 				var left = origin + Left * direction;
 				var right = origin + Right * direction;
 
@@ -912,21 +1118,30 @@ public class UnitManager : MonoBehaviour
 
 		public void DestroyAll()
 		{
-			squad.StartCoroutine(head.FadeLineRenderer(0.5f));
 			line.Destroy();
+			head.Destroy();
 			ClearAll();
 		}
 		
 		private void ClearAll()
 		{
 			foreach (var target in targets) {
-				Object.DestroyIfNamed(target, "wayPointer");
+				if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target);
 			}
 			targets.Clear();
 			cache.Clear();
 		}
 	}
 	
+	private interface Movement
+	{
+		void Append(GameObject target, float? orientation = null, float? length = null);
+		void Reset(GameObject target, float? orientation = null, float? length = null);
+		void SetActive(bool value);
+		bool Update();
+		void DestroyAll();
+	}
+
 	#endregion
 
 	#region Interaction
@@ -942,7 +1157,7 @@ public class UnitManager : MonoBehaviour
 		{
 			lastPos = pos;
 
-            if (!enabled && !locked && Vector.DistanceSq(startPos, lastPos) > distance * distance && !pointer) {
+            if (!pointer && !enabled && !locked && Vector.DistanceSq(startPos, lastPos) > distance * distance) {
 	            enabled = true;
 	            return true;
             }
@@ -965,11 +1180,4 @@ public class UnitManager : MonoBehaviour
 	}
 	
 	#endregion
-
-	public static GameObject CreateTarget(Vector3 dest)
-	{
-		var gameObject = new GameObject("wayPointer");
-		gameObject.transform.position = dest;
-		return gameObject;
-	}
 }

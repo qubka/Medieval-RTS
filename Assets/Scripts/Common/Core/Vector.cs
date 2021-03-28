@@ -197,7 +197,7 @@ public static class Vector // MathExtension ?
 	
 	public static float Angle(Vector3 from, Vector3 to)
 	{
-		var num = Math.Sqrt((Dot(from, from)) * Dot(to, to));
+		var num = Math.Sqrt((from.SqMagnitude()) * to.SqMagnitude());
 		return num < 1.00000000362749E-15 ? 0f : (float) Math.Acos(Mathf.Clamp(Dot(from, to) / (float) num, -1f, 1f)) * Mathf.Rad2Deg;
 	}
 

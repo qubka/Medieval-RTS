@@ -109,12 +109,12 @@ public class Squad : MonoBehaviour
     private bool select;
     private bool clipCache;
 
-    public bool IsSelect => select;
-    public bool HasUnits => units.Count > 0;
-    public bool HasEnemies => enemies.Count > 0;
-    public int UnitCount => units.Count;
-    //public int EnemyCount => enemies.Count;
-    //public int NeighbourCount => neighbours.Count;
+    public bool isSelect => select;
+    public bool hasUnits => units.Count > 0;
+    public bool hasEnemies => enemies.Count > 0;
+    public int unitCount => units.Count;
+    //public int enemyCount => enemies.Count;
+    //public int neighbourCount => neighbours.Count;
 
     private void Awake()
     {
@@ -258,7 +258,7 @@ public class Squad : MonoBehaviour
             entityManager.AddComponentObject(unitEntity, boid);
 
             // Add unit to the global table
-            unitTable.AddUnit(unitObject, unit);
+            unitTable.Add(unitObject, unit);
             
             // Add unit to the entity buffer
             unitBuffer[i] = new UnitBuffer { Value = unitEntity };
@@ -295,6 +295,9 @@ public class Squad : MonoBehaviour
             layoutTransform.SetParent(Manager.layoutCanvas, false);
             StartCoroutine(RepositionCard()); // fix for re-parenting
         }
+        
+        // Add a squad to the combat statistics
+        Manager.combatSlider.Add(this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
@@ -506,7 +509,7 @@ public class Squad : MonoBehaviour
         }
     }
 
-    public void SetDestination(bool append, GameObject target, float? orientation, float? length)
+    public void SetDestination(bool append, GameObject target, float? orientation = null, float? length = null)
     {
         if (seekScript) {
             if (append) {
@@ -518,14 +521,8 @@ public class Squad : MonoBehaviour
             DestroyImmediate(idleScript);
             DestroyImmediate(attackScript);
 
-            /*if (orientation.HasValue && Physics.OverlapSphereNonAlloc(target.transform.position, 2f, colliders, Manager.Squad) != 0 && colliders[0].gameObject == gameObject) {
-                transform.SetPositionAndRotation(target.transform.position, Quaternion.Euler(0f, orientation.Value, 0f));
-                isForward = true;
-                if (length.HasValue) UpdateFormation(length.Value); 
-            } else {*/
             ChangeState(SquadFSM.Seek);
             seekScript.AddDestination(target, orientation, length);
-            //}
         }
     }
 
@@ -589,6 +586,7 @@ public class Squad : MonoBehaviour
         cardNumber.text = count.ToString();
         
         if (count == 0) {
+            Manager.combatSlider.Remove(this);
             squadCanvas.GetComponent<SortByDistance>().Remove(squadBar.GetComponent<SquadBar>());
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
@@ -611,10 +609,11 @@ public class Squad : MonoBehaviour
         modelManager.AddPrefabInstance(newUnit.animator);
         var obj = oldUnit.gameObject;
         Destroy(obj);
-        unitTable.RemoveEntry(obj);
-        unitTable.AddUnit(newUnit.gameObject, newUnit);
+        unitTable.Remove(obj);
+        unitTable.Add(newUnit.gameObject, newUnit);
         units[index] = newUnit;
-        
+
+
         var anim = newUnit.currentAnim;
         var startTime = anim.frame1 / anim.FrameRate;
         newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, true, startTime);
@@ -662,49 +661,49 @@ public class Squad : MonoBehaviour
 
     #region Helpers
 
-    public Squad FindClosestSquad(Vector3 current)
+    public Squad FindClosestSquad(Vector3 position)
     {
         switch (enemies.Count) {
             case 0: return attackScript && attackScript.enemy ? attackScript.enemy : null; // can that happend?
             case 1: return enemies[0];
             default: {
-                var closest = enemies[0];
-                var nearest = closest.centroid;
+                Squad closest = null;
+                var nearest = float.MaxValue;
                 
-                for (var i = 1; i < enemies.Count; i++) {
-                    var squad = enemies[i];
-                    var position = squad.centroid;
-                    if (Vector.DistanceSq(position, current) < Vector.DistanceSq(nearest, current)) {
+                foreach (var squad in enemies) {
+                    var distance = Vector.DistanceSq(squad.centroid, position);
+                    if (distance < nearest) {
                         closest = squad;
-                        nearest = position;
+                        nearest = distance;
                     }
                 }
+                
                 return closest;
             }
         }
     }
 
-    public Unit FindClosestEnemy(Vector3 current)
+    public Unit FindClosestEnemy(Vector3 position)
     {
-        var squad = FindClosestSquad(current);
-        return squad ? squad.FindClosestUnit(current) : null;
+        var squad = FindClosestSquad(position);
+        return squad ? squad.FindClosestUnit(position) : null;
     }
     
-    private Unit FindClosestUnit(Vector3 current)
+    private Unit FindClosestUnit(Vector3 position)
     {
         switch (units.Count) {
             case 0: return null;
             case 1: return units[0];
             default: {
-                var closest = units[0];
-                var nearest = closest.worldTransform.position;
-
-                for (var i = 1; i < units.Count; i++) {
-                    var unit = units[i];
-                    var position = unit.worldTransform.position;
-                    if (Vector.DistanceSq(position, current) < Vector.DistanceSq(nearest, current)) {
+                //Unit visible = null;
+                Unit closest = null;
+                var nearest = float.MaxValue;
+                
+                foreach (var unit in units) {
+                    var distance = Vector.DistanceSq(unit.worldTransform.position, position);
+                    if (distance < nearest) {
                         closest = unit;
-                        nearest = position;
+                        nearest = distance;
                     }
                 }
 
@@ -778,4 +777,5 @@ public enum SquadFSM
     Idle,
     Seek,
     Attack,
+    Retreat
 }

@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityStandardAssets.Cameras;
-using Object = ObjectExtention; 
 
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("RTS Camera")]
@@ -24,6 +22,7 @@ public class CamController : MonoBehaviour
 	private Transform worldTrasnform;
 	private Transform camTransform;
 	private TerrainBorder border;
+	private ObjectPool objectPool;
 	
 	#endregion
 
@@ -72,7 +71,7 @@ public class CamController : MonoBehaviour
 	public float distance = 10.0f;
 	public float smoothRotationTime = 0.0001f;
 	private float currentRotationVelocity;
-	private bool lookAtTarget;
+	//private bool lookAtTarget;
 
 	#endregion
 
@@ -188,6 +187,7 @@ public class CamController : MonoBehaviour
 		rotationX = euler.x;
 		rotationY = euler.y;
 		border = Manager.border;
+		objectPool = Manager.objectPool;
 	}
 
 	private void LateUpdate()
@@ -409,10 +409,10 @@ public class CamController : MonoBehaviour
 	/// <param name="lookAt">True to use look at feature on the target transform.</param>
 	public void SetTarget(Transform trans, bool lookAt = false)
 	{
-		if (target) Object.DestroyIfNamed(target.gameObject, "wayPointer");
+		if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target.gameObject);
 		//worldTrasnform.localRotation = Quaternion.identity;
 		target = trans;
-		lookAtTarget = lookAt;
+		//lookAtTarget = lookAt;
 	}
 
 	/// <summary>
@@ -420,10 +420,10 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	public void ResetTarget()
 	{
-		if (target) Object.DestroyIfNamed(target.gameObject, "wayPointer");
+		if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target.gameObject);
 		//worldTrasnform.localRotation = Quaternion.identity;
 		target = null;
-		lookAtTarget = false;
+		//lookAtTarget = false;
 	}
 
 	#endregion

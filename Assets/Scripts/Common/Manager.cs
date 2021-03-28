@@ -11,6 +11,7 @@ public class Manager : MonoBehaviour
 	public RectTransform unitCard;
 	public Camera main;
 	public Camera minimap;
+	public CombatSliderRatio combatSliderRatio;
 
 	[Header("Layers")] 
 	public LayerMask ui = -1;
@@ -40,11 +41,12 @@ public class Manager : MonoBehaviour
 	public static RectTransform squadCanvas;
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
-	public static GPUICrowdManager modelManager;
+	public static ObjectPool objectPool;
 	public static UnitTable unitTable;
 	public static UnitManager unitManager;
 	public static SoundManager soundManager;
-	public static ObjectPooler objectPooler;
+	public static GPUICrowdManager modelManager;
+	public static CombatSliderRatio combatSlider;
 	public static AudioSource[] cameraSources;
 	
 	private void Awake()
@@ -63,8 +65,9 @@ public class Manager : MonoBehaviour
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();
 		soundManager = GetComponent<SoundManager>();
-		objectPooler = GetComponent<ObjectPooler>();
-
+		objectPool = GetComponent<ObjectPool>();
+		combatSlider = combatSliderRatio;
+		
 		UI = ui.value;
 		Ground = ground.value;
 		Unit = unit.value;

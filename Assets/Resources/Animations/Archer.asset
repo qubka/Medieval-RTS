@@ -499,13 +499,6 @@ MonoBehaviour:
     sound1: {fileID: 11400000, guid: 3115b0cc462efb4469373da9b63939e3, type: 2}
     sound2: {fileID: 0}
   equip:
-  - clip: {fileID: 7400054, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
-    frame1: 14
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 544f5fbba1e65b5479c7226e9b021d91, type: 2}
-    sound2: {fileID: 0}
   - clip: {fileID: 7400006, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
     frame1: 66
     frame2: 0
@@ -513,20 +506,12 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 775262736f065eb4188a19f1ac6a9a9c, type: 2}
     sound2: {fileID: 0}
-  holster:
-  - clip: {fileID: 7400056, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
-    frame1: 40
+  - clip: {fileID: 7400054, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 14
     frame2: 0
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: 544f5fbba1e65b5479c7226e9b021d91, type: 2}
-    sound2: {fileID: 0}
-  - clip: {fileID: 7400004, guid: 9e3310731c7cd994b973d09f35aa7540, type: 3}
-    frame1: 88
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: c1403dd1d4163904d86d4a62bbb99607, type: 2}
     sound2: {fileID: 0}
   kick:
   - clip: {fileID: 7400040, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
@@ -534,8 +519,8 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: 21af906a9bc0b8a4ebebb1d70298c6e2, type: 2}
-    sound2: {fileID: 0}
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: 21af906a9bc0b8a4ebebb1d70298c6e2, type: 2}
   rage:
   - clip: {fileID: 7400000, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
     frame1: 26
@@ -768,6 +753,35 @@ MonoBehaviour:
   counterLeft: []
   counterRight: []
   counterShield: []
+  knockdownNormal:
+  - clip: {fileID: 7400100, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400032, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400036, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400034, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
   knockdownCombat:
   - clip: {fileID: 7400036, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
     frame1: 0
@@ -1238,5 +1252,6 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
     sound2: {fileID: 0}
-  hasMultiCombatKnockback: 0
-  hasMultiRangeKnockback: 1
+  hasMultiNormalKnockdown: 1
+  hasMultiCombatKnockdown: 0
+  hasMultiRangeKnockdown: 1

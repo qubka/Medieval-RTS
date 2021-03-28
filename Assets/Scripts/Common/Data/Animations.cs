@@ -18,7 +18,6 @@ public class Animations : ScriptableObject
     public List<AnimationData> rangeRelease;
     public List<AnimationData> reload;
     public List<AnimationData> equip;
-    public List<AnimationData> holster;
     public List<AnimationData> kick;
     public List<AnimationData> rage;
     public List<AnimationData> charge;
@@ -35,6 +34,7 @@ public class Animations : ScriptableObject
     public List<AnimationData> counterLeft;
     public List<AnimationData> counterRight;
     public List<AnimationData> counterShield;
+    public List<AnimationData> knockdownNormal;
     public List<AnimationData> knockdownCombat;
     public List<AnimationData> knockdownRange;
     public List<AnimationData> deathNormal;
@@ -43,8 +43,9 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitNormal;
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
-    public bool hasMultiCombatKnockback;
-    public bool hasMultiRangeKnockback;
+    public bool hasMultiNormalKnockdown;
+    public bool hasMultiCombatKnockdown;
+    public bool hasMultiRangeKnockdown;
 
 
     public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
@@ -80,18 +81,81 @@ public class Animations : ScriptableObject
         return attackStep;
     }
 
-    public List<AnimationData> GetMoveAnimation(bool isForward, bool isRunning, bool run)
+    public List<AnimationData> GetIdleAnimation(bool isCombat, bool isRange)
     {
-        return (isForward ? (run || isRunning) ? forwardRun : forwardWalk : (run || isRunning) ? backwardRun : backwardWalk);
+        if (isCombat) {
+            if (isRange && idleRange.Count > 0) {
+                return idleRange;
+            }
+            
+            if (idleCombat.Count > 0) {
+                return idleCombat;
+            }
+        }
+
+        return idleNormal;
     }
 
-    public AnimationData GetKnockdownAnimation(bool isRange)
+    public AnimationData GetKnockdownAnimation(bool isCombat, bool isRange)
     {
-        if (isRange) {
-            return hasMultiRangeKnockback? knockdownRange.GetRandom(1) : knockdownRange.GetRandom();
-        } else {
-            return hasMultiCombatKnockback ? knockdownCombat.GetRandom(1) : knockdownCombat.GetRandom();
+        if (isCombat) {
+            if (isRange && knockdownRange.Count > 0) {
+                return hasMultiRangeKnockdown? knockdownRange.GetRandom(1) : knockdownRange.GetRandom();
+            }
+            
+            if (knockdownCombat.Count > 0) {
+                return hasMultiCombatKnockdown ? knockdownCombat.GetRandom(1) : knockdownCombat.GetRandom();
+            }
         }
+        
+        return hasMultiNormalKnockdown ? knockdownNormal.GetRandom(1) : knockdownNormal.GetRandom();
+    }
+
+    public AnimationData GetHitAnimation(bool isCombat, bool isRange)
+    {
+        if (isCombat) {
+            if (isRange && hitRange.Count > 0) {
+                return hitRange.GetRandom();
+            }
+            
+            if (hitCombat.Count > 0) {
+                return hitCombat.GetRandom();
+            }
+        }
+
+        return hitNormal.GetRandom();
+    }
+    
+    public AnimationData GetDeathAnimation(bool isCombat, bool isRange)
+    {
+        if (isCombat) {
+            if (isRange && deathRange.Count > 0) {
+                return deathRange.GetRandom();
+            }
+            
+            if (deathCombat.Count > 0) {
+                return deathCombat.GetRandom();
+            }
+        }
+
+        return deathNormal.GetRandom();
+    }
+    
+    public AnimationData GetMoveAnimation(bool isForward, bool isRunning, bool isRun, bool isCombat, bool isRange)
+    {
+        var list = (isForward ? (isRun || isRunning) ? forwardRun : forwardWalk : (isRun || isRunning) ? backwardRun : backwardWalk);
+
+        if (isCombat) {
+            if (isRange && list.Count > 2) {
+                return list[2];
+            }
+        
+            if (list.Count > 1) {
+                return list[1];
+            }
+        }
+
+        return list[0];
     }
 }
 

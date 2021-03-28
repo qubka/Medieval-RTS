@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using Object = ObjectExtention;
 using Random = UnityEngine.Random;
 
 //this is the script attached and active during the "moving" state
@@ -20,6 +19,7 @@ public class SeekBehavior : MonoBehaviour
     private Agent agent;
     private Transform worldTransform;
     private Transform targetTransform;
+    private ObjectPool objectPool;
     
     private float rotationSpeed;
     private bool forwardMove;
@@ -35,6 +35,7 @@ public class SeekBehavior : MonoBehaviour
         tempTarget.AddComponent<Agent>();
         
         worldTransform = squad.worldTransform;
+        objectPool = Manager.objectPool;
         
         agent = squad.agentScript;
         agent.enabled = true;
@@ -49,7 +50,7 @@ public class SeekBehavior : MonoBehaviour
     {
         // Apply our rotation
         if (math.lengthsq(agent.velocity) > 0f) {
-            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (squad.isForward ? agent.velocity : -agent.velocity).ToRotation(), rotationSpeed * Time.deltaTime);
+            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (squad.isForward ? agent.velocity : -agent.velocity).ToEuler(), rotationSpeed * Time.deltaTime);
         }
 
         if (enemy) {
@@ -85,40 +86,22 @@ public class SeekBehavior : MonoBehaviour
     private void SeekEnemy()
     {
         // Get distance to target if it exist
-        var distance = float.MaxValue;
-        if (target) distance = Vector.DistanceSq(squad.centroid, enemy.centroid);
+        var direction = enemy.centroid - squad.centroid;
+        var distance = direction.SqMagnitude();
 
-        // Can we shoot the target?
-        if (distance < squad.data.attackDistance) { //yes
+        // Can we attack the target?
+        if (distance < squad.data.attackDistance) {
             squad.ChangeState(SquadFSM.Attack);
             squad.PlaySound(squad.data.commanderSounds.charge);
             squad.attackScript.enemy = enemy;
             DestroyImmediate(this);
-        }/* else { // No
-            // Can we see the target?
-            if (distance < squad.data.viewDistance) { //yes
-                lastPos = enemy.centroid; //save the last position
-            } else { // No
-                if (Vector.DistanceSq(squad.centroid, lastPos) > 2500.0f) {
-                    // Create a fake target at lastpos and move towards it
-                    tempTarget.transform.position = lastPos;
-                    target = tempTarget;
-                    seek.SetTarget(target);
-                } else { 
-                    // Target has evaded us
-                    squad.ChangeState(SquadFSM.Idle);
-                    squad.PlaySound(squad.data.commanderSounds.halt);
-                    squad.RequestSound(squad.data.groupSounds.stopSounds);
-                    DestroyImmediate(this);
-                }
-            }
-        }*/
+        }
     }
 
     public void NextTarget()
     {
         // Remove prev target
-        Object.DestroyIfNamed(target, "wayPointer");
+        if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target);
         
         // Store current
         var (obj, orientation, length) = targets.Dequeue();
@@ -155,7 +138,7 @@ public class SeekBehavior : MonoBehaviour
         forwardMove = true;
         
         // Get the direction of movement
-        var dir = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, direction.normalized, Vector3.up));
+        var dir = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, direction.Normalized(), Vector3.up));
         
         // Play sounds
         var sounds = squad.data.commanderSounds;
@@ -216,7 +199,7 @@ public class SeekBehavior : MonoBehaviour
                 }
             }
         } else if (dir == Direction.Backward) {
-            worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * squad.phalanxHeight, direction.ToRotation());
+            worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * squad.phalanxHeight, direction.ToEuler());
             if (!length.HasValue) length = squad.phalanxLength; // use to reverse formation for correct backward repositioning
         }
 
@@ -238,12 +221,12 @@ public class SeekBehavior : MonoBehaviour
         targets.Clear();
     }
 
-    public void AddDestination(GameObject obj, float? orientation, float? length)
+    public void AddDestination(GameObject obj, float? orientation = null, float? length = null)
     {
         targets.Enqueue((obj, orientation, length));
     }
 
-    public void ResetDestination(GameObject obj, float? orientation, float? length)
+    public void ResetDestination(GameObject obj, float? orientation = null, float? length = null)
     {
         targets.Clear();
         targets.Enqueue((obj, orientation, length));

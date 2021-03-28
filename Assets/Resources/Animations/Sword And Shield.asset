@@ -218,6 +218,8 @@ MonoBehaviour:
   rangeHold: []
   rangeRelease: []
   reload: []
+  equip: []
+  holster: []
   kick:
   - clip: {fileID: 7400014, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
     frame1: 10
@@ -416,6 +418,35 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: 15fa6743b07488b4992ac0a43fbb3525, type: 2}
+  knockdownNormal:
+  - clip: {fileID: 7400100, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400032, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400036, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400034, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
   knockdownCombat:
   - clip: {fileID: 7400118, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
@@ -522,6 +553,6 @@ MonoBehaviour:
     sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
     sound2: {fileID: 0}
   hitRange: []
-  stateChange: []
-  hasMultiCombatKnockback: 0
-  hasMultiRangeKnockback: 0
+  hasMultiNormalKnockdown: 1
+  hasMultiCombatKnockdown: 0
+  hasMultiRangeKnockdown: 0

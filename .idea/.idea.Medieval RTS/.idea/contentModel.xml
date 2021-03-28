@@ -502,22 +502,7 @@
             </e>
           </e>
           <e p="Standard Assets" t="Include">
-            <e p="Cameras" t="Include">
-              <e p="CameraGuidelines.txt" t="Include" />
-              <e p="Scripts" t="Include">
-                <e p="AbstractTargetFollower.cs" t="Include" />
-                <e p="AutoCam.cs" t="Include" />
-                <e p="HandHeldCam.cs" t="Include" />
-                <e p="LookatTarget.cs" t="Include" />
-                <e p="PivotBasedCameraRig.cs" t="Include" />
-                <e p="ProtectCameraFromWallClip.cs" t="Include" />
-                <e p="TargetFieldOfView.cs" t="Include" />
-              </e>
-            </e>
             <e p="Editor" t="Include">
-              <e p="CrossPlatformInput" t="Include">
-                <e p="CrossPlatformInputInitialize.cs" t="Include" />
-              </e>
               <e p="Water" t="Include">
                 <e p="Water4" t="Include">
                   <e p="GerstnerDisplaceEditor.cs" t="Include" />
@@ -650,13 +635,6 @@
               </e>
             </e>
           </e>
-          <e p="Tween" t="Include">
-            <e p="Demo" t="Include">
-              <e p="TweenDemo.cs" t="Include" />
-            </e>
-            <e p="Readme.txt" t="Include" />
-            <e p="Tween.cs" t="Include" />
-          </e>
         </e>
         <e p="Editor" t="Include">
           <e p="AutoNameAnimations.cs" t="Include" />
@@ -699,11 +677,9 @@
               <e p="Direction.cs" t="Include" />
               <e p="ImageExtention.cs" t="Include" />
               <e p="Line.cs" t="Include" />
-              <e p="ListBehavior.cs" t="Include" />
               <e p="MathExtention.cs" t="Include" />
               <e p="Matrix.cs" t="Include" />
-              <e p="ObjectExtention.cs" t="Include" />
-              <e p="ObjectPooler.cs" t="Include" />
+              <e p="ObjectPool.cs" t="Include" />
               <e p="Obstacle.cs" t="Include" />
               <e p="ParticleCallback.cs" t="Include" />
               <e p="RandomExtention.cs" t="Include" />
@@ -712,6 +688,11 @@
             </e>
             <e p="Data" t="Include">
               <e p="Animations.cs" t="Include" />
+              <e p="Behavior" t="Include">
+                <e p="ListBehaviour.cs" t="Include" />
+                <e p="SingletonBehaviour.cs" t="Include" />
+                <e p="TableBehaviour.cs" t="Include" />
+              </e>
               <e p="Commander.cs" t="Include" />
               <e p="Group.cs" t="Include" />
               <e p="ReadOnlyAttribute.cs" t="Include" />
@@ -756,6 +737,7 @@
             </e>
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />
+              <e p="CombatSliderRatio.cs" t="Include" />
               <e p="EventTriggerInvoker.cs" t="Include" />
               <e p="HideButton.cs" t="Include" />
               <e p="HighlightToggle.cs" t="Include" />
@@ -778,6 +760,7 @@
             </e>
             <e p="Effects" t="Include">
               <e p="FadeEffect.cs" t="Include" />
+              <e p="Tween.cs" t="Include" />
             </e>
             <e p="ExitButtonController.cs" t="Include" />
             <e p="Settings.cs" t="Include" />

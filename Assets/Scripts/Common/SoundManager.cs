@@ -13,32 +13,34 @@ public class SoundManager : MonoBehaviour
     public float playRange = 22500f;
     public float soundRange = 100f;
 
+    //private Transform worldTransform;
     private Transform camTransform;
     
     private Dictionary<Vector3, (Sounds, int)> clipTable;
     private Dictionary<AudioSource, (Vector3, int)> playTable;
     
-    private AudioSource[] sources;
+    private List<AudioSource> sources;
     private List<AudioSource> availables;
     
     private void Start()
     {
+        //worldTransform = transform;
         camTransform = Manager.camTransform;
         
         clipTable = new Dictionary<Vector3, (Sounds, int)>(1000);
         playTable = new Dictionary<AudioSource, (Vector3, int)>(maxSounds);
 
-        sources = new AudioSource[maxSounds];
+        sources = new List<AudioSource>(maxSounds);
         availables = new List<AudioSource>(maxSounds);
         
         for (var i = 0; i < maxSounds; i++) {
-            var source = new GameObject("Distant shot audio").AddComponent<AudioSource>();
+            var source = new GameObject("Audio shot").AddComponent<AudioSource>();
             source.dopplerLevel = dopplerLevel;
             source.spatialBlend = spatialBlend;
             source.volume = defaultVolume;
             source.loop = false;
             source.playOnAwake = false;
-            sources[i] = source;
+            sources.Add(source);
         }
     }
 

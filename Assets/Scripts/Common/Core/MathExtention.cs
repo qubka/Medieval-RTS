@@ -1,4 +1,7 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public static class MathExtention
@@ -40,12 +43,12 @@ public static class MathExtention
         };
     }
 
-    public static Quaternion ToRotation(this Vector3 vector)
+    public static Quaternion ToEuler(this Vector3 vector)
     {
         return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, vector, Vector3.up), 0f);
     }
 
-    public static Quaternion ToRotation(this float2 vector) 
+    public static Quaternion ToEuler(this float2 vector) 
     {
         return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, new Vector3(vector.x, 0f, vector.y), Vector3.up), 0f);
     }
@@ -68,5 +71,17 @@ public static class MathExtention
     public static float Magnitude(this Vector2 vector) 
     {
         return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
+    }
+    
+    public static Vector3 Normalized(this Vector3 vector) 
+    {
+        var len = vector.SqMagnitude();
+        return len > math.FLT_MIN_NORMAL ? vector * (1.0f / Mathf.Sqrt(len)) : Vector3.zero;
+    }
+    
+    public static Vector3 Normalized(this Vector2 vector) 
+    {
+        var len = vector.SqMagnitude();
+        return len > math.FLT_MIN_NORMAL ? vector * (1.0f / Mathf.Sqrt(len)) : Vector2.zero;
     }
 }

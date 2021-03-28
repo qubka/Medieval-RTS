@@ -215,7 +215,7 @@ MonoBehaviour:
   counterLeft: []
   counterRight: []
   counterShield: []
-  knockdownCombat:
+  knockdownNormal:
   - clip: {fileID: 7400124, guid: 53b1914c23d3e11498ab4125bfaa431c, type: 3}
     frame1: 0
     frame2: 0
@@ -223,6 +223,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
     sound2: {fileID: 0}
+  knockdownCombat: []
   deathNormal: []
   deathCombat:
   - clip: {fileID: 7400126, guid: 53b1914c23d3e11498ab4125bfaa431c, type: 3}

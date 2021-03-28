@@ -1,4 +1,5 @@
 ﻿using System;
+using GPUInstancer;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -20,8 +21,6 @@ public class Squadron : ScriptableObject
     public float squadAccel;
     public float squadRotation;
     public float attackDistance;
-    //public float shootDistance;
-    
     public float meleeDistance;
     public float chargeDistance;
     public float rangeDistance;
@@ -32,7 +31,7 @@ public class Squadron : ScriptableObject
 
     [Space(10)]
     
-    [Header("Attack")]
+    [Header("Damage")]
     public int attack;
     public int chargeBonus;
     public Weapon melee;
@@ -48,4 +47,16 @@ public class Squadron : ScriptableObject
     public bool canBlock;
     public bool canCounter;
     public bool hasShield;
+    
+    public int TotalStats() {
+        
+        var damage = attack;
+        if (melee && melee.armorPiercing) damage *= 2;
+        if (range && range.armorPiercing) damage *= 2;
+        damage += chargeBonus;
+        var defense = armour;
+        if (canBlock) defense *= 2;
+        if (canCounter) defense *= 2;
+        return damage + defense;
+    }
 }

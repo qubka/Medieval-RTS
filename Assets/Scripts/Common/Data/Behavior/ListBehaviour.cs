@@ -1,8 +1,9 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ListBehavior<T> : MonoBehaviour
+public abstract class ListBehaviour<T> : MonoBehaviour, IEnumerable where T : MonoBehaviour
 {
     [ReadOnly] public List<T> list;
     
@@ -19,5 +20,15 @@ public abstract class ListBehavior<T> : MonoBehaviour
     public void Remove(T obj)
     {
         list.Remove(obj);
+    }
+    
+    public IEnumerator<T> GetEnumerator()
+    {
+        return list.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

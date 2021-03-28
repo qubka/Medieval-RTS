@@ -15,14 +15,14 @@ public class IdleBehavior : MonoBehaviour
     private void Update()
     {
         // If we find an enemy, exit idleNormal mode
-        if (squad.HasEnemies) {
-            squad.ChangeState(SquadFSM.Attack);
+        if (squad.hasEnemies) {
+            squad.ChangeState(SquadFSM.Seek);
             var enemy = squad.FindClosestSquad(squad.centroid);
-            squad.attackScript.enemy = enemy;
+            squad.seekScript.AddDestination(enemy.gameObject);
            
             // Play sound
             var sounds = squad.data.commanderSounds;
-            var direction = DirectionUtils.AngleToDirection(Vector.SignedAngle(squad.worldTransform.forward, (enemy.centroid - squad.centroid).normalized, Vector3.up));
+            var direction = DirectionUtils.AngleToDirection(Vector.SignedAngle(squad.worldTransform.forward, (enemy.centroid - squad.centroid).Normalized(), Vector3.up));
             switch (direction) {
                 case Direction.Forward:
                     squad.PlaySound(Random.Range(0, 2) == 0 ? sounds.prepare : sounds.braceYourselves);

@@ -14,6 +14,7 @@ public class Agent : MonoBehaviour
     //public float maxAngularAccel = 45.0f;
     
     private Transform worldTransform;
+    private Terrain terrain;
     
     private void Start() 
     {
@@ -21,6 +22,7 @@ public class Agent : MonoBehaviour
         steering = new Steering();
         //trueMaxSpeed = maxSpeed;
         worldTransform = transform;
+        terrain = Manager.terrain;
     }
 
     public void SetSteering(Steering data, float weight) 
@@ -36,19 +38,8 @@ public class Agent : MonoBehaviour
         var pos = worldTransform.position;
         pos.x += displacement.x;
         pos.z += displacement.y;
-        pos.y = Manager.terrain.SampleHeight(pos); // align to the ground
+        pos.y = terrain.SampleHeight(pos); // align to the ground
         worldTransform.position = pos;
-
-        /*orientation += rotation * Time.deltaTime;
-        // we need to limit the orientation values
-        // to be in the range (0 – 360)
-        if (orientation < 0.0f) {
-            orientation += 360.0f;
-        } else if (orientation > 360.0f) {
-            orientation -= 360.0f;
-        }
-
-        worldTransform.SetPositionAndRotation(pos, Quaternion.Euler(0f, orientation, 0f));*/
     }
 
     //update movement for the next frame
