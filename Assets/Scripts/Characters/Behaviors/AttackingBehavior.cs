@@ -66,7 +66,7 @@ public class AttackingBehavior : MonoBehaviour
                 targetTransform.position = squad.centroid - worldTransform.forward * squad.phalanxHeight;
 
                 // ...
-                var movement = !(distance < squad.data.attackDistance * 0.85f && squad.isRange);
+                var movement = !(distance < squad.data.rangeDistance && squad.isRange);
                 squad.agentScript.enabled = movement;
                 seek.enabled = movement;
             } else {

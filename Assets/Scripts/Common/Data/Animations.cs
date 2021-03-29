@@ -43,6 +43,7 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitNormal;
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
+    public List<AnimationData> transition;
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
