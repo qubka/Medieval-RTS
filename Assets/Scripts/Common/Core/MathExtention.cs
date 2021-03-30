@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using UnityEngine;
 
 public static class MathExtention
 {
+    public static readonly float A90 = math.cos(math.radians(90f));
+    public static readonly float A80 = math.cos(math.radians(80f));
+    public static readonly float A70 = math.cos(math.radians(70f));
+    public static readonly float A60 = math.cos(math.radians(60f));
+    public static readonly float A50 = math.cos(math.radians(50f));
+    public static readonly float A40 = math.cos(math.radians(40f));
+    public static readonly float A30 = math.cos(math.radians(30f));
+    public static readonly float A20 = math.cos(math.radians(20f));
+    public static readonly float A10 = math.cos(math.radians(10f));
+    
     public static float3 ToEuler(this quaternion rot)
     {
         var q = rot.value;
@@ -60,7 +67,7 @@ public static class MathExtention
     
     public static float Magnitude(this Vector3 vector) 
     {
-        return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+        return math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
     }
     
     public static float SqMagnitude(this Vector2 vector) 
@@ -70,18 +77,24 @@ public static class MathExtention
     
     public static float Magnitude(this Vector2 vector) 
     {
-        return Mathf.Sqrt(vector.x * vector.x + vector.y * vector.y);
+        return math.sqrt(vector.x * vector.x + vector.y * vector.y);
     }
     
     public static Vector3 Normalized(this Vector3 vector) 
     {
         var len = vector.SqMagnitude();
-        return len > math.FLT_MIN_NORMAL ? vector * (1.0f / Mathf.Sqrt(len)) : Vector3.zero;
+        return len > math.FLT_MIN_NORMAL ? vector * (1.0f / math.sqrt(len)) : Vector3.zero;
     }
     
     public static Vector3 Normalized(this Vector2 vector) 
     {
         var len = vector.SqMagnitude();
-        return len > math.FLT_MIN_NORMAL ? vector * (1.0f / Mathf.Sqrt(len)) : Vector2.zero;
+        return len > math.FLT_MIN_NORMAL ? vector * (1.0f / math.sqrt(len)) : Vector2.zero;
+    }
+    
+    public static float Clamp01(float value)
+    {
+        if (value < 0f) return 0f;
+        return value > 1f ? 1f : value;
     }
 }

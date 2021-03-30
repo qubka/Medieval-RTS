@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 [RequireComponent(typeof(Terrain))]
 public class TreeManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class TreeManager : MonoBehaviour
                 continue;
 
             // Make connection between tree position and entity
-            Instantiate(treeCollider, position, Quaternion.Euler(0f, tree.rotation * Mathf.Rad2Deg, 0f));
+            Instantiate(treeCollider, position, Quaternion.Euler(0f, math.degrees(tree.rotation), 0f));
         }
     }
 }

@@ -21,7 +21,6 @@ public class SeekBehavior : MonoBehaviour
     private Transform targetTransform;
     private ObjectPool objectPool;
     
-    private float rotationSpeed;
     private bool forwardMove;
 
     private void Awake()
@@ -44,13 +43,14 @@ public class SeekBehavior : MonoBehaviour
     private void Start()
     {
         NextTarget();
+        InvokeRepeating(nameof(Seek), 0f, 0.1f);
     }
 
-    private void Update()
+    private void Seek()
     {
         // Apply our rotation
         if (math.lengthsq(agent.velocity) > 0f) {
-            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (squad.isForward ? agent.velocity : -agent.velocity).ToEuler(), rotationSpeed * Time.deltaTime);
+            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (squad.isForward ? agent.velocity : -agent.velocity).ToEuler(), squad.data.squadRotation);
         }
 
         if (enemy) {
@@ -67,7 +67,7 @@ public class SeekBehavior : MonoBehaviour
         if (target) distance = Vector.TruncDistance(worldTransform.position, targetTransform.position);
         
         // Seek a non-enemy target
-        if (distance < 0.01f) {
+        if (distance < 0.1f) {
             //we are at the target
             if (targets.Count != 0) {
                 NextTarget();
@@ -90,11 +90,20 @@ public class SeekBehavior : MonoBehaviour
         var distance = direction.SqMagnitude();
 
         // Can we attack the target?
-        if (distance < squad.data.attackDistance) {
-            squad.ChangeState(SquadFSM.Attack);
-            squad.PlaySound(squad.data.commanderSounds.charge);
-            squad.attackScript.enemy = enemy;
-            DestroyImmediate(this);
+        if (squad.isRange) {
+            if (distance < squad.data.rangeDistance) {
+                squad.ChangeState(SquadFSM.Attack);
+                //squad.PlaySound(squad.data.commanderSounds.charge); /// FIX THAT ???????????????
+                squad.attackScript.enemy = enemy;
+                DestroyImmediate(this);
+            }
+        } else {
+            if (distance < squad.data.attackDistance) {
+                squad.ChangeState(SquadFSM.Attack);
+                //squad.PlaySound(squad.data.commanderSounds.charge);
+                squad.attackScript.enemy = enemy;
+                DestroyImmediate(this);
+            }
         }
     }
 
@@ -210,8 +219,6 @@ public class SeekBehavior : MonoBehaviour
         } else if (squad.isForward != forwardMove) {
             StartCoroutine(WaitUntilDoneMovements(1.0f));
         }
-
-        rotationSpeed = squad.data.squadRotation;//squad.GetRotationSpeed(distance);
     }
 
     public void OnDestroy()

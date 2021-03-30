@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 public class WorldCanvasAlign : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class WorldCanvasAlign : MonoBehaviour
     public void Update()
     {
         var direction = worldTransform.position - camTransform.position;
-        var scale = Mathf.Clamp(direction.Magnitude() / scaleFactor, minScale, maxScale);
+        var scale = math.clamp(direction.Magnitude() / scaleFactor, minScale, maxScale);
         worldTransform.localScale = new Vector3(scale, scale, 1f);
         worldTransform.forward = direction;
     }

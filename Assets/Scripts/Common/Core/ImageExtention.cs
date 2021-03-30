@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public static class ImageExtention
         var currentFade = 1f - targetFade;
 
         while (currentTime < fadeSpeed) {
-            var alpha = Mathf.Lerp(targetFade, currentFade, currentTime / fadeSpeed);
+            var alpha = math.lerp(targetFade, currentFade, currentTime / fadeSpeed);
             
             var color = image.color;
             color.a = alpha;

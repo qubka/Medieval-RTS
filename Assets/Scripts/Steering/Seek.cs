@@ -31,7 +31,6 @@ public class Seek : AgentBehaviour
     
     public override void SetTarget(GameObject obj)
     {
-        base.SetTarget(obj);
         targetTransform = obj.transform;
     }
 }

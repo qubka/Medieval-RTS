@@ -1,11 +1,12 @@
 ﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 [Serializable]
 public abstract class AgentBehaviour : MonoBehaviour
 {
-    public float weight = 1.0f;
-    protected GameObject target;
+    public float weight = 1f;
+    
     protected Agent agent;
     
     protected virtual void Start() 
@@ -20,21 +21,17 @@ public abstract class AgentBehaviour : MonoBehaviour
 
     protected float MapToRange(float rotation) 
     { //limit a given rotation to between -180 and 180
-        rotation %= 360.0f;
-        if (Mathf.Abs(rotation) > 180.0f) {
-            if (rotation < 0.0f) {
-                rotation += 360.0f;
+        rotation %= 360f;
+        if (math.abs(rotation) > 180f) {
+            if (rotation < 0f) {
+                rotation += 360f;
             } else {
-                rotation -= 360.0f;
+                rotation -= 360f;
             }
         }
         return rotation;
     }
 
     protected abstract Steering GetSteering();
-
-    public virtual void SetTarget(GameObject obj)
-    {
-        target = obj;
-    }
+    public abstract void SetTarget(GameObject obj);
 }

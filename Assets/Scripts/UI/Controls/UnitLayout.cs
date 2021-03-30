@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
@@ -34,8 +35,8 @@ public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
 				for (var i = 0; i < count; i++) {
 					var squad = parentTransform.GetChild(i).GetComponent<UnitLayout>().squad;
 					if (squad.isSelect) {
-						min = Mathf.Min(min, i);
-						max = Mathf.Max(max, i);
+						min = math.min(min, i);
+						max = math.max(max, i);
 					}
 					squads[i] = squad;
 				}

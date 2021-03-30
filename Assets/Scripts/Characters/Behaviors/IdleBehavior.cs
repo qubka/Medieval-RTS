@@ -12,7 +12,12 @@ public class IdleBehavior : MonoBehaviour
         squad.agentScript.enabled = false;
     }
 
-    private void Update()
+    private void Start()
+    {
+        InvokeRepeating(nameof(Idle), 0f, 0.1f);
+    }
+
+    private void Idle()
     {
         // If we find an enemy, exit idleNormal mode
         if (squad.hasEnemies) {

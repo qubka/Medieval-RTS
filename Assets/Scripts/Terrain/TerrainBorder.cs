@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(Terrain))]
@@ -27,8 +28,8 @@ public class TerrainBorder : MonoBehaviour
 		line.AddLine(corner2, corner3);
 		line.AddLine(corner3, corner4);
 		line.AddLine(corner4, corner1);
-		line.Simplify();
 		line.Render();
+		line.Simplify();
 	}
 
 	private void OnDestroy()
@@ -38,6 +39,6 @@ public class TerrainBorder : MonoBehaviour
 	
 	public bool IsOutsideBorder(Vector3 point)
 	{
-		return Mathf.Abs(point.x) > limitX || Mathf.Abs(point.z) > limitZ;
+		return math.abs(point.x) > limitX || math.abs(point.z) > limitZ;
 	}
 }

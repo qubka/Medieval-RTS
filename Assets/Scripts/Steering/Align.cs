@@ -13,7 +13,7 @@ public class Align : AgentBehaviour
         var steering = new Steering();
         var rotation = targetAgent.orientation - agent.orientation;
         rotation = MapToRange(rotation);
-        var rotationSize = Mathf.Abs(rotation);
+        var rotationSize = math.abs(rotation);
 
         if (rotationSize < targetRadius) {
             return steering;
@@ -29,7 +29,7 @@ public class Align : AgentBehaviour
         targetRotation *= rotation / rotationSize;
         steering.angular = targetRotation - agent.rotation;
         steering.angular /= timeToTarget;
-        var angularAccel = Mathf.Abs(steering.angular);
+        var angularAccel = mathf.abs(steering.angular);
 
         if (angularAccel > agent.maxAngularAccel) {
             steering.angular /= angularAccel;

@@ -17,7 +17,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 using System;
 using System.Collections.Generic;
-
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace DigitalRuby.Tween
@@ -970,7 +970,7 @@ namespace DigitalRuby.Tween
     /// </remarks>
     public static class TweenScaleFunctions
     {
-        private const float halfPi = Mathf.PI * 0.5f;
+        private const float halfPi = math.PI * 0.5f;
 
         /// <summary>
         /// A linear progress scale function.
@@ -1054,29 +1054,29 @@ namespace DigitalRuby.Tween
         /// A sine progress scale function that eases in.
         /// </summary>
         public static readonly Func<float, float> SineEaseIn = SineEaseInFunc;
-        private static float SineEaseInFunc(float progress) { return Mathf.Sin(progress * halfPi - halfPi) + 1; }
+        private static float SineEaseInFunc(float progress) { return math.sin(progress * halfPi - halfPi) + 1; }
 
         /// <summary>
         /// A sine progress scale function that eases out.
         /// </summary>
         public static readonly Func<float, float> SineEaseOut = SineEaseOutFunc;
-        private static float SineEaseOutFunc(float progress) { return Mathf.Sin(progress * halfPi); }
+        private static float SineEaseOutFunc(float progress) { return math.sin(progress * halfPi); }
 
         /// <summary>
         /// A sine progress scale function that eases in and out.
         /// </summary>
         public static readonly Func<float, float> SineEaseInOut = SineEaseInOutFunc;
-        private static float SineEaseInOutFunc(float progress) { return (Mathf.Sin(progress * Mathf.PI - halfPi) + 1) / 2; }
+        private static float SineEaseInOutFunc(float progress) { return (math.sin(progress * math.PI - halfPi) + 1) / 2; }
 
         private static float EaseInPower(float progress, int power)
         {
-            return Mathf.Pow(progress, power);
+            return math.pow(progress, power);
         }
 
         private static float EaseOutPower(float progress, int power)
         {
             int sign = power % 2 == 0 ? -1 : 1;
-            return (sign * (Mathf.Pow(progress - 1, power) + sign));
+            return (sign * (math.pow(progress - 1, power) + sign));
         }
 
         private static float EaseInOutPower(float progress, int power)
@@ -1084,12 +1084,12 @@ namespace DigitalRuby.Tween
             progress *= 2.0f;
             if (progress < 1)
             {
-                return Mathf.Pow(progress, power) / 2.0f;
+                return math.pow(progress, power) / 2.0f;
             }
             else
             {
                 int sign = power % 2 == 0 ? -1 : 1;
-                return (sign / 2.0f * (Mathf.Pow(progress - 2, power) + sign * 2));
+                return (sign / 2.0f * (math.pow(progress - 2, power) + sign * 2));
             }
         }
     }

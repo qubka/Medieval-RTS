@@ -5,8 +5,7 @@ using Random = UnityEngine.Random;
 public class AttackingBehavior : MonoBehaviour
 {
     [ReadOnly] public Squad enemy;
-    private GameObject target;
-    
+
     private Squad squad;
     private Seek seek;
 
@@ -18,8 +17,7 @@ public class AttackingBehavior : MonoBehaviour
         squad = gameObject.GetComponent<Squad>();
         squad.agentScript.enabled = true;
         
-        target = new GameObject();
-        target.AddComponent<Agent>();
+        var target = new GameObject();
         seek = gameObject.AddComponent<Seek>();
         seek.SetTarget(target);
         
@@ -50,32 +48,33 @@ public class AttackingBehavior : MonoBehaviour
                 squad.PlaySound(sounds.fightUntilYouDie);
                 break;
         }
+        InvokeRepeating(nameof(Attack), 0f, 0.1f);
     }
 
-    private void Update()
+    private void Attack()
     {
-        // Is target alive?
         if (enemy && enemy.hasUnits) {
-            // Is target within range?
             var distance = Vector.DistanceSq(squad.centroid, enemy.centroid);
-            if (distance < squad.data.attackDistance) {//yes
-                // Apply our rotation
-                worldTransform.rotation = Quaternion.LookRotation(enemy.centroid - squad.centroid); //vector from us to the target
-                
-                // Move our fake target to the centroid
-                targetTransform.position = squad.centroid - worldTransform.forward * squad.phalanxHeight;
-
-                // ...
-                var movement = !(distance < squad.data.rangeDistance && squad.isRange);
+            worldTransform.rotation = Quaternion.LookRotation(enemy.centroid - squad.centroid);
+            if (squad.isRange) {
+                targetTransform.position = enemy.centroid;
+                var movement = distance > squad.data.rangeDistance * 0.95f;
                 squad.agentScript.enabled = movement;
                 seek.enabled = movement;
             } else {
+                if (distance < squad.data.attackDistance) {
+                    targetTransform.position = squad.centroid - worldTransform.forward * squad.phalanxHeight;
+                    squad.agentScript.enabled = true;
+                    seek.enabled = true;
+                }
+            }
+            /* }else {
                 // If target out of range, return to seek state
                 squad.ChangeState(SquadFSM.Idle);
                 squad.PlaySound(squad.data.commanderSounds.dismiss);
                 squad.UpdateFormation(squad.phalanxLength);
                 DestroyImmediate(this);
-            }
+            }*/
         } else {//no
             squad.ChangeState(SquadFSM.Idle);
             squad.PlaySound(squad.data.commanderSounds.victoryIsOurs);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -26,7 +27,7 @@ public static class RandomExtention
     
     public static AudioClip GetByProportion(this List<AudioClip> list, int current, int max)
     {
-        return list[(int) Mathf.Floor((float) (list.Count - 1) * current / max)];
+        return list[(int) math.floor((float) (list.Count - 1) * current / max)];
     }
     
     public static AudioClip GetRandom(this List<AudioClip> list)

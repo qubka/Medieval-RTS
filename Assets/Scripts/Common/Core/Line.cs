@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -49,7 +50,7 @@ public class Line
     
     public void AddCurve(Vector3 start, Vector3 end, float height)
     {
-        var vertexCount = Mathf.Min(Vector.Distance(end, start), 24f);
+        var vertexCount = math.min(Vector.Distance(end, start), 24f);
         var center = (end + start) / 2f;
         center.y = terrain.SampleHeight(center) + height;
 
@@ -82,9 +83,7 @@ public class Line
 
     public void Simplify(float tolerance = 0.5f)
     {
-        var output = new List<Vector3>();
-        LineUtility.Simplify(points, tolerance, output);
-        points = output;
+        line.Simplify(tolerance);
     }
     
     public void Destroy()
@@ -124,7 +123,7 @@ public class Line
         var currentTime = 0f;
 
         while (currentTime < fadeSpeed) {
-            var alpha = Mathf.Lerp(1f, 0f, currentTime / fadeSpeed);
+            var alpha = math.lerp(1f, 0f, currentTime / fadeSpeed);
  
             gradient.SetKeys(line.colorGradient.colorKeys, new[] { new GradientAlphaKey(alpha, 1f) });
             line.colorGradient = gradient;

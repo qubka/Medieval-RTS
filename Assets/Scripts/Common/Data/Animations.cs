@@ -16,6 +16,7 @@ public class Animations : ScriptableObject
     public List<AnimationData> rangeStart;
     public List<AnimationData> rangeHold;
     public List<AnimationData> rangeRelease;
+    public List<AnimationData> rangeEnd;
     public List<AnimationData> reload;
     public List<AnimationData> equip;
     public List<AnimationData> kick;
@@ -43,7 +44,6 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitNormal;
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
-    public List<AnimationData> transition;
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
@@ -157,6 +157,35 @@ public class Animations : ScriptableObject
         }
 
         return list[0];
+    }
+    
+    
+    public int GetRangeAnimation(Weapon weapon, float distance)
+    {
+        if (distance > weapon.distant) {
+            return 2;
+        }
+
+        if (distance < weapon.normal) {
+            return 0;
+        }
+        
+        return 1;
+    }
+
+    public bool IsIdle(AnimationClip current, bool isCombat, bool isRange)
+    {
+        if (isCombat) {
+            if (isRange && deathRange.Count > 0) {
+                return idleRange[0].clip == current;
+            }
+            
+            if (deathCombat.Count > 0) {
+                return idleCombat[0].clip == current;
+            }
+        }
+
+        return idleNormal[0].clip == current;
     }
 }
 

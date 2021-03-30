@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("RTS Camera")]
@@ -49,8 +50,8 @@ public class CamController : MonoBehaviour
 	public float keyboardZoomingSensitivity = 2f;
 	public float scrollWheelZoomingSensitivity = 40f;
 	public float zoomPos = 0.5f; //value in range (0, 1) used as t in Matf.Lerp
-	public float smoothZoomTime = 0.1f; //Mathf.SmoothDamp interpolation
-	private float currentZoomVelocity; // Mathf.SmoothDamp needs this for interpolation
+	public float smoothZoomTime = 0.1f; //
+	private float currentZoomVelocity; // 
 	
 	#endregion
 
@@ -269,12 +270,12 @@ public class CamController : MonoBehaviour
 		if (useKeyboardZooming)
 			zoomPos += ZoomDirection * Time.deltaTime * keyboardZoomingSensitivity;
 
-		zoomPos = Mathf.Clamp01(zoomPos);
+		zoomPos = MathExtention.Clamp01(zoomPos);
 		
 		var position = camTransform.position;
 		var ray = new Ray(position, Vector3.down);
 		if (Physics.Raycast(ray, out var hit, 1000f, Manager.Ground | Manager.Water)) {
-			var desiredHeight = hit.point.y + Mathf.Lerp(minHeight, maxHeight, zoomPos);
+			var desiredHeight = hit.point.y + math.lerp(minHeight, maxHeight, zoomPos);
 			position.y = Mathf.SmoothDamp(position.y, desiredHeight, ref currentZoomVelocity, smoothZoomTime);
 			camTransform.position = position;
 		}
@@ -290,7 +291,7 @@ public class CamController : MonoBehaviour
 			rotationX -= VerticalRotation * speed;
 			rotationY += HorizontalRotation * speed;
 			
-			rotationX = Mathf.Clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
+			rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 
@@ -299,7 +300,7 @@ public class CamController : MonoBehaviour
 			rotationX -= axis.y;
 			rotationY += axis.x;
 			
-			rotationX = Mathf.Clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
+			rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 	}
@@ -313,14 +314,14 @@ public class CamController : MonoBehaviour
 			return;
 
 		var position = camTransform.position;
-		position = new Vector3(Mathf.Clamp(position.x, -border.limitX, border.limitX), position.y, Mathf.Clamp(position.z, -border.limitZ, border.limitZ));
+		position = new Vector3(math.clamp(position.x, -border.limitX, border.limitX), position.y, math.clamp(position.z, -border.limitZ, border.limitZ));
 		camTransform.position = position;
 	}
 
 	// TODO:
 	private void Shake()
 	{
-		var shake = Mathf.Pow(trauma, TraumaExponent);
+		var shake = math.pow(trauma, TraumaExponent);
 		
 		/* Only apply this when there is active shake */
 		if(shake > 0f) {
@@ -343,7 +344,7 @@ public class CamController : MonoBehaviour
 
 			worldTrasnform.localPosition += lastPosition - previousPosition;
 			worldTrasnform.localRotation = Quaternion.Euler(worldTrasnform.localRotation.eulerAngles + lastRotation - previousRotation);
-			trauma = Mathf.Clamp01(trauma - Time.deltaTime);
+			trauma = MathExtention.Clamp01(trauma - Time.deltaTime);
 		} else {
 			if (lastPosition == Vector3.zero && lastRotation == Vector3.zero)
 				return;
@@ -362,7 +363,7 @@ public class CamController : MonoBehaviour
 	/// <param name="shake">[0,1] Amount of shake to apply to the object</param>
 	public void InduceShake(float shake)
 	{
-		trauma = Mathf.Clamp01(trauma + shake);
+		trauma = MathExtention.Clamp01(trauma + shake);
 	}
 	
 	/// <summary>
@@ -388,7 +389,7 @@ public class CamController : MonoBehaviour
 
 		// Move to the desired position
 		desiredPosition = new Vector3(desiredPosition.x, currentPosition.y, desiredPosition.z);
-		currentPosition = Vector3.MoveTowards(currentPosition, desiredPosition,  followingSpeed * Time.deltaTime);
+		currentPosition = Vector.MoveTowards(currentPosition, desiredPosition,  followingSpeed * Time.deltaTime);
 		camTransform.position = currentPosition;
 
 		// Always look at the target
@@ -469,7 +470,7 @@ public class CamController : MonoBehaviour
 		
 		rotationY += mouseX * mouseSensitivity * deltaTime * 0.02f;
 		rotationX += mouseY * mouseSensitivity * deltaTime * 0.02f;	
-		rotationX = Mathf.Clamp(rotationX, -clampAngle, clampAngle);
+		rotationX = math.clamp(rotationX, -clampAngle, clampAngle);
 		worldTransform.rotation = Quaternion.Euler(rotationX, rotationY, 0f);
 	}
 

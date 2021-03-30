@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ public class CombatSliderRatio : ListBehaviour<Squad>
     private void Start()
     {
         slider = GetComponent<Slider>();
-        InvokeRepeating(nameof(ChangeSlider), 0f, 1.0f);
+        InvokeRepeating(nameof(ChangeSlider), 0f, 1f);
     }
     
     private void ChangeSlider()
@@ -33,7 +34,7 @@ public class CombatSliderRatio : ListBehaviour<Squad>
         } else if (allies == 0) {
             slider.value = 0;
         } else {
-            slider.value = Mathf.Clamp((float) allies / enemies, 0.1f, 1.9f);
+            slider.value = math.clamp((float) allies / enemies, 0.1f, 1.9f);
         }
     }
 }

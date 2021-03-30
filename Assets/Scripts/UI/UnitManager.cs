@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Manager))]
@@ -101,7 +102,7 @@ public class UnitManager : MonoBehaviour
 		//unitList = GameObject.Find("Unit list");
 		eventSystem = EventSystem.current;
 		var size = Manager.terrain.terrainData.size;
-		maxDistance = Mathf.Max(size.x, size.z) * 2f;
+		maxDistance = math.max(size.x, size.z) * 2f;
 		unitTable = Manager.unitTable;
 		objectPool = Manager.objectPool;
 		border = Manager.border;
@@ -647,7 +648,7 @@ public class UnitManager : MonoBehaviour
 
 		var time = Time.time;
 		if ((time - lastSelectTime < 0.5f) && lastSelectSquad == filter) {
-			var trans = filter.audioTransform;
+			var trans = filter.centerTransform;
 			if (camController.target != trans) {
 				camController.SetTarget(trans, true);
 				clickAudio.clip = targetSound;
@@ -743,7 +744,7 @@ public class UnitManager : MonoBehaviour
 		public void Expand(List<Vector3> positions, Vector3 start, Vector3 end, Vector3 center, float angle, float length)
 		{
 			var totalLength = squad.unitCount * squad.unitSize.width;
-			length = Mathf.Clamp(length, totalLength / 12f, totalLength);
+			length = math.clamp(length, totalLength / 12f, totalLength);
 
 			var shift = FormationUtils.GetFormation(positions, squad.formationShape, squad.unitSize, squad.unitCount, length, true);
 			// ReSharper disable once CompareOfFloatsByEqualityOperator

@@ -44,10 +44,7 @@ public class Squad : MonoBehaviour
     [ReadOnly] public float phalanxHeight;
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public Transform worldTransform;
-    [HideInInspector] public Transform audioTransform;
     [HideInInspector] public Transform camTransform;
-    [HideInInspector] public Transform particleTransform;
-    [HideInInspector] public Transform minimapTransform;
     [HideInInspector] public Transform barTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
@@ -74,19 +71,18 @@ public class Squad : MonoBehaviour
     public Image cardSelect;
     public Text cardNumber;
     public GameObject unitLayout;
-
     [Space(5f)]
     public ParticleSystem particle;
+    public GameObject circle;
+    public Transform centerTransform;
     
     [Header("Misc")]
-    public float MaximumShake = 0.5f;
-    public float ShakeRange = 2000f;
-    //[Tooltip()]
-    public float CanvasHeight = 10f;
-    //[Tooltip()]
-    public Vector3 BarScale = new Vector3(1.15f, 1.15f, 1.15f);
-    //[Tooltip()]
-    public Vector3 BoundCollision = new Vector3(1.25f, 5f, 1.1f);
+    public float maximumShake = 0.5f;
+    public float shakeRange = 2000f;
+    public float canvasHeight = 10f;
+    public Vector3 barScale = new Vector3(1.15f, 1.15f, 1.15f);
+    public Vector3 boundCollision = new Vector3(1.25f, 5f, 1.1f);
+    public KeyCode radiusKey = KeyCode.LeftAlt;
     
     // Private data
     private Camera cam;
@@ -123,9 +119,10 @@ public class Squad : MonoBehaviour
         colliders = new Collider[32];
         collision = GetComponent<BoxCollider>();
         particleShape = particle.shape;
-        particleTransform = particle.transform;
-        minimapTransform = minimap.transform;
-        audioTransform = source.transform; // store main one for transform
+        //particleTransform = particle.transform;
+        //circleTransform = circle.transform;
+       // minimapTransform = minimap.transform;
+        //audioTransform = source.transform; // store main one for transform
         barTransform = squadBar.transform;
         layoutTransform = unitLayout.transform;
         cardTransform = unitCard.transform;
@@ -133,7 +130,8 @@ public class Squad : MonoBehaviour
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
         agentScript.maxAccel = data.squadAccel;
-
+        circle.GetComponent<Circle>().radius = math.sqrt(data.range ? data.rangeDistance : data.attackDistance);
+        
         // Lond audio components
         var sources = source.GetComponents<AudioSource>();
         mainAudio = sources[0];
@@ -149,7 +147,7 @@ public class Squad : MonoBehaviour
         barHealth.value = squadSize;
         cardHealth.maxValue = squadSize;
         cardHealth.value = squadSize;
-        
+        cardAmmo.gameObject.SetActive(data.range);
         cardNumber.text = squadSize.ToString();
         var color = team.GetColor();
         barFill.color = color;
@@ -163,6 +161,9 @@ public class Squad : MonoBehaviour
         neighbours = new List<Squad>();
         enemies = new List<Squad>();
         obstacles = new List<Obstacle>();
+        
+        // Call some repeat func
+        InvokeRepeating(nameof(UpdateAll), 0f, 0.1f);
     }
 
     private void Start()
@@ -285,7 +286,7 @@ public class Squad : MonoBehaviour
         
         // Parent a bar to the screen
         barTransform.SetParent(squadCanvas, false);
-        barTransform.localScale = BarScale;
+        barTransform.localScale = barScale;
         squadCanvas.GetComponent<SortByDistance>().Add(squadBar.GetComponent<SquadBar>()); // add bar to the screen distance sort system
         
         // Parent unit to the screen
@@ -345,18 +346,51 @@ public class Squad : MonoBehaviour
         foreach (var pos in positions) {
             Gizmos.DrawSphere(worldTransform.TransformPoint(pos), 0.1f);
         }
-
         UnityEditor.Handles.Label(worldTransform.position + Vector3.up * 5f, state.ToString());
     }*/
-    
+
     private void Update()
     {
-        RepositionChildren();
+        // Find absolute centroid position
+        centroid = Vector3.zero;
+
+        foreach (var unit in units) {
+            centroid += unit.worldTransform.position;
+        }
+        
+        centroid /= units.Count;
+
+        // Place objects to the local centroid
+        var center = worldTransform.InverseTransformPoint(centroid);
+        collision.center = center;
+        centerTransform.localPosition = center;
+
+        // Calculate position for the ui bar
+        center = centroid;
+        center.y += canvasHeight;
+        center = cam.WorldToScreenPoint(center);
+        
+        // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
+        if (center.z < 0f) {
+            squadBar.SetActive(false);
+        } else {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(squadCanvas, center, null, out var canvasPos);
+            barTransform.localPosition = canvasPos;
+            squadBar.SetActive(true);
+        }
+
+        // TODO: Temporary
+        // Disable circle radius if we not in range anymore
+        circle.SetActive(select && (isRange || Input.GetKey(radiusKey)));
+    }
+    
+    private void UpdateAll()
+    {
         DetectCollision();
         DetectObstacles();
         PlaySound();
     }
-    
+
     private void PlaySound()
     {
         if (IsUnitsFighting()) {
@@ -426,7 +460,7 @@ public class Squad : MonoBehaviour
             }
         }
     }
-    
+
     private void DetectCollision()
     {
         enemies.Clear();
@@ -473,39 +507,6 @@ public class Squad : MonoBehaviour
                     unit.SetAvoidance(true, obstacle);
                 }
             }
-        }
-    }
-
-    private void RepositionChildren()
-    {
-        // Find absolute centroid position
-        centroid = Vector3.zero;
-
-        foreach (var unit in units) {
-            centroid += unit.worldTransform.position;
-        }
-        
-        centroid /= units.Count;
-
-        // Place objects to the local centroid
-        var center = worldTransform.InverseTransformPoint(centroid);
-        collision.center = center;
-        particleTransform.localPosition = center;
-        audioTransform.localPosition = center;
-        minimapTransform.localPosition = new Vector3(center.x, CanvasHeight, center.z);
-        
-        // Calculate position for the ui bar
-        center = centroid;
-        center.y += CanvasHeight;
-        center = cam.WorldToScreenPoint(center);
-        
-        // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
-        if (center.z < 0f) {
-            squadBar.SetActive(false);
-        } else {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(squadCanvas, center, null, out var canvasPos);
-            barTransform.localPosition = canvasPos;
-            squadBar.SetActive(true);
         }
     }
 
@@ -556,6 +557,8 @@ public class Squad : MonoBehaviour
                 selectAudio.Play();
             }
         }
+        
+        //circle.SetActive(isRange && select);
     }
 
     public void UpdateFormation(float length)
@@ -567,12 +570,12 @@ public class Squad : MonoBehaviour
 
     private void UpdateCollision()
     {
-        var x = phalanxLength * BoundCollision.x;
-        var y = BoundCollision.y;
-        var z = phalanxHeight * BoundCollision.z;
+        var x = phalanxLength * boundCollision.x;
+        var y = boundCollision.y;
+        var z = phalanxHeight * boundCollision.z;
         var size = new Vector3(x, y, z);
         collision.size = size;
-        var scale = Mathf.Max(x, z);
+        var scale = math.max(x, z);
         particleShape.scale = new Vector3(scale, 1f, scale / 2f);
     }
     
@@ -622,11 +625,11 @@ public class Squad : MonoBehaviour
     public void CreateShake(Vector3 position)
     {
         var distance = Vector.DistanceSq(position, camTransform.position);
-        if (distance > ShakeRange)
+        if (distance > shakeRange)
             return;
 
-        var scale = Mathf.Clamp01(distance / ShakeRange);
-        var stress = (1f - scale * scale) * MaximumShake;
+        var scale = MathExtention.Clamp01(distance / shakeRange);
+        var stress = (1f - scale * scale) * maximumShake;
         camController.InduceShake(stress);
     }
 

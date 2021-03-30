@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -36,7 +37,7 @@ public class LayoutExpander : UIBehaviour
             var size = rectTransform.sizeDelta;
             foreach (var rect in rectangles) {
                 var trans = rect.transform;
-                var width = Mathf.Max(rect.minWidth, size.x);
+                var width = math.max(rect.minWidth, size.x);
                 var enable = width > 0f;
                 if (enable) {
                     var sizeDelta = trans.sizeDelta;

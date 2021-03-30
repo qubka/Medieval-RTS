@@ -198,7 +198,7 @@ public static class Vector // MathExtension ?
 	public static float Angle(Vector3 from, Vector3 to)
 	{
 		var num = Math.Sqrt((from.SqMagnitude()) * to.SqMagnitude());
-		return num < 1.00000000362749E-15 ? 0f : (float) Math.Acos(Mathf.Clamp(Dot(from, to) / (float) num, -1f, 1f)) * Mathf.Rad2Deg;
+		return num < 1.00000000362749E-15 ? 0f : math.degrees(math.acos(math.clamp(Dot(from, to) / (float) num, -1f, 1f)));
 	}
 
 	public static float SignedAngle(Vector3 from, Vector3 to, Vector3 axis)
@@ -211,4 +211,22 @@ public static class Vector // MathExtension ?
 		return num1 * num5;
 	}
 	
+	public static Vector3 MoveTowards(Vector3 current, Vector3 target, float maxDistanceDelta) {
+		var num1 = target.x - current.x;
+		var num2 = target.y - current.y;
+		var num3 = target.z - current.z;
+		var num4 = num1 * num1 + num2 * num2 + num3 * num3;
+		if (num4 == 0f || maxDistanceDelta >= 0f && num4 <= maxDistanceDelta * maxDistanceDelta)
+			return target;
+		var num5 = math.sqrt(num4);
+		return new Vector3(current.x + num1 / num5 * maxDistanceDelta, current.y + num2 / num5 * maxDistanceDelta, current.z + num3 / num5 * maxDistanceDelta);
+	}
+	
+	public static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angle) 
+	{
+		var dir = point - pivot; // get point direction relative to pivot
+		dir = Quaternion.Euler(angle) * dir; // rotate it
+		point = dir + pivot; // calculate rotated point
+		return point; // return it
+	}
 }
