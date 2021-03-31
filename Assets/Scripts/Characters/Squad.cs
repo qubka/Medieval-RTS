@@ -48,11 +48,11 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform barTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
-
+    [HideInInspector] public bool canShoot;
+    
     [Header("Children References")] 
     public GameObject source;
     [Space(5f)]
-    public GameObject minimap;
     public Image mapMarker;
     public Image mapBorder;
     [Space(5f)]
@@ -337,9 +337,9 @@ public class Squad : MonoBehaviour
         state = newState;
     }
     
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        if (units == null)
+        if (!Application.isPlaying)
             return;
 
         Gizmos.color = Color.red;
@@ -347,7 +347,7 @@ public class Squad : MonoBehaviour
             Gizmos.DrawSphere(worldTransform.TransformPoint(pos), 0.1f);
         }
         UnityEditor.Handles.Label(worldTransform.position + Vector3.up * 5f, state.ToString());
-    }*/
+    }
 
     private void Update()
     {
@@ -458,6 +458,12 @@ public class Squad : MonoBehaviour
             if (particle.isPlaying) {
                 particle.Stop();
             }
+        }
+
+        var temp = canShoot;
+        canShoot = isRange && IsUnitsHolding();
+        if (canShoot && !temp) {
+            PlaySound(data.commanderSounds.fire);
         }
     }
 
@@ -770,6 +776,22 @@ public class Squad : MonoBehaviour
         }
         
         return false;
+    }
+
+    public bool IsUnitsHolding()
+    {
+        var count = 0;
+        foreach (var unit in units) {
+            switch (unit.state) {
+                case UnitFSM.Death:
+                case UnitFSM.Hit:
+                case UnitFSM.RangeHold:
+                    count++;
+                    break;
+            }
+        }
+        
+        return count >= units.Count;
     }
 
     #endregion

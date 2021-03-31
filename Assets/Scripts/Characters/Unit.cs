@@ -19,12 +19,12 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public AnimationData prevAnim;
     [ReadOnly] public float nextAnimTime;
     [ReadOnly] public float nextTargetTime;
-    [ReadOnly] public float nextModeTime = Max;
-    [ReadOnly] public float nextDamageTime = Max;
-    [ReadOnly] public float nextDamage2Time = Max;
-    [ReadOnly] public float nextBlockTime = Max;
-    [ReadOnly] public float nextBlock2Time = Max;
-    [ReadOnly] public float lastDamageTime = Min;
+    [ReadOnly] public float nextModeTime;
+    [ReadOnly] public float nextDamageTime;
+    [ReadOnly] public float nextDamage2Time;
+    [ReadOnly] public float nextBlockTime;
+    [ReadOnly] public float nextBlock2Time;
+    [ReadOnly] public float lastDamageTime;
     [ReadOnly] public float currentTime;
     [ReadOnly] public bool isRunning;
     [ReadOnly] public bool isRange;
@@ -461,10 +461,7 @@ public abstract class Unit : MonoBehaviour
     
     protected bool HasCollision()
     {
-	    //if (!squad.hasEnemies)
-		//    return false;
-
-		if (collisions.Count == 0)
+	    if (collisions.Count == 0)
 			return false;
 		
         var position = worldTransform.position;
@@ -635,29 +632,6 @@ public abstract class Unit : MonoBehaviour
         selector.SetActive(value);
     }
 
-    /*protected void SelectorAdjustment()
-    {
-        if (!isSelected)
-            return;
-        
-        var position = worldTransform.position;
-        var rotation = worldTransform.rotation;
-        
-        var front = rotation * new Vector3(0, 0, 1);
-        var side = rotation * new Vector3(1, 0, 0);
-
-        var p1 = Manager.terrain.SampleHeight(position + front);
-        var p2 = Manager.terrain.SampleHeight(position - front);
-        var p3 = Manager.terrain.SampleHeight(position + side);
-        var p4 = Manager.terrain.SampleHeight(position - side);
-
-        var pos = worldTransform.InverseTransformPoint(new Vector3(0f, Math.Max(Math.Max(p1, p2), Math.Max(p3, p4)), 0f));
-        pos.x = 0f;
-        pos.y += 0.1f;
-        pos.z = 0f;
-        selectorTransform.localPosition = pos;
-    }*/
-
     #endregion
     
     #region DOTS
@@ -760,7 +734,7 @@ public abstract class Unit : MonoBehaviour
 						PlayAnimation(anim, anim.Length);
 					}
 				} else {
-					worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), rotationSpeed);
+					worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), rotationSpeed / 2f);
 
 					if (currentTime > nextAnimTime) {
 						var anim = (isRange ? animations.idleRange : animations.idleCombat).GetRandom();
@@ -823,7 +797,7 @@ public abstract class Unit : MonoBehaviour
 			}
 		} else {
 			if (isIdle) {
-				worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), rotationSpeed);
+				worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), rotationSpeed / 2f);
 			}
 		}
 	}
@@ -844,7 +818,7 @@ public abstract class Unit : MonoBehaviour
 			}
 
 			var boost = math.log(speed) / 2f;
-			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, boid.velocity.ToEuler(), 2f * rotationSpeed - boost);
+			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, boid.velocity.ToEuler(), rotationSpeed - boost);
 			speed = math.clamp(speed, 0.5f, 1f);
 
 			if (currentTime > nextAnimTime) {
@@ -892,7 +866,7 @@ public abstract class Unit : MonoBehaviour
 			}
 
 			var boost = math.log(speed) / 2f;
-			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, boid.velocity.ToEuler(), 2f * rotationSpeed - boost);
+			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, boid.velocity.ToEuler(), rotationSpeed - boost);
 			speed = math.clamp(speed, 0.5f, 1f);
 
 			if (currentTime > nextAnimTime) {
@@ -920,7 +894,7 @@ public abstract class Unit : MonoBehaviour
 		var current = worldTransform.rotation;
 		var desired = (target.worldTransform.position - worldTransform.position).ToEuler();
 		if (math.abs(Quaternion.Dot(current, desired)) < 0.999999f) {
-			worldTransform.rotation = Quaternion.RotateTowards(current, desired, rotationSpeed * 2f);
+			worldTransform.rotation = Quaternion.RotateTowards(current, desired, rotationSpeed);
 		} else {
 			MeleeStart();
 		}
@@ -986,7 +960,7 @@ public abstract class Unit : MonoBehaviour
 			}*/
 
 			var boost = math.log(speed) / 2f;
-			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, boid.velocity.ToEuler(), 2f * rotationSpeed - boost);
+			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, boid.velocity.ToEuler(), rotationSpeed - boost);
 			speed = math.clamp(speed, 0.5f, 1f);
 
 			if (currentTime > nextAnimTime) {
@@ -1014,19 +988,22 @@ public abstract class Unit : MonoBehaviour
 		var current = worldTransform.rotation;
 		var desired = (target.worldTransform.position - worldTransform.position).ToEuler();
 		if (math.abs(Quaternion.Dot(current, desired)) < 0.999999f) {
-			worldTransform.rotation = Quaternion.RotateTowards(current, desired, rotationSpeed * 2f);
+			worldTransform.rotation = Quaternion.RotateTowards(current, desired,  rotationSpeed);
 		} else {
-			if (currentTime > nextAnimTime) {
-				ChangeState(UnitFSM.RangeReload);
-				var anim = animations.reload.GetRandom();
-				PlayAnimation(anim, anim.Length);
-			}
+			ChangeState(UnitFSM.RangeReload);
+			var anim = animations.reload.GetRandom();
+			PlayAnimation(anim, anim.Length);
 		}
 	}
 
 	protected void RangeStart()
 	{
-		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), 2f * rotationSpeed);
+		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), rotationSpeed);
+
+		if (currentTime > nextModeTime) {
+			squad.RequestPlaySound(worldTransform.position, currentAnim.sound2);
+			nextModeTime = Max;
+		}
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.RangeHold);
@@ -1039,9 +1016,9 @@ public abstract class Unit : MonoBehaviour
 	
 	protected void RangeHold()
 	{
-		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), 2f * rotationSpeed);
+		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), rotationSpeed);
 		
-		if (currentTime > nextAnimTime) {
+		if (squad.canShoot) {
 			ChangeState(UnitFSM.RangeRelease);
 			var anim = animations.rangeRelease[range];
 			PlayAnimation(anim, anim.Length);
@@ -1061,13 +1038,14 @@ public abstract class Unit : MonoBehaviour
 	{
 		
 		var direction = (target.worldTransform.position - worldTransform.position);
-		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), 2f * rotationSpeed);
+		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), rotationSpeed);
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.RangeStart);
 			range = animations.GetRangeAnimation(squad.data.range, direction.SqMagnitude());
 			var anim = animations.rangeStart[range];
 			PlayAnimation(anim, anim.Length - 0.05f);
+			nextModeTime = currentTime + currentAnim.frame2 / currentAnim.FrameRate;
 		}
 	}
 	
@@ -1075,7 +1053,7 @@ public abstract class Unit : MonoBehaviour
 	
 	protected void WaitA() // Attack
 	{
-		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), 2f * rotationSpeed);
+		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), rotationSpeed);
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Attack);
@@ -1117,7 +1095,7 @@ public abstract class Unit : MonoBehaviour
 				}
 			} else {
 				if (isIdle) {
-					worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, squad.worldTransform.rotation, rotationSpeed);
+					worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, squad.worldTransform.rotation, rotationSpeed / 2f);
 				}
 			}
 		}
@@ -1131,7 +1109,7 @@ public abstract class Unit : MonoBehaviour
 			var current = worldTransform.rotation;
 			var target = (squad.isForward ? boid.velocity : -boid.velocity).ToEuler();
 			if (math.abs(Quaternion.Dot(current, target)) < 0.999999f) {
-				worldTransform.rotation = Quaternion.RotateTowards(current, target, rotationSpeed * 2f);
+				worldTransform.rotation = Quaternion.RotateTowards(current, target, rotationSpeed);
 			} else {
 				ChangeState(UnitFSM.SeekStart);
 				nextAnimTime = currentTime + Random.Range(0.1f, 0.5f);
@@ -1157,7 +1135,7 @@ public abstract class Unit : MonoBehaviour
 		var speed = moveSpeed;
 		if (speed > 0f) {
 			var boost = math.log(speed) / 2f;
-			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (squad.isForward ? boid.velocity : -boid.velocity).ToEuler(), 2f * rotationSpeed - boost);
+			worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (squad.isForward ? boid.velocity : -boid.velocity).ToEuler(), rotationSpeed - boost);
 
 			if (speed > 1f) {
 				speed = 1f + boost;
@@ -1250,7 +1228,7 @@ public abstract class Unit : MonoBehaviour
 
 	protected void Wait()
 	{
-		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (squad.isForward ? boid.velocity : -boid.velocity).ToEuler(), 2f * rotationSpeed);
+		//worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (squad.isForward ? boid.velocity : -boid.velocity).ToEuler(), rotationSpeed);
                 
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Idle);
@@ -1345,7 +1323,7 @@ public abstract class Unit : MonoBehaviour
     {
 	    // Create an unit entity
 	    var unitObject = Instantiate(prefab);
-
+		
 	    // Use unit components to store in the entity
 	    var trans = unitObject.transform;
 	    trans.SetPositionAndRotation(worldTransform.position, worldTransform.rotation);
@@ -1353,7 +1331,7 @@ public abstract class Unit : MonoBehaviour
 	    var animator = unitObject.GetComponent<GPUICrowdPrefab>();
 	    var unit = unitObject.GetComponent<Unit>();
 	    selector.transform.SetParent(trans);
-		    
+		
 	    unit.entityManager = entityManager;
 	    unit.entity = entity;
 	    unit.formation = formation;
@@ -1383,7 +1361,7 @@ public abstract class Unit : MonoBehaviour
 	    unit.arrivalWeight = arrivalWeight;
 	    unit.arrivalRadius = arrivalRadius;
 	    unit.seekingTarget = seekingTarget;
-
+		
 	    entityManager.AddComponentObject(entity, trans);
 	    entityManager.AddComponentObject(entity, boid);
 	    
