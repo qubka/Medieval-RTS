@@ -203,6 +203,7 @@ MonoBehaviour:
   rangeStart: []
   rangeHold: []
   rangeRelease: []
+  rangeEnd: []
   reload: []
   equip: []
   kick:
@@ -566,6 +567,14 @@ MonoBehaviour:
     sound2: {fileID: 0}
   hitCombat: []
   hitRange: []
+  hitBack:
+  - clip: {fileID: 7400022, guid: 1bdc2ef74b0fc8b459c915473007e656, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 0}
   hasMultiNormalKnockdown: 1
   hasMultiCombatKnockdown: 0
   hasMultiRangeKnockdown: 0

@@ -44,10 +44,10 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitNormal;
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
+    public List<AnimationData> hitBack;
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
-
 
     public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
     {

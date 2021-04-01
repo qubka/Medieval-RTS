@@ -16,8 +16,8 @@ public class Squad : MonoBehaviour
 {
     [Header("Main Information")]
     public Squadron data;
-    public GameObject meleePrefab;
-    public GameObject rangePrefab;
+    public List<GameObject> meleePrefabs;
+    public List<GameObject> rangePrefabs;
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
@@ -25,7 +25,7 @@ public class Squad : MonoBehaviour
     //public bool isRotating;
     public bool isForward;
     public bool isRange;
-    
+
     [Space(10)]
     [ReadOnly] public SquadFSM state;
     [ReadOnly] public Agent agentScript;
@@ -43,6 +43,7 @@ public class Squad : MonoBehaviour
     [ReadOnly] public float phalanxLength;
     [ReadOnly] public float phalanxHeight;
     [HideInInspector] public UnitSize unitSize;
+    [HideInInspector] public ObjectPool objectPool;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform camTransform;
     [HideInInspector] public Transform barTransform;
@@ -173,6 +174,7 @@ public class Squad : MonoBehaviour
         unitTable = Manager.unitTable;
         cam = Manager.mainCamera;
         camController = Manager.camController;
+        objectPool = Manager.objectPool;
         squadCanvas = Manager.squadCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
@@ -221,10 +223,13 @@ public class Squad : MonoBehaviour
             entityManager.SetName(formationEntity, "formation");
             entityManager.SetComponentData(formationEntity, new Translation { Value = pos });
             entityManager.SetComponentData(formationEntity, new Formation { Position = slotPos, Squad = squadEntity });
+
+            // Get random skin index
+            var skin = Random.Range(0, meleePrefabs.Count);
             
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(meleePrefab);
+            var unitObject = Instantiate(isRange ? rangePrefabs[skin] : meleePrefabs[skin]);
             
             // Use unit components to store in the entity
             var trans = unitObject.transform;
@@ -233,12 +238,14 @@ public class Squad : MonoBehaviour
             var animator = unitObject.GetComponent<GPUICrowdPrefab>();
             var unit = unitObject.GetComponent<Unit>();
             unit.health = data.hitPoints;
+            unit.isRange = isRange;
             unit.entityManager = entityManager;
             unit.entity = unitEntity;
             unit.formation = formationEntity;
             unit.animator = animator;
             unit.worldTransform = trans;
             unit.boid = boid;
+            unit.skin = skin;
             unit.squad = this;
 
             // Attach objects to the transform
@@ -446,7 +453,7 @@ public class Squad : MonoBehaviour
                     }
                 }
                 
-                if (!particle.isPlaying) {
+                if (isRunning && !particle.isPlaying) {
                     particle.Play();
                 }
             }
@@ -462,7 +469,7 @@ public class Squad : MonoBehaviour
 
         var temp = canShoot;
         canShoot = isRange && IsUnitsHolding();
-        if (canShoot && !temp) {
+        if (canShoot && !temp && Random.Range(0, 10) == 0) {
             PlaySound(data.commanderSounds.fire);
         }
     }
@@ -567,10 +574,10 @@ public class Squad : MonoBehaviour
         //circle.SetActive(isRange && select);
     }
 
-    public void UpdateFormation(float length)
+    public void UpdateFormation(float length, bool reverse = false)
     {
         phalanxLength = length;
-        phalanxHeight = FormationUtils.SetFormation(ref entityManager, units, positions, worldTransform.localToWorldMatrix, formationShape, unitSize, units.Count, phalanxLength);
+        phalanxHeight = FormationUtils.SetFormation(ref entityManager, units, positions, worldTransform.localToWorldMatrix, formationShape, unitSize, units.Count, phalanxLength, reverse);
         UpdateCollision();
     }
 
@@ -695,7 +702,7 @@ public class Squad : MonoBehaviour
     public Unit FindClosestEnemy(Vector3 position)
     {
         var squad = FindClosestSquad(position);
-        return squad ? squad.FindClosestUnit(position) : null;
+        return squad ? isRange ? squad.units[Random.Range(0, squad.unitCount)] : squad.FindClosestUnit(position) : null;
     }
     
     private Unit FindClosestUnit(Vector3 position)

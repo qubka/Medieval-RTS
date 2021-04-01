@@ -72,10 +72,11 @@ public static class FormationUtils
         }
     }
 
-    public static float SetFormation(ref EntityManager entityManager, List<Unit> units, List<Vector3> positions, float4x4 local, FormationShape formationShape, UnitSize size, int count, float length)
+    public static float SetFormation(ref EntityManager entityManager, List<Unit> units, List<Vector3> positions, float4x4 local, FormationShape formationShape, UnitSize size, int count, float length, bool reverse)
     {
         var shift = GetFormation(positions, formationShape, size, count, length);
-
+        if (reverse) positions.Reverse();
+        
         var terrain = Manager.terrain;
         
         var ordered = units.ToList();

@@ -30,6 +30,7 @@ public abstract class Unit : MonoBehaviour
     [ReadOnly] public bool isRange;
     [ReadOnly] public int health;
     [ReadOnly] public int range;
+    [ReadOnly] public int skin;
     
     // Misc
     [ReadOnly] public Squad squad;
@@ -51,12 +52,27 @@ public abstract class Unit : MonoBehaviour
     protected float moveSpeed => math.length(boid.velocity);
     protected bool hasSpeed => math.lengthsq(boid.velocity) > 0f;
     protected bool isCombat => target || squad.hasEnemies || currentTime < lastDamageTime + 10f;
-    
+
     protected Animations animations => squad.data.animations;
+
+    public Vector3 GetAim()
+    {
+	    var pos = worldTransform.position;
+	    pos.y += squad.data.unitSize.center;
+	    pos.z += 1.45f;
+	    return pos;
+    }
     
+    public Vector3 GetCenter()
+    {
+	    var pos = worldTransform.position;
+	    pos.y += squad.data.unitSize.center;
+	    return pos;
+	}
+
     protected const float Max = float.MaxValue;
     protected const float Min = float.MinValue;
-
+	
     private void Awake()
     {
 		nextModeTime = Max;
@@ -307,12 +323,14 @@ public abstract class Unit : MonoBehaviour
     }
     
     #endregion
-
-    protected void OnDamage(Unit inflictor, DamageType damage)
+    
+    public void OnDamage(Unit inflictor, DamageType damage)
     {
+	    var melee = true;
 	    var rotate = false;
 	    var trigger = false;
-        switch (damage) {
+
+	    switch (damage) {
             case DamageType.Normal:
                 switch (state) {
 	                case UnitFSM.Hit:
@@ -329,7 +347,6 @@ public abstract class Unit : MonoBehaviour
                         trigger = true;
                         break;
                 }
-
                 break;
 
             case DamageType.Charge:
@@ -362,10 +379,31 @@ public abstract class Unit : MonoBehaviour
                 }
                 squad.CreateShake(worldTransform.position);
                 break;
+            
+            case DamageType.Range:
+	            switch (state) {
+		            case UnitFSM.Hit:
+			            trigger = true;
+			            break;
+		            case UnitFSM.Knockdown:
+		            case UnitFSM.Death:
+			            break;
+		            default:
+			            ChangeState(UnitFSM.Hit);
+			            if (Random.Range(0, 10) == 0) {
+				            var anim = animations.GetHitAnimation(isCombat, isRange);
+				            PlayAnimation(anim, anim.Length);
+			            }
+			            trigger = true;
+			            break;
+	            }
+
+	            melee = false;
+	            break;
         }
         
         if (trigger) {
-            //CalculateDamage(inflictor, true);
+            CalculateDamage(inflictor, melee);
         }
 
         if (rotate && state != UnitFSM.Death && squad.state == SquadFSM.Attack) {
@@ -808,7 +846,7 @@ public abstract class Unit : MonoBehaviour
 	{
 		var speed = moveSpeed;
 		if (speed > 0f) {
-			if (HasCollision()) {
+			if (squad.hasEnemies && HasCollision()) {
 				ChangeState(UnitFSM.Wait);
 				var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
 				if (currentAnim != anim) {
@@ -1018,10 +1056,17 @@ public abstract class Unit : MonoBehaviour
 	{
 		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, (target.worldTransform.position - worldTransform.position).ToEuler(), rotationSpeed);
 		
-		if (squad.canShoot) {
+		if (squad.canShoot || !squad.isRange) {
 			ChangeState(UnitFSM.RangeRelease);
 			var anim = animations.rangeRelease[range];
 			PlayAnimation(anim, anim.Length);
+
+			var arrow = squad.objectPool.SpawnFromPool("Arrow").GetComponent<Projectile>();
+			arrow.origin = this;
+			arrow.target = target;
+			arrow.heightFactor = math.clamp(range * 0.5f, 0.01f, 1f);
+			arrow.defaultAccuracy = Random.Range(2, 5);
+			arrow.enabled = true;
 		}
 	}
 	
@@ -1036,13 +1081,15 @@ public abstract class Unit : MonoBehaviour
 	
 	protected void RangeReload()
 	{
-		
 		var direction = (target.worldTransform.position - worldTransform.position);
 		worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, direction.ToEuler(), rotationSpeed);
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.RangeStart);
 			range = animations.GetRangeAnimation(squad.data.range, direction.SqMagnitude());
+			if (range == 0 && squad.attackScript.hasObstacles) {
+				range++;
+			}
 			var anim = animations.rangeStart[range];
 			PlayAnimation(anim, anim.Length - 0.05f);
 			nextModeTime = currentTime + currentAnim.frame2 / currentAnim.FrameRate;
@@ -1250,7 +1297,7 @@ public abstract class Unit : MonoBehaviour
 		if (currentTime > nextModeTime) {
 			isRange = true;
 			nextModeTime = Max;
-			squad.SwapUnit(this, squad.rangePrefab);
+			squad.SwapUnit(this, squad.rangePrefabs[skin]);
 		}
 		
 		if (currentTime > nextAnimTime) {
@@ -1266,7 +1313,7 @@ public abstract class Unit : MonoBehaviour
 		if (currentTime > nextModeTime) {
 			isRange = false;
 			nextModeTime = Max;
-			squad.SwapUnit(this, squad.meleePrefab);
+			squad.SwapUnit(this, squad.meleePrefabs[skin]);
 		}
 		
 		if (currentTime > nextAnimTime) {
@@ -1304,12 +1351,6 @@ public abstract class Unit : MonoBehaviour
 
 
 	#endregion
-    
-    protected enum DamageType
-    { 
-        Normal,
-        Charge
-    }
 
     protected enum Side
     {
@@ -1354,6 +1395,8 @@ public abstract class Unit : MonoBehaviour
 	    unit.isRunning = isRunning;
 	    unit.isRange = isRange;
 	    unit.health = health;
+	    unit.range = range;
+	    unit.skin = skin;
 	    unit.squad = squad;
 	    unit.collisions = collisions;
 	    unit.obstacles = obstacles;
@@ -1416,4 +1459,11 @@ public enum UnitFSM
     RangeToMelee,
     MeleeToRange,
     Death,
+}
+ 
+public enum DamageType
+{
+	Normal,
+	Charge,
+	Range
 }

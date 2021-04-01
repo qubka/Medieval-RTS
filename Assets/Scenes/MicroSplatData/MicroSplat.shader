@@ -6,9 +6,9 @@
 //
 // Auto-generated shader code, don't hand edit!
 //
-//   Unity Version: 2018.4.7f1
+//   Unity Version: 2020.3.0f1
 //   Render Pipeline: Standard
-//   Platform: OSXEditor
+//   Platform: WindowsEditor
 ////////////////////////////////////////
 
 
@@ -29,27 +29,6 @@ Shader "MicroSplat/Example"
       _Contrast("Blend Contrast", Range(0.01, 0.99)) = 0.4
       _UVScale("UV Scales", Vector) = (45, 45, 0, 0)
       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      _TriplanarUVScale("Triplanar UV Scale", Vector) = (1, 1, 0, 0)
-
 
 
    }
@@ -92,9 +71,9 @@ Shader "MicroSplat/Example"
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX8TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _MSRENDERLOOP_SURFACESHADER 1
 
 #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 
@@ -513,7 +492,7 @@ Shader "MicroSplat/Example"
             float3 worldPos : TEXCOORD0;
             float3 worldNormal : TEXCOORD1;
             float4 worldTangent : TEXCOORD2;
-             float4 texcoord0 : TEXCCOORD19;
+             float4 texcoord0 : TEXCCOORD3;
              float4 texcoord1 : TEXCCOORD4;
              float4 texcoord2 : TEXCCOORD5;
             // float4 texcoord3 : TEXCCOORD6;
@@ -685,6 +664,16 @@ Shader "MicroSplat/Example"
                  #define UNITY_SAMPLE_TEX2D_SAMPLER_LOD(tex,samplertex,coord,lod) tex2D (tex,coord,0,lod)
                #endif
             #endif
+
+            float3 GetCameraWorldPosition()
+            {
+               #if _HDRP
+                  return GetCameraRelativePositionWS(_WorldSpaceCameraPos);
+               #else
+                  return _WorldSpaceCameraPos;
+               #endif
+            }
+
      
 
 
@@ -2056,117 +2045,14 @@ Shader "MicroSplat/Example"
         #if _MEGASPLAT
            UnpackMegaSplat(s, IN);
         #endif
-        #if _MICROVERTEXMESH
+   
+        #if _MICROVERTEXMESH || _MICRODIGGERMESH
             UnpackVertexWorkflow(s, IN);
         #endif
         
         return s;
      }
      
-// Stochastic shared code
-
-// Compute local triangle barycentric coordinates and vertex IDs
-void TriangleGrid(float2 uv, float scale,
-   out float w1, out float w2, out float w3,
-   out int2 vertex1, out int2 vertex2, out int2 vertex3)
-{
-   // Scaling of the input
-   uv *= 3.464 * scale; // 2 * sqrt(3)
-
-   // Skew input space into simplex triangle grid
-   const float2x2 gridToSkewedGrid = float2x2(1.0, 0.0, -0.57735027, 1.15470054);
-   float2 skewedCoord = mul(gridToSkewedGrid, uv);
-
-   // Compute local triangle vertex IDs and local barycentric coordinates
-   int2 baseId = int2(floor(skewedCoord));
-   float3 temp = float3(frac(skewedCoord), 0);
-   temp.z = 1.0 - temp.x - temp.y;
-   if (temp.z > 0.0)
-   {
-      w1 = temp.z;
-      w2 = temp.y;
-      w3 = temp.x;
-      vertex1 = baseId;
-      vertex2 = baseId + int2(0, 1);
-      vertex3 = baseId + int2(1, 0);
-   }
-   else
-   {
-      w1 = -temp.z;
-      w2 = 1.0 - temp.y;
-      w3 = 1.0 - temp.x;
-      vertex1 = baseId + int2(1, 1);
-      vertex2 = baseId + int2(1, 0);
-      vertex3 = baseId + int2(0, 1);
-   }
-}
-
-// Fast random hash function
-float2 SimpleHash2(float2 p)
-{
-   return frac(sin(mul(float2x2(127.1, 311.7, 269.5, 183.3), p)) * 43758.5453);
-}
-
-
-half3 BaryWeightBlend(half3 iWeights, half tex0, half tex1, half tex2, half contrast)
-{
-    // compute weight with height map
-    const half epsilon = 1.0f / 1024.0f;
-    half3 weights = half3(iWeights.x * (tex0 + epsilon), 
-                             iWeights.y * (tex1 + epsilon),
-                             iWeights.z * (tex2 + epsilon));
-
-    // Contrast weights
-    half maxWeight = max(weights.x, max(weights.y, weights.z));
-    half transition = contrast * maxWeight;
-    half threshold = maxWeight - transition;
-    half scale = 1.0f / transition;
-    weights = saturate((weights - threshold) * scale);
-    // Normalize weights.
-    half weightScale = 1.0f / (weights.x + weights.y + weights.z);
-    weights *= weightScale;
-    return weights;
-}
-
-void PrepareStochasticUVs(float scale, float3 uv, out float3 uv1, out float3 uv2, out float3 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv.xy, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2, out float2 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-
 
 
       void SampleAlbedo(inout Config config, inout TriplanarConfig tc, inout RawSamples s, MIPFORMAT mipLevel, half4 weights)
@@ -2455,10 +2341,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #endif
             
             half3 absVertNormal = abs(tc.IN.worldNormal);
-            float3 t2w0 = WorldNormalVector(tc.IN, float3(1,0,0));
-            float3 t2w1 = WorldNormalVector(tc.IN, float3(0,1,0));
-            float3 t2w2 = WorldNormalVector(tc.IN, float3(0,0,1));
-            float3x3 t2w = float3x3(t2w0, t2w1, t2w2);
+            float3x3 t2w = tc.IN.TBN;
             
             
             {
@@ -3119,7 +3002,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             half4 heightWeights = ComputeWeights(weights, samples.albedo0.a, samples.albedo1.a, samples.albedo2.a, samples.albedo3.a, _Contrast);
          #endif
 
-
+         
          // rescale derivatives after height weighting. Basically, in gradmip mode we blend the mip levels,
          // but this is before height mapping is sampled, so reblending them after alpha will make sure the other
          // channels (normal, etc) are sharper, which likely matters most.. 
@@ -3468,7 +3351,17 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #if _USESPECULARWORKFLOW && !_DISABLESPLATMAPS
                specular = BlendWeights(samples.specular0, samples.specular1, samples.specular2, samples.specular3, heightWeights);
             #endif
+
+            #if _PERTEXOUTLINECOLOR
+               SAMPLE_PER_TEX(ptOutlineColor, 28.5, config, half4(0.5, 0.5, 0.5, 1));
+               half4 outlineColor = BlendWeights(ptOutlineColor0, ptOutlineColor1, ptOutlineColor2, ptOutlineColor3, heightWeights);
+               half4 tstr = saturate(abs(heightWeights - 0.5) * 2);
+               half transitionBlend = min(min(min(tstr.x, tstr.y), tstr.z), tstr.w);
+               albedo.rgb = lerp(albedo.rgb * outlineColor.rgb * 2, albedo.rgb, outlineColor.a * transitionBlend);
+            #endif
          #endif
+
+
 
          #if _MESHOVERLAYSPLATS || _MESHCOMBINED
             o.Alpha = 1.0;
@@ -3626,7 +3519,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
 
          #if _PERTEXSSS || _MESHCOMBINEDUSESSS || (_SNOW && _SNOWSSS)
          {
-            half3 worldView = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+            half3 worldView = normalize(GetCameraWorldPosition().xyz - i.worldPos.xyz);
 
             o.Emission += ComputeSSS(i, worldView, WorldNormalVector(i, o.Normal),
                SSSTint, SSSThickness, _SSSDistance, _SSSScale, _SSSPower);
@@ -3783,19 +3676,15 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             tangent.w = -1;
             half tangentSign = tangent.w * unity_WorldTransformParams.w;
             half3 wBitangent = cross(wNormal, tangent) * tangentSign;
-            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(_WorldSpaceCameraPos - i.worldPos));
+            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(GetCameraWorldPosition() - i.worldPos));
          }
          #endif
 
          #if _MEGANOUV
             i.uv_Control0 = i.worldPos.xz;
          #endif
-
-         #if _TERRAINBLENDABLESHADER && _TRIPLANAR
-            worldNormalVertex = WorldNormalVector(i, float3(0,0,1));
-         #endif
          
-         float camDist = distance(_WorldSpaceCameraPos, i.worldPos);
+         float camDist = distance(GetCameraWorldPosition(), i.worldPos);
           
          #if _FORCELOCALSPACE
             worldNormalVertex = mul((float3x3)unity_WorldToObject, worldNormalVertex).xyz;
@@ -4047,7 +3936,7 @@ float3 GetTessFactors ()
         #if (defined(UNITY_INSTANCING_ENABLED) && _MICROTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_TerrainNormalmapTexture, _Control0, sampleCoords).xyz * 2 - 1);
@@ -4060,18 +3949,22 @@ float3 GetTessFactors ()
         #elif _PERPIXNORMAL &&  (_MICROTERRAIN || _MICROMESHTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy * _PerPixelNormal_TexelSize.zw + 0.5f) * _PerPixelNormal_TexelSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_PerPixelNormal, _Control0, sampleCoords).xyz * 2 - 1);
             
-            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1))) * -1;
+            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1)));
             float3 geomBitangent = normalize(cross(geomTangent, geomNormal));
             worldNormalVertex = geomNormal;
             d.worldSpaceNormal = geomNormal;
             d.worldSpaceTangent = geomTangent.xyz;
             d.TBNMatrix = float3x3(geomTangent.xyz, geomBitangent, geomNormal);
-        #endif       
+        #endif
+
+        #if _TOONPOLYEDGE
+           FlatShade(d);
+        #endif
 
          Input i = DescToInput(d);
 
@@ -4120,7 +4013,7 @@ float3 GetTessFactors ()
             
 
             d.TBNMatrix = float3x3(d.worldSpaceTangent, bitangent, d.worldSpaceNormal);
-            d.worldSpaceViewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+            d.worldSpaceViewDir = normalize(GetCameraWorldPosition() - i.worldPos);
             d.tangentSpaceViewDir = mul(d.TBNMatrix, d.worldSpaceViewDir);
              d.texcoord0 = i.texcoord0;
              d.texcoord1 = i.texcoord1;
@@ -4330,7 +4223,7 @@ float3 GetTessFactors ()
            o.Normal = normalize(TangentToWorldSpace(d, l.Normal));
 
            #if _BDRFLAMBERT || _BDRF3
-              o.Specular = l.Occlusion;
+              o.Specular = l.Specular;
               o.Gloss = l.Smoothness;
            #elif _SPECULARFROMMETALLIC
               o.Occlusion = l.Occlusion;
@@ -4458,9 +4351,9 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX8TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _MSRENDERLOOP_SURFACESHADER 1
 
 #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 
@@ -5042,6 +4935,16 @@ float3 GetTessFactors ()
                  #define UNITY_SAMPLE_TEX2D_SAMPLER_LOD(tex,samplertex,coord,lod) tex2D (tex,coord,0,lod)
                #endif
             #endif
+
+            float3 GetCameraWorldPosition()
+            {
+               #if _HDRP
+                  return GetCameraRelativePositionWS(_WorldSpaceCameraPos);
+               #else
+                  return _WorldSpaceCameraPos;
+               #endif
+            }
+
      
 
 
@@ -6413,117 +6316,14 @@ float3 GetTessFactors ()
         #if _MEGASPLAT
            UnpackMegaSplat(s, IN);
         #endif
-        #if _MICROVERTEXMESH
+   
+        #if _MICROVERTEXMESH || _MICRODIGGERMESH
             UnpackVertexWorkflow(s, IN);
         #endif
         
         return s;
      }
      
-// Stochastic shared code
-
-// Compute local triangle barycentric coordinates and vertex IDs
-void TriangleGrid(float2 uv, float scale,
-   out float w1, out float w2, out float w3,
-   out int2 vertex1, out int2 vertex2, out int2 vertex3)
-{
-   // Scaling of the input
-   uv *= 3.464 * scale; // 2 * sqrt(3)
-
-   // Skew input space into simplex triangle grid
-   const float2x2 gridToSkewedGrid = float2x2(1.0, 0.0, -0.57735027, 1.15470054);
-   float2 skewedCoord = mul(gridToSkewedGrid, uv);
-
-   // Compute local triangle vertex IDs and local barycentric coordinates
-   int2 baseId = int2(floor(skewedCoord));
-   float3 temp = float3(frac(skewedCoord), 0);
-   temp.z = 1.0 - temp.x - temp.y;
-   if (temp.z > 0.0)
-   {
-      w1 = temp.z;
-      w2 = temp.y;
-      w3 = temp.x;
-      vertex1 = baseId;
-      vertex2 = baseId + int2(0, 1);
-      vertex3 = baseId + int2(1, 0);
-   }
-   else
-   {
-      w1 = -temp.z;
-      w2 = 1.0 - temp.y;
-      w3 = 1.0 - temp.x;
-      vertex1 = baseId + int2(1, 1);
-      vertex2 = baseId + int2(1, 0);
-      vertex3 = baseId + int2(0, 1);
-   }
-}
-
-// Fast random hash function
-float2 SimpleHash2(float2 p)
-{
-   return frac(sin(mul(float2x2(127.1, 311.7, 269.5, 183.3), p)) * 43758.5453);
-}
-
-
-half3 BaryWeightBlend(half3 iWeights, half tex0, half tex1, half tex2, half contrast)
-{
-    // compute weight with height map
-    const half epsilon = 1.0f / 1024.0f;
-    half3 weights = half3(iWeights.x * (tex0 + epsilon), 
-                             iWeights.y * (tex1 + epsilon),
-                             iWeights.z * (tex2 + epsilon));
-
-    // Contrast weights
-    half maxWeight = max(weights.x, max(weights.y, weights.z));
-    half transition = contrast * maxWeight;
-    half threshold = maxWeight - transition;
-    half scale = 1.0f / transition;
-    weights = saturate((weights - threshold) * scale);
-    // Normalize weights.
-    half weightScale = 1.0f / (weights.x + weights.y + weights.z);
-    weights *= weightScale;
-    return weights;
-}
-
-void PrepareStochasticUVs(float scale, float3 uv, out float3 uv1, out float3 uv2, out float3 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv.xy, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2, out float2 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-
 
 
       void SampleAlbedo(inout Config config, inout TriplanarConfig tc, inout RawSamples s, MIPFORMAT mipLevel, half4 weights)
@@ -6812,10 +6612,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #endif
             
             half3 absVertNormal = abs(tc.IN.worldNormal);
-            float3 t2w0 = WorldNormalVector(tc.IN, float3(1,0,0));
-            float3 t2w1 = WorldNormalVector(tc.IN, float3(0,1,0));
-            float3 t2w2 = WorldNormalVector(tc.IN, float3(0,0,1));
-            float3x3 t2w = float3x3(t2w0, t2w1, t2w2);
+            float3x3 t2w = tc.IN.TBN;
             
             
             {
@@ -7476,7 +7273,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             half4 heightWeights = ComputeWeights(weights, samples.albedo0.a, samples.albedo1.a, samples.albedo2.a, samples.albedo3.a, _Contrast);
          #endif
 
-
+         
          // rescale derivatives after height weighting. Basically, in gradmip mode we blend the mip levels,
          // but this is before height mapping is sampled, so reblending them after alpha will make sure the other
          // channels (normal, etc) are sharper, which likely matters most.. 
@@ -7825,7 +7622,17 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #if _USESPECULARWORKFLOW && !_DISABLESPLATMAPS
                specular = BlendWeights(samples.specular0, samples.specular1, samples.specular2, samples.specular3, heightWeights);
             #endif
+
+            #if _PERTEXOUTLINECOLOR
+               SAMPLE_PER_TEX(ptOutlineColor, 28.5, config, half4(0.5, 0.5, 0.5, 1));
+               half4 outlineColor = BlendWeights(ptOutlineColor0, ptOutlineColor1, ptOutlineColor2, ptOutlineColor3, heightWeights);
+               half4 tstr = saturate(abs(heightWeights - 0.5) * 2);
+               half transitionBlend = min(min(min(tstr.x, tstr.y), tstr.z), tstr.w);
+               albedo.rgb = lerp(albedo.rgb * outlineColor.rgb * 2, albedo.rgb, outlineColor.a * transitionBlend);
+            #endif
          #endif
+
+
 
          #if _MESHOVERLAYSPLATS || _MESHCOMBINED
             o.Alpha = 1.0;
@@ -7983,7 +7790,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
 
          #if _PERTEXSSS || _MESHCOMBINEDUSESSS || (_SNOW && _SNOWSSS)
          {
-            half3 worldView = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+            half3 worldView = normalize(GetCameraWorldPosition().xyz - i.worldPos.xyz);
 
             o.Emission += ComputeSSS(i, worldView, WorldNormalVector(i, o.Normal),
                SSSTint, SSSThickness, _SSSDistance, _SSSScale, _SSSPower);
@@ -8140,19 +7947,15 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             tangent.w = -1;
             half tangentSign = tangent.w * unity_WorldTransformParams.w;
             half3 wBitangent = cross(wNormal, tangent) * tangentSign;
-            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(_WorldSpaceCameraPos - i.worldPos));
+            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(GetCameraWorldPosition() - i.worldPos));
          }
          #endif
 
          #if _MEGANOUV
             i.uv_Control0 = i.worldPos.xz;
          #endif
-
-         #if _TERRAINBLENDABLESHADER && _TRIPLANAR
-            worldNormalVertex = WorldNormalVector(i, float3(0,0,1));
-         #endif
          
-         float camDist = distance(_WorldSpaceCameraPos, i.worldPos);
+         float camDist = distance(GetCameraWorldPosition(), i.worldPos);
           
          #if _FORCELOCALSPACE
             worldNormalVertex = mul((float3x3)unity_WorldToObject, worldNormalVertex).xyz;
@@ -8404,7 +8207,7 @@ float3 GetTessFactors ()
         #if (defined(UNITY_INSTANCING_ENABLED) && _MICROTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_TerrainNormalmapTexture, _Control0, sampleCoords).xyz * 2 - 1);
@@ -8417,18 +8220,22 @@ float3 GetTessFactors ()
         #elif _PERPIXNORMAL &&  (_MICROTERRAIN || _MICROMESHTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy * _PerPixelNormal_TexelSize.zw + 0.5f) * _PerPixelNormal_TexelSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_PerPixelNormal, _Control0, sampleCoords).xyz * 2 - 1);
             
-            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1))) * -1;
+            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1)));
             float3 geomBitangent = normalize(cross(geomTangent, geomNormal));
             worldNormalVertex = geomNormal;
             d.worldSpaceNormal = geomNormal;
             d.worldSpaceTangent = geomTangent.xyz;
             d.TBNMatrix = float3x3(geomTangent.xyz, geomBitangent, geomNormal);
-        #endif       
+        #endif
+
+        #if _TOONPOLYEDGE
+           FlatShade(d);
+        #endif
 
          Input i = DescToInput(d);
 
@@ -8477,7 +8284,7 @@ float3 GetTessFactors ()
             
 
             d.TBNMatrix = float3x3(d.worldSpaceTangent, bitangent, d.worldSpaceNormal);
-            d.worldSpaceViewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+            d.worldSpaceViewDir = normalize(GetCameraWorldPosition() - i.worldPos);
             d.tangentSpaceViewDir = mul(d.TBNMatrix, d.worldSpaceViewDir);
              d.texcoord0 = i.texcoord0;
              d.texcoord1 = i.texcoord1;
@@ -8659,7 +8466,7 @@ float3 GetTessFactors ()
            o.Normal = normalize(TangentToWorldSpace(d, l.Normal));
 
            #if _BDRFLAMBERT || _BDRF3
-              o.Specular = l.Occlusion;
+              o.Specular = l.Specular;
               o.Gloss = l.Smoothness;
            #elif _SPECULARFROMMETALLIC
               o.Occlusion = l.Occlusion;
@@ -8747,9 +8554,9 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX8TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _MSRENDERLOOP_SURFACESHADER 1
 
 #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 
@@ -9342,6 +9149,16 @@ float3 GetTessFactors ()
                  #define UNITY_SAMPLE_TEX2D_SAMPLER_LOD(tex,samplertex,coord,lod) tex2D (tex,coord,0,lod)
                #endif
             #endif
+
+            float3 GetCameraWorldPosition()
+            {
+               #if _HDRP
+                  return GetCameraRelativePositionWS(_WorldSpaceCameraPos);
+               #else
+                  return _WorldSpaceCameraPos;
+               #endif
+            }
+
      
 
 
@@ -10713,117 +10530,14 @@ float3 GetTessFactors ()
         #if _MEGASPLAT
            UnpackMegaSplat(s, IN);
         #endif
-        #if _MICROVERTEXMESH
+   
+        #if _MICROVERTEXMESH || _MICRODIGGERMESH
             UnpackVertexWorkflow(s, IN);
         #endif
         
         return s;
      }
      
-// Stochastic shared code
-
-// Compute local triangle barycentric coordinates and vertex IDs
-void TriangleGrid(float2 uv, float scale,
-   out float w1, out float w2, out float w3,
-   out int2 vertex1, out int2 vertex2, out int2 vertex3)
-{
-   // Scaling of the input
-   uv *= 3.464 * scale; // 2 * sqrt(3)
-
-   // Skew input space into simplex triangle grid
-   const float2x2 gridToSkewedGrid = float2x2(1.0, 0.0, -0.57735027, 1.15470054);
-   float2 skewedCoord = mul(gridToSkewedGrid, uv);
-
-   // Compute local triangle vertex IDs and local barycentric coordinates
-   int2 baseId = int2(floor(skewedCoord));
-   float3 temp = float3(frac(skewedCoord), 0);
-   temp.z = 1.0 - temp.x - temp.y;
-   if (temp.z > 0.0)
-   {
-      w1 = temp.z;
-      w2 = temp.y;
-      w3 = temp.x;
-      vertex1 = baseId;
-      vertex2 = baseId + int2(0, 1);
-      vertex3 = baseId + int2(1, 0);
-   }
-   else
-   {
-      w1 = -temp.z;
-      w2 = 1.0 - temp.y;
-      w3 = 1.0 - temp.x;
-      vertex1 = baseId + int2(1, 1);
-      vertex2 = baseId + int2(1, 0);
-      vertex3 = baseId + int2(0, 1);
-   }
-}
-
-// Fast random hash function
-float2 SimpleHash2(float2 p)
-{
-   return frac(sin(mul(float2x2(127.1, 311.7, 269.5, 183.3), p)) * 43758.5453);
-}
-
-
-half3 BaryWeightBlend(half3 iWeights, half tex0, half tex1, half tex2, half contrast)
-{
-    // compute weight with height map
-    const half epsilon = 1.0f / 1024.0f;
-    half3 weights = half3(iWeights.x * (tex0 + epsilon), 
-                             iWeights.y * (tex1 + epsilon),
-                             iWeights.z * (tex2 + epsilon));
-
-    // Contrast weights
-    half maxWeight = max(weights.x, max(weights.y, weights.z));
-    half transition = contrast * maxWeight;
-    half threshold = maxWeight - transition;
-    half scale = 1.0f / transition;
-    weights = saturate((weights - threshold) * scale);
-    // Normalize weights.
-    half weightScale = 1.0f / (weights.x + weights.y + weights.z);
-    weights *= weightScale;
-    return weights;
-}
-
-void PrepareStochasticUVs(float scale, float3 uv, out float3 uv1, out float3 uv2, out float3 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv.xy, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2, out float2 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-
 
 
       void SampleAlbedo(inout Config config, inout TriplanarConfig tc, inout RawSamples s, MIPFORMAT mipLevel, half4 weights)
@@ -11112,10 +10826,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #endif
             
             half3 absVertNormal = abs(tc.IN.worldNormal);
-            float3 t2w0 = WorldNormalVector(tc.IN, float3(1,0,0));
-            float3 t2w1 = WorldNormalVector(tc.IN, float3(0,1,0));
-            float3 t2w2 = WorldNormalVector(tc.IN, float3(0,0,1));
-            float3x3 t2w = float3x3(t2w0, t2w1, t2w2);
+            float3x3 t2w = tc.IN.TBN;
             
             
             {
@@ -11776,7 +11487,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             half4 heightWeights = ComputeWeights(weights, samples.albedo0.a, samples.albedo1.a, samples.albedo2.a, samples.albedo3.a, _Contrast);
          #endif
 
-
+         
          // rescale derivatives after height weighting. Basically, in gradmip mode we blend the mip levels,
          // but this is before height mapping is sampled, so reblending them after alpha will make sure the other
          // channels (normal, etc) are sharper, which likely matters most.. 
@@ -12125,7 +11836,17 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #if _USESPECULARWORKFLOW && !_DISABLESPLATMAPS
                specular = BlendWeights(samples.specular0, samples.specular1, samples.specular2, samples.specular3, heightWeights);
             #endif
+
+            #if _PERTEXOUTLINECOLOR
+               SAMPLE_PER_TEX(ptOutlineColor, 28.5, config, half4(0.5, 0.5, 0.5, 1));
+               half4 outlineColor = BlendWeights(ptOutlineColor0, ptOutlineColor1, ptOutlineColor2, ptOutlineColor3, heightWeights);
+               half4 tstr = saturate(abs(heightWeights - 0.5) * 2);
+               half transitionBlend = min(min(min(tstr.x, tstr.y), tstr.z), tstr.w);
+               albedo.rgb = lerp(albedo.rgb * outlineColor.rgb * 2, albedo.rgb, outlineColor.a * transitionBlend);
+            #endif
          #endif
+
+
 
          #if _MESHOVERLAYSPLATS || _MESHCOMBINED
             o.Alpha = 1.0;
@@ -12283,7 +12004,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
 
          #if _PERTEXSSS || _MESHCOMBINEDUSESSS || (_SNOW && _SNOWSSS)
          {
-            half3 worldView = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+            half3 worldView = normalize(GetCameraWorldPosition().xyz - i.worldPos.xyz);
 
             o.Emission += ComputeSSS(i, worldView, WorldNormalVector(i, o.Normal),
                SSSTint, SSSThickness, _SSSDistance, _SSSScale, _SSSPower);
@@ -12440,19 +12161,15 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             tangent.w = -1;
             half tangentSign = tangent.w * unity_WorldTransformParams.w;
             half3 wBitangent = cross(wNormal, tangent) * tangentSign;
-            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(_WorldSpaceCameraPos - i.worldPos));
+            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(GetCameraWorldPosition() - i.worldPos));
          }
          #endif
 
          #if _MEGANOUV
             i.uv_Control0 = i.worldPos.xz;
          #endif
-
-         #if _TERRAINBLENDABLESHADER && _TRIPLANAR
-            worldNormalVertex = WorldNormalVector(i, float3(0,0,1));
-         #endif
          
-         float camDist = distance(_WorldSpaceCameraPos, i.worldPos);
+         float camDist = distance(GetCameraWorldPosition(), i.worldPos);
           
          #if _FORCELOCALSPACE
             worldNormalVertex = mul((float3x3)unity_WorldToObject, worldNormalVertex).xyz;
@@ -12704,7 +12421,7 @@ float3 GetTessFactors ()
         #if (defined(UNITY_INSTANCING_ENABLED) && _MICROTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_TerrainNormalmapTexture, _Control0, sampleCoords).xyz * 2 - 1);
@@ -12717,18 +12434,22 @@ float3 GetTessFactors ()
         #elif _PERPIXNORMAL &&  (_MICROTERRAIN || _MICROMESHTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy * _PerPixelNormal_TexelSize.zw + 0.5f) * _PerPixelNormal_TexelSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_PerPixelNormal, _Control0, sampleCoords).xyz * 2 - 1);
             
-            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1))) * -1;
+            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1)));
             float3 geomBitangent = normalize(cross(geomTangent, geomNormal));
             worldNormalVertex = geomNormal;
             d.worldSpaceNormal = geomNormal;
             d.worldSpaceTangent = geomTangent.xyz;
             d.TBNMatrix = float3x3(geomTangent.xyz, geomBitangent, geomNormal);
-        #endif       
+        #endif
+
+        #if _TOONPOLYEDGE
+           FlatShade(d);
+        #endif
 
          Input i = DescToInput(d);
 
@@ -12777,7 +12498,7 @@ float3 GetTessFactors ()
             
 
             d.TBNMatrix = float3x3(d.worldSpaceTangent, bitangent, d.worldSpaceNormal);
-            d.worldSpaceViewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+            d.worldSpaceViewDir = normalize(GetCameraWorldPosition() - i.worldPos);
             d.tangentSpaceViewDir = mul(d.TBNMatrix, d.worldSpaceViewDir);
              d.texcoord0 = i.texcoord0;
              d.texcoord1 = i.texcoord1;
@@ -13125,9 +12846,9 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX8TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _MSRENDERLOOP_SURFACESHADER 1
 
 #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 
@@ -13706,6 +13427,16 @@ float3 GetTessFactors ()
                  #define UNITY_SAMPLE_TEX2D_SAMPLER_LOD(tex,samplertex,coord,lod) tex2D (tex,coord,0,lod)
                #endif
             #endif
+
+            float3 GetCameraWorldPosition()
+            {
+               #if _HDRP
+                  return GetCameraRelativePositionWS(_WorldSpaceCameraPos);
+               #else
+                  return _WorldSpaceCameraPos;
+               #endif
+            }
+
      
 
 
@@ -15077,117 +14808,14 @@ float3 GetTessFactors ()
         #if _MEGASPLAT
            UnpackMegaSplat(s, IN);
         #endif
-        #if _MICROVERTEXMESH
+   
+        #if _MICROVERTEXMESH || _MICRODIGGERMESH
             UnpackVertexWorkflow(s, IN);
         #endif
         
         return s;
      }
      
-// Stochastic shared code
-
-// Compute local triangle barycentric coordinates and vertex IDs
-void TriangleGrid(float2 uv, float scale,
-   out float w1, out float w2, out float w3,
-   out int2 vertex1, out int2 vertex2, out int2 vertex3)
-{
-   // Scaling of the input
-   uv *= 3.464 * scale; // 2 * sqrt(3)
-
-   // Skew input space into simplex triangle grid
-   const float2x2 gridToSkewedGrid = float2x2(1.0, 0.0, -0.57735027, 1.15470054);
-   float2 skewedCoord = mul(gridToSkewedGrid, uv);
-
-   // Compute local triangle vertex IDs and local barycentric coordinates
-   int2 baseId = int2(floor(skewedCoord));
-   float3 temp = float3(frac(skewedCoord), 0);
-   temp.z = 1.0 - temp.x - temp.y;
-   if (temp.z > 0.0)
-   {
-      w1 = temp.z;
-      w2 = temp.y;
-      w3 = temp.x;
-      vertex1 = baseId;
-      vertex2 = baseId + int2(0, 1);
-      vertex3 = baseId + int2(1, 0);
-   }
-   else
-   {
-      w1 = -temp.z;
-      w2 = 1.0 - temp.y;
-      w3 = 1.0 - temp.x;
-      vertex1 = baseId + int2(1, 1);
-      vertex2 = baseId + int2(1, 0);
-      vertex3 = baseId + int2(0, 1);
-   }
-}
-
-// Fast random hash function
-float2 SimpleHash2(float2 p)
-{
-   return frac(sin(mul(float2x2(127.1, 311.7, 269.5, 183.3), p)) * 43758.5453);
-}
-
-
-half3 BaryWeightBlend(half3 iWeights, half tex0, half tex1, half tex2, half contrast)
-{
-    // compute weight with height map
-    const half epsilon = 1.0f / 1024.0f;
-    half3 weights = half3(iWeights.x * (tex0 + epsilon), 
-                             iWeights.y * (tex1 + epsilon),
-                             iWeights.z * (tex2 + epsilon));
-
-    // Contrast weights
-    half maxWeight = max(weights.x, max(weights.y, weights.z));
-    half transition = contrast * maxWeight;
-    half threshold = maxWeight - transition;
-    half scale = 1.0f / transition;
-    weights = saturate((weights - threshold) * scale);
-    // Normalize weights.
-    half weightScale = 1.0f / (weights.x + weights.y + weights.z);
-    weights *= weightScale;
-    return weights;
-}
-
-void PrepareStochasticUVs(float scale, float3 uv, out float3 uv1, out float3 uv2, out float3 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv.xy, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2, out float2 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-
 
 
       void SampleAlbedo(inout Config config, inout TriplanarConfig tc, inout RawSamples s, MIPFORMAT mipLevel, half4 weights)
@@ -15476,10 +15104,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #endif
             
             half3 absVertNormal = abs(tc.IN.worldNormal);
-            float3 t2w0 = WorldNormalVector(tc.IN, float3(1,0,0));
-            float3 t2w1 = WorldNormalVector(tc.IN, float3(0,1,0));
-            float3 t2w2 = WorldNormalVector(tc.IN, float3(0,0,1));
-            float3x3 t2w = float3x3(t2w0, t2w1, t2w2);
+            float3x3 t2w = tc.IN.TBN;
             
             
             {
@@ -16140,7 +15765,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             half4 heightWeights = ComputeWeights(weights, samples.albedo0.a, samples.albedo1.a, samples.albedo2.a, samples.albedo3.a, _Contrast);
          #endif
 
-
+         
          // rescale derivatives after height weighting. Basically, in gradmip mode we blend the mip levels,
          // but this is before height mapping is sampled, so reblending them after alpha will make sure the other
          // channels (normal, etc) are sharper, which likely matters most.. 
@@ -16489,7 +16114,17 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #if _USESPECULARWORKFLOW && !_DISABLESPLATMAPS
                specular = BlendWeights(samples.specular0, samples.specular1, samples.specular2, samples.specular3, heightWeights);
             #endif
+
+            #if _PERTEXOUTLINECOLOR
+               SAMPLE_PER_TEX(ptOutlineColor, 28.5, config, half4(0.5, 0.5, 0.5, 1));
+               half4 outlineColor = BlendWeights(ptOutlineColor0, ptOutlineColor1, ptOutlineColor2, ptOutlineColor3, heightWeights);
+               half4 tstr = saturate(abs(heightWeights - 0.5) * 2);
+               half transitionBlend = min(min(min(tstr.x, tstr.y), tstr.z), tstr.w);
+               albedo.rgb = lerp(albedo.rgb * outlineColor.rgb * 2, albedo.rgb, outlineColor.a * transitionBlend);
+            #endif
          #endif
+
+
 
          #if _MESHOVERLAYSPLATS || _MESHCOMBINED
             o.Alpha = 1.0;
@@ -16647,7 +16282,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
 
          #if _PERTEXSSS || _MESHCOMBINEDUSESSS || (_SNOW && _SNOWSSS)
          {
-            half3 worldView = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+            half3 worldView = normalize(GetCameraWorldPosition().xyz - i.worldPos.xyz);
 
             o.Emission += ComputeSSS(i, worldView, WorldNormalVector(i, o.Normal),
                SSSTint, SSSThickness, _SSSDistance, _SSSScale, _SSSPower);
@@ -16804,19 +16439,15 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             tangent.w = -1;
             half tangentSign = tangent.w * unity_WorldTransformParams.w;
             half3 wBitangent = cross(wNormal, tangent) * tangentSign;
-            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(_WorldSpaceCameraPos - i.worldPos));
+            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(GetCameraWorldPosition() - i.worldPos));
          }
          #endif
 
          #if _MEGANOUV
             i.uv_Control0 = i.worldPos.xz;
          #endif
-
-         #if _TERRAINBLENDABLESHADER && _TRIPLANAR
-            worldNormalVertex = WorldNormalVector(i, float3(0,0,1));
-         #endif
          
-         float camDist = distance(_WorldSpaceCameraPos, i.worldPos);
+         float camDist = distance(GetCameraWorldPosition(), i.worldPos);
           
          #if _FORCELOCALSPACE
             worldNormalVertex = mul((float3x3)unity_WorldToObject, worldNormalVertex).xyz;
@@ -17068,7 +16699,7 @@ float3 GetTessFactors ()
         #if (defined(UNITY_INSTANCING_ENABLED) && _MICROTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_TerrainNormalmapTexture, _Control0, sampleCoords).xyz * 2 - 1);
@@ -17081,18 +16712,22 @@ float3 GetTessFactors ()
         #elif _PERPIXNORMAL &&  (_MICROTERRAIN || _MICROMESHTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy * _PerPixelNormal_TexelSize.zw + 0.5f) * _PerPixelNormal_TexelSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_PerPixelNormal, _Control0, sampleCoords).xyz * 2 - 1);
             
-            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1))) * -1;
+            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1)));
             float3 geomBitangent = normalize(cross(geomTangent, geomNormal));
             worldNormalVertex = geomNormal;
             d.worldSpaceNormal = geomNormal;
             d.worldSpaceTangent = geomTangent.xyz;
             d.TBNMatrix = float3x3(geomTangent.xyz, geomBitangent, geomNormal);
-        #endif       
+        #endif
+
+        #if _TOONPOLYEDGE
+           FlatShade(d);
+        #endif
 
          Input i = DescToInput(d);
 
@@ -17141,7 +16776,7 @@ float3 GetTessFactors ()
             
 
             d.TBNMatrix = float3x3(d.worldSpaceTangent, bitangent, d.worldSpaceNormal);
-            d.worldSpaceViewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+            d.worldSpaceViewDir = normalize(GetCameraWorldPosition() - i.worldPos);
             d.tangentSpaceViewDir = mul(d.TBNMatrix, d.worldSpaceViewDir);
              d.texcoord0 = i.texcoord0;
              d.texcoord1 = i.texcoord1;
@@ -17331,9 +16966,9 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX8TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
-      #define _MSRENDERLOOP_SURFACESHADER 1
 
 #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
 
@@ -17916,6 +17551,16 @@ float3 GetTessFactors ()
                  #define UNITY_SAMPLE_TEX2D_SAMPLER_LOD(tex,samplertex,coord,lod) tex2D (tex,coord,0,lod)
                #endif
             #endif
+
+            float3 GetCameraWorldPosition()
+            {
+               #if _HDRP
+                  return GetCameraRelativePositionWS(_WorldSpaceCameraPos);
+               #else
+                  return _WorldSpaceCameraPos;
+               #endif
+            }
+
      
 
 
@@ -19287,117 +18932,14 @@ float3 GetTessFactors ()
         #if _MEGASPLAT
            UnpackMegaSplat(s, IN);
         #endif
-        #if _MICROVERTEXMESH
+   
+        #if _MICROVERTEXMESH || _MICRODIGGERMESH
             UnpackVertexWorkflow(s, IN);
         #endif
         
         return s;
      }
      
-// Stochastic shared code
-
-// Compute local triangle barycentric coordinates and vertex IDs
-void TriangleGrid(float2 uv, float scale,
-   out float w1, out float w2, out float w3,
-   out int2 vertex1, out int2 vertex2, out int2 vertex3)
-{
-   // Scaling of the input
-   uv *= 3.464 * scale; // 2 * sqrt(3)
-
-   // Skew input space into simplex triangle grid
-   const float2x2 gridToSkewedGrid = float2x2(1.0, 0.0, -0.57735027, 1.15470054);
-   float2 skewedCoord = mul(gridToSkewedGrid, uv);
-
-   // Compute local triangle vertex IDs and local barycentric coordinates
-   int2 baseId = int2(floor(skewedCoord));
-   float3 temp = float3(frac(skewedCoord), 0);
-   temp.z = 1.0 - temp.x - temp.y;
-   if (temp.z > 0.0)
-   {
-      w1 = temp.z;
-      w2 = temp.y;
-      w3 = temp.x;
-      vertex1 = baseId;
-      vertex2 = baseId + int2(0, 1);
-      vertex3 = baseId + int2(1, 0);
-   }
-   else
-   {
-      w1 = -temp.z;
-      w2 = 1.0 - temp.y;
-      w3 = 1.0 - temp.x;
-      vertex1 = baseId + int2(1, 1);
-      vertex2 = baseId + int2(1, 0);
-      vertex3 = baseId + int2(0, 1);
-   }
-}
-
-// Fast random hash function
-float2 SimpleHash2(float2 p)
-{
-   return frac(sin(mul(float2x2(127.1, 311.7, 269.5, 183.3), p)) * 43758.5453);
-}
-
-
-half3 BaryWeightBlend(half3 iWeights, half tex0, half tex1, half tex2, half contrast)
-{
-    // compute weight with height map
-    const half epsilon = 1.0f / 1024.0f;
-    half3 weights = half3(iWeights.x * (tex0 + epsilon), 
-                             iWeights.y * (tex1 + epsilon),
-                             iWeights.z * (tex2 + epsilon));
-
-    // Contrast weights
-    half maxWeight = max(weights.x, max(weights.y, weights.z));
-    half transition = contrast * maxWeight;
-    half threshold = maxWeight - transition;
-    half scale = 1.0f / transition;
-    weights = saturate((weights - threshold) * scale);
-    // Normalize weights.
-    half weightScale = 1.0f / (weights.x + weights.y + weights.z);
-    weights *= weightScale;
-    return weights;
-}
-
-void PrepareStochasticUVs(float scale, float3 uv, out float3 uv1, out float3 uv2, out float3 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv.xy, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2, out float2 uv3, out half3 weights)
-{
-   // Get triangle info
-   float w1, w2, w3;
-   int2 vertex1, vertex2, vertex3;
-   TriangleGrid(uv, scale, w1, w2, w3, vertex1, vertex2, vertex3);
-
-   // Assign random offset to each triangle vertex
-   uv1 = uv;
-   uv2 = uv;
-   uv3 = uv;
-   
-   uv1.xy += SimpleHash2(vertex1);
-   uv2.xy += SimpleHash2(vertex2);
-   uv3.xy += SimpleHash2(vertex3);
-   weights = half3(w1, w2, w3);
-   
-}
-
-
 
 
       void SampleAlbedo(inout Config config, inout TriplanarConfig tc, inout RawSamples s, MIPFORMAT mipLevel, half4 weights)
@@ -19686,10 +19228,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #endif
             
             half3 absVertNormal = abs(tc.IN.worldNormal);
-            float3 t2w0 = WorldNormalVector(tc.IN, float3(1,0,0));
-            float3 t2w1 = WorldNormalVector(tc.IN, float3(0,1,0));
-            float3 t2w2 = WorldNormalVector(tc.IN, float3(0,0,1));
-            float3x3 t2w = float3x3(t2w0, t2w1, t2w2);
+            float3x3 t2w = tc.IN.TBN;
             
             
             {
@@ -20350,7 +19889,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             half4 heightWeights = ComputeWeights(weights, samples.albedo0.a, samples.albedo1.a, samples.albedo2.a, samples.albedo3.a, _Contrast);
          #endif
 
-
+         
          // rescale derivatives after height weighting. Basically, in gradmip mode we blend the mip levels,
          // but this is before height mapping is sampled, so reblending them after alpha will make sure the other
          // channels (normal, etc) are sharper, which likely matters most.. 
@@ -20699,7 +20238,17 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             #if _USESPECULARWORKFLOW && !_DISABLESPLATMAPS
                specular = BlendWeights(samples.specular0, samples.specular1, samples.specular2, samples.specular3, heightWeights);
             #endif
+
+            #if _PERTEXOUTLINECOLOR
+               SAMPLE_PER_TEX(ptOutlineColor, 28.5, config, half4(0.5, 0.5, 0.5, 1));
+               half4 outlineColor = BlendWeights(ptOutlineColor0, ptOutlineColor1, ptOutlineColor2, ptOutlineColor3, heightWeights);
+               half4 tstr = saturate(abs(heightWeights - 0.5) * 2);
+               half transitionBlend = min(min(min(tstr.x, tstr.y), tstr.z), tstr.w);
+               albedo.rgb = lerp(albedo.rgb * outlineColor.rgb * 2, albedo.rgb, outlineColor.a * transitionBlend);
+            #endif
          #endif
+
+
 
          #if _MESHOVERLAYSPLATS || _MESHCOMBINED
             o.Alpha = 1.0;
@@ -20857,7 +20406,7 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
 
          #if _PERTEXSSS || _MESHCOMBINEDUSESSS || (_SNOW && _SNOWSSS)
          {
-            half3 worldView = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+            half3 worldView = normalize(GetCameraWorldPosition().xyz - i.worldPos.xyz);
 
             o.Emission += ComputeSSS(i, worldView, WorldNormalVector(i, o.Normal),
                SSSTint, SSSThickness, _SSSDistance, _SSSScale, _SSSPower);
@@ -21014,19 +20563,15 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
             tangent.w = -1;
             half tangentSign = tangent.w * unity_WorldTransformParams.w;
             half3 wBitangent = cross(wNormal, tangent) * tangentSign;
-            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(_WorldSpaceCameraPos - i.worldPos));
+            i.viewDir = mul(float3x3(tangent.xyz, wBitangent, wNormal), normalize(GetCameraWorldPosition() - i.worldPos));
          }
          #endif
 
          #if _MEGANOUV
             i.uv_Control0 = i.worldPos.xz;
          #endif
-
-         #if _TERRAINBLENDABLESHADER && _TRIPLANAR
-            worldNormalVertex = WorldNormalVector(i, float3(0,0,1));
-         #endif
          
-         float camDist = distance(_WorldSpaceCameraPos, i.worldPos);
+         float camDist = distance(GetCameraWorldPosition(), i.worldPos);
           
          #if _FORCELOCALSPACE
             worldNormalVertex = mul((float3x3)unity_WorldToObject, worldNormalVertex).xyz;
@@ -21278,7 +20823,7 @@ float3 GetTessFactors ()
         #if (defined(UNITY_INSTANCING_ENABLED) && _MICROTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_TerrainNormalmapTexture, _Control0, sampleCoords).xyz * 2 - 1);
@@ -21291,18 +20836,22 @@ float3 GetTessFactors ()
         #elif _PERPIXNORMAL &&  (_MICROTERRAIN || _MICROMESHTERRAIN)
             float2 sampleCoords = (d.texcoord0.xy * _PerPixelNormal_TexelSize.zw + 0.5f) * _PerPixelNormal_TexelSize.xy;
             #if _TOONHARDEDGENORMAL
-               sampleCoords = ToonEdgeUV(sampleCoords);
+               sampleCoords = ToonEdgeUV(d.texcoord0.xy);
             #endif
 
             float3 geomNormal = normalize(UNITY_SAMPLE_TEX2D_SAMPLER(_PerPixelNormal, _Control0, sampleCoords).xyz * 2 - 1);
             
-            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1))) * -1;
+            float3 geomTangent = normalize(cross(geomNormal, float3(0, 0, 1)));
             float3 geomBitangent = normalize(cross(geomTangent, geomNormal));
             worldNormalVertex = geomNormal;
             d.worldSpaceNormal = geomNormal;
             d.worldSpaceTangent = geomTangent.xyz;
             d.TBNMatrix = float3x3(geomTangent.xyz, geomBitangent, geomNormal);
-        #endif       
+        #endif
+
+        #if _TOONPOLYEDGE
+           FlatShade(d);
+        #endif
 
          Input i = DescToInput(d);
 
@@ -21351,7 +20900,7 @@ float3 GetTessFactors ()
             
 
             d.TBNMatrix = float3x3(d.worldSpaceTangent, bitangent, d.worldSpaceNormal);
-            d.worldSpaceViewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+            d.worldSpaceViewDir = normalize(GetCameraWorldPosition() - i.worldPos);
             d.tangentSpaceViewDir = mul(d.TBNMatrix, d.worldSpaceViewDir);
              d.texcoord0 = i.texcoord0;
              d.texcoord1 = i.texcoord1;
@@ -21527,7 +21076,7 @@ float3 GetTessFactors ()
       UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
 
    }
-   Dependency "BaseMapShader" =  "Hidden/MicroSplat/Example_Base1434532173"
-   Fallback "Hidden/MicroSplat/Example_Base1434532173"
+   Dependency "BaseMapShader" =  "Hidden/MicroSplat/Example_Base-529962445"
+   Fallback "Hidden/MicroSplat/Example_Base-529962445"
    CustomEditor "MicroSplatShaderGUI"
 }

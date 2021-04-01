@@ -5,7 +5,8 @@ using Random = UnityEngine.Random;
 public class AttackingBehavior : MonoBehaviour
 {
     [ReadOnly] public Squad enemy;
-
+    [ReadOnly] public bool hasObstacles;
+    
     private Squad squad;
     private Seek seek;
 
@@ -55,7 +56,14 @@ public class AttackingBehavior : MonoBehaviour
     {
         if (enemy && enemy.hasUnits) {
             var distance = Vector.DistanceSq(squad.centroid, enemy.centroid);
-            worldTransform.rotation = Quaternion.LookRotation(enemy.centroid - squad.centroid);
+            var direction = enemy.centroid - squad.centroid;
+            worldTransform.rotation = Quaternion.LookRotation(direction);
+            
+            if (Physics.Raycast(squad.centroid, direction, out var hit, direction.Magnitude(), Manager.Squad)) {
+                hasObstacles = hit.collider.gameObject != enemy.gameObject;
+            }
+
+            
             if (squad.isRange) {
                 targetTransform.position = enemy.centroid;
                 var movement = distance > squad.data.rangeDistance * 0.95f;

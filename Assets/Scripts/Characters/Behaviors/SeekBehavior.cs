@@ -140,7 +140,8 @@ public class SeekBehavior : MonoBehaviour
         
         // Direction of rotation
         var direction = targetPos - squad.centroid;
-
+        var reverse = false;
+        
         // Remove all corontines just in case
         StopAllCoroutines();
         seek.enabled = true;
@@ -210,10 +211,11 @@ public class SeekBehavior : MonoBehaviour
         } else if (dir == Direction.Backward) {
             worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * squad.phalanxHeight, direction.ToEuler());
             if (!length.HasValue) length = squad.phalanxLength; // use to reverse formation for correct backward repositioning
+            reverse = true;
         }
 
         if (length.HasValue) {
-            squad.UpdateFormation(length.Value);
+            squad.UpdateFormation(length.Value, reverse);
             squad.isForward = true; // to make units move to their desired position normally
             StartCoroutine(WaitUntilDoneMovements(1.0f));
         } else if (squad.isForward != forwardMove) {
