@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public abstract class Unit : MonoBehaviour
+public class Unit : MonoBehaviour
 {
 	// ESC
     public EntityManager entityManager;

@@ -442,32 +442,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-6799320803036483083
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Idle2Crouch
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400118, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &-6558511489469636778
 AnimatorState:
   serializedVersion: 6
@@ -832,32 +806,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-3959809740340415996
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Crouch2Idle
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400122, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &-3597029252020991613
 AnimatorState:
   serializedVersion: 6
@@ -1102,40 +1050,31 @@ AnimatorStateMachine:
     m_Position: {x: -240, y: 2890, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4557083221170076870}
-    m_Position: {x: -240, y: 3050, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 8166871664159006395}
-    m_Position: {x: -240, y: 3090, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -3959809740340415996}
     m_Position: {x: -240, y: 2930, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 8517297174193146127}
+    m_State: {fileID: 8166871664159006395}
     m_Position: {x: -240, y: 2970, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -6799320803036483083}
-    m_Position: {x: -240, y: 3010, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 554068062535616878}
     m_Position: {x: -240, y: 2850, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6454125360423594402}
-    m_Position: {x: -240, y: 3130, z: 0}
+    m_Position: {x: -240, y: 3010, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5352892512172916650}
-    m_Position: {x: -240, y: 3170, z: 0}
+    m_Position: {x: -240, y: 3050, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2314523547403357713}
-    m_Position: {x: -240, y: 3210, z: 0}
+    m_Position: {x: -240, y: 3090, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -228695876038745229}
-    m_Position: {x: -240, y: 3250, z: 0}
+    m_Position: {x: -240, y: 3130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -519163090001298183}
-    m_Position: {x: -240, y: 3290, z: 0}
+    m_Position: {x: -240, y: 3170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6963459871254472077}
-    m_Position: {x: -240, y: 3330, z: 0}
+    m_Position: {x: -240, y: 3210, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -1143,7 +1082,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -220, y: -30, z: 0}
   m_EntryPosition: {x: -220, y: 40, z: 0}
-  m_ExitPosition: {x: -220, y: 3380, z: 0}
+  m_ExitPosition: {x: -220, y: 3260, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -7295306307840900830}
 --- !u!1102 &-3229371854596043448
@@ -2359,32 +2298,6 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400022, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &8517297174193146127
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Crouch_Idle
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400120, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
