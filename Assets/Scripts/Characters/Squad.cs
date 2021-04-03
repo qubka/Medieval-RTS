@@ -16,8 +16,8 @@ public class Squad : MonoBehaviour
 {
     [Header("Main Information")]
     public Squadron data;
-    public List<GameObject> meleePrefabs;
-    public List<GameObject> rangePrefabs;
+    public List<GameObject> primaryPrefabs;
+    public List<GameObject> secondaryPrefabs;
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
@@ -225,35 +225,46 @@ public class Squad : MonoBehaviour
             entityManager.SetComponentData(formationEntity, new Formation { Position = slotPos, Squad = squadEntity });
 
             // Get random skin index
-            var skin = Random.Range(0, meleePrefabs.Count);
+            var skin = Random.Range(0, data.animations.hasAttachment ? secondaryPrefabs.Count : primaryPrefabs.Count);
             
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(isRange ? rangePrefabs[skin] : meleePrefabs[skin]);
+            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[skin]);
             
             // Use unit components to store in the entity
             var trans = unitObject.transform;
             trans.SetPositionAndRotation(pos, rot);
             var boid = unitObject.AddComponent<BoidBehaviour>();
-            var animator = unitObject.GetComponent<GPUICrowdPrefab>();
+            var crowd = unitObject.GetComponent<GPUICrowdPrefab>();
             var unit = unitObject.GetComponent<Unit>();
             unit.health = data.hitPoints;
             unit.isRange = isRange;
             unit.entityManager = entityManager;
             unit.entity = unitEntity;
             unit.formation = formationEntity;
-            unit.animator = animator;
+            unit.crowd = crowd;
             unit.worldTransform = trans;
             unit.boid = boid;
             unit.skin = skin;
             unit.squad = this;
 
-            // Attach objects to the transform
+            // Attach selector to the transform
             var selector = Instantiate(data.selectorPrefab, trans);
             selector.GetComponent<MeshRenderer>().material.SetColor(emission, color);
-            selector.transform.localPosition = new Vector3(0f, data.selectorHeight, 0f);
+            var selectorTransform = selector.transform;
+            selectorTransform.localPosition = data.selectorPosition;
             selector.SetActive(false);
             unit.selector = selector;
+            
+            // Attach child to the transform
+            if (data.animations.hasAttachment) {
+                var attachment = Instantiate(secondaryPrefabs[skin], trans);
+                var subCrowd = attachment.GetComponent<GPUICrowdPrefab>();
+                attachment.transform.localPosition = data.attachPosition;
+                unit.attachment = attachment;
+                unit.subCrowd = subCrowd;
+                instances.Add(subCrowd);
+            }
             
             // Set component data to unit
             entityManager.SetName(unitEntity, "unit");
@@ -273,7 +284,7 @@ public class Squad : MonoBehaviour
             
             // Add entities and objects to the local array
             units.Add(unit);
-            instances.Add(animator);
+            instances.Add(crowd);
         }
 
         // Add buffer filled with neighbours units
@@ -621,15 +632,14 @@ public class Squad : MonoBehaviour
     {
         var index = units.IndexOf(oldUnit);
         var newUnit = oldUnit.Clone(newPrefab);
-        modelManager.RemovePrefabInstance(oldUnit.animator);
-        modelManager.AddPrefabInstance(newUnit.animator);
+        modelManager.RemovePrefabInstance(oldUnit.crowd);
+        modelManager.AddPrefabInstance(newUnit.crowd);
         var obj = oldUnit.gameObject;
         Destroy(obj);
         unitTable.Remove(obj);
         unitTable.Add(newUnit.gameObject, newUnit);
         units[index] = newUnit;
-
-
+        
         var anim = newUnit.currentAnim;
         var startTime = anim.frame1 / anim.FrameRate;
         newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, true, startTime);
@@ -670,7 +680,7 @@ public class Squad : MonoBehaviour
     
     public void RequestPlaySound(Vector3 position, Sounds sound)
     {
-        soundManager.RequestPlaySound(position, sound);
+        //soundManager.RequestPlaySound(position, sound);
     }
     
     #endregion

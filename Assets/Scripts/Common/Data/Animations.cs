@@ -48,7 +48,8 @@ public class Animations : ScriptableObject
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
-
+    public bool hasAttachment;
+    
     public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
     {
         switch (side) {

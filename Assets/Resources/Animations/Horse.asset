@@ -1,0 +1,294 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72a0f955e64c4b6e971e55f90417cc3b, type: 3}
+  m_Name: Horse
+  m_EditorClassIdentifier: 
+  idleNormal:
+  - clip: {fileID: 7400002, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 70
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e7dddf39c925c7418ebefcd699fc156, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400004, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 18
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e7dddf39c925c7418ebefcd699fc156, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400016, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 21
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400006, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 30
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6933e4dde423bd5468cb9a47e1699cb7, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400018, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 31
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6b8da4c6509cb674fb917287815c6b2f, type: 2}
+    sound2: {fileID: 0}
+  idleCombat: []
+  idleRange:
+  - clip: {fileID: 7400010, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 29
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+  - clip: {fileID: 7400008, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 21
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+  - clip: {fileID: 7400012, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 91
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+  attackNormal:
+  - clip: {fileID: 7400086, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 7
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+  - clip: {fileID: 7400088, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 8
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+  - clip: {fileID: 7400102, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 17
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+  - clip: {fileID: 7400104, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 17
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+  - clip: {fileID: 7400124, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 15
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+  - clip: {fileID: 7400126, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 16
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+  attackStep: []
+  attackCharge:
+  - clip: {fileID: 7400094, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400092, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  rangeStart: []
+  rangeHold: []
+  rangeRelease: []
+  rangeEnd: []
+  reload: []
+  equip: []
+  kick:
+  - clip: {fileID: 7400010, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 13
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ccf7103e8bc7c8c44954650db7dd77bc, type: 2}
+    sound2: {fileID: 0}
+  rage:
+  - clip: {fileID: 7400018, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: aa68941cbfcf2074aa0f6d57d8adc8c6, type: 2}
+    sound2: {fileID: 0}
+  charge:
+  - clip: {fileID: 7400032, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 5
+    frame2: 9
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400020, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400026, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400028, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+  forwardWalk:
+  - clip: {fileID: 7400040, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 8
+    frame2: 21
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
+    sound2: {fileID: 0}
+  forwardRun:
+  - clip: {fileID: 7400038, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 5
+    frame2: 15
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
+    sound2: {fileID: 0}
+  backwardWalk:
+  - clip: {fileID: 7400042, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 11
+    frame2: 29
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
+    sound2: {fileID: 0}
+  backwardRun:
+  - clip: {fileID: 7400042, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
+    sound2: {fileID: 0}
+  blockLeftUp: []
+  blockLeftDown: []
+  blockRightUp: []
+  blockRightDown: []
+  blockShieldUp: []
+  blockShieldDown: []
+  counterLeft: []
+  counterRight: []
+  counterShield: []
+  knockdownNormal: []
+  knockdownCombat: []
+  knockdownRange: []
+  deathNormal:
+  - clip: {fileID: 7400014, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 459f0ccff41ecce499b9ea58f30901dc, type: 2}
+    sound2: {fileID: 0}
+  deathCombat:
+  - clip: {fileID: 7400028, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 459f0ccff41ecce499b9ea58f30901dc, type: 2}
+    sound2: {fileID: 0}
+  deathRange:
+  - clip: {fileID: 7400030, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400032, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400034, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+  hitNormal:
+  - clip: {fileID: 7400008, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: dfdada17bf2e91a458d2a61a16a8375a, type: 2}
+    sound2: {fileID: 0}
+  hitCombat: []
+  hitRange:
+  - clip: {fileID: 7400024, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 0}
+  - clip: {fileID: 7400090, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 0}
+  hitBack: []
+  hasMultiNormalKnockdown: 0
+  hasMultiCombatKnockdown: 0
+  hasMultiRangeKnockdown: 0
+  hasChild: 1

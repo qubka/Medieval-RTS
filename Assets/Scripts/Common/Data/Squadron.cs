@@ -8,13 +8,14 @@ public class Squadron : ScriptableObject
 {
     [Header("Unit")]
     public GameObject selectorPrefab;
-    public float selectorHeight;
+    public Vector3 selectorPosition;
+    public Vector3 attachPosition;
     public UnitSize unitSize;
     public float unitSpeed;
     public float unitAccel;
     public float unitRotation;
     public Animations animations;
-    
+
     [Header("Squad")]
     public int squadSize;
     public float squadSpeed;

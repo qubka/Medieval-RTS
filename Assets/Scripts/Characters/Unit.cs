@@ -34,12 +34,14 @@ public class Unit : MonoBehaviour
     
     // Misc
     [ReadOnly] public Squad squad;
+    [ReadOnly] public GameObject attachment;
+    [ReadOnly] public GameObject selector;
     [ReadOnly] public Transform worldTransform;
-    [ReadOnly] public GPUICrowdPrefab animator;
     [ReadOnly] public List<Transform> collisions;
     [ReadOnly] public List<Obstacle> obstacles;
-    [ReadOnly] public GameObject selector;
     [ReadOnly] public Unit target;
+    [ReadOnly] public GPUICrowdPrefab crowd;
+    [ReadOnly] public GPUICrowdPrefab subCrowd;
 
     // Steering cache valuers
     [Space(10)]
@@ -58,8 +60,9 @@ public class Unit : MonoBehaviour
     public Vector3 GetAim()
     {
 	    var pos = worldTransform.position;
-	    pos.y += squad.data.unitSize.center;
-	    pos.z += 1.45f;
+	    var center = squad.data.unitSize.center;
+	    pos.y += center;
+	    pos.z += center;
 	    return pos;
     }
     
@@ -540,10 +543,18 @@ public class Unit : MonoBehaviour
 
     public void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, bool sound = true, float startTime = -1f)
     {
-        animator.StartAnimation(anim.clip, startTime, speed, transition);
-        currentAnim = anim;
-        nextAnimTime = currentTime + duration;
-        if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
+	    /*if (anim.playOnChild) {
+		    subCrowd.StartAnimation(anim.clip, startTime, speed, transition);
+		    currentAnim = anim;
+		    nextAnim2Time = currentTime + duration;
+		    if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
+	    } else {
+	    }*/
+	    
+	    crowd.StartAnimation(anim.clip, startTime, speed, transition);
+	    currentAnim = anim;
+	    nextAnimTime = currentTime + duration;
+	    if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
     }
 
     #region Damage
@@ -653,7 +664,7 @@ public class Unit : MonoBehaviour
     
     protected void OnDeath()
     {
-	    animator.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
+	    crowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
         entityManager.DestroyEntity(entity);
         entityManager.DestroyEntity(formation);
         Destroy(selector);
@@ -822,7 +833,8 @@ public class Unit : MonoBehaviour
 
 	protected void IdleStart(Vector3 direction)
 	{
-		var isIdle = animations.IsIdle(animator.crowdAnimator.currentAnimationClipData[0].animationClip, isCombat, isRange);
+		var clip = crowd.crowdAnimator.currentAnimationClipData[0].animationClip;
+		var isIdle = animations.IsIdle(clip, isCombat, isRange);
 					
 		if (currentTime > nextAnimTime) {
 			if (isIdle && Random.Range(0, 10) == 0) {
@@ -1122,8 +1134,8 @@ public class Unit : MonoBehaviour
 			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
 			PlayAnimation(anim, anim.Length);
 		} else {
-			var isIdle = animations.IsIdle(animator.crowdAnimator.currentAnimationClipData[0].animationClip, isCombat, isRange);
-
+			var clip = crowd.crowdAnimator.currentAnimationClipData[0].animationClip;
+			var isIdle = animations.IsIdle(clip, isCombat, isRange);
 			if (currentTime > nextAnimTime) {
 				if (isIdle && Random.Range(0, 10) == 0) {
 					var anim = animations.idleNormal.GetRandom(1); // from 1 (0  should be default one)
@@ -1139,6 +1151,10 @@ public class Unit : MonoBehaviour
 						pos.y += squad.unitSize.radius;
 						squad.RequestPlaySound(pos, anim.sound2);
 					}
+				}
+
+				if (attachment) {
+					
 				}
 			} else {
 				if (isIdle) {
@@ -1297,7 +1313,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextModeTime) {
 			isRange = true;
 			nextModeTime = Max;
-			squad.SwapUnit(this, squad.rangePrefabs[skin]);
+			squad.SwapUnit(this, squad.secondaryPrefabs[skin]);
 		}
 		
 		if (currentTime > nextAnimTime) {
@@ -1313,7 +1329,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextModeTime) {
 			isRange = false;
 			nextModeTime = Max;
-			squad.SwapUnit(this, squad.meleePrefabs[skin]);
+			squad.SwapUnit(this, squad.primaryPrefabs[skin]);
 		}
 		
 		if (currentTime > nextAnimTime) {
@@ -1369,16 +1385,30 @@ public class Unit : MonoBehaviour
 	    var trans = unitObject.transform;
 	    trans.SetPositionAndRotation(worldTransform.position, worldTransform.rotation);
 	    var boid = unitObject.AddComponent<BoidBehaviour>();
-	    var animator = unitObject.GetComponent<GPUICrowdPrefab>();
+	    var crowd = unitObject.GetComponent<GPUICrowdPrefab>();
 	    var unit = unitObject.GetComponent<Unit>();
-	    selector.transform.SetParent(trans);
-		
+	    
+	    // Update transforms
+	    if (selector) {
+		    var selectorTransform = selector.transform;
+		    selectorTransform.SetParent(trans, false);
+		    selectorTransform.localPosition = squad.data.selectorPosition;
+	    }
+	    if (attachment) {
+		    var attachTransform = attachment.transform;
+		    attachTransform.SetParent(trans, false);
+		    attachTransform.localPosition = squad.data.selectorPosition;
+	    }
+	    
+	    // Copy all structure data
 	    unit.entityManager = entityManager;
 	    unit.entity = entity;
 	    unit.formation = formation;
 	    unit.selector = selector;
 	    unit.boid = boid;
-	    unit.animator = animator;
+	    unit.attachment = attachment;
+	    unit.subCrowd = subCrowd;
+	    unit.crowd = crowd;
 	    unit.state = state;
 	    unit.worldTransform = trans;
 	    unit.currentAnim = currentAnim;
