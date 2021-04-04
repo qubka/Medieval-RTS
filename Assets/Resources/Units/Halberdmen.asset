@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Halberdmen
   m_EditorClassIdentifier: 
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
-  selectorHeight: 0.25
+  selectorPosition: {x: 0, y: 0.25, z: 0}
+  attachPosition: {x: 0, y: 0, z: 0}
   unitSize:
     width: 1.25
     height: 2
@@ -39,7 +40,7 @@ MonoBehaviour:
   chargeBonus: 5
   melee: {fileID: 11400000, guid: f5a9100434fa0ac4ba22a7f06c744e93, type: 2}
   range: {fileID: 0}
-  canKnockdown: 1
+  canKnock: 1
   armour: 5
   defenceSkill: 10
   shield: 0
@@ -47,4 +48,5 @@ MonoBehaviour:
   morale: 7
   canBlock: 0
   canCounter: 0
+  canKnockdown: 1
   hasShield: 0

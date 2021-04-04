@@ -36,6 +36,8 @@ public class Unit : MonoBehaviour
     [ReadOnly] public Squad squad;
     [ReadOnly] public GameObject attachment;
     [ReadOnly] public GameObject selector;
+    [ReadOnly] public Transform selectorTransform;
+    [ReadOnly] public Transform attachTransform;
     [ReadOnly] public Transform worldTransform;
     [ReadOnly] public List<Transform> collisions;
     [ReadOnly] public List<Obstacle> obstacles;
@@ -128,6 +130,14 @@ public class Unit : MonoBehaviour
 		            DefaultBehavior();
 	            }
 	            break;
+        }
+
+        if (Input.GetKeyDown(KeyCode.O)) {
+	        ChangeState(UnitFSM.Death);
+	        var anim = animations.GetDeathAnimation(isCombat, isRange);
+	        PlayAnimation(anim, anim.Length);
+	        Destroy(GetComponent<CapsuleCollider>());
+	        Destroy(GetComponent<Rigidbody>());
         }
     }
 
@@ -355,7 +365,7 @@ public class Unit : MonoBehaviour
             case DamageType.Charge:
                 switch (state) {
 	                case UnitFSM.Hit:
-		                if (inflictor.squad.data.canKnockdown) {
+		                if (inflictor.squad.data.canKnock) {
 			                ChangeState(UnitFSM.Knockdown);
 			                var anim = animations.GetKnockdownAnimation(isCombat, isRange);
 			                PlayAnimation(anim, anim.Length);
@@ -367,7 +377,7 @@ public class Unit : MonoBehaviour
                     case UnitFSM.Death:
                         break;
                     default:
-	                    if (inflictor.squad.data.canKnockdown) {
+	                    if (inflictor.squad.data.canKnock) {
 		                    ChangeState(UnitFSM.Knockdown);
 		                    var anim = animations.GetKnockdownAnimation(isCombat, isRange);
 		                    PlayAnimation(anim, anim.Length);
@@ -541,20 +551,21 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, bool sound = true, float startTime = -1f)
+    public void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, float startTime = -1f)
     {
-	    /*if (anim.playOnChild) {
-		    subCrowd.StartAnimation(anim.clip, startTime, speed, transition);
-		    currentAnim = anim;
-		    nextAnim2Time = currentTime + duration;
-		    if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
-	    } else {
-	    }*/
+	    var hasChild = anim.childList.Count > 0;
 	    
-	    crowd.StartAnimation(anim.clip, startTime, speed, transition);
-	    currentAnim = anim;
-	    nextAnimTime = currentTime + duration;
-	    if (sound) squad.RequestPlaySound(worldTransform.position, anim.sound1);
+	    if (anim.chance == 0 || Random.Range(0, anim.chance) != 0) {
+		    (anim.playOnChild ? subCrowd : crowd).StartAnimation(anim.clip, startTime, speed, transition);
+		    currentAnim = anim;
+		    nextAnimTime = currentTime + duration;
+		    if (anim.sound1) squad.RequestPlaySound(worldTransform.position, anim.sound2 && !hasChild && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
+	    }
+	    
+	    if (hasChild) {
+		    subCrowd.StartAnimation(anim.childList.GetRandom(), startTime, speed, transition);
+		    if (anim.sound2) squad.RequestPlaySound(attachTransform.position, anim.sound2);
+	    }
     }
 
     #region Damage
@@ -661,10 +672,11 @@ public class Unit : MonoBehaviour
             }
         }
     }
-    
+
     protected void OnDeath()
     {
 	    crowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
+	    if (subCrowd) subCrowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
         entityManager.DestroyEntity(entity);
         entityManager.DestroyEntity(formation);
         Destroy(selector);
@@ -1058,7 +1070,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.RangeHold);
 			var anim = animations.rangeHold[range];
-			PlayAnimation(anim, anim.Length, 1f, 0f, false);
+			PlayAnimation(anim, anim.Length);
 			nextModeTime = Random.Range(0.5f, 2.0f);
 			nextAnimTime = currentTime + nextModeTime;
 		}
@@ -1144,17 +1156,11 @@ public class Unit : MonoBehaviour
 					var rnd = Random.Range(0, squad.unitCount * 10);
 					
 					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
-					PlayAnimation(anim, anim.Length, 1f, 0.5f, rnd == 0);
+					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 
 					if (rnd == 1) {
-						var pos = worldTransform.position;
-						pos.y += squad.unitSize.radius;
-						squad.RequestPlaySound(pos, anim.sound2);
+						squad.RequestPlaySound(selectorTransform.position, anim.sound2);
 					}
-				}
-
-				if (attachment) {
-					
 				}
 			} else {
 				if (isIdle) {
@@ -1261,7 +1267,7 @@ public class Unit : MonoBehaviour
 			if (animations.hasMultiCombatKnockdown || animations.hasMultiRangeKnockdown) {
 				ChangeState(UnitFSM.Wait);
 				var anim = (animations.hasMultiCombatKnockdown ? animations.knockdownCombat : animations.knockdownRange)[0];
-				PlayAnimation(anim, anim.Length, 1f,  0f, false);
+				PlayAnimation(anim, anim.Length);
 			} else {
 				ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
 			}
@@ -1284,6 +1290,12 @@ public class Unit : MonoBehaviour
 
 	protected void Death()
 	{
+		if (attachment) {
+			var delta = 150f * Time.deltaTime;
+			attachTransform.localPosition = Vector3.MoveTowards(attachTransform.localPosition, animations.deathPosition, delta);
+			attachTransform.localEulerAngles = Vector3.MoveTowards(attachTransform.localEulerAngles, animations.deathRotation, delta);
+		}
+		
 		if (currentTime > nextAnimTime) {
 			OnDeath();
 		}
@@ -1389,13 +1401,11 @@ public class Unit : MonoBehaviour
 	    var unit = unitObject.GetComponent<Unit>();
 	    
 	    // Update transforms
-	    if (selector) {
-		    var selectorTransform = selector.transform;
+	    if (selectorTransform) {
 		    selectorTransform.SetParent(trans, false);
 		    selectorTransform.localPosition = squad.data.selectorPosition;
 	    }
-	    if (attachment) {
-		    var attachTransform = attachment.transform;
+	    if (attachTransform) {
 		    attachTransform.SetParent(trans, false);
 		    attachTransform.localPosition = squad.data.selectorPosition;
 	    }
@@ -1407,9 +1417,11 @@ public class Unit : MonoBehaviour
 	    unit.selector = selector;
 	    unit.boid = boid;
 	    unit.attachment = attachment;
-	    unit.subCrowd = subCrowd;
 	    unit.crowd = crowd;
+	    unit.subCrowd = subCrowd;
 	    unit.state = state;
+	    unit.selectorTransform = selectorTransform;
+	    unit.attachTransform = attachTransform;
 	    unit.worldTransform = trans;
 	    unit.currentAnim = currentAnim;
 	    unit.prevAnim = prevAnim;

@@ -51,7 +51,10 @@ public class CamController : MonoBehaviour
 	public float scrollWheelZoomingSensitivity = 40f;
 	public float zoomPos = 0.5f; //value in range (0, 1) used as t in Matf.Lerp
 	public float smoothZoomTime = 0.1f; //
-	private float currentZoomVelocity; // 
+	private float currentHeight;
+	private float currentZoomVelocity;
+	
+	public float DistToGround => currentHeight / maxHeight;
 	
 	#endregion
 
@@ -278,6 +281,7 @@ public class CamController : MonoBehaviour
 			var desiredHeight = hit.point.y + math.lerp(minHeight, maxHeight, zoomPos);
 			position.y = Mathf.SmoothDamp(position.y, desiredHeight, ref currentZoomVelocity, smoothZoomTime);
 			camTransform.position = position;
+			currentHeight = hit.distance;
 		}
 	}
 

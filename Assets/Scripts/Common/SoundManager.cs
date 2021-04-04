@@ -1,31 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour
 {
+    [Header(("Normal"))]
     public int maxSounds = 50;
     [Range(0f, 1f)] public float dopplerLevel;
     [Range(0f, 1f)] public float spatialBlend = 1f;
     [Range(0f, 1f)] public float defaultVolume = 1f;
-    [Header("Not Sq")]
+    [Space]
     public float playRange = 22500f;
     public float soundRange = 100f;
+    [Header(("Ambient"))] 
+    public AudioClip ambientSound;
+    [Range(0.01f, 1f)] public float ambientMiltiplier = 0.5f;
 
     //private Transform worldTransform;
     private Transform camTransform;
-    
+    private CamController camController;
+
     private Dictionary<Vector3, (Sounds, int)> clipTable;
     private Dictionary<AudioSource, (Vector3, int)> playTable;
     
+    private AudioSource ambient;
     private List<AudioSource> sources;
     private List<AudioSource> availables;
     
     private void Start()
     {
-        //worldTransform = transform;
+        ambient = Manager.cameraSources[2];
+        ambient.loop = true;
+        ambient.clip = ambientSound;
+        ambient.Play();
+        
         camTransform = Manager.camTransform;
+        camController = Manager.camController;
         
         clipTable = new Dictionary<Vector3, (Sounds, int)>(1000);
         playTable = new Dictionary<AudioSource, (Vector3, int)>(maxSounds);
@@ -80,7 +93,12 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
-    
+
+    public void Update()
+    {
+        ambient.volume = (1f - MathExtention.Clamp01(camController.DistToGround)) * ambientMiltiplier;
+    }
+
     public void LateUpdate()
     {
         foreach (var source in sources) {

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: HeavySwordmen
   m_EditorClassIdentifier: 
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
-  selectorHeight: 0.25
+  selectorPosition: {x: 0, y: 0.25, z: 0}
+  attachPosition: {x: 0, y: 0, z: 0}
   unitSize:
     width: 1.5
     height: 2
@@ -39,7 +40,7 @@ MonoBehaviour:
   chargeBonus: 3
   melee: {fileID: 11400000, guid: a253b233f4fb2c943a2c2af98e195c35, type: 2}
   range: {fileID: 0}
-  canKnockdown: 0
+  canKnock: 0
   armour: 7
   defenceSkill: 8
   shield: 6
@@ -47,4 +48,5 @@ MonoBehaviour:
   morale: 9
   canBlock: 1
   canCounter: 1
+  canKnockdown: 1
   hasShield: 1

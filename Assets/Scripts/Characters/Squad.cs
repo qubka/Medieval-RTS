@@ -34,14 +34,14 @@ public class Squad : MonoBehaviour
     [ReadOnly] public AttackingBehavior attackScript;
 
     [Space(10)]
+    [ReadOnly] public float phalanxLength;
+    [ReadOnly] public float phalanxHeight;
     [ReadOnly] public List<Unit> units;
     [ReadOnly] public List<Squad> neighbours;
     [ReadOnly] public List<Squad> enemies;
     [ReadOnly] public List<Obstacle> obstacles;
     [ReadOnly] public List<Vector3> positions;
     [ReadOnly] public Vector3 centroid;
-    [ReadOnly] public float phalanxLength;
-    [ReadOnly] public float phalanxHeight;
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public ObjectPool objectPool;
     [HideInInspector] public Transform worldTransform;
@@ -254,13 +254,16 @@ public class Squad : MonoBehaviour
             var selectorTransform = selector.transform;
             selectorTransform.localPosition = data.selectorPosition;
             selector.SetActive(false);
+            unit.selectorTransform = selectorTransform;
             unit.selector = selector;
             
             // Attach child to the transform
             if (data.animations.hasAttachment) {
                 var attachment = Instantiate(secondaryPrefabs[skin], trans);
                 var subCrowd = attachment.GetComponent<GPUICrowdPrefab>();
-                attachment.transform.localPosition = data.attachPosition;
+                var attachTransform = attachment.transform;
+                attachTransform.localPosition = data.attachPosition;
+                unit.attachTransform = attachTransform;
                 unit.attachment = attachment;
                 unit.subCrowd = subCrowd;
                 instances.Add(subCrowd);
@@ -642,7 +645,7 @@ public class Squad : MonoBehaviour
         
         var anim = newUnit.currentAnim;
         var startTime = anim.frame1 / anim.FrameRate;
-        newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, true, startTime);
+        newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, startTime);
     }
     
     public void CreateShake(Vector3 position)

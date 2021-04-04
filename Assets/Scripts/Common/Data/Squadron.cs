@@ -37,7 +37,7 @@ public class Squadron : ScriptableObject
     public int chargeBonus;
     public Weapon melee;
     public Weapon range;
-    public bool canKnockdown;
+    public bool canKnock;
 
     [Header("Defense")]
     public int armour;
@@ -47,6 +47,7 @@ public class Squadron : ScriptableObject
     public int morale;
     public bool canBlock;
     public bool canCounter;
+    public bool canKnockdown;
     public bool hasShield;
     
     public int TotalStats() {

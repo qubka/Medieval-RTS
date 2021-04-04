@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu]
@@ -49,7 +50,11 @@ public class Animations : ScriptableObject
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
     public bool hasAttachment;
-    
+    public bool hasDistant;
+    [Space]
+    public Vector3 deathPosition;
+    public Vector3 deathRotation;
+
     public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
     {
         switch (side) {
@@ -68,19 +73,15 @@ public class Animations : ScriptableObject
 
     public List<AnimationData> GetAttackAnimation(Weapon weapon, float distance)
     {
-        if (distance > weapon.distant) {
+        if (hasDistant && distance > weapon.distant) {
             return attackCharge;
         }
 
-        if (Random.Range(0, 2) == 0 && distance < weapon.kick) {
+        if (kick.Count > 0 && Random.Range(0, 2) == 0 && distance < weapon.kick) {
             return kick;
         }
         
-        if (distance < weapon.normal) {
-            return attackNormal;
-        }
-        
-        return attackStep;
+        return distance > weapon.normal && attackStep.Count > 0 ? attackStep : attackNormal;
     }
 
     public List<AnimationData> GetIdleAnimation(bool isCombat, bool isRange)
@@ -159,8 +160,7 @@ public class Animations : ScriptableObject
 
         return list[0];
     }
-    
-    
+
     public int GetRangeAnimation(Weapon weapon, float distance)
     {
         if (distance > weapon.distant) {
@@ -200,7 +200,9 @@ public class AnimationData
     public AnimSide side2;
     public Sounds sound1;
     public Sounds sound2;
-    //public float volume = 1f;
+    public int chance;
+    public List<AnimationClip> childList;
+    public bool playOnChild;
 
     public float Length => clip.length;
     public float FrameRate => clip.frameRate;

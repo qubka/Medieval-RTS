@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Horsemen
   m_EditorClassIdentifier: 
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
-  selectorHeight: 0.25
-  childPosition: {x: 0, y: -0.25, z: 0}
+  selectorPosition: {x: 0, y: 0.25, z: 0}
+  attachPosition: {x: 0, y: -0.25, z: 0}
   unitSize:
     width: 3
     height: 4
@@ -27,7 +27,7 @@ MonoBehaviour:
   squadSize: 85
   squadSpeed: 3
   squadAccel: 3
-  squadRotation: 2
+  squadRotation: 10
   attackDistance: 900
   meleeDistance: 10
   chargeDistance: 100
@@ -40,7 +40,7 @@ MonoBehaviour:
   chargeBonus: 2
   melee: {fileID: 11400000, guid: 7e0036085b3634c45b06ee1b41c0e249, type: 2}
   range: {fileID: 0}
-  canKnockdown: 1
+  canKnock: 1
   armour: 5
   defenceSkill: 5
   shield: 3
@@ -48,4 +48,5 @@ MonoBehaviour:
   morale: 7
   canBlock: 0
   canCounter: 0
+  canKnockdown: 0
   hasShield: 0
