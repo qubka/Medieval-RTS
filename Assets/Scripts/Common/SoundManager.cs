@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,8 +15,8 @@ public class SoundManager : MonoBehaviour
     public float soundRange = 100f;
     [Header(("Ambient"))] 
     public AudioClip ambientSound;
-    [Range(0.01f, 1f)] public float ambientMiltiplier = 0.5f;
-
+    public AnimationCurve ambientCurve;
+    
     //private Transform worldTransform;
     private Transform camTransform;
     private CamController camController;
@@ -96,7 +94,7 @@ public class SoundManager : MonoBehaviour
 
     public void Update()
     {
-        ambient.volume = (1f - MathExtention.Clamp01(camController.DistToGround)) * ambientMiltiplier;
+        ambient.volume = ambientCurve.Evaluate(MathExtention.Clamp01(camController.DistToGround));
     }
 
     public void LateUpdate()

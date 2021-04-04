@@ -555,12 +555,10 @@ public class Unit : MonoBehaviour
     {
 	    var hasChild = anim.childList.Count > 0;
 	    
-	    if (anim.chance == 0 || Random.Range(0, anim.chance) != 0) {
-		    (anim.playOnChild ? subCrowd : crowd).StartAnimation(anim.clip, startTime, speed, transition);
-		    currentAnim = anim;
-		    nextAnimTime = currentTime + duration;
-		    if (anim.sound1) squad.RequestPlaySound(worldTransform.position, anim.sound2 && !hasChild && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
-	    }
+	    (anim.playOnChild ? subCrowd : crowd).StartAnimation(anim.clip, startTime, speed, transition);
+	    currentAnim = anim;
+	    nextAnimTime = currentTime + duration;
+	    if (anim.sound1) squad.RequestPlaySound(worldTransform.position, anim.sound2 && !hasChild && Random.Range(0, squad.unitCount * 10) == 0 ? anim.sound2 : anim.sound1);
 	    
 	    if (hasChild) {
 		    subCrowd.StartAnimation(anim.childList.GetRandom(), startTime, speed, transition);
@@ -1153,14 +1151,8 @@ public class Unit : MonoBehaviour
 					var anim = animations.idleNormal.GetRandom(1); // from 1 (0  should be default one)
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				} else {
-					var rnd = Random.Range(0, squad.unitCount * 10);
-					
 					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
-
-					if (rnd == 1) {
-						squad.RequestPlaySound(selectorTransform.position, anim.sound2);
-					}
 				}
 			} else {
 				if (isIdle) {

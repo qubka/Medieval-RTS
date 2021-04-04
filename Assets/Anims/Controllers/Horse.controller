@@ -1,13 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-9108253515445147063
+--- !u!1102 &-8891898968874687555
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_Idle
+  m_Name: Arm_Horse|Trot_F
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,33 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400002, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &-8826560847942712924
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: RM_horse_running_death
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400036, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: 2103893111128861753, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -62,53 +36,56 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: 5053405889628673632}
-    m_Position: {x: 370, y: -90, z: 0}
+    m_State: {fileID: -5453082278650679044}
+    m_Position: {x: 30, y: 330, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 8982486826317075245}
-    m_Position: {x: 470, y: 30, z: 0}
+    m_State: {fileID: -773749897051251368}
+    m_Position: {x: 30, y: 370, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 113264789303865238}
-    m_Position: {x: 590, y: -20, z: 0}
+    m_State: {fileID: -6268450795197830394}
+    m_Position: {x: 30, y: 410, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -8826560847942712924}
-    m_Position: {x: 260, y: 190, z: 0}
+    m_State: {fileID: -4282357238165876434}
+    m_Position: {x: 30, y: 450, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 9213122526570104568}
-    m_Position: {x: 370, y: 310, z: 0}
+    m_State: {fileID: -1873582060864031784}
+    m_Position: {x: 30, y: 490, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 2769391835621720728}
-    m_Position: {x: 550, y: 360, z: 0}
+    m_State: {fileID: -4511180034342398665}
+    m_Position: {x: 30, y: 530, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -4161175025362084340}
-    m_Position: {x: 400, y: 100, z: 0}
+    m_State: {fileID: -6150950057984890407}
+    m_Position: {x: 30, y: 570, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 4540392886395583433}
-    m_Position: {x: 690, y: 330, z: 0}
+    m_State: {fileID: 7797117617636891939}
+    m_Position: {x: 30, y: 610, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -4274330811910387078}
-    m_Position: {x: 680, y: -150, z: 0}
+    m_State: {fileID: 5607494508724885519}
+    m_Position: {x: 30, y: 650, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -2304670507482307751}
-    m_Position: {x: 300, y: -190, z: 0}
+    m_State: {fileID: 7774720560294489736}
+    m_Position: {x: 30, y: 170, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 5725874231364093845}
-    m_Position: {x: 100, y: -120, z: 0}
+    m_State: {fileID: 4510288124516200619}
+    m_Position: {x: 30, y: 210, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 6702333005657906228}
-    m_Position: {x: 830, y: -50, z: 0}
+    m_State: {fileID: 4718961166319615773}
+    m_Position: {x: 30, y: 250, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -9108253515445147063}
-    m_Position: {x: 250, y: 0, z: 0}
+    m_State: {fileID: 8502503270633472689}
+    m_Position: {x: 30, y: 290, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 8192184758560457489}
-    m_Position: {x: 620, y: 130, z: 0}
+    m_State: {fileID: 4746254448850887172}
+    m_Position: {x: 30, y: 690, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -4816975543577241384}
-    m_Position: {x: 110, y: 360, z: 0}
+    m_State: {fileID: -8891898968874687555}
+    m_Position: {x: 30, y: 730, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 5323352869586897960}
-    m_Position: {x: 615.5, y: 230.5, z: 0}
+    m_State: {fileID: -3427319341394073788}
+    m_Position: {x: 30, y: 770, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -498713495539326069}
+    m_Position: {x: 30, y: 810, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -118,15 +95,15 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -9108253515445147063}
---- !u!1102 &-4816975543577241384
+  m_DefaultState: {fileID: -5453082278650679044}
+--- !u!1102 &-6268450795197830394
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_death
+  m_Name: Arm_Horse|Attack_3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -139,20 +116,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400014, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: 427959909295874982, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-4274330811910387078
+--- !u!1102 &-6150950057984890407
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_looking_around
+  m_Name: Arm_Horse|Hit_back
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -165,20 +142,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400004, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: -8836729903165393175, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-4161175025362084340
+--- !u!1102 &-5453082278650679044
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_sniff
+  m_Name: Arm_Horse|Attack_1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -191,20 +168,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400006, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: -864993259634287010, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-2304670507482307751
+--- !u!1102 &-4511180034342398665
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_kick_ground
+  m_Name: Arm_Horse|Eat
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -217,7 +194,137 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400016, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: 8749170119270513500, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-4282357238165876434
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Arm_Horse|Death_1
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -7504370829292103141, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-3427319341394073788
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Arm_Horse|Walk_B
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 8292973972155249793, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-1873582060864031784
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Arm_Horse|Death_2
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 5591776602257257172, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-773749897051251368
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Arm_Horse|Attack_2
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -8774051957608841502, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-498713495539326069
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Arm_Horse|Walk_F
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -538131536831758851, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -245,14 +352,14 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!1102 &113264789303865238
+--- !u!1102 &4510288124516200619
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RM_horse_jump
+  m_Name: Arm_Horse|Idle_2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -265,20 +372,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400034, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: 3682869527434209857, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &2769391835621720728
+--- !u!1102 &4718961166319615773
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RM_horse_walk
+  m_Name: Arm_Horse|Idle_3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -291,20 +398,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400040, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: -7246173300179722178, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &4540392886395583433
+--- !u!1102 &4746254448850887172
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_rear_up
+  m_Name: Arm_Horse|Run_F
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -317,20 +424,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400008, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: 5236264335687597140, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &5053405889628673632
+--- !u!1102 &5607494508724885519
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RM_horse_walk_back
+  m_Name: Arm_Horse|Hit_simple
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -343,85 +450,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400042, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &5323352869586897960
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: horse_bite
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400012, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &5725874231364093845
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: horse_kick
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400010, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &6702333005657906228
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: horse_jump
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400026, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: -1918856290162554971, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -441,14 +470,14 @@ AnimatorTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 1
---- !u!1102 &8192184758560457489
+--- !u!1102 &7774720560294489736
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: horse_eating
+  m_Name: Arm_Horse|Idle_1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -461,20 +490,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400018, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: -2635069113546453591, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &8982486826317075245
+--- !u!1102 &7797117617636891939
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RM_horse_galloping
+  m_Name: Arm_Horse|Hit_front
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -487,20 +516,20 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400032, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: 7166156302799084284, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &9213122526570104568
+--- !u!1102 &8502503270633472689
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RM_horse_trot
+  m_Name: Arm_Horse|Idle_4
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -513,7 +542,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400038, guid: 84734aa4226d3f44b845262d2b7ceadf, type: 3}
+  m_Motion: {fileID: -9128147562317054211, guid: f1af6d76bc54ceb4591e8d98a263d6a6, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

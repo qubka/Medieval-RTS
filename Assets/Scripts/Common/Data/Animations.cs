@@ -200,7 +200,6 @@ public class AnimationData
     public AnimSide side2;
     public Sounds sound1;
     public Sounds sound2;
-    public int chance;
     public List<AnimationClip> childList;
     public bool playOnChild;
 
