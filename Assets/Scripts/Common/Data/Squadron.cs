@@ -33,7 +33,8 @@ public class Squadron : ScriptableObject
     [Space(10)]
     
     [Header("Damage")]
-    public int attack;
+    public int meleeAttack;
+    public int missileAttack;
     public int chargeBonus;
     public Weapon melee;
     public Weapon range;
@@ -52,7 +53,7 @@ public class Squadron : ScriptableObject
     
     public int TotalStats() {
         
-        var damage = attack;
+        var damage = meleeAttack + missileAttack;
         if (melee && melee.armorPiercing) damage *= 2;
         if (range && range.armorPiercing) damage *= 2;
         damage += chargeBonus;

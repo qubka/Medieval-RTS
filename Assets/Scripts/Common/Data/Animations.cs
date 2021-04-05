@@ -55,17 +55,17 @@ public class Animations : ScriptableObject
     public Vector3 deathPosition;
     public Vector3 deathRotation;
 
-    public List<AnimationData> GetCounterAnimation(AnimSide side, bool shield, bool counter)
+    public List<AnimationData> GetCounterAnimation(AnimSide side, bool hasShield, bool isCounter)
     {
         switch (side) {
             case AnimSide.RightUp:
-                return counter ? shield ? counterShield : counterRight : shield && Random.Range(0, 2) == 0 ?  blockShieldUp : blockRightUp;
+                return isCounter ? hasShield ? counterShield : counterRight : hasShield && Random.Range(0, 2) == 0 ?  blockShieldUp : blockRightUp;
             case AnimSide.RightDown:
-                return counter ? counterRight : shield && Random.Range(0, 2) == 0 ? blockShieldDown : blockRightDown;
+                return isCounter ? counterRight : hasShield && Random.Range(0, 2) == 0 ? blockShieldDown : blockRightDown;
             case AnimSide.LeftUp:
-                return counter ? counterLeft : blockLeftUp;
+                return isCounter ? counterLeft : blockLeftUp;
             case AnimSide.LeftDown:
-                return counter ? counterLeft : blockLeftDown;
+                return isCounter ? counterLeft : blockLeftDown;
             default:
                 return null;
         }
@@ -77,7 +77,7 @@ public class Animations : ScriptableObject
             return attackCharge;
         }
 
-        if (kick.Count > 0 && Random.Range(0, 2) == 0 && distance < weapon.kick) {
+        if (kick.Count > 0 && Random.Range(0, 10) == 0 && distance < weapon.kick) {
             return kick;
         }
         
@@ -103,7 +103,7 @@ public class Animations : ScriptableObject
     {
         if (isCombat) {
             if (isRange && knockdownRange.Count > 0) {
-                return hasMultiRangeKnockdown? knockdownRange.GetRandom(1) : knockdownRange.GetRandom();
+                return hasMultiRangeKnockdown ? knockdownRange.GetRandom(1) : knockdownRange.GetRandom();
             }
             
             if (knockdownCombat.Count > 0) {

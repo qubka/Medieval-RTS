@@ -146,7 +146,10 @@ public class Projectile : MonoBehaviour
             Manager.objectPool.ReturnToPool("Arrow", gameObject);
             
             if (origin) {
-                target.OnDamage(origin, DamageType.Range);
+                var lethal = target.RangeDamage(origin) == DamageType.Lethal;
+                if (lethal || Random.Range(0, 50) == 0) {
+                    target.OnDamage(origin, DamageMode.Range, lethal);
+                }
             }
         } else {
             Manager.soundManager.RequestPlaySound(lastTarget, hitGround);
