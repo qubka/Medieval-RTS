@@ -402,7 +402,7 @@ public class Squad : MonoBehaviour
 
         // TODO: Temporary
         // Disable circle radius if we not in range anymore
-        circle.SetActive(select && (isRange || Input.GetKey(radiusKey)));
+        circle.SetActive(team == Team.Self && select && (isRange || Input.GetKey(radiusKey)));
     }
     
     private void UpdateAll()
@@ -683,7 +683,7 @@ public class Squad : MonoBehaviour
     
     public void RequestPlaySound(Vector3 position, Sounds sound)
     {
-        //soundManager.RequestPlaySound(position, sound);
+        soundManager.RequestPlaySound(position, sound);
     }
     
     #endregion

@@ -81,6 +81,7 @@ public class Projectile : MonoBehaviour
         }
         
         source.enabled = true;
+        source.pitch = Random.Range(0.9f, 1.1f);
     }
 
     private void Update()

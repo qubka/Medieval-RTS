@@ -353,10 +353,7 @@ public class Unit : MonoBehaviour
                     case UnitFSM.Death:
                         break;
                     default:
-	                    ChangeState(UnitFSM.Hit);
-	                    var anim = animations.GetHitAnimation(isCombat, isRange);
-	                    PlayAnimation(anim, anim.Length);
-                        rotate = true;
+	                    rotate = true;
                         trigger = true;
                         break;
                 }
@@ -366,9 +363,6 @@ public class Unit : MonoBehaviour
                 switch (state) {
 	                case UnitFSM.Hit:
 		                if (inflictor.squad.data.canKnock) {
-			                ChangeState(UnitFSM.Knockdown);
-			                var anim = animations.GetKnockdownAnimation(isCombat, isRange);
-			                PlayAnimation(anim, anim.Length);
 			                rotate = true;
 			                trigger = true;
 		                }
@@ -377,15 +371,6 @@ public class Unit : MonoBehaviour
                     case UnitFSM.Death:
                         break;
                     default:
-	                    if (inflictor.squad.data.canKnock) {
-		                    ChangeState(UnitFSM.Knockdown);
-		                    var anim = animations.GetKnockdownAnimation(isCombat, isRange);
-		                    PlayAnimation(anim, anim.Length);
-	                    } else {
-		                    ChangeState(UnitFSM.Hit);
-		                    var anim = animations.GetHitAnimation(isCombat, isRange);
-		                    PlayAnimation(anim, anim.Length);
-	                    }
 	                    rotate = true;
                         trigger = true;
                         break;
@@ -402,11 +387,6 @@ public class Unit : MonoBehaviour
 		            case UnitFSM.Death:
 			            break;
 		            default:
-			            ChangeState(UnitFSM.Hit);
-			            if (Random.Range(0, 10) == 0) {
-				            var anim = animations.GetHitAnimation(isCombat, isRange);
-				            PlayAnimation(anim, anim.Length);
-			            }
 			            trigger = true;
 			            break;
 	            }
@@ -416,7 +396,17 @@ public class Unit : MonoBehaviour
         }
         
         if (trigger) {
-            CalculateDamage(inflictor, melee);
+	        if (CalculateDamage(inflictor, melee)) {
+		        if (inflictor.squad.data.canKnock) {
+			        ChangeState(UnitFSM.Knockdown);
+			        var anim = animations.GetKnockdownAnimation(isCombat, isRange);
+			        PlayAnimation(anim, anim.Length);
+		        } else {
+			        ChangeState(UnitFSM.Hit);
+			        var anim = animations.GetHitAnimation(isCombat, isRange);
+			        PlayAnimation(anim, anim.Length);
+		        }
+	        }
         }
 
         if (rotate && state != UnitFSM.Death && squad.state == SquadFSM.Attack) {
@@ -626,7 +616,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void CalculateDamage(Unit inflictor, bool melee)
+    private bool CalculateDamage(Unit inflictor, bool melee)
     {
         // https://amp.reddit.com/r/totalwar/comments/3tgtg2/how_is_damage_calculated/&ved=2ahUKEwj5g8_g85XvAhUSuHEKHbCtCW4QFjABegQIAhAG&usg=AOvVaw0B_rkefk6KqOXpE9FLwuI6
         var attacker = inflictor.squad.data;
@@ -666,9 +656,12 @@ public class Unit : MonoBehaviour
 	                PlayAnimation(anim, anim.Length);
 	                Destroy(GetComponent<CapsuleCollider>());
 	                Destroy(GetComponent<Rigidbody>());
+	                return false;
                 }
             }
+            return true;
         }
+        return false;
     }
 
     protected void OnDeath()
