@@ -170,6 +170,7 @@ MonoBehaviour:
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
+  turn: []
   charge:
   - clip: {fileID: -4010395083508936601, guid: 4a1af87de6964a440b276ed900e5bed3, type: 3}
     frame1: 5
@@ -181,15 +182,6 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   forwardWalk:
-  - clip: {fileID: 7400012, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
-    frame1: 8
-    frame2: 22
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
   - clip: {fileID: -3324134082935255511, guid: 81873faca0bd4674aa2b38b463a0a88e, type: 3}
     frame1: 3
     frame2: 16
@@ -200,15 +192,6 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   forwardRun:
-  - clip: {fileID: 7400036, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
-    frame1: 7
-    frame2: 18
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
   - clip: {fileID: -4010395083508936601, guid: 4a1af87de6964a440b276ed900e5bed3, type: 3}
     frame1: 5
     frame2: 17
@@ -219,15 +202,6 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   backwardWalk:
-  - clip: {fileID: 7400010, guid: 72bc559d4b44eb14bb687cefb4d1c638, type: 3}
-    frame1: 8
-    frame2: 22
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
   - clip: {fileID: 4072620773772969381, guid: 35cace289bc21864da9a6ac1ad823662, type: 3}
     frame1: 13
     frame2: 25
@@ -238,15 +212,6 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   backwardRun:
-  - clip: {fileID: 7400050, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
-    frame1: 10
-    frame2: 19
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
   - clip: {fileID: 9128918799655052268, guid: 4d87a0b85ca997e4d904ec91aec01852, type: 3}
     frame1: 8
     frame2: 19
@@ -568,5 +533,6 @@ MonoBehaviour:
   hasMultiRangeKnockdown: 0
   hasAttachment: 0
   hasDistant: 1
+  hasTurn: 0
   deathPosition: {x: 0, y: 0, z: 0}
   deathRotation: {x: 0, y: 0, z: 0}

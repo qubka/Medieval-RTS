@@ -225,11 +225,12 @@ public class Squad : MonoBehaviour
             entityManager.SetComponentData(formationEntity, new Formation { Position = slotPos, Squad = squadEntity });
 
             // Get random skin index
-            var skin = Random.Range(0, data.animations.hasAttachment ? secondaryPrefabs.Count : primaryPrefabs.Count);
+            var attach = data.animations.hasAttachment;
+            var skin = Random.Range(0, attach ? secondaryPrefabs.Count : primaryPrefabs.Count);
             
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[skin]);
+            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[attach ? Random.Range(0, primaryPrefabs.Count) : skin]);
             
             // Use unit components to store in the entity
             var trans = unitObject.transform;
@@ -258,7 +259,7 @@ public class Squad : MonoBehaviour
             unit.selector = selector;
             
             // Attach child to the transform
-            if (data.animations.hasAttachment) {
+            if (attach) {
                 var attachment = Instantiate(secondaryPrefabs[skin], trans);
                 var subCrowd = attachment.GetComponent<GPUICrowdPrefab>();
                 var attachTransform = attachment.transform;
@@ -712,10 +713,16 @@ public class Squad : MonoBehaviour
         }
     }
 
+    public Unit FindRandomEnemy(Vector3 position)
+    {
+        var squad = FindClosestSquad(position);
+        return squad ? squad.units[Random.Range(0, squad.unitCount)] : null;
+    }
+    
     public Unit FindClosestEnemy(Vector3 position)
     {
         var squad = FindClosestSquad(position);
-        return squad ? isRange ? squad.units[Random.Range(0, squad.unitCount)] : squad.FindClosestUnit(position) : null;
+        return squad ? squad.FindClosestUnit(position) : null;
     }
     
     private Unit FindClosestUnit(Vector3 position)

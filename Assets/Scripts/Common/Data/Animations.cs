@@ -22,6 +22,7 @@ public class Animations : ScriptableObject
     public List<AnimationData> equip;
     public List<AnimationData> kick;
     public List<AnimationData> rage;
+    public List<AnimationData> turn;
     public List<AnimationData> charge;
     public List<AnimationData> forwardWalk;
     public List<AnimationData> forwardRun;
@@ -51,6 +52,7 @@ public class Animations : ScriptableObject
     public bool hasMultiRangeKnockdown;
     public bool hasAttachment;
     public bool hasDistant;
+    public bool hasTurn;
     [Space]
     public Vector3 deathPosition;
     public Vector3 deathRotation;
@@ -161,6 +163,11 @@ public class Animations : ScriptableObject
         return list[0];
     }
 
+    public AnimationData GetTurnAnimation(Quaternion current, Quaternion desired)
+    {
+        return turn[Vector.IsRightRotationDirection(current, desired) ? 1 : 0];
+    }
+    
     public int GetRangeAnimation(Weapon weapon, float distance)
     {
         if (distance > weapon.distant) {
@@ -187,6 +194,11 @@ public class Animations : ScriptableObject
         }
 
         return idleNormal[0].clip == current;
+    }
+
+    public bool IsTurn(AnimationClip current)
+    {
+        return turn.Count > 0 && (turn[0].clip == current || turn[1].clip == current);
     }
 }
 

@@ -229,4 +229,23 @@ public static class Vector // MathExtension ?
 		point = dir + pivot; // calculate rotated point
 		return point; // return it
 	}
+	
+	public static bool IsRightRotationDirection(Quaternion from, Quaternion to)
+	{
+		var fromY = from.eulerAngles.y;
+		var toY  = to.eulerAngles.y;
+		
+		float clockWise;
+		float counterClockWise;
+ 
+		if (fromY <= toY) {
+			clockWise = toY - fromY;
+			counterClockWise = fromY + (360f - toY);
+		} else {
+			clockWise = (360f - fromY) + toY;
+			counterClockWise = fromY - toY;
+		}
+		
+		return (clockWise <= counterClockWise);
+	}
 }
