@@ -9,17 +9,13 @@ public class Projectile : MonoBehaviour
     public Sounds hitGround;
     public Sounds hitTarget;
     
-    public int defaultAccuracy = 2; // default accuracity value
     public float defaultSpeed = 1f; // default speed value
+    [Range(1, 100)] public int defaultAccuracy = 100; // default accuracity value
+    [Range(0.01f, 1f)] public float positionFactor; // multiplier for adjusting the starting position for point P1 (along the X axis) 
+    [Range(0.01f, 1f)] public float heightFactor; // multiplier for adjusting the starting position for point P1 (along the Y axis) 
     private const float speedIncreaseFactor = 1.2f; // multiplier to increase speed
     private const float speedDecreaseFactor = 0.8f; // multiplier to decrease speed
-
-    [Range(0.01f, 1.0f)]
-    public float positionFactor; // multiplier for adjusting the starting position for point P1 (along the X axis) 
-
-    [Range(0.01f, 1.0f)]
-    public float heightFactor; // multiplier for adjusting the starting position for point P1 (along the Y axis) 
-
+    
     private Collider[] colliders = new Collider[1];
     private AudioSource source;
     
@@ -66,7 +62,7 @@ public class Projectile : MonoBehaviour
         lastTarget = desired;
         
         // Randomize position for random shoot
-        randomShot = Random.Range(0, defaultAccuracy) != 0;
+        randomShot = Random.Range(0, 100) <= defaultAccuracy;
         if (randomShot) {
             lastTarget.x += Random.Range(-10f, 10f);
             lastTarget.z += Random.Range(-10f, 10f);
@@ -138,17 +134,17 @@ public class Projectile : MonoBehaviour
         lastTarget = desired;
     }
 
-    private void Disable(bool damage)
+    private void Disable(bool trigger)
     {
         enabled = false;
-        if (damage && target && !randomShot) {
+        if (trigger && target && !randomShot) {
             Manager.soundManager.RequestPlaySound(lastTarget, hitTarget);
-            Manager.objectPool.ReturnToPool("Arrow", gameObject);
+            Manager.objectPool.ReturnToPool(Manager.Arrow, gameObject);
             
             if (origin) {
-                var lethal = target.RangeDamage(origin) == DamageType.Lethal;
-                if (lethal || Random.Range(0, 50) == 0) {
-                    target.OnDamage(origin, DamageMode.Range, lethal);
+                var damage = target.RangeDamage(origin);
+                if (damage > 0 || Random.Range(0, 50) == 0) {
+                    target.OnDamage(origin, DamageType.Range, damage);
                 }
             }
         } else {
@@ -161,6 +157,6 @@ public class Projectile : MonoBehaviour
     private IEnumerator DelayRemove()
     {
         yield return new WaitForSeconds(Random.Range(3f, 5f));
-        Manager.objectPool.ReturnToPool("Arrow", gameObject);
+        Manager.objectPool.ReturnToPool(Manager.Arrow, gameObject);
     }
 }

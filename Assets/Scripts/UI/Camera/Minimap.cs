@@ -21,7 +21,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     
     private float lastClickTime;
     private Vector2 lastClickPos;
-    private bool toggle = true;
+    private bool enable = true;
     private bool rotate = true;
 
     private void Start()
@@ -54,21 +54,20 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
             if (border.IsOutsideBorder(hit))
                 return;
 
-            camController.SetTarget(objectPool.SpawnFromPool("Way", hit).transform);
+            camController.SetTarget(objectPool.SpawnFromPool(Manager.Way, hit).transform);
         }
 
         lastClickTime = time;
         lastClickPos = eventData.position;
     }
 
-    public void OnButtonPressed()
+    public void Toggle()
     {
-        toggle = !toggle;
-        iconImage.sprite = toggle ? active : disable;
+        enable = !enable;
+        iconImage.sprite = enable ? active : disable;
         
-        var current = rectTransform.localPosition;
-        var target = current;
-        target.y = toggle ? 0f : rectTransform.sizeDelta.y;
+        var current = rectTransform.localPosition.y;
+        var target = enable ? 0f : rectTransform.sizeDelta.y;
 
         gameObject.Tween("MapMove", current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, MapMove);
         
@@ -93,8 +92,10 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         iconTransform.Rotate(Vector3.forward, obj.CurrentValue);
     }
     
-    private void MapMove(ITween<Vector3> obj)
+    private void MapMove(ITween<float> obj)
     {
-        rectTransform.localPosition = obj.CurrentValue;
+        var position = rectTransform.localPosition;
+        position.y = obj.CurrentValue;
+        rectTransform.localPosition = position;
     }
 }

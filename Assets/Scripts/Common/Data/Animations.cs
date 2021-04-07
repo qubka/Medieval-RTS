@@ -50,9 +50,14 @@ public class Animations : ScriptableObject
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
-    public bool hasAttachment;
+    public bool hasMount;
     public bool hasDistant;
     public bool hasTurn;
+    public bool canKnock;
+    public bool canBlock;
+    public bool canCounter;
+    public bool canKnockdown;
+    public bool hasShield;
     [Space]
     public Vector3 deathPosition;
     public Vector3 deathRotation;
@@ -73,7 +78,7 @@ public class Animations : ScriptableObject
         }
     }
 
-    public List<AnimationData> GetAttackAnimation(Weapon weapon, float distance)
+    public List<AnimationData> GetAttackAnimation(MeleeWeapon weapon, float distance)
     {
         if (hasDistant && distance > weapon.distant) {
             return attackCharge;
@@ -168,13 +173,13 @@ public class Animations : ScriptableObject
         return turn[Vector.IsRightRotationDirection(current, desired) ? 1 : 0];
     }
     
-    public int GetRangeAnimation(Weapon weapon, float distance)
+    public int GetRangeAnimation(RangeWeapon weapon, float distance)
     {
         if (distance > weapon.distant) {
             return 2;
         }
 
-        if (distance < weapon.normal) {
+        if (distance < weapon.close) {
             return 0;
         }
         

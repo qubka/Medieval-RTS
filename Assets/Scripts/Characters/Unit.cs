@@ -27,13 +27,14 @@ public class Unit : MonoBehaviour
     [ReadOnly] public float nextBlock2Time;
     [ReadOnly] public float lastDamageTime;
     [ReadOnly] public float currentTime;
-    [ReadOnly] public DamageType nextDamage;
-    [ReadOnly] public DamageType nextDamage2;
+    [ReadOnly] public int nextDamage;
+    [ReadOnly] public int nextDamage2;
     [ReadOnly] public AnimationData nextBlock;
     [ReadOnly] public AnimationData nextBlock2;
     [ReadOnly] public bool isRunning;
     [ReadOnly] public bool isRange;
     [ReadOnly] public int health;
+    [ReadOnly] public int ammunition;
     [ReadOnly] public int range;
     [ReadOnly] public int skin;
 
@@ -136,14 +137,6 @@ public class Unit : MonoBehaviour
 		            DefaultBehavior();
 	            }
 	            break;
-        }
-
-        if (Input.GetKeyDown(KeyCode.O)) {
-	        ChangeState(UnitFSM.Death);
-	        var anim = animations.GetDeathAnimation(isCombat, isRange);
-	        PlayAnimation(anim, anim.Length);
-	        Destroy(GetComponent<CapsuleCollider>());
-	        Destroy(GetComponent<Rigidbody>());
         }
     }
 
@@ -450,57 +443,53 @@ public class Unit : MonoBehaviour
 
     #region Damage
 
-    private void PrepareDamage(DamageMode damage)
+    private void PrepareDamage(DamageType type)
     {
-	    var frame = (damage == DamageMode.Counter ? currentAnim.frame2 : currentAnim.frame1);
+	    var frame = (type == DamageType.Counter ? currentAnim.frame2 : currentAnim.frame1);
 	    if (frame != 0) {
-		    nextDamage = MeleeDamage(damage);
+		    nextDamage = MeleeDamage(type);
 		    nextDamageTime = currentTime + frame / currentAnim.FrameRate;
-		    switch (nextDamage) {
-			    case DamageType.Counter:
-			    case DamageType.Block:
-				    var anim = target.animations.GetCounterAnimation(currentAnim.side1, target.squad.data.hasShield, nextDamage == DamageType.Counter);
-				    if (anim != null) {
-					    nextBlock = anim.GetRandom();
-					    var time = nextBlock.frame1 / nextBlock.FrameRate;
-					    if (nextDamageTime >= currentTime + time) {
-						    nextBlockTime = nextDamageTime - time;
-					    } else {
-						    nextDamage = DamageType.Default;
-						    nextBlockTime = Max;
-					    }
+		    if (nextDamage < 0) {
+				var anims = target.animations;
+			    var anim = anims.GetCounterAnimation(currentAnim.side1, anims.hasShield, nextDamage == -2);
+			    if (anim != null) {
+				    nextBlock = anim.GetRandom();
+				    var time = nextBlock.frame1 / nextBlock.FrameRate;
+				    if (nextDamageTime >= currentTime + time) {
+					    nextBlockTime = nextDamageTime - time;
 				    } else {
-					    nextDamage = DamageType.Default;
+					    nextDamage = 0;
 					    nextBlockTime = Max;
 				    }
-				    break;
+			    } else {
+				    nextDamage = 0;
+				    nextBlockTime = Max;
+			    }
 		    }
 	    } else {
             nextDamageTime = Max;
             nextBlockTime = Max;
         }
 
-        if (currentAnim.frame2 != 0 && damage != DamageMode.Counter && nextDamage != DamageType.Lethal) {
-	        nextDamage2 = MeleeDamage(damage);
+        if (currentAnim.frame2 != 0 && type != DamageType.Counter && nextDamage != -2) {
+	        nextDamage2 = MeleeDamage(type);
 	        nextDamage2Time = currentTime + currentAnim.frame2 / currentAnim.FrameRate;
-	        switch (nextDamage2) {
-		        case DamageType.Counter:
-		        case DamageType.Block:
-			        var anim = target.animations.GetCounterAnimation(currentAnim.side1, target.squad.data.hasShield, nextDamage2 == DamageType.Counter);
-			        if (anim != null) {
-				        nextBlock2 = anim.GetRandom();
-				        var time = nextBlock2.frame1 / nextBlock2.FrameRate;
-				        if (nextDamage2Time >= currentTime + time) {
-					        nextBlock2Time = nextDamage2Time - time;
-				        } else {
-					        nextDamage2 = DamageType.Default;
-					        nextBlock2Time = Max;
-				        }
+	        if (nextDamage2 < 0) {
+		        var anims = target.animations;
+		        var anim = anims.GetCounterAnimation(currentAnim.side1, anims.hasShield, nextDamage2 == -2);
+		        if (anim != null) {
+			        nextBlock2 = anim.GetRandom();
+			        var time = nextBlock2.frame1 / nextBlock2.FrameRate;
+			        if (nextDamage2Time >= currentTime + time) {
+				        nextBlock2Time = nextDamage2Time - time;
 			        } else {
-				        nextDamage2 = DamageType.Default;
+				        nextDamage2 = 0;
 				        nextBlock2Time = Max;
 			        }
-			        break;
+		        } else {
+			        nextDamage2 = 0;
+			        nextBlock2Time = Max;
+		        }
 	        }
         } else {
 	        nextDamage2Time = Max;
@@ -508,15 +497,15 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void TriggerDamage(DamageMode damage)
+    private void TriggerDamage(DamageType type)
     {
 	    if (currentTime > nextBlockTime) {
-		    if (target.OnBlock(this, nextBlock, nextDamage == DamageType.Counter)) {
+		    if (target.OnBlock(this, nextBlock, nextDamage == -2)) {
 			    nextDamageTime = Max;
 		    }
 	        nextBlockTime = Max;
 	    } else if (currentTime > nextBlock2Time) {
-	        if (target.OnBlock(this, nextBlock2, nextDamage2 == DamageType.Counter)) {
+	        if (target.OnBlock(this, nextBlock2, nextDamage2 == -2)) {
 			    nextDamage2Time = Max;
 		    }
 	        nextBlock2Time = Max;
@@ -525,23 +514,23 @@ public class Unit : MonoBehaviour
         if (currentTime > nextDamageTime) {
 	        var current = worldTransform.position;
 	        var desired = target.worldTransform.position;
-            if (Vector.DistanceSq(desired, current) <= squad.data.meleeDistance) {
-	            target.OnDamage(this, damage, nextDamage == DamageType.Lethal);
+            if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
+	            target.OnDamage(this, type, nextDamage);
                 squad.RequestPlaySound(current, currentAnim.sound2);
             }
             nextDamageTime = Max;
         } else if (currentTime > nextDamage2Time) {
 	        var current = worldTransform.position;
 	        var desired = target.worldTransform.position;
-            if (Vector.DistanceSq(desired, current) <= squad.data.meleeDistance) {
-	            target.OnDamage(this, damage, nextDamage2 == DamageType.Lethal);
+            if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
+	            target.OnDamage(this, type, nextDamage2);
                 squad.RequestPlaySound(current, currentAnim.sound2);
             }
             nextDamage2Time = Max;
         }
     }
     
-    public DamageType MeleeDamage(DamageMode damage)
+    public int MeleeDamage(DamageType type)
     {
 	    // https://amp.reddit.com/r/totalwar/comments/3tgtg2/how_is_damage_calculated/&ved=2ahUKEwj5g8_g85XvAhUSuHEKHbCtCW4QFjABegQIAhAG&usg=AOvVaw0B_rkefk6KqOXpE9FLwuI6
 	    var attacker = squad.data;
@@ -553,9 +542,11 @@ public class Unit : MonoBehaviour
 		    attack += attacker.chargeBonus;
 	    }
 
-	    var defense = victim.armour;
+	    attack += target.animations.hasMount ? attacker.meleeWeapon.attackAgainstCavalry : attacker.meleeWeapon.attackAgainstInfantry;
+	    
+	    var defense = math.max(0, victim.armor - attacker.meleeWeapon.armorPiercingDamage);
 
-	    if (attacker.melee.armorPiercing) {
+	    if (attacker.meleeWeapon.armorPiercing) {
 		    defense /= 2;
 	    }
 
@@ -570,39 +561,32 @@ public class Unit : MonoBehaviour
 
 	    // attack success
 	    if (attack > defense) {
-		    var lethality = Random.Range(0f, 1f);
-		    if (lethality > 0.5f) {
-			    return DamageType.Lethal;
-		    }
+		    return attack;
 	    }
 
 	    // attack failure
-	    if (damage == DamageMode.Normal && !target.isRange) {
+	    if (type == DamageType.Normal && !target.isRange) {
 		    
-		    if (victim.canCounter && Random.Range(0, 2) == 0) {
-			    return DamageType.Counter;
+		    if (victim.animations.canCounter && Random.Range(0, 2) == 0) {
+			    return -2;
 		    }
 
-		    if (victim.canBlock) {
-			    return DamageType.Block;
+		    if (victim.animations.canBlock) {
+			    return -1;
 		    }
 	    }
 
-	    return DamageType.Default;
+	    return 0;
     }
 
-    public DamageType RangeDamage(Unit inflictor)
+    public int RangeDamage(Unit inflictor)
     {
 	    var attacker = inflictor.squad.data;
 	    var victim = squad.data;
 
-	    var attack = attacker.missileAttack;
+	    var attack = attacker.rangeWeapon.missileDamage;
 
-	    var defense = victim.armour;
-
-	    if (attacker.range.armorPiercing) {
-		    defense /= 2;
-	    }
+	    var defense = math.max(0, victim.armor - attacker.rangeWeapon.missileArmorPiercingDamage);
 
 	    if (IsFacing(inflictor, Side.Forward, MathExtention.A90) || IsFacing(inflictor, Side.Left, MathExtention.A90)) {
 		    defense += victim.shield;
@@ -613,40 +597,42 @@ public class Unit : MonoBehaviour
 
 	    // attack success
 	    if (attack > defense) {
-		    var lethality = Random.Range(0f, 1f);
-		    if (lethality > 0.5f) {
-			    return DamageType.Lethal;
-		    }
+		    return attack;
 	    }
 
-	    return DamageType.Default;
+	    return 0;
     }
 
-    public void OnDamage(Unit inflictor, DamageMode damage, bool reduce)
+    public void OnDamage(Unit inflictor, DamageType type, int damage)
     {
+	    if (state == UnitFSM.Death)
+		    return;
+	    
+	    lastDamageTime = currentTime;
+	    
 	    var rotate = false;
 
-	    switch (damage) {
-		    case DamageMode.Counter:
-            case DamageMode.Normal:
+	    switch (type) {
+		    case DamageType.Counter:
+            case DamageType.Normal:
                 switch (state) {
+	                case UnitFSM.Hit:
 	                case UnitFSM.Knockdown:
 		            case UnitFSM.WakeUp:
-                    case UnitFSM.Death:
                         break;
                     default:
-	                    rotate = state != UnitFSM.Hit;
 	                    ChangeState(UnitFSM.Hit);
 	                    var anim = animations.GetHitAnimation(isCombat, isRange);
 	                    PlayAnimation(anim, anim.Length);
+	                    rotate = true;
 	                    break;
                 }
                 break;
 
-            case DamageMode.Charge:
+            case DamageType.Charge:
                 switch (state) {
 	                case UnitFSM.Hit:
-		                if (inflictor.squad.data.canKnock) {
+		                if (inflictor.animations.canKnock) {
 			                ChangeState(UnitFSM.Knockdown);
 			                var anim = animations.GetKnockdownAnimation(isCombat, isRange);
 			                PlayAnimation(anim, anim.Length);
@@ -655,10 +641,9 @@ public class Unit : MonoBehaviour
 		                break;
                     case UnitFSM.Knockdown:
                     case UnitFSM.WakeUp:
-                    case UnitFSM.Death:
                         break;
                     default:
-	                    if (inflictor.squad.data.canKnock) {
+	                    if (inflictor.animations.canKnock) {
 		                    ChangeState(UnitFSM.Knockdown);
 		                    var anim = animations.GetKnockdownAnimation(isCombat, isRange);
 		                    PlayAnimation(anim, anim.Length);
@@ -673,26 +658,26 @@ public class Unit : MonoBehaviour
                 squad.CreateShake(worldTransform.position);
                 break;
             
-            case DamageMode.Range:
+            case DamageType.Range:
 	            break;
         }
 
-	    if (reduce) {
-		    health--;
+	    if (damage > 0) {
+		    health -= damage;
 		    if (health <= 0) {
 			    ChangeState(UnitFSM.Death);
 			    var anim = animations.GetDeathAnimation(isCombat, isRange);
 			    PlayAnimation(anim, anim.Length);
 			    Destroy(GetComponent<CapsuleCollider>());
 			    Destroy(GetComponent<Rigidbody>());
+			    inflictor.squad.killed++;
+			    return;
 		    }
 	    }
 
-	    if (rotate && state != UnitFSM.Death && squad.state == SquadFSM.Attack) {
+	    if (rotate && squad.state == SquadFSM.Attack) {
 	        worldTransform.rotation = Quaternion.LookRotation(inflictor.worldTransform.position - worldTransform.position);
         }
-
-        lastDamageTime = currentTime;
     }
 
     private bool OnBlock(Unit inflictor, AnimationData anim, bool counter)
@@ -715,7 +700,7 @@ public class Unit : MonoBehaviour
 	            if (counter) {
 		            target = inflictor;
 		            ChangeState(UnitFSM.Counter);
-		            PrepareDamage(DamageMode.Counter);
+		            PrepareDamage(DamageType.Counter);
 	            } else {
 		            ChangeState(UnitFSM.Block);
 	            }
@@ -786,7 +771,7 @@ public class Unit : MonoBehaviour
                     entityManager.SetComponentData(entity, seeking);
                 } else {
                     entityManager.AddComponent<Seeking>(entity);
-                    entityManager.AddComponentData(entity, new Seeking { Target = target.entity, Weight = 1f, TargetRadius = squad.data.meleeDistance });
+                    entityManager.AddComponentData(entity, new Seeking { Target = target.entity, Weight = 1f, TargetRadius = squad.data.meleeDistance * squad.data.meleeDistance });
                 }
             } else {
 	            entityManager.RemoveComponent<Seeking>(entity);
@@ -821,7 +806,7 @@ public class Unit : MonoBehaviour
 		}
 		
 		var direction = target.worldTransform.position - worldTransform.position;
-		var distance = direction.SqMagnitude();
+		var distance = direction.Magnitude();
 		
 		if (isRange) {
 			if (hasSpeed) {
@@ -845,7 +830,12 @@ public class Unit : MonoBehaviour
 		} else {
 			if (hasSpeed) {
 				if (!isRange && distance > squad.data.chargeDistance && !HasCollision()) {
-					//target = 
+					/*var enemy = squad.FindTargetInFront(GetAim());
+					if (enemy) {
+						target = enemy;
+						SetSeeking(enemy);
+						nextTargetTime = currentTime + 10f;
+					}*/
 					ChangeState(UnitFSM.Charge);
 					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
 					if (currentAnim != anim) {
@@ -939,12 +929,12 @@ public class Unit : MonoBehaviour
 				PlayAnimation(anim, anim.Length / speed, speed, currentAnim != anim ? 0.5f : 0f);
 			}
 		} else {
-			var distance = Vector.DistanceSq(target.worldTransform.position, worldTransform.position);
+			var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
 			if (distance <= squad.data.meleeDistance) {
 				ChangeState(UnitFSM.Strike);
 				var anim = animations.attackCharge.GetRandom();
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
-				PrepareDamage(DamageMode.Charge);
+				PrepareDamage(DamageType.Charge);
 			} else {
 				ChangeState(UnitFSM.Attack);
 				var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
@@ -957,7 +947,7 @@ public class Unit : MonoBehaviour
 
 	private void Strike()
 	{
-		TriggerDamage(DamageMode.Charge);
+		TriggerDamage(DamageType.Charge);
 
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Attack);
@@ -988,13 +978,8 @@ public class Unit : MonoBehaviour
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
 		} else {
-			var direction = target.worldTransform.position - worldTransform.position;
-			var distance = direction.SqMagnitude();
-			if (distance <= squad.data.meleeDistance) {
-				ChangeState(UnitFSM.MeleeTurn);
-			} else {
-				ChangeState(UnitFSM.Attack);
-			}
+			var distance = Vector3.Distance(target.worldTransform.position, worldTransform.position);
+			ChangeState(distance <= squad.data.meleeDistance ? UnitFSM.MeleeTurn : UnitFSM.Attack);
 			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
 			if (currentAnim != anim) {
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
@@ -1028,11 +1013,11 @@ public class Unit : MonoBehaviour
 
 				default: {
 					ChangeState(UnitFSM.Melee);
-					var distance = Vector.DistanceSq(target.worldTransform.position, worldTransform.position);
-					var anim = animations.GetAttackAnimation(squad.data.melee, distance).GetRandom(prevAnim);
+					var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
+					var anim = animations.GetAttackAnimation(squad.data.meleeWeapon, distance).GetRandom(prevAnim);
 					PlayAnimation(anim, anim.Length);
 					prevAnim = currentAnim;
-					PrepareDamage(DamageMode.Normal);
+					PrepareDamage(DamageType.Normal);
 					break;
 				}
 			}
@@ -1041,7 +1026,7 @@ public class Unit : MonoBehaviour
 
 	private void Melee()
 	{
-		TriggerDamage(DamageMode.Normal);
+		TriggerDamage(DamageType.Normal);
 
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Wait);
@@ -1069,13 +1054,8 @@ public class Unit : MonoBehaviour
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
 		} else {
-			var direction = target.worldTransform.position - worldTransform.position;
-			var distance = direction.SqMagnitude();
-			if (distance <= squad.data.rangeDistance) {
-				ChangeState(UnitFSM.RangeTurn);
-			} else {
-				ChangeState(UnitFSM.Attack);
-			}
+			var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
+			ChangeState(distance <= squad.data.rangeDistance ? UnitFSM.RangeTurn : UnitFSM.Attack);
 			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
 			if (currentAnim != anim) {
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
@@ -1105,7 +1085,7 @@ public class Unit : MonoBehaviour
 			ChangeState(UnitFSM.RangeHold);
 			var anim = animations.rangeHold[range];
 			PlayAnimation(anim, anim.Length);
-			nextModeTime = Random.Range(0.5f, 2.0f);
+			nextModeTime = Random.Range(0.5f, squad.data.fireRate - 0.5f);
 			nextAnimTime = currentTime + nextModeTime;
 		}
 	}
@@ -1119,11 +1099,11 @@ public class Unit : MonoBehaviour
 			var anim = animations.rangeRelease[range];
 			PlayAnimation(anim, anim.Length);
 
-			var arrow = squad.objectPool.SpawnFromPool("Arrow").GetComponent<Projectile>();
+			var arrow = squad.objectPool.SpawnFromPool(Manager.Arrow).GetComponent<Projectile>();
 			arrow.origin = this;
 			arrow.target = target;
 			arrow.heightFactor = math.clamp(range * 0.5f, 0.01f, 1f);
-			arrow.defaultAccuracy = Random.Range(2, 5);
+			arrow.defaultAccuracy = squad.data.accuracy;
 			arrow.enabled = true;
 		}
 	}
@@ -1133,7 +1113,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Wait);
 			var anim = animations.rangeEnd.GetRandom();
-			PlayAnimation(anim, 3f - nextModeTime);
+			PlayAnimation(anim, squad.data.fireRate - nextModeTime);
 		}
 	}
 	
@@ -1144,7 +1124,7 @@ public class Unit : MonoBehaviour
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.RangeStart);
-			range = animations.GetRangeAnimation(squad.data.range, direction.SqMagnitude());
+			range = animations.GetRangeAnimation(squad.data.rangeWeapon, direction.Magnitude());
 			if (range == 0 && squad.attackScript.hasObstacles) {
 				range++;
 			}
@@ -1270,7 +1250,7 @@ public class Unit : MonoBehaviour
 	private void Counter()
 	{
 		if (target) {
-			TriggerDamage(DamageMode.Counter);
+			TriggerDamage(DamageType.Counter);
 		}
 
 		if (currentTime > nextAnimTime) {
@@ -1428,7 +1408,7 @@ public class Unit : MonoBehaviour
 
 		return false;
 	}
-
+	
 	#endregion
 
     private enum Side
@@ -1492,6 +1472,7 @@ public class Unit : MonoBehaviour
 	    unit.isRunning = isRunning;
 	    unit.isRange = isRange;
 	    unit.health = health;
+	    unit.ammunition = ammunition;
 	    unit.range = range;
 	    unit.skin = skin;
 	    unit.squad = squad;
@@ -1558,16 +1539,8 @@ public enum UnitFSM
     MeleeToRange,
     Death,
 }
- 
-public enum DamageType
-{
-	Default,
-	Counter,
-	Block,
-	Lethal
-}
 
-public enum DamageMode
+public enum DamageType
 {
 	Normal,
 	Charge,

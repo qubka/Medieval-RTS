@@ -12,9 +12,9 @@ public class Manager : MonoBehaviour
 	public Camera main;
 	public Camera minimap;
 	public CombatSliderRatio combatSliderRatio;
+	public SquadDescription squadDescriptionBoard;
 
-	[Header("Layers")] 
-	public LayerMask ui = -1;
+	[Header("Layers")]
 	public LayerMask ground = -1;
 	public LayerMask unit = -1;
 	public LayerMask obstacle = -1;
@@ -22,8 +22,7 @@ public class Manager : MonoBehaviour
 	public LayerMask squad = -1;
 	public LayerMask manager = -1;
 	public LayerMask water = -1;
-
-	public static int UI;
+	
 	public static int Ground;
 	public static int Unit;
 	public static int Obstacle;
@@ -47,8 +46,14 @@ public class Manager : MonoBehaviour
 	public static SoundManager soundManager;
 	public static GPUICrowdManager modelManager;
 	public static CombatSliderRatio combatSlider;
+	public static SquadDescription squadDesc;
 	public static AudioSource[] cameraSources;
 	
+	public static readonly int Selector = "SelectorPoint".GetHashCode();
+	public static readonly int Pointer = "PointerMove".GetHashCode();
+	public static readonly int Arrow = "Arrow".GetHashCode();
+	public static readonly int Way = "Way".GetHashCode();
+
 	private void Awake()
 	{
 		terrain = Terrain.activeTerrain;
@@ -67,8 +72,8 @@ public class Manager : MonoBehaviour
 		soundManager = GetComponent<SoundManager>();
 		objectPool = GetComponent<ObjectPool>();
 		combatSlider = combatSliderRatio;
-		
-		UI = ui.value;
+		squadDesc = squadDescriptionBoard;
+
 		Ground = ground.value;
 		Unit = unit.value;
 		Obstacle = obstacle.value;

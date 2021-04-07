@@ -151,7 +151,7 @@ public class UnitManager : MonoBehaviour
 			var currentTime = Time.time;
 			if ((currentTime - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, groundHit.point) <= 1f) {
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Squad) == 0) {
-					camController.SetTarget(objectPool.SpawnFromPool("Way", groundHit.point).transform);
+					camController.SetTarget(objectPool.SpawnFromPool(Manager.Way, groundHit.point).transform);
 					//clickAudio.clip = targetSound;
 					//clickAudio.Play();
 					onSelect.locked = true;
@@ -315,7 +315,7 @@ public class UnitManager : MonoBehaviour
 					var count = selectedUnits.Count;
 					if (count == 1) {
 						var squad = selectedUnits[0];
-						AddToDynamicGroup(squad, objectPool.SpawnFromPool("Way", dest));
+						AddToDynamicGroup(squad, objectPool.SpawnFromPool(Manager.Way, dest));
 					} else {
 						var position = Vector3.zero;
 						foreach (var squad in selectedUnits) {
@@ -325,7 +325,7 @@ public class UnitManager : MonoBehaviour
 						
 						var shift = dest - position;
 						foreach (var squad in selectedUnits) {
-							AddToDynamicGroup(squad, objectPool.SpawnFromPool("Way", squad.worldTransform.position + shift));
+							AddToDynamicGroup(squad, objectPool.SpawnFromPool(Manager.Way, squad.worldTransform.position + shift));
 						}
 					}
 					
@@ -340,7 +340,7 @@ public class UnitManager : MonoBehaviour
 				var playSound = false;
 				foreach (var formation in placedFormations) {
 					if (formation.active) {
-						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool("Way", formation.centroid), formation.targetOrientation, formation.phalanxLength);
+						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool(Manager.Way, formation.centroid), formation.targetOrientation, formation.phalanxLength);
 						playSound = true;
 					}
 				}
@@ -410,7 +410,7 @@ public class UnitManager : MonoBehaviour
 				var playSound = false;
 				foreach (var formation in placedFormations) {
 					if (formation.active) {
-						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool("Way", formation.centroid), formation.targetOrientation);
+						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool(Manager.Way, formation.centroid), formation.targetOrientation);
 						playSound = true;
 					}
 				}
@@ -723,7 +723,7 @@ public class UnitManager : MonoBehaviour
 		private ObjectPool objectPool;
 
 		private const float DefaultAngle = 45f;
-		
+
 		public Formation(Squad squads, GameObject directionLine)
 		{
 			squad = squads;
@@ -735,7 +735,7 @@ public class UnitManager : MonoBehaviour
 
 			selectors = new List<GameObject>(squad.unitCount);
 			for (var i = 0; i < squad.unitCount; i++) {
-				selectors.Add(objectPool.SpawnFromPool("Selector"));
+				selectors.Add(objectPool.SpawnFromPool(Manager.Selector));
 			}
 
 			active = true;
@@ -769,7 +769,7 @@ public class UnitManager : MonoBehaviour
 				if (count > i) {
 					selector.transform.SetPositionAndRotation(positions[i], rot);
 				} else {
-					objectPool.ReturnToPool("Selector", selector);
+					objectPool.ReturnToPool(Manager.Selector, selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -830,7 +830,7 @@ public class UnitManager : MonoBehaviour
 					pos.y = terrain.SampleHeight(pos) + 0.5f;
 					selector.transform.SetPositionAndRotation(pos, rot);
 				} else {
-					objectPool.ReturnToPool("Selector", selector);
+					objectPool.ReturnToPool(Manager.Selector, selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -855,7 +855,7 @@ public class UnitManager : MonoBehaviour
 				if (count > i) {
 					selector.SetActive(state);
 				} else {
-					objectPool.ReturnToPool("Selector", selector);
+					objectPool.ReturnToPool(Manager.Selector, selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -873,15 +873,15 @@ public class UnitManager : MonoBehaviour
 					var selector = selectors[i];
 					if (count > i) {
 						var trans = selector.transform;
-						objectPool.SpawnFromPool("Pointer", trans.position, trans.rotation);
+						objectPool.SpawnFromPool(Manager.Pointer, trans.position, trans.rotation);
 					}
-					objectPool.ReturnToPool("Selector", selector);
+					objectPool.ReturnToPool(Manager.Selector, selector);
 				}
 			} else {
 				line.Destroy();
 				
 				foreach (var selector in selectors) {
-					objectPool.ReturnToPool("Selector", selector);
+					objectPool.ReturnToPool(Manager.Selector, selector);
 				}
 			}
 		}
@@ -942,9 +942,9 @@ public class UnitManager : MonoBehaviour
 			if (output.Count > 0) {
 				var objectPool = Manager.objectPool;
 				
-				squad.SetDestination(false, objectPool.SpawnFromPool("Way", output[0]));
+				squad.SetDestination(false, objectPool.SpawnFromPool(Manager.Way, output[0]));
 				for (var i = 1; i < output.Count; i++) {
-					squad.SetDestination(true, objectPool.SpawnFromPool("Way", output[i]));
+					squad.SetDestination(true, objectPool.SpawnFromPool(Manager.Way, output[i]));
 				}
 			}
 		}
@@ -1127,7 +1127,7 @@ public class UnitManager : MonoBehaviour
 		private void ClearAll()
 		{
 			foreach (var target in targets) {
-				if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target);
+				if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
 			}
 			targets.Clear();
 			cache.Clear();

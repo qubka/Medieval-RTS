@@ -28,7 +28,7 @@ public class HideButton : MonoBehaviour
         }
     }
 
-    public void OnButtonPressed()
+    public void Toggle()
     {
         enable = !enable;
         image.sprite = enable ? activate : disabled;

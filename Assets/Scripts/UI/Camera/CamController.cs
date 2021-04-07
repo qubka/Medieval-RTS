@@ -414,7 +414,7 @@ public class CamController : MonoBehaviour
 	/// <param name="lookAt">True to use look at feature on the target transform.</param>
 	public void SetTarget(Transform trans, bool lookAt = false)
 	{
-		if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target.gameObject);
+		if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target.gameObject);
 		//worldTrasnform.localRotation = Quaternion.identity;
 		target = trans;
 		//lookAtTarget = lookAt;
@@ -425,7 +425,7 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	public void ResetTarget()
 	{
-		if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target.gameObject);
+		if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target.gameObject);
 		//worldTrasnform.localRotation = Quaternion.identity;
 		target = null;
 		//lookAtTarget = false;

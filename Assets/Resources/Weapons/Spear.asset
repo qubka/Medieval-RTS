@@ -9,10 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77a8e05928934b258bb9bd2b7054ea1e, type: 3}
+  m_Script: {fileID: 11500000, guid: f4f32125d9dd488982aa1f6ec595d5f9, type: 3}
   m_Name: Spear
   m_EditorClassIdentifier: 
+  baseDamage: 24
+  armorPiercingDamage: 8
   armorPiercing: 0
-  kick: 2
-  normal: 10
-  distant: 100
+  attackAgainstCavalry: 30
+  attackAgainstInfantry: 0
+  kick: 1.4
+  normal: 2.5
+  distant: 2.9

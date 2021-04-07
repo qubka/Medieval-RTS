@@ -6,7 +6,7 @@ public class FadeEffect : MonoBehaviour
 {
     public float fadeSpeed = 0.5f;
     private Image image;
-    private bool toggle;
+    private bool enable;
 
     private void Start()
     {
@@ -25,13 +25,13 @@ public class FadeEffect : MonoBehaviour
             var color = image.color;
             color.a = 0f;
             image.color = color;
-            toggle = false;
+            enable = false;
         }
     }
 
     private void ToggleState()
     {
-        toggle = !toggle;
-        StartCoroutine(image.Fade(toggle ? 0f : 1f, fadeSpeed - 0.1f));
+        enable = !enable;
+        StartCoroutine(image.Fade(enable ? 0f : 1f, fadeSpeed - 0.1f));
     }
 }

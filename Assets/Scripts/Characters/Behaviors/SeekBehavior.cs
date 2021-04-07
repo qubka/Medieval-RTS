@@ -5,48 +5,38 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 //this is the script attached and active during the "moving" state
-public class SeekBehavior : MonoBehaviour
+public class SeekBehavior : SquadBehavior
 {
-    private Squad squad;
     private Squad enemy;
     private Seek seek;
-    private GameObject target;
-    private GameObject tempTarget;
     private Queue<(GameObject, float?, float?)> targets;
     private Quaternion? targetOrientation;
-    //private Collider[] colliders;
-
-    private Agent agent;
-    private Transform worldTransform;
+    private GameObject target;
+    private GameObject tempTarget;
     private Transform targetTransform;
-    private ObjectPool objectPool;
     
+    private ObjectPool objectPool;
     private bool forwardMove;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        agent.enabled = true;
+        
         targets = new Queue<(GameObject, float?, float?)>();
-        
-        squad = GetComponent<Squad>();
         seek = gameObject.AddComponent<Seek>();
-        
         tempTarget = new GameObject();
         tempTarget.AddComponent<Agent>();
-        
-        worldTransform = squad.worldTransform;
         objectPool = Manager.objectPool;
-        
-        agent = squad.agentScript;
-        agent.enabled = true;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         NextTarget();
-        InvokeRepeating(nameof(Seek), 0f, 0.1f);
     }
 
-    private void Seek()
+    protected override void RareUpdate()
     {
         // Apply our rotation
         if (math.lengthsq(agent.velocity) > 0f) {
@@ -86,8 +76,7 @@ public class SeekBehavior : MonoBehaviour
     private void SeekEnemy()
     {
         // Get distance to target if it exist
-        var direction = enemy.centroid - squad.centroid;
-        var distance = direction.SqMagnitude();
+        var distance = Vector.Distance(enemy.centroid, squad.centroid);
 
         // Can we attack the target?
         if (squad.isRange) {
@@ -110,7 +99,7 @@ public class SeekBehavior : MonoBehaviour
     public void NextTarget()
     {
         // Remove prev target
-        if (target && target.CompareTag("Way")) objectPool.ReturnToPool("Way", target);
+        if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
         
         // Store current
         var (obj, orientation, length) = targets.Dequeue();

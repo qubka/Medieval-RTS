@@ -1,33 +1,31 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 //this is the script attached and active during the "attacking" state
-public class AttackingBehavior : MonoBehaviour
+public class AttackingBehavior : SquadBehavior
 {
     [ReadOnly] public Squad enemy;
     [ReadOnly] public bool hasObstacles;
-    
-    private Squad squad;
-    private Seek seek;
+    [HideInInspector] public Vector3 direction;
 
-    private Transform worldTransform;
+    private Seek seek;
     private Transform targetTransform;
 
-    private void Awake() 
+    protected override void Awake()
     {
-        squad = gameObject.GetComponent<Squad>();
-        squad.agentScript.enabled = true;
+        base.Awake();
+        agent.enabled = true;
         
         var target = new GameObject();
+        targetTransform = target.transform;
         seek = gameObject.AddComponent<Seek>();
         seek.SetTarget(target);
-        
-        targetTransform = target.transform;
-        worldTransform = squad.worldTransform;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         var sounds = squad.data.commanderSounds;
         switch (Random.Range(0, 5)) {
             case 0:
@@ -49,20 +47,15 @@ public class AttackingBehavior : MonoBehaviour
                 squad.PlaySound(sounds.fightUntilYouDie);
                 break;
         }
-        InvokeRepeating(nameof(Attack), 0f, 0.1f);
     }
 
-    private void Attack()
+    protected override void RareUpdate()
     {
         if (enemy && enemy.hasUnits) {
-            var distance = Vector.DistanceSq(squad.centroid, enemy.centroid);
-            var direction = enemy.centroid - squad.centroid;
+            direction = enemy.centroid - squad.centroid;
             worldTransform.rotation = Quaternion.LookRotation(direction);
             
-            if (Physics.Raycast(squad.centroid, direction, out var hit, direction.Magnitude(), Manager.Squad)) {
-                hasObstacles = hit.collider.gameObject != enemy.gameObject;
-            }
-
+            var distance = direction.Magnitude();
             
             if (squad.isRange) {
                 targetTransform.position = enemy.centroid;
@@ -76,6 +69,11 @@ public class AttackingBehavior : MonoBehaviour
                     seek.enabled = true;
                 }
             }
+
+            if (Physics.Raycast(squad.centroid, direction, out var hit, distance, Manager.Squad)) {
+                hasObstacles = hit.collider.gameObject != enemy.gameObject;
+            }
+            
             /* }else {
                 // If target out of range, return to seek state
                 squad.ChangeState(SquadFSM.Idle);

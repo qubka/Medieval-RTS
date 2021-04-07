@@ -2,24 +2,17 @@
 using Random = UnityEngine.Random;
 
 //this is the script attached and active during the "idleNormal" state
-public class IdleBehavior : MonoBehaviour
+public class IdleBehavior : SquadBehavior
 {
-    private Squad squad;
-
-    private void Awake()
+    protected override void Awake()
     {
-        squad = gameObject.GetComponent<Squad>();
-        squad.agentScript.enabled = false;
+        base.Awake();
+        agent.enabled = false;
     }
 
-    private void Start()
+    protected override void RareUpdate()
     {
-        InvokeRepeating(nameof(Idle), 0f, 0.1f);
-    }
-
-    private void Idle()
-    {
-        // If we find an enemy, exit idleNormal mode
+        // If we find an enemy, exit idle mode
         if (squad.hasEnemies) {
             squad.ChangeState(SquadFSM.Seek);
             var enemy = squad.FindClosestSquad(squad.centroid);

@@ -32,34 +32,33 @@ public class Squadron : ScriptableObject
 
     [Space(10)]
     
-    [Header("Damage")]
+    [Header("Melee")]
     public int meleeAttack;
-    public int missileAttack;
+    public MeleeWeapon meleeWeapon;
     public int chargeBonus;
-    public Weapon melee;
-    public Weapon range;
-    public bool canKnock;
-
-    [Header("Defense")]
-    public int armour;
-    public int defenceSkill;
-    public int shield;
-    public int hitPoints;
-    public int morale;
-    public bool canBlock;
-    public bool canCounter;
-    public bool canKnockdown;
-    public bool hasShield;
     
-    public int TotalStats() {
-        
-        var damage = meleeAttack + missileAttack;
-        if (melee && melee.armorPiercing) damage *= 2;
-        if (range && range.armorPiercing) damage *= 2;
+    [Header("Range")]
+    public RangeWeapon rangeWeapon;
+    public int accuracy;
+    public int ammunition;
+    public float fireRate;
+    
+    [Header("Defense")]
+    public int armor;
+    public int shield;
+    public int defenceSkill;
+    public int manHealth;
+    public int bonusHitPoints;
+    public int mountHealth;
+    public int morale;
+
+    public int TotalStats()
+    {
+        var damage = meleeAttack;
+        if (meleeWeapon) damage += meleeWeapon.baseDamage + meleeWeapon.armorPiercingDamage;
+        if (rangeWeapon) damage += rangeWeapon.missileDamage + rangeWeapon.missileArmorPiercingDamage;
         damage += chargeBonus;
-        var defense = armour;
-        if (canBlock) defense *= 2;
-        if (canCounter) defense *= 2;
+        var defense = armor + shield + defenceSkill + manHealth + bonusHitPoints + mountHealth;
         return damage + defense;
     }
 }

@@ -49,6 +49,33 @@ MonoBehaviour:
     sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
     childList: []
     playOnChild: 0
+  - clip: {fileID: 7400008, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 273
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400010, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 363
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400002, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 76
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+    childList: []
+    playOnChild: 0
   idleCombat:
   - clip: {fileID: 6187384348888656934, guid: a001ec4c79709a84bbf3099a859473c1, type: 3}
     frame1: 25
@@ -366,43 +393,6 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   knockdownNormal:
-  - clip: {fileID: 7400100, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 0}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400032, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400036, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400034, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
-  knockdownCombat:
   - clip: {fileID: 7400118, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0
@@ -439,27 +429,9 @@ MonoBehaviour:
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
+  knockdownCombat: []
   knockdownRange: []
   deathNormal:
-  - clip: {fileID: 7400038, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400040, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
-    sound2: {fileID: 0}
-    childList: []
-    playOnChild: 0
-  deathCombat:
   - clip: {fileID: -3332131236326761211, guid: 871a59cd4f914f14bbe4f16caa575136, type: 3}
     frame1: 0
     frame2: 0
@@ -469,27 +441,9 @@ MonoBehaviour:
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
+  deathCombat: []
   deathRange: []
   hitNormal:
-  - clip: {fileID: 7400028, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
-    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400030, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
-    frame1: 0
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
-    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
-    childList: []
-    playOnChild: 0
-  hitCombat:
   - clip: {fileID: 7400102, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0
@@ -526,13 +480,19 @@ MonoBehaviour:
     sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
     childList: []
     playOnChild: 0
+  hitCombat: []
   hitRange: []
   hitBack: []
-  hasMultiNormalKnockdown: 1
+  hasMultiNormalKnockdown: 0
   hasMultiCombatKnockdown: 0
   hasMultiRangeKnockdown: 0
-  hasAttachment: 0
+  hasMount: 0
   hasDistant: 1
   hasTurn: 0
+  canKnock: 0
+  canBlock: 1
+  canCounter: 1
+  canKnockdown: 1
+  hasShield: 1
   deathPosition: {x: 0, y: 0, z: 0}
   deathRotation: {x: 0, y: 0, z: 0}

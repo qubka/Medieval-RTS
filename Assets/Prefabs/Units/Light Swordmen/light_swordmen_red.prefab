@@ -676,7 +676,7 @@ Animator:
   m_GameObject: {fileID: 1667624588356406612}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 99675704e13ed8f4eb95585063241b66, type: 3}
-  m_Controller: {fileID: 9100000, guid: 4eb1218557aad8e4cb73c2214937c69d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9828ddd7dbc70834ba5d31fff445725d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -775,6 +775,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 0}
     sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   prevAnim:
     clip: {fileID: 0}
     frame1: 0
@@ -783,6 +785,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 0}
     sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   nextAnimTime: 0
   nextTargetTime: 0
   nextModeTime: 0
@@ -792,18 +796,44 @@ MonoBehaviour:
   nextBlock2Time: 0
   lastDamageTime: 0
   currentTime: 0
+  nextDamage: 0
+  nextDamage2: 0
+  nextBlock:
+    clip: {fileID: 0}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  nextBlock2:
+    clip: {fileID: 0}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   isRunning: 0
   isRange: 0
   health: 0
   range: 0
   skin: 0
   squad: {fileID: 0}
+  attachment: {fileID: 0}
+  selector: {fileID: 0}
+  selectorTransform: {fileID: 0}
+  attachTransform: {fileID: 0}
   worldTransform: {fileID: 0}
-  animator: {fileID: 0}
   collisions: []
   obstacles: []
-  selector: {fileID: 0}
   target: {fileID: 0}
+  crowd: {fileID: 0}
+  subCrowd: {fileID: 0}
   arrivalWeight: 0
   arrivalRadius: 1
   seekingTarget: {fileID: 0}

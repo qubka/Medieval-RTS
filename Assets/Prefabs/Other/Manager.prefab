@@ -54,9 +54,7 @@ MonoBehaviour:
   main: {fileID: 0}
   minimap: {fileID: 0}
   combatSliderRatio: {fileID: 0}
-  ui:
-    serializedVersion: 2
-    m_Bits: 32
+  squadDescriptionBoard: {fileID: 0}
   ground:
     serializedVersion: 2
     m_Bits: 512
@@ -204,8 +202,33 @@ MonoBehaviour:
   dopplerLevel: 0
   spatialBlend: 1
   defaultVolume: 0.2
-  playRange: 22500
-  soundRange: 25
+  playRange: 150
+  soundRange: 5
+  ambientSound: {fileID: 8300000, guid: a62cdd7b13276b647b0c91d1876c19de, type: 3}
+  ambientCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.09974289
+      inSlope: -0.05478298
+      outSlope: -0.05478298
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.057546146
+    - serializedVersion: 3
+      time: 1
+      value: 0.052193217
+      inSlope: -0.041267812
+      outSlope: -0.041267812
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07383281
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &7014365690190988827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,17 +242,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - tag: Selector
-    prefab: {fileID: 1973751116660066, guid: 39d4073ebd9eaff4c9af35e8450cc0a2, type: 3}
+  - prefab: {fileID: 1973751116660066, guid: 39d4073ebd9eaff4c9af35e8450cc0a2, type: 3}
     size: 150
-  - tag: Pointer
-    prefab: {fileID: 1973751116660066, guid: c59b06362c6fbb1419ef911f9fdb82d4, type: 3}
+  - prefab: {fileID: 1973751116660066, guid: c59b06362c6fbb1419ef911f9fdb82d4, type: 3}
     size: 150
-  - tag: Way
-    prefab: {fileID: 2635699562462626617, guid: ee73381bfa1e5ff4ba3f86863ded1e85, type: 3}
+  - prefab: {fileID: 2635699562462626617, guid: ee73381bfa1e5ff4ba3f86863ded1e85, type: 3}
     size: 50
-  - tag: Arrow
-    prefab: {fileID: 4278076331674049431, guid: a73f2b1fbd1b2e3469312771b6c9a1bd, type: 3}
+  - prefab: {fileID: 4278076331674049431, guid: a73f2b1fbd1b2e3469312771b6c9a1bd, type: 3}
     size: 500
 --- !u!114 &-1217265927458176945
 MonoBehaviour:

@@ -206,8 +206,8 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   rage:
-  - clip: {fileID: 7400022, guid: 963c602205c554940aa8cac531de90a5, type: 3}
-    frame1: 26
+  - clip: {fileID: 7400058, guid: 53b1914c23d3e11498ab4125bfaa431c, type: 3}
+    frame1: 14
     frame2: 0
     side1: 0
     side2: 0
@@ -360,8 +360,13 @@ MonoBehaviour:
   hasMultiNormalKnockdown: 0
   hasMultiCombatKnockdown: 0
   hasMultiRangeKnockdown: 0
-  hasAttachment: 0
+  hasMount: 0
   hasDistant: 0
   hasTurn: 0
+  canKnock: 1
+  canBlock: 0
+  canCounter: 0
+  canKnockdown: 1
+  hasShield: 0
   deathPosition: {x: 0, y: 0, z: 0}
   deathRotation: {x: 0, y: 0, z: 0}

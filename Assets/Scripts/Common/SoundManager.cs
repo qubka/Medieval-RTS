@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,8 +12,8 @@ public class SoundManager : MonoBehaviour
     [Range(0f, 1f)] public float spatialBlend = 1f;
     [Range(0f, 1f)] public float defaultVolume = 1f;
     [Space]
-    public float playRange = 22500f;
-    public float soundRange = 100f;
+    public float playRange = 150f;
+    public float soundRange = 10f;
     [Header(("Ambient"))] 
     public AudioClip ambientSound;
     public AnimationCurve ambientCurve;
@@ -27,7 +28,13 @@ public class SoundManager : MonoBehaviour
     private AudioSource ambient;
     private List<AudioSource> sources;
     private List<AudioSource> availables;
-    
+
+    private void Awake()
+    {
+        playRange *= playRange;
+        soundRange *= soundRange;
+    }
+
     private void Start()
     {
         ambient = Manager.cameraSources[2];

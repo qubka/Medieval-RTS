@@ -42,6 +42,7 @@ public class Squad : MonoBehaviour
     [ReadOnly] public List<Obstacle> obstacles;
     [ReadOnly] public List<Vector3> positions;
     [ReadOnly] public Vector3 centroid;
+    [ReadOnly] public int killed;
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public ObjectPool objectPool;
     [HideInInspector] public Transform worldTransform;
@@ -50,6 +51,7 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
     [HideInInspector] public bool canShoot;
+    [HideInInspector] public RaycastHit[] raycasts;
     
     [Header("Children References")] 
     public GameObject source;
@@ -93,6 +95,7 @@ public class Squad : MonoBehaviour
     private UnitManager unitManager;
     private UnitTable unitTable;
     private SoundManager soundManager;
+    private SquadDescription squadDesc;
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
@@ -118,6 +121,7 @@ public class Squad : MonoBehaviour
         // Set up the main components 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         colliders = new Collider[32];
+        raycasts = new RaycastHit[32];
         collision = GetComponent<BoxCollider>();
         particleShape = particle.shape;
         //particleTransform = particle.transform;
@@ -131,7 +135,7 @@ public class Squad : MonoBehaviour
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
         agentScript.maxAccel = data.squadAccel;
-        circle.GetComponent<Circle>().radius = math.sqrt(data.range ? data.rangeDistance : data.attackDistance);
+        circle.GetComponent<Circle>().radius = data.rangeWeapon ? data.rangeDistance : data.attackDistance;
         
         // Lond audio components
         var sources = source.GetComponents<AudioSource>();
@@ -148,7 +152,7 @@ public class Squad : MonoBehaviour
         barHealth.value = squadSize;
         cardHealth.maxValue = squadSize;
         cardHealth.value = squadSize;
-        cardAmmo.gameObject.SetActive(data.range);
+        cardAmmo.gameObject.SetActive(data.rangeWeapon);
         cardNumber.text = squadSize.ToString();
         var color = team.GetColor();
         barFill.color = color;
@@ -178,6 +182,7 @@ public class Squad : MonoBehaviour
         squadCanvas = Manager.squadCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
+        squadDesc = Manager.squadDesc;
         camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
         var terrain = Manager.terrain;
@@ -225,12 +230,12 @@ public class Squad : MonoBehaviour
             entityManager.SetComponentData(formationEntity, new Formation { Position = slotPos, Squad = squadEntity });
 
             // Get random skin index
-            var attach = data.animations.hasAttachment;
-            var skin = Random.Range(0, attach ? secondaryPrefabs.Count : primaryPrefabs.Count);
+            var mount = data.animations.hasMount;
+            var skin = Random.Range(0, mount ? secondaryPrefabs.Count : primaryPrefabs.Count);
             
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[attach ? Random.Range(0, primaryPrefabs.Count) : skin]);
+            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[mount ? Random.Range(0, primaryPrefabs.Count) : skin]);
             
             // Use unit components to store in the entity
             var trans = unitObject.transform;
@@ -238,7 +243,8 @@ public class Squad : MonoBehaviour
             var boid = unitObject.AddComponent<BoidBehaviour>();
             var crowd = unitObject.GetComponent<GPUICrowdPrefab>();
             var unit = unitObject.GetComponent<Unit>();
-            unit.health = data.hitPoints;
+            unit.health = data.manHealth + Random.Range(0, data.bonusHitPoints) + data.mountHealth;
+            unit.ammunition = data.ammunition;
             unit.isRange = isRange;
             unit.entityManager = entityManager;
             unit.entity = unitEntity;
@@ -258,8 +264,8 @@ public class Squad : MonoBehaviour
             unit.selectorTransform = selectorTransform;
             unit.selector = selector;
             
-            // Attach child to the transform
-            if (attach) {
+            // Attach unit to the mount
+            if (mount) {
                 var attachment = Instantiate(secondaryPrefabs[skin], trans);
                 var subCrowd = attachment.GetComponent<GPUICrowdPrefab>();
                 var attachTransform = attachment.transform;
@@ -408,6 +414,11 @@ public class Squad : MonoBehaviour
     
     private void UpdateAll()
     {
+        if (!worldTransform) {
+            CancelInvoke(nameof(UpdateAll));
+            return;
+        }
+        
         DetectCollision();
         DetectObstacles();
         PlaySound();
@@ -577,16 +588,20 @@ public class Squad : MonoBehaviour
         }
         select = !select;
 
-        if (select && team == Team.Self) {
-            PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.formTheOrder : data.commanderSounds.longLiveTheKing);
+        if (team == Team.Self) {
+            if (select) {
+                PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.formTheOrder : data.commanderSounds.longLiveTheKing);
             
-            if (!selectAudio.isPlaying) {
-                selectAudio.clip = data.groupSounds.selectSounds.GetRandom();
-                selectAudio.Play();
+                if (!selectAudio.isPlaying) {
+                    selectAudio.clip = data.groupSounds.selectSounds.GetRandom();
+                    selectAudio.Play();
+                }
+                
+                squadDesc.SetSquad(this);
+            } else {
+                squadDesc.SetSquad(null);
             }
         }
-        
-        //circle.SetActive(isRange && select);
     }
 
     public void UpdateFormation(float length, bool reverse = false)
@@ -713,6 +728,22 @@ public class Squad : MonoBehaviour
         }
     }
 
+    public Unit FindTargetInFront(Vector3 position)
+    {
+        var cast = Physics.Raycast(position, attackScript.direction, out var hit, data.attackDistance, Manager.Squad);
+        if (cast) {
+            var size = Physics.OverlapSphereNonAlloc(hit.point, 2f, colliders, Manager.Unit);
+            if (size > 0) {
+                var unit = unitTable[colliders[0].gameObject];
+                if (unit.squad.team != team) {
+                    return unit;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public Unit FindRandomEnemy(Vector3 position)
     {
         var squad = FindClosestSquad(position);
@@ -721,6 +752,12 @@ public class Squad : MonoBehaviour
     
     public Unit FindClosestEnemy(Vector3 position)
     {
+        /*if (enemies.Count == 0) {
+            var target = FindTargetInFront(position);
+            if (target) {
+                return target;
+            }
+        }*/
         var squad = FindClosestSquad(position);
         return squad ? squad.FindClosestUnit(position) : null;
     }

@@ -5,13 +5,12 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     public List<Pool> pools;
-    private Dictionary<string, Queue<GameObject>> poolTable;
+    private Dictionary<int, Queue<GameObject>> poolTable;
     private Transform worldTransform;
     
     [Serializable]
     public struct Pool
     {
-        public string tag;
         public GameObject prefab;
         public int size;
     }
@@ -19,7 +18,7 @@ public class ObjectPool : MonoBehaviour
     private void Awake()
     {
         worldTransform = transform;
-        poolTable = new Dictionary<string, Queue<GameObject>>();
+        poolTable = new Dictionary<int, Queue<GameObject>>();
 
         foreach (var pool in pools) {
             var objectPool = new Queue<GameObject>();
@@ -28,16 +27,16 @@ public class ObjectPool : MonoBehaviour
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
-            poolTable.Add(pool.tag, objectPool);
+            poolTable.Add(pool.prefab.name.GetHashCode(), objectPool);
         }
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3? pos = null, Quaternion? rot = null)
+    public GameObject SpawnFromPool(int id, Vector3? pos = null, Quaternion? rot = null)
     {
-        var queue = poolTable[tag];
+        var queue = poolTable[id];
         if (queue.Count == 0) {
             foreach (var pool in pools) {
-                if (pool.tag == tag) {
+                if (pool.prefab.name.GetHashCode() == id) {
                     return Instantiate(pool.prefab, pos ?? Vector3.zero, rot ?? Quaternion.identity);
                 }
             }
@@ -62,13 +61,13 @@ public class ObjectPool : MonoBehaviour
         return objectToSpawn;
     }
 
-    public void ReturnToPool(string tag, GameObject obj)
+    public void ReturnToPool(int id, GameObject obj)
     {
         var trans = obj.transform;
         trans.SetParent(worldTransform, false);
         trans.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         
         obj.SetActive(false);
-        poolTable[tag].Enqueue(obj);
+        poolTable[id].Enqueue(obj);
     }
 }
