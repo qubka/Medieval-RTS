@@ -763,6 +763,26 @@ MonoBehaviour:
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
+  injuredWalk:
+  - clip: {fileID: 8993902097722301239, guid: 7f5d3e607f385c240930dd4d185fee68, type: 3}
+    frame1: 2
+    frame2: 22
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  injuredRun:
+  - clip: {fileID: 8993902097722301239, guid: 0e3cceef3f6696a4abe786806aedf1af, type: 3}
+    frame1: 2
+    frame2: 10
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   hasMultiNormalKnockdown: 1
   hasMultiCombatKnockdown: 0
   hasMultiRangeKnockdown: 0

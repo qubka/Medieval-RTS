@@ -33,6 +33,7 @@ public class SeekBehavior : SquadBehavior
     protected override void Start()
     {
         base.Start();
+        if (targets.Count == 0) Debug.LogError(squad.name + "No targets in list");
         NextTarget();
     }
 

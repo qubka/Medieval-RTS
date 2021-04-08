@@ -61,6 +61,7 @@ public class SquadDescription : MonoBehaviour
         shield.value = data.shield;
         morale.value = data.morale;
         speed.value = data.squadSpeed * 10f;
+        ammunition.value = data.ammunition;
         missleDamage.value = (data.rangeWeapon) ? data.rangeWeapon.missileDamage + data.rangeWeapon.missileArmorPiercingDamage : 0f;
         icon.sprite = data.canvasIcon;
         caption.text = data.name; //TODO: Translation

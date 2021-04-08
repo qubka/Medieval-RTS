@@ -51,6 +51,43 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   idleRange: []
+  idleInjured:
+  - clip: {fileID: 8993902097722301239, guid: 8c35b1ff0fd364a4a877db92d50725e2, type: 3}
+    frame1: 32
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 8993902097722301239, guid: f85aafa58441a0f40b3b2aed3534b25e, type: 3}
+    frame1: 110
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 8993902097722301239, guid: 129ee3bbc10d0a34283b503d957a88d6, type: 3}
+    frame1: 50
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 8993902097722301239, guid: f9612ba9608c5fb4fb44ed02114f8b58, type: 3}
+    frame1: 16
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   attackNormal:
   - clip: {fileID: 7400014, guid: fb07a934dbc1969468121112ca048964, type: 3}
     frame1: 42
@@ -723,6 +760,26 @@ MonoBehaviour:
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  injuredWalk:
+  - clip: {fileID: 8993902097722301239, guid: 7f5d3e607f385c240930dd4d185fee68, type: 3}
+    frame1: 2
+    frame2: 22
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  injuredRun:
+  - clip: {fileID: 8993902097722301239, guid: 0e3cceef3f6696a4abe786806aedf1af, type: 3}
+    frame1: 2
+    frame2: 10
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0

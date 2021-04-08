@@ -48,6 +48,8 @@ public class Animations : ScriptableObject
     public List<AnimationData> hitCombat;
     public List<AnimationData> hitRange;
     public List<AnimationData> hitBack;
+    public List<AnimationData> injuredWalk;
+    public List<AnimationData> injuredRun;
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
@@ -156,11 +158,11 @@ public class Animations : ScriptableObject
         return deathNormal.GetRandom();
     }
     
-    public AnimationData GetMoveAnimation(bool isForward, bool isRunning, bool isRun, bool isCombat, bool isRange)
+    public AnimationData GetMoveAnimation(bool isForward, bool isRunning, bool isCombat, bool isRange, bool isInjure)
     {
-        var list = (isForward ? (isRun || isRunning) ? forwardRun : forwardWalk : (isRun || isRunning) ? backwardRun : backwardWalk);
-
         if (isCombat) {
+            var list = (isForward ? isRunning ? forwardRun : forwardWalk : isRunning ? backwardRun : backwardWalk);
+            
             if (isRange && list.Count > 2) {
                 return list[2];
             }
@@ -168,9 +170,11 @@ public class Animations : ScriptableObject
             if (list.Count > 1) {
                 return list[1];
             }
+            
+            return list[0];
         }
 
-        return list[0];
+        return (isForward ? isRunning ? isInjure && injuredRun.Count > 0 ? injuredRun : forwardRun : isInjure && injuredWalk.Count > 0 ? injuredWalk : forwardWalk : isRunning ? backwardRun : backwardWalk)[0];
     }
 
     public AnimationData GetTurnAnimation(Quaternion current, Quaternion desired)

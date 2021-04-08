@@ -755,6 +755,7 @@ public class Squad : MonoBehaviour
     
     public Unit FindClosestEnemy(Vector3 position)
     {
+        // TODO: Improve target find system
         if (enemies.Count == 0) {
             var target = FindTargetInFront(position);
             if (target) {

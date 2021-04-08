@@ -14,61 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idleNormal:
   - clip: {fileID: 3835606431569094806, guid: a61bf5e0ebd031a4b95b1b33099ce931, type: 3}
-    frame1: 25
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400002, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
-    frame1: 65
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400004, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
-    frame1: 166
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400006, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
-    frame1: 127
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400008, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
-    frame1: 273
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400010, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
-    frame1: 363
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 7400002, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
-    frame1: 76
+    frame1: 10
     frame2: 0
     side1: 0
     side2: 0
@@ -77,26 +23,8 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   idleCombat:
-  - clip: {fileID: 6187384348888656934, guid: a001ec4c79709a84bbf3099a859473c1, type: 3}
-    frame1: 25
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 2212214423473404717, guid: abe17a8c88a5d364b923a46dfb6f8d70, type: 3}
-    frame1: 32
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
-    childList: []
-    playOnChild: 0
-  - clip: {fileID: 2623484637271486947, guid: 8486f264e17af2744ac91296d1436686, type: 3}
-    frame1: 24
+  - clip: {fileID: 7400006, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 21
     frame2: 0
     side1: 0
     side2: 0
@@ -105,11 +33,75 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   idleRange: []
+  idleInjured:
+  - clip: {fileID: 8993902097722301239, guid: 8c35b1ff0fd364a4a877db92d50725e2, type: 3}
+    frame1: 32
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 8993902097722301239, guid: f85aafa58441a0f40b3b2aed3534b25e, type: 3}
+    frame1: 110
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 8993902097722301239, guid: 129ee3bbc10d0a34283b503d957a88d6, type: 3}
+    frame1: 50
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 8993902097722301239, guid: f9612ba9608c5fb4fb44ed02114f8b58, type: 3}
+    frame1: 16
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   attackNormal:
+  - clip: {fileID: 7400030, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 17
+    frame2: 0
+    side1: 2
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400040, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 15
+    frame2: 0
+    side1: 2
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400044, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 11
+    frame2: 0
+    side1: 2
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
   - clip: {fileID: 6490296231833927595, guid: 189fa279a95ea2941b9915a294638ee1, type: 3}
     frame1: 10
     frame2: 0
-    side1: 1
+    side1: 4
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
@@ -118,7 +110,7 @@ MonoBehaviour:
   - clip: {fileID: 1622366330116382686, guid: b32807603a67bf346a240b20f965a868, type: 3}
     frame1: 13
     frame2: 0
-    side1: 1
+    side1: 4
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
@@ -142,24 +134,186 @@ MonoBehaviour:
     sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
     childList: []
     playOnChild: 0
-  attackStep:
+  - clip: {fileID: 7339149588938543728, guid: 55db7abd70b48e3499a250737f133992, type: 3}
+    frame1: 14
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: 15fa6743b07488b4992ac0a43fbb3525, type: 2}
+    childList: []
+    playOnChild: 0
   - clip: {fileID: -339046013677612474, guid: 10fed03b610bd7f43b027516175e12a4, type: 3}
-    frame1: 12
-    frame2: 28
+    frame1: 10
+    frame2: 29
+    side1: 4
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  attackStep:
+  - clip: {fileID: 7400002, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 13
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400042, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 13
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400036, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 14
+    frame2: 0
+    side1: 4
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400020, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 19
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400016, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 13
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400034, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 14
+    frame2: 27
     side1: 3
     side2: 1
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
     sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
     childList: []
     playOnChild: 0
-  attackCharge:
-  - clip: {fileID: -339046013677612474, guid: 10fed03b610bd7f43b027516175e12a4, type: 3}
-    frame1: 12
-    frame2: 28
+  - clip: {fileID: 7400018, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 20
+    frame2: 36
     side1: 3
     side2: 1
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
-    sound2: {fileID: 11400000, guid: 15fa6743b07488b4992ac0a43fbb3525, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400022, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 18
+    frame2: 35
+    side1: 3
+    side2: 1
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400028, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 19
+    frame2: 33
+    side1: 3
+    side2: 2
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400026, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 21
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400024, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 28
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400038, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 12
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400032, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 10
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400004, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 8
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400006, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 10
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400008, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 11
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  attackCharge:
+  - clip: {fileID: 7400012, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 35
+    frame2: 62
+    side1: 3
+    side2: 1
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400010, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 20
+    frame2: 43
+    side1: 1
+    side2: 1
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
     childList: []
     playOnChild: 0
   rangeStart: []
@@ -169,8 +323,8 @@ MonoBehaviour:
   reload: []
   equip: []
   kick:
-  - clip: {fileID: 966221566273459642, guid: 243fa6adc4d9bb54389b16ccc85e2ec8, type: 3}
-    frame1: 14
+  - clip: {fileID: 7400014, guid: f892c20b005f4cc49913580f9087adbc, type: 3}
+    frame1: 10
     frame2: 0
     side1: 0
     side2: 0
@@ -178,18 +332,9 @@ MonoBehaviour:
     sound2: {fileID: 11400000, guid: 21af906a9bc0b8a4ebebb1d70298c6e2, type: 2}
     childList: []
     playOnChild: 0
-  - clip: {fileID: 7339149588938543728, guid: 55db7abd70b48e3499a250737f133992, type: 3}
-    frame1: 16
-    frame2: 0
-    side1: 1
-    side2: 0
-    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
-    sound2: {fileID: 11400000, guid: 15fa6743b07488b4992ac0a43fbb3525, type: 2}
-    childList: []
-    playOnChild: 0
   rage:
   - clip: {fileID: 8592060052817889519, guid: 475de3e3e9eef7f40b3eb2b015d2e82c, type: 3}
-    frame1: 15
+    frame1: 14
     frame2: 0
     side1: 0
     side2: 0
@@ -199,8 +344,8 @@ MonoBehaviour:
     playOnChild: 0
   turn: []
   charge:
-  - clip: {fileID: -4010395083508936601, guid: 4a1af87de6964a440b276ed900e5bed3, type: 3}
-    frame1: 5
+  - clip: {fileID: 7400048, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 7
     frame2: 17
     side1: 0
     side2: 0
@@ -209,9 +354,18 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   forwardWalk:
-  - clip: {fileID: -3324134082935255511, guid: 81873faca0bd4674aa2b38b463a0a88e, type: 3}
-    frame1: 3
-    frame2: 16
+  - clip: {fileID: 7400000, guid: 1735599492bb9614d80551289ab7e083, type: 2}
+    frame1: 10
+    frame2: 24
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400024, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 8
+    frame2: 23
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
@@ -219,8 +373,8 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   forwardRun:
-  - clip: {fileID: -4010395083508936601, guid: 4a1af87de6964a440b276ed900e5bed3, type: 3}
-    frame1: 5
+  - clip: {fileID: 7400048, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 7
     frame2: 17
     side1: 0
     side2: 0
@@ -229,9 +383,18 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   backwardWalk:
-  - clip: {fileID: 4072620773772969381, guid: 35cace289bc21864da9a6ac1ad823662, type: 3}
-    frame1: 13
-    frame2: 25
+  - clip: {fileID: 7400000, guid: a299529e30cba96429adf6bf10b3901e, type: 2}
+    frame1: 14
+    frame2: 27
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400026, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 9
+    frame2: 27
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
@@ -239,9 +402,9 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   backwardRun:
-  - clip: {fileID: 9128918799655052268, guid: 4d87a0b85ca997e4d904ec91aec01852, type: 3}
-    frame1: 8
-    frame2: 19
+  - clip: {fileID: 7400050, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 7
+    frame2: 17
     side1: 0
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
@@ -254,7 +417,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -263,7 +426,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -272,7 +435,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -281,7 +444,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -291,7 +454,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -301,7 +464,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -310,25 +473,25 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
-  - clip: {fileID: 7400082, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+  - clip: {fileID: 7400078, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 6
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
-  - clip: {fileID: 7400086, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+  - clip: {fileID: 7400084, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 5
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -338,7 +501,7 @@ MonoBehaviour:
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
+    sound1: {fileID: 11400000, guid: 6f99a28365ac63e44850923efeb144de, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -369,7 +532,7 @@ MonoBehaviour:
     side1: 1
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
-    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    sound2: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
     childList: []
     playOnChild: 0
   counterRight:
@@ -379,7 +542,7 @@ MonoBehaviour:
     side1: 3
     side2: 0
     sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
-    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
+    sound2: {fileID: 11400000, guid: d38d809f03f349d468cc924423022df9, type: 2}
     childList: []
     playOnChild: 0
   counterShield:
@@ -432,7 +595,16 @@ MonoBehaviour:
   knockdownCombat: []
   knockdownRange: []
   deathNormal:
-  - clip: {fileID: -3332131236326761211, guid: 871a59cd4f914f14bbe4f16caa575136, type: 3}
+  - clip: {fileID: 7400100, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400098, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
     frame1: 0
     frame2: 0
     side1: 0
@@ -483,6 +655,26 @@ MonoBehaviour:
   hitCombat: []
   hitRange: []
   hitBack: []
+  injuredWalk:
+  - clip: {fileID: 8993902097722301239, guid: 7f5d3e607f385c240930dd4d185fee68, type: 3}
+    frame1: 2
+    frame2: 22
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  injuredRun:
+  - clip: {fileID: 8993902097722301239, guid: 0e3cceef3f6696a4abe786806aedf1af, type: 3}
+    frame1: 2
+    frame2: 10
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   hasMultiNormalKnockdown: 0
   hasMultiCombatKnockdown: 0
   hasMultiRangeKnockdown: 0

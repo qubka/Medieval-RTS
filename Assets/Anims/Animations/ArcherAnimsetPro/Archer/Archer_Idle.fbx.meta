@@ -1,188 +1,536 @@
 fileFormatVersion: 2
 guid: dc957421f0f4ede428de015043525ac6
-timeCreated: 1493371657
-licenseType: Store
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Body_Mesh
-    100004: Cloth_Mesh
-    100006: ClothSide_Mesh
-    100008: Front_01
-    100010: Front_02
-    100012: Front_03
-    100014: FrontPart_Mesh
-    100016: Head
-    100018: Head_Mesh
-    100020: Hips
-    100022: LeftArm
-    100024: LeftArmRoll
-    100026: LeftFoot
-    100028: LeftForeArm
-    100030: LeftForeArmRoll
-    100032: LeftHand
-    100034: LeftHandIndex1
-    100036: LeftHandIndex2
-    100038: LeftHandIndex3
-    100040: LeftHandMiddle1
-    100042: LeftHandMiddle2
-    100044: LeftHandMiddle3
-    100046: LeftHandPinky1
-    100048: LeftHandPinky2
-    100050: LeftHandPinky3
-    100052: LeftHandRing1
-    100054: LeftHandRing2
-    100056: LeftHandRing3
-    100058: LeftHandThumb1
-    100060: LeftHandThumb2
-    100062: LeftHandThumb3
-    100064: LeftLeg
-    100066: LeftLegRoll
-    100068: LeftShoulder
-    100070: LeftToeBase
-    100072: LeftUpLeg
-    100074: LeftUpLegRoll
-    100076: Mask_Mesh
-    100078: MeshGroup
-    100080: Neck
-    100082: Prop_Bow
-    100084: RightArm
-    100086: RightArmRoll
-    100088: RightFoot
-    100090: RightForeArm
-    100092: RightForeArmRoll
-    100094: RightHand
-    100096: RightHandIndex1
-    100098: RightHandIndex2
-    100100: RightHandIndex3
-    100102: RightHandMiddle1
-    100104: RightHandMiddle2
-    100106: RightHandMiddle3
-    100108: RightHandPinky1
-    100110: RightHandPinky2
-    100112: RightHandPinky3
-    100114: RightHandRing1
-    100116: RightHandRing2
-    100118: RightHandRing3
-    100120: RightHandThumb1
-    100122: RightHandThumb2
-    100124: RightHandThumb3
-    100126: RightLeg
-    100128: RightLegRoll
-    100130: RightShoulder
-    100132: RightToeBase
-    100134: RightUpLeg
-    100136: RightUpLegRoll
-    100138: root
-    100140: Spine_01
-    100142: Spine_02
-    100144: Spine_03
-    400000: //RootNode
-    400002: Body_Mesh
-    400004: Cloth_Mesh
-    400006: ClothSide_Mesh
-    400008: Front_01
-    400010: Front_02
-    400012: Front_03
-    400014: FrontPart_Mesh
-    400016: Head
-    400018: Head_Mesh
-    400020: Hips
-    400022: LeftArm
-    400024: LeftArmRoll
-    400026: LeftFoot
-    400028: LeftForeArm
-    400030: LeftForeArmRoll
-    400032: LeftHand
-    400034: LeftHandIndex1
-    400036: LeftHandIndex2
-    400038: LeftHandIndex3
-    400040: LeftHandMiddle1
-    400042: LeftHandMiddle2
-    400044: LeftHandMiddle3
-    400046: LeftHandPinky1
-    400048: LeftHandPinky2
-    400050: LeftHandPinky3
-    400052: LeftHandRing1
-    400054: LeftHandRing2
-    400056: LeftHandRing3
-    400058: LeftHandThumb1
-    400060: LeftHandThumb2
-    400062: LeftHandThumb3
-    400064: LeftLeg
-    400066: LeftLegRoll
-    400068: LeftShoulder
-    400070: LeftToeBase
-    400072: LeftUpLeg
-    400074: LeftUpLegRoll
-    400076: Mask_Mesh
-    400078: MeshGroup
-    400080: Neck
-    400082: Prop_Bow
-    400084: RightArm
-    400086: RightArmRoll
-    400088: RightFoot
-    400090: RightForeArm
-    400092: RightForeArmRoll
-    400094: RightHand
-    400096: RightHandIndex1
-    400098: RightHandIndex2
-    400100: RightHandIndex3
-    400102: RightHandMiddle1
-    400104: RightHandMiddle2
-    400106: RightHandMiddle3
-    400108: RightHandPinky1
-    400110: RightHandPinky2
-    400112: RightHandPinky3
-    400114: RightHandRing1
-    400116: RightHandRing2
-    400118: RightHandRing3
-    400120: RightHandThumb1
-    400122: RightHandThumb2
-    400124: RightHandThumb3
-    400126: RightLeg
-    400128: RightLegRoll
-    400130: RightShoulder
-    400132: RightToeBase
-    400134: RightUpLeg
-    400136: RightUpLegRoll
-    400138: root
-    400140: Spine_01
-    400142: Spine_02
-    400144: Spine_03
-    4300000: FrontPart_Mesh
-    4300002: Mask_Mesh
-    4300004: Head_Mesh
-    4300006: Cloth_Mesh
-    4300008: ClothSide_Mesh
-    4300010: Body_Mesh
-    7400000: Bow_Idle_01
-    7400002: Bow_Idle_02
-    7400004: Bow_Idle_2_Aim
-    7400006: Bow_Idle_2_Aim_Fast
-    7400008: Bow_Crouch_2_Idle
-    7400010: Bow_Idle_2_Crouch
-    7400012: Bow_Crouch_Idle
-    7400014: Bow_Idle_Aim_01
-    7400016: Bow_Idle_Aim_02
-    7400018: Bow_Aim_2_Idle
-    7400020: Bow_Crouch_Aim
-    7400022: Bow_Crouch_Idle_2_Aim
-    7400024: Bow_Crouch_Idle_2_Aim_Fast
-    7400026: Bow_Idle_2_Crouch_Aim
-    7400028: Bow_Crouch_2_Idle_Aim
-    9500000: //RootNode
-    13700000: Body_Mesh
-    13700002: Cloth_Mesh
-    13700004: ClothSide_Mesh
-    13700006: FrontPart_Mesh
-    13700008: Head_Mesh
-    13700010: Mask_Mesh
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Body_Mesh
+  - first:
+      1: 100004
+    second: Cloth_Mesh
+  - first:
+      1: 100006
+    second: ClothSide_Mesh
+  - first:
+      1: 100008
+    second: Front_01
+  - first:
+      1: 100010
+    second: Front_02
+  - first:
+      1: 100012
+    second: Front_03
+  - first:
+      1: 100014
+    second: FrontPart_Mesh
+  - first:
+      1: 100016
+    second: Head
+  - first:
+      1: 100018
+    second: Head_Mesh
+  - first:
+      1: 100020
+    second: Hips
+  - first:
+      1: 100022
+    second: LeftArm
+  - first:
+      1: 100024
+    second: LeftArmRoll
+  - first:
+      1: 100026
+    second: LeftFoot
+  - first:
+      1: 100028
+    second: LeftForeArm
+  - first:
+      1: 100030
+    second: LeftForeArmRoll
+  - first:
+      1: 100032
+    second: LeftHand
+  - first:
+      1: 100034
+    second: LeftHandIndex1
+  - first:
+      1: 100036
+    second: LeftHandIndex2
+  - first:
+      1: 100038
+    second: LeftHandIndex3
+  - first:
+      1: 100040
+    second: LeftHandMiddle1
+  - first:
+      1: 100042
+    second: LeftHandMiddle2
+  - first:
+      1: 100044
+    second: LeftHandMiddle3
+  - first:
+      1: 100046
+    second: LeftHandPinky1
+  - first:
+      1: 100048
+    second: LeftHandPinky2
+  - first:
+      1: 100050
+    second: LeftHandPinky3
+  - first:
+      1: 100052
+    second: LeftHandRing1
+  - first:
+      1: 100054
+    second: LeftHandRing2
+  - first:
+      1: 100056
+    second: LeftHandRing3
+  - first:
+      1: 100058
+    second: LeftHandThumb1
+  - first:
+      1: 100060
+    second: LeftHandThumb2
+  - first:
+      1: 100062
+    second: LeftHandThumb3
+  - first:
+      1: 100064
+    second: LeftLeg
+  - first:
+      1: 100066
+    second: LeftLegRoll
+  - first:
+      1: 100068
+    second: LeftShoulder
+  - first:
+      1: 100070
+    second: LeftToeBase
+  - first:
+      1: 100072
+    second: LeftUpLeg
+  - first:
+      1: 100074
+    second: LeftUpLegRoll
+  - first:
+      1: 100076
+    second: Mask_Mesh
+  - first:
+      1: 100078
+    second: MeshGroup
+  - first:
+      1: 100080
+    second: Neck
+  - first:
+      1: 100082
+    second: Prop_Bow
+  - first:
+      1: 100084
+    second: RightArm
+  - first:
+      1: 100086
+    second: RightArmRoll
+  - first:
+      1: 100088
+    second: RightFoot
+  - first:
+      1: 100090
+    second: RightForeArm
+  - first:
+      1: 100092
+    second: RightForeArmRoll
+  - first:
+      1: 100094
+    second: RightHand
+  - first:
+      1: 100096
+    second: RightHandIndex1
+  - first:
+      1: 100098
+    second: RightHandIndex2
+  - first:
+      1: 100100
+    second: RightHandIndex3
+  - first:
+      1: 100102
+    second: RightHandMiddle1
+  - first:
+      1: 100104
+    second: RightHandMiddle2
+  - first:
+      1: 100106
+    second: RightHandMiddle3
+  - first:
+      1: 100108
+    second: RightHandPinky1
+  - first:
+      1: 100110
+    second: RightHandPinky2
+  - first:
+      1: 100112
+    second: RightHandPinky3
+  - first:
+      1: 100114
+    second: RightHandRing1
+  - first:
+      1: 100116
+    second: RightHandRing2
+  - first:
+      1: 100118
+    second: RightHandRing3
+  - first:
+      1: 100120
+    second: RightHandThumb1
+  - first:
+      1: 100122
+    second: RightHandThumb2
+  - first:
+      1: 100124
+    second: RightHandThumb3
+  - first:
+      1: 100126
+    second: RightLeg
+  - first:
+      1: 100128
+    second: RightLegRoll
+  - first:
+      1: 100130
+    second: RightShoulder
+  - first:
+      1: 100132
+    second: RightToeBase
+  - first:
+      1: 100134
+    second: RightUpLeg
+  - first:
+      1: 100136
+    second: RightUpLegRoll
+  - first:
+      1: 100138
+    second: root
+  - first:
+      1: 100140
+    second: Spine_01
+  - first:
+      1: 100142
+    second: Spine_02
+  - first:
+      1: 100144
+    second: Spine_03
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Body_Mesh
+  - first:
+      4: 400004
+    second: Cloth_Mesh
+  - first:
+      4: 400006
+    second: ClothSide_Mesh
+  - first:
+      4: 400008
+    second: Front_01
+  - first:
+      4: 400010
+    second: Front_02
+  - first:
+      4: 400012
+    second: Front_03
+  - first:
+      4: 400014
+    second: FrontPart_Mesh
+  - first:
+      4: 400016
+    second: Head
+  - first:
+      4: 400018
+    second: Head_Mesh
+  - first:
+      4: 400020
+    second: Hips
+  - first:
+      4: 400022
+    second: LeftArm
+  - first:
+      4: 400024
+    second: LeftArmRoll
+  - first:
+      4: 400026
+    second: LeftFoot
+  - first:
+      4: 400028
+    second: LeftForeArm
+  - first:
+      4: 400030
+    second: LeftForeArmRoll
+  - first:
+      4: 400032
+    second: LeftHand
+  - first:
+      4: 400034
+    second: LeftHandIndex1
+  - first:
+      4: 400036
+    second: LeftHandIndex2
+  - first:
+      4: 400038
+    second: LeftHandIndex3
+  - first:
+      4: 400040
+    second: LeftHandMiddle1
+  - first:
+      4: 400042
+    second: LeftHandMiddle2
+  - first:
+      4: 400044
+    second: LeftHandMiddle3
+  - first:
+      4: 400046
+    second: LeftHandPinky1
+  - first:
+      4: 400048
+    second: LeftHandPinky2
+  - first:
+      4: 400050
+    second: LeftHandPinky3
+  - first:
+      4: 400052
+    second: LeftHandRing1
+  - first:
+      4: 400054
+    second: LeftHandRing2
+  - first:
+      4: 400056
+    second: LeftHandRing3
+  - first:
+      4: 400058
+    second: LeftHandThumb1
+  - first:
+      4: 400060
+    second: LeftHandThumb2
+  - first:
+      4: 400062
+    second: LeftHandThumb3
+  - first:
+      4: 400064
+    second: LeftLeg
+  - first:
+      4: 400066
+    second: LeftLegRoll
+  - first:
+      4: 400068
+    second: LeftShoulder
+  - first:
+      4: 400070
+    second: LeftToeBase
+  - first:
+      4: 400072
+    second: LeftUpLeg
+  - first:
+      4: 400074
+    second: LeftUpLegRoll
+  - first:
+      4: 400076
+    second: Mask_Mesh
+  - first:
+      4: 400078
+    second: MeshGroup
+  - first:
+      4: 400080
+    second: Neck
+  - first:
+      4: 400082
+    second: Prop_Bow
+  - first:
+      4: 400084
+    second: RightArm
+  - first:
+      4: 400086
+    second: RightArmRoll
+  - first:
+      4: 400088
+    second: RightFoot
+  - first:
+      4: 400090
+    second: RightForeArm
+  - first:
+      4: 400092
+    second: RightForeArmRoll
+  - first:
+      4: 400094
+    second: RightHand
+  - first:
+      4: 400096
+    second: RightHandIndex1
+  - first:
+      4: 400098
+    second: RightHandIndex2
+  - first:
+      4: 400100
+    second: RightHandIndex3
+  - first:
+      4: 400102
+    second: RightHandMiddle1
+  - first:
+      4: 400104
+    second: RightHandMiddle2
+  - first:
+      4: 400106
+    second: RightHandMiddle3
+  - first:
+      4: 400108
+    second: RightHandPinky1
+  - first:
+      4: 400110
+    second: RightHandPinky2
+  - first:
+      4: 400112
+    second: RightHandPinky3
+  - first:
+      4: 400114
+    second: RightHandRing1
+  - first:
+      4: 400116
+    second: RightHandRing2
+  - first:
+      4: 400118
+    second: RightHandRing3
+  - first:
+      4: 400120
+    second: RightHandThumb1
+  - first:
+      4: 400122
+    second: RightHandThumb2
+  - first:
+      4: 400124
+    second: RightHandThumb3
+  - first:
+      4: 400126
+    second: RightLeg
+  - first:
+      4: 400128
+    second: RightLegRoll
+  - first:
+      4: 400130
+    second: RightShoulder
+  - first:
+      4: 400132
+    second: RightToeBase
+  - first:
+      4: 400134
+    second: RightUpLeg
+  - first:
+      4: 400136
+    second: RightUpLegRoll
+  - first:
+      4: 400138
+    second: root
+  - first:
+      4: 400140
+    second: Spine_01
+  - first:
+      4: 400142
+    second: Spine_02
+  - first:
+      4: 400144
+    second: Spine_03
+  - first:
+      43: 4300000
+    second: FrontPart_Mesh
+  - first:
+      43: 4300002
+    second: Mask_Mesh
+  - first:
+      43: 4300004
+    second: Head_Mesh
+  - first:
+      43: 4300006
+    second: Cloth_Mesh
+  - first:
+      43: 4300008
+    second: ClothSide_Mesh
+  - first:
+      43: 4300010
+    second: Body_Mesh
+  - first:
+      74: 7400000
+    second: Bow_Idle_01
+  - first:
+      74: 7400002
+    second: Bow_Idle_02
+  - first:
+      74: 7400004
+    second: Bow_Idle_2_Aim
+  - first:
+      74: 7400006
+    second: Bow_Idle_2_Aim_Fast
+  - first:
+      74: 7400008
+    second: Bow_Crouch_2_Idle
+  - first:
+      74: 7400010
+    second: Bow_Idle_2_Crouch
+  - first:
+      74: 7400012
+    second: Bow_Crouch_Idle
+  - first:
+      74: 7400014
+    second: Bow_Idle_Aim_01
+  - first:
+      74: 7400016
+    second: Bow_Idle_Aim_02
+  - first:
+      74: 7400018
+    second: Bow_Aim_2_Idle
+  - first:
+      74: 7400020
+    second: Bow_Crouch_Aim
+  - first:
+      74: 7400022
+    second: Bow_Crouch_Idle_2_Aim
+  - first:
+      74: 7400024
+    second: Bow_Crouch_Idle_2_Aim_Fast
+  - first:
+      74: 7400026
+    second: Bow_Idle_2_Crouch_Aim
+  - first:
+      74: 7400028
+    second: Bow_Crouch_2_Idle_Aim
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Body_Mesh
+  - first:
+      137: 13700002
+    second: Cloth_Mesh
+  - first:
+      137: 13700004
+    second: ClothSide_Mesh
+  - first:
+      137: 13700006
+    second: FrontPart_Mesh
+  - first:
+      137: 13700008
+    second: Head_Mesh
+  - first:
+      137: 13700010
+    second: Mask_Mesh
+  externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -195,16 +543,20 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 0
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
       name: Bow_Idle_01
       takeName: Bow_Idle_01
+      internalID: 0
       firstFrame: 0
       lastFrame: 311
       wrapMode: 0
@@ -379,6 +731,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_02
       takeName: Bow_Idle_02
+      internalID: 0
       firstFrame: 0
       lastFrame: 663
       wrapMode: 0
@@ -553,6 +906,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_2_Aim
       takeName: Bow_Idle_2_Aim
+      internalID: 0
       firstFrame: 0
       lastFrame: 67
       wrapMode: 0
@@ -727,6 +1081,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_2_Aim_Fast
       takeName: Bow_Idle_2_Aim_Fast
+      internalID: 0
       firstFrame: 0
       lastFrame: 37
       wrapMode: 0
@@ -901,6 +1256,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Crouch_2_Idle
       takeName: Bow_Crouch_2_Idle
+      internalID: 0
       firstFrame: 0
       lastFrame: 84
       wrapMode: 0
@@ -1075,6 +1431,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_2_Crouch
       takeName: Bow_Idle_2_Crouch
+      internalID: 0
       firstFrame: 0
       lastFrame: 85
       wrapMode: 0
@@ -1249,6 +1606,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Crouch_Idle
       takeName: Bow_Crouch_Idle
+      internalID: 0
       firstFrame: 0
       lastFrame: 102
       wrapMode: 0
@@ -1423,6 +1781,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_Aim_01
       takeName: Bow_Idle_Aim_01
+      internalID: 0
       firstFrame: 0
       lastFrame: 523
       wrapMode: 0
@@ -1597,6 +1956,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_Aim_02
       takeName: Bow_Idle_Aim_02
+      internalID: 0
       firstFrame: 0
       lastFrame: 663
       wrapMode: 0
@@ -1771,6 +2131,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Aim_2_Idle
       takeName: Bow_Aim_2_Idle
+      internalID: 0
       firstFrame: 0
       lastFrame: 70
       wrapMode: 0
@@ -1945,6 +2306,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Crouch_Aim
       takeName: Bow_Crouch_Aim
+      internalID: 0
       firstFrame: 0
       lastFrame: 102
       wrapMode: 0
@@ -2119,6 +2481,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Crouch_Idle_2_Aim
       takeName: Bow_Crouch_Idle_2_Aim
+      internalID: 0
       firstFrame: 0
       lastFrame: 67
       wrapMode: 0
@@ -2293,6 +2656,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Crouch_Idle_2_Aim_Fast
       takeName: Bow_Crouch_Idle_2_Aim_Fast
+      internalID: 0
       firstFrame: 0
       lastFrame: 37
       wrapMode: 0
@@ -2467,6 +2831,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Idle_2_Crouch_Aim
       takeName: Bow_Idle_2_Crouch_Aim
+      internalID: 0
       firstFrame: 0
       lastFrame: 85
       wrapMode: 0
@@ -2641,6 +3006,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Bow_Crouch_2_Idle_Aim
       takeName: Bow_Crouch_2_Idle_Aim
+      internalID: 0
       firstFrame: 0
       lastFrame: 84
       wrapMode: 0
@@ -2818,26 +3184,45 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: Hips
       humanName: Hips
@@ -3449,8 +3834,7 @@ ModelImporter:
     - name: LeftForeArmRoll
       parentName: LeftForeArm
       position: {x: -0.14000006, y: -0.0000000114419185, z: 0.00000022916252}
-      rotation: {x: -0.000000033527606, y: -0.000000022339004, z: 0.0000000010721803,
-        w: 1}
+      rotation: {x: -0.000000033527606, y: -0.000000022339004, z: 0.0000000010721803, w: 1}
       scale: {x: 1.0000007, y: 1.0000008, z: 1.0000005}
     - name: LeftArmRoll
       parentName: LeftArm
@@ -3629,14 +4013,17 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
