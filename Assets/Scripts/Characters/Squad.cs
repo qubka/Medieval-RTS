@@ -25,7 +25,9 @@ public class Squad : MonoBehaviour
     //public bool isRotating;
     public bool isForward;
     public bool isRange;
-
+    [Range(0.001f, 1f)] public float heightFactor;
+    [Range(0.001f, 1f)] public float positionFactor;
+    
     [Space(10)]
     [ReadOnly] public SquadFSM state;
     [ReadOnly] public Agent agentScript;
@@ -81,7 +83,7 @@ public class Squad : MonoBehaviour
     
     [Header("Misc")]
     public float maximumShake = 0.5f;
-    public float shakeRange = 2000f;
+    public float shakeRange = 50f;
     public float canvasHeight = 10f;
     public Vector3 barScale = new Vector3(1.15f, 1.15f, 1.15f);
     public Vector3 boundCollision = new Vector3(1.25f, 5f, 1.1f);
@@ -159,6 +161,7 @@ public class Squad : MonoBehaviour
         mapMarker.color = color;
         barIcon.sprite = data.canvasIcon;
         cardIcon.sprite = data.layoutIcon;
+        shakeRange *= shakeRange;
         
         // Set up lists
         units = new List<Unit>(squadSize);
@@ -597,7 +600,7 @@ public class Squad : MonoBehaviour
                     selectAudio.Play();
                 }
                 
-                squadDesc.SetSquad(this);
+                squadDesc.SetSquad(unitManager.selectedCount == 1 ? this : null);
             } else {
                 squadDesc.SetSquad(null);
             }
@@ -752,12 +755,12 @@ public class Squad : MonoBehaviour
     
     public Unit FindClosestEnemy(Vector3 position)
     {
-        /*if (enemies.Count == 0) {
+        if (enemies.Count == 0) {
             var target = FindTargetInFront(position);
             if (target) {
                 return target;
             }
-        }*/
+        }
         var squad = FindClosestSquad(position);
         return squad ? squad.FindClosestUnit(position) : null;
     }
@@ -768,19 +771,25 @@ public class Squad : MonoBehaviour
             case 0: return null;
             case 1: return units[0];
             default: {
-                //Unit visible = null;
+                Unit visible = null;
                 Unit closest = null;
                 var nearest = float.MaxValue;
-                
+
                 foreach (var unit in units) {
-                    var distance = Vector.DistanceSq(unit.worldTransform.position, position);
+                    var direction = unit.worldTransform.position - position;
+                    var distance = direction.Magnitude();
                     if (distance < nearest) {
                         closest = unit;
                         nearest = distance;
+                        if (Physics.Raycast(unit.GetAim(), direction, out var hit, distance, Manager.Unit)) {
+                            if (hit.transform == unit.worldTransform) {
+                                visible = unit;
+                            }
+                        }
                     }
                 }
 
-                return closest;
+                return visible ? visible : closest;
             }
         }
     }

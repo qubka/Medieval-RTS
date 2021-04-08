@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 824bf5ca99334214f9838b12bd32d65e, type: 2}
-  meleePrefab: {fileID: 1151442207042416966, guid: 7cb8fcdd4c2e5f54f829cae1d833999a, type: 3}
-  rangePrefab: {fileID: 1733150063720338491, guid: 44bddaaa8df3d8243a70d52225459396, type: 3}
+  primaryPrefabs: []
+  secondaryPrefabs: []
   team: 0
   squadSize: 50
   formationShape: 0
@@ -60,26 +60,28 @@ MonoBehaviour:
   idleScript: {fileID: 0}
   seekScript: {fileID: 0}
   attackScript: {fileID: 0}
+  phalanxLength: 30
+  phalanxHeight: 0
   units: []
   neighbours: []
   enemies: []
   obstacles: []
   positions: []
   centroid: {x: 0, y: 0, z: 0}
-  phalanxLength: 30
-  phalanxHeight: 0
+  killed: 0
   unitSize:
     width: 1.5
     height: 2
     center: 0
     radius: 1
+  objectPool: {fileID: 0}
   worldTransform: {fileID: 0}
   camTransform: {fileID: 0}
   barTransform: {fileID: 0}
   layoutTransform: {fileID: 0}
   cardTransform: {fileID: 0}
+  canShoot: 0
   source: {fileID: 8722389834154966228}
-  minimap: {fileID: 5867832890474363471}
   mapMarker: {fileID: 6858779381314954999}
   mapBorder: {fileID: 1609439309022534998}
   squadBar: {fileID: 7118437330086952744}
@@ -100,10 +102,11 @@ MonoBehaviour:
   circle: {fileID: 1572686340177436137}
   centerTransform: {fileID: 7594045245857739196}
   maximumShake: 0.5
-  shakeRange: 2000
+  shakeRange: 50
   canvasHeight: 10
   barScale: {x: 1.15, y: 1.15, z: 1.15}
   boundCollision: {x: 1.25, y: 5, z: 1.1}
+  radiusKey: 308
 --- !u!65 &2053806470803109941
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour
     public Sounds hitTarget;
     
     public float defaultSpeed = 1f; // default speed value
-    [Range(1, 100)] public int defaultAccuracy = 100; // default accuracity value
+    [Range(1, 100)] public int defaultAccuracy = 100; // default accuracity value (as percentage of successful hit)
     [Range(0.01f, 1f)] public float positionFactor; // multiplier for adjusting the starting position for point P1 (along the X axis) 
     [Range(0.01f, 1f)] public float heightFactor; // multiplier for adjusting the starting position for point P1 (along the Y axis) 
     private const float speedIncreaseFactor = 1.2f; // multiplier to increase speed
@@ -45,16 +45,15 @@ public class Projectile : MonoBehaviour
         }
 
         // calculation of distance between points P0 and P2
-        var startDistance = Vector3.Distance(started, desired);
+        var direction = desired - started;
+        var distance = direction.Magnitude();
 
         // coordinate calculation for point Q1
-        var factor = startDistance * positionFactor;
-        var supportingX = started.x < desired.x ? started.x + factor : started.x - factor;
-        var supportingY = started.y + startDistance * heightFactor;
-        var supportingZ = started.z < desired.z ? started.z + factor : started.z - factor;
+        var supporting = started + direction * positionFactor;
+        supporting.y += distance * heightFactor;
 
         // initial positioning for points Q1 and B
-        support = new Vector3(supportingX, supportingY, supportingZ);
+        support = supporting;
         flying.position = started;
         
         // Store current positions
@@ -62,14 +61,15 @@ public class Projectile : MonoBehaviour
         lastTarget = desired;
         
         // Randomize position for random shoot
-        randomShot = Random.Range(0, 100) <= defaultAccuracy;
+        randomShot = Random.Range(0, 100) > defaultAccuracy;
         if (randomShot) {
             lastTarget.x += Random.Range(-10f, 10f);
             lastTarget.z += Random.Range(-10f, 10f);
             lastTarget.y = Manager.terrain.SampleHeight(lastTarget);
 
             // If new position is touch another unit use it as new target
-            if (Physics.Raycast(lastOrigin, Vector3.up, 1f, Manager.Unit)) {
+            var size = Physics.OverlapSphereNonAlloc(lastTarget, 0.5f, colliders, Manager.Unit);
+            if (size > 0) {
                 target = Manager.unitTable[colliders[0].gameObject];
                 lastTarget = target.GetCenter();
                 randomShot = false;
@@ -133,6 +133,11 @@ public class Projectile : MonoBehaviour
         lastOrigin = started;
         lastTarget = desired;
     }
+
+    /*private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(support, 0.5f);
+    }*/
 
     private void Disable(bool trigger)
     {

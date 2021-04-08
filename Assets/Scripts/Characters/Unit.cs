@@ -50,7 +50,8 @@ public class Unit : MonoBehaviour
     [ReadOnly] public Unit target;
     [ReadOnly] public GPUICrowdPrefab crowd;
     [ReadOnly] public GPUICrowdPrefab subCrowd;
-
+    [ReadOnly] public Rigidbody body;
+    
     // Steering cache valuers
     [Space(10)]
     [ReadOnly] public float arrivalWeight;
@@ -62,7 +63,8 @@ public class Unit : MonoBehaviour
     private float moveSpeed => math.length(boid.velocity);
     private bool hasSpeed => math.lengthsq(boid.velocity) > 0f;
     private bool isCombat => target || squad.hasEnemies || currentTime < lastDamageTime + 10f;
-
+    private bool isInjure => health <= squad.data.manHealth / 4f;
+	
     private Animations animations => squad.data.animations;
 
     public Vector3 GetAim()
@@ -94,6 +96,7 @@ public class Unit : MonoBehaviour
 		lastDamageTime = Min;
         collisions = new List<Transform>();
         obstacles = new List<Obstacle>();
+        body = GetComponent<Rigidbody>();
         ChangeState(UnitFSM.Idle);
     }
 
@@ -243,7 +246,7 @@ public class Unit : MonoBehaviour
             
             default:
                 ChangeState(UnitFSM.Wait);
-                var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+                var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
                 if (currentAnim != anim) {
 	                PlayAnimation(anim, 1f, 1f, 0.5f);
                 }
@@ -316,7 +319,7 @@ public class Unit : MonoBehaviour
 
             default:
 	            ChangeState(UnitFSM.Wait);
-                var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+                var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
                 if (currentAnim != anim) {
 	                PlayAnimation(anim, 1f, 1f, 0.5f);
                 }
@@ -331,13 +334,24 @@ public class Unit : MonoBehaviour
             case UnitFSM.Idle:
             case UnitFSM.Attack:
 	            SetArrivalRadius(1f);
+	            body.Sleep();
                 break;
+            
+            case UnitFSM.Wait:
+	        case UnitFSM.KnockdownWait:
+	            body.Sleep();
+	            break;
             
             case UnitFSM.Seek:
             case UnitFSM.RangeSeek:
-                SetArrivalRadius(0.25f);
+	            SetArrivalRadius(0.25f);
+	            body.WakeUp();
                 break;
-            }
+            
+            default:
+	            body.WakeUp();
+	            break;
+        }
 
         state = newState;
     }
@@ -616,15 +630,14 @@ public class Unit : MonoBehaviour
 		    case DamageType.Counter:
             case DamageType.Normal:
                 switch (state) {
-	                case UnitFSM.Hit:
 	                case UnitFSM.Knockdown:
 		            case UnitFSM.WakeUp:
                         break;
                     default:
+	                    rotate = state != UnitFSM.Hit;
 	                    ChangeState(UnitFSM.Hit);
 	                    var anim = animations.GetHitAnimation(isCombat, isRange);
 	                    PlayAnimation(anim, anim.Length);
-	                    rotate = true;
 	                    break;
                 }
                 break;
@@ -811,7 +824,7 @@ public class Unit : MonoBehaviour
 		if (isRange) {
 			if (hasSpeed) {
 				ChangeState(UnitFSM.RangeSeek);
-				var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 				if (currentAnim != anim) {
 					PlayAnimation(anim, anim.Length);
 				}
@@ -830,21 +843,16 @@ public class Unit : MonoBehaviour
 		} else {
 			if (hasSpeed) {
 				if (!isRange && distance > squad.data.chargeDistance && !HasCollision()) {
-					/*var enemy = squad.FindTargetInFront(GetAim());
-					if (enemy) {
-						target = enemy;
-						SetSeeking(enemy);
-						nextTargetTime = currentTime + 10f;
-					}*/
+					nextTargetTime = currentTime;
 					ChangeState(UnitFSM.Charge);
-					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 					if (currentAnim != anim) {
 						PlayAnimation(anim, anim.Length);
 					}
 					nextAnimTime = 0f;
 				} else if (!HasCollision()) {
 					ChangeState(UnitFSM.MeleeSeek);
-					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 					if (currentAnim != anim) {
 						PlayAnimation(anim, anim.Length);
 					}
@@ -869,7 +877,7 @@ public class Unit : MonoBehaviour
 	private void IdleStart(Vector3 direction)
 	{
 		var clip = crowd.crowdAnimator.currentAnimationClipData[0].animationClip;
-		var isIdle = animations.IsIdle(clip, isCombat, isRange);
+		var isIdle = animations.IsIdle(clip, isCombat, isRange, isInjure);
 					
 		if (currentTime > nextAnimTime) {
 			if (isIdle && Random.Range(0, 10) == 0) {
@@ -877,7 +885,7 @@ public class Unit : MonoBehaviour
 				var anim = animations.rage.GetRandom();
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			} else {
-				var anim = animations.GetIdleAnimation(isCombat, isRange).GetRandom();
+				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure).GetRandom();
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			}
 		} else {
@@ -893,7 +901,7 @@ public class Unit : MonoBehaviour
 		var desired = direction.ToEuler();
 		if (math.abs(Quaternion.Dot(current, desired)) < 0.999999f) {
 			ChangeState(next);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			if (currentAnim != anim) {
 				PlayAnimation(anim, anim.Length);
 			}
@@ -912,7 +920,7 @@ public class Unit : MonoBehaviour
 		if (speed > 0f) {
 			if (squad.hasEnemies && HasCollision()) {
 				ChangeState(UnitFSM.Wait);
-				var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 				if (currentAnim != anim) {
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				}
@@ -937,7 +945,7 @@ public class Unit : MonoBehaviour
 				PrepareDamage(DamageType.Charge);
 			} else {
 				ChangeState(UnitFSM.Attack);
-				var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 				if (currentAnim != anim) {
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				}
@@ -960,7 +968,7 @@ public class Unit : MonoBehaviour
 		if (speed > 0f) {
 			if (HasCollision()) {
 				ChangeState(UnitFSM.Wait);
-				var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 				if (currentAnim != anim) {
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				}
@@ -980,7 +988,7 @@ public class Unit : MonoBehaviour
 		} else {
 			var distance = Vector3.Distance(target.worldTransform.position, worldTransform.position);
 			ChangeState(distance <= squad.data.meleeDistance ? UnitFSM.MeleeTurn : UnitFSM.Attack);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			if (currentAnim != anim) {
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			}
@@ -1000,7 +1008,7 @@ public class Unit : MonoBehaviour
 			switch (target.state) {
 				/*case UnitFSM.Melee: {
 					ChangeState(UnitFSM.Wait);
-					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 					PlayAnimation(anim, 1f);
 					break;
 				}*/
@@ -1030,7 +1038,7 @@ public class Unit : MonoBehaviour
 
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Wait);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			PlayAnimation(anim, Random.Range(1f, math.min(3f, anim.Length)));
 		}
 	}
@@ -1056,7 +1064,7 @@ public class Unit : MonoBehaviour
 		} else {
 			var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
 			ChangeState(distance <= squad.data.rangeDistance ? UnitFSM.RangeTurn : UnitFSM.Attack);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			if (currentAnim != anim) {
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			}
@@ -1099,11 +1107,13 @@ public class Unit : MonoBehaviour
 			var anim = animations.rangeRelease[range];
 			PlayAnimation(anim, anim.Length);
 
+			var prop = squad.data.rangeWeapon.ranges[range];
 			var arrow = squad.objectPool.SpawnFromPool(Manager.Arrow).GetComponent<Projectile>();
 			arrow.origin = this;
 			arrow.target = target;
-			arrow.heightFactor = math.clamp(range * 0.5f, 0.01f, 1f);
-			arrow.defaultAccuracy = squad.data.accuracy;
+			arrow.heightFactor = prop.height;
+			arrow.positionFactor = prop.position;
+			arrow.defaultAccuracy = squad.data.accuracy + prop.accuracy;
 			arrow.enabled = true;
 		}
 	}
@@ -1157,17 +1167,17 @@ public class Unit : MonoBehaviour
 
 		if (hasSpeed) {
 			ChangeState(UnitFSM.Turn);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			PlayAnimation(anim, anim.Length);
 		} else {
 			var clip = crowd.crowdAnimator.currentAnimationClipData[0].animationClip;
-			var isIdle = animations.IsIdle(clip, isCombat, isRange);
+			var isIdle = animations.IsIdle(clip, isCombat, isRange, isInjure);
 			if (currentTime > nextAnimTime) {
 				if (isIdle && Random.Range(0, 10) == 0) {
 					var anim = animations.idleNormal.GetRandom(1); // from 1 (0  should be default one)
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				} else {
-					var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				}
 			} else {
@@ -1236,7 +1246,7 @@ public class Unit : MonoBehaviour
 			}
 		} else {
 			ChangeState(UnitFSM.Idle);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			if (currentAnim != anim) {
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			}
@@ -1340,7 +1350,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			lastDamageTime = currentTime;
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			PlayAnimation(anim, anim.Length);
 		}
 	}
@@ -1356,7 +1366,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			lastDamageTime = currentTime;
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
-			var anim = animations.GetIdleAnimation(isCombat, isRange)[0];
+			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			PlayAnimation(anim, anim.Length);
 		}
 	}
@@ -1430,6 +1440,7 @@ public class Unit : MonoBehaviour
 	    var boid = unitObject.AddComponent<BoidBehaviour>();
 	    var crowd = unitObject.GetComponent<GPUICrowdPrefab>();
 	    var unit = unitObject.GetComponent<Unit>();
+	    var body = unitObject.GetComponent<Rigidbody>();
 	    
 	    // Update transforms
 	    if (selectorTransform) {
@@ -1475,6 +1486,7 @@ public class Unit : MonoBehaviour
 	    unit.ammunition = ammunition;
 	    unit.range = range;
 	    unit.skin = skin;
+	    unit.body = body;
 	    unit.squad = squad;
 	    unit.collisions = collisions;
 	    unit.obstacles = obstacles;

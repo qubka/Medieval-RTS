@@ -221,15 +221,7 @@ public static class Vector // MathExtension ?
 		var num5 = math.sqrt(num4);
 		return new Vector3(current.x + num1 / num5 * maxDistanceDelta, current.y + num2 / num5 * maxDistanceDelta, current.z + num3 / num5 * maxDistanceDelta);
 	}
-	
-	public static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angle) 
-	{
-		var dir = point - pivot; // get point direction relative to pivot
-		dir = Quaternion.Euler(angle) * dir; // rotate it
-		point = dir + pivot; // calculate rotated point
-		return point; // return it
-	}
-	
+
 	public static bool IsRightRotationDirection(Quaternion from, Quaternion to)
 	{
 		var fromY = from.eulerAngles.y;

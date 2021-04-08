@@ -11,6 +11,7 @@ public class Animations : ScriptableObject
     public List<AnimationData> idleNormal;
     public List<AnimationData> idleCombat;
     public List<AnimationData> idleRange;
+    public List<AnimationData> idleInjured;
     public List<AnimationData> attackNormal;
     public List<AnimationData> attackStep;
     public List<AnimationData> attackCharge;
@@ -91,7 +92,7 @@ public class Animations : ScriptableObject
         return distance > weapon.normal && attackStep.Count > 0 ? attackStep : attackNormal;
     }
 
-    public List<AnimationData> GetIdleAnimation(bool isCombat, bool isRange)
+    public List<AnimationData> GetIdleAnimation(bool isCombat, bool isRange, bool isInjure)
     {
         if (isCombat) {
             if (isRange && idleRange.Count > 0) {
@@ -100,6 +101,10 @@ public class Animations : ScriptableObject
             
             if (idleCombat.Count > 0) {
                 return idleCombat;
+            }
+        } else {
+            if (isInjure && idleInjured.Count > 0) {
+                return idleInjured;
             }
         }
 
@@ -186,7 +191,7 @@ public class Animations : ScriptableObject
         return 1;
     }
 
-    public bool IsIdle(AnimationClip current, bool isCombat, bool isRange)
+    public bool IsIdle(AnimationClip current, bool isCombat, bool isRange, bool isInjure)
     {
         if (isCombat) {
             if (isRange && deathRange.Count > 0) {
@@ -196,8 +201,12 @@ public class Animations : ScriptableObject
             if (deathCombat.Count > 0) {
                 return idleCombat[0].clip == current;
             }
+        } else {
+            if (isInjure && idleInjured.Count > 0) {
+                return idleInjured[0].clip == current;
+            }
         }
-
+        
         return idleNormal[0].clip == current;
     }
 
