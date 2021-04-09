@@ -73,6 +73,7 @@ MonoBehaviour:
     playOnChild: 0
   idleCombat: []
   idleRange: []
+  idleInjured: []
   attackNormal:
   - clip: {fileID: 7400086, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
     frame1: 7
@@ -85,24 +86,6 @@ MonoBehaviour:
     playOnChild: 1
   - clip: {fileID: 7400088, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
     frame1: 8
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
-    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
-    childList: []
-    playOnChild: 1
-  - clip: {fileID: 7400102, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
-    frame1: 17
-    frame2: 0
-    side1: 0
-    side2: 0
-    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
-    sound2: {fileID: 11400000, guid: c606770fcfa07fb4595707c4d11de2e6, type: 2}
-    childList: []
-    playOnChild: 1
-  - clip: {fileID: 7400104, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
-    frame1: 17
     frame2: 0
     side1: 0
     side2: 0
@@ -130,14 +113,15 @@ MonoBehaviour:
     playOnChild: 1
   attackStep: []
   attackCharge:
-  - clip: {fileID: -8881028698655504191, guid: 6447de9e77809494c8e8f691404deaae, type: 3}
-    frame1: 0
+  - clip: {fileID: 0}
+    frame1: 1
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: dfdada17bf2e91a458d2a61a16a8375a, type: 2}
+    sound1: {fileID: 0}
     sound2: {fileID: 11400000, guid: e30aa96bec691614cb0b1fe1408f1e70, type: 2}
-    childList: []
+    childList:
+    - {fileID: 7400010, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
     playOnChild: 0
   rangeStart: []
   rangeHold: []
@@ -184,8 +168,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
     sound2: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    childList:
-    - {fileID: 7400010, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    childList: []
     playOnChild: 0
   - clip: {fileID: -317490499389676881, guid: 6447de9e77809494c8e8f691404deaae, type: 3}
     frame1: 10
@@ -194,8 +177,7 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 11400000, guid: 6fbce1d94f4374f4391d5913081fb323, type: 2}
     sound2: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
-    childList:
-    - {fileID: 7400010, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
+    childList: []
     playOnChild: 0
   charge:
   - clip: {fileID: 2176285660270117362, guid: 6447de9e77809494c8e8f691404deaae, type: 3}
@@ -348,6 +330,8 @@ MonoBehaviour:
   hitCombat: []
   hitRange: []
   hitBack: []
+  injuredWalk: []
+  injuredRun: []
   hasMultiNormalKnockdown: 0
   hasMultiCombatKnockdown: 0
   hasMultiRangeKnockdown: 0
@@ -359,5 +343,6 @@ MonoBehaviour:
   canCounter: 0
   canKnockdown: 0
   hasShield: 0
+  chargeBoost: 0.5
   deathPosition: {x: 0, y: 0, z: 0}
   deathRotation: {x: 0, y: 0, z: 90}

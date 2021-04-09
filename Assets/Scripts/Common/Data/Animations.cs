@@ -61,6 +61,8 @@ public class Animations : ScriptableObject
     public bool canCounter;
     public bool canKnockdown;
     public bool hasShield;
+    public float chargeBoost;
+
     [Space]
     public Vector3 deathPosition;
     public Vector3 deathRotation;

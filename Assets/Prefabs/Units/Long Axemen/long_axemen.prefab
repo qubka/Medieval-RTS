@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 8054929514059729361}
   - component: {fileID: 92065245327755374}
   m_Layer: 10
-  m_Name: axemen
+  m_Name: long_axemen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -400,6 +400,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 0}
     sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   prevAnim:
     clip: {fileID: 0}
     frame1: 0
@@ -408,6 +410,8 @@ MonoBehaviour:
     side2: 0
     sound1: {fileID: 0}
     sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   nextAnimTime: 0
   nextTargetTime: 0
   nextModeTime: 0
@@ -417,20 +421,46 @@ MonoBehaviour:
   nextBlock2Time: 0
   lastDamageTime: 0
   currentTime: 0
+  nextDamage: 0
+  nextDamage2: 0
+  nextBlock:
+    clip: {fileID: 0}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  nextBlock2:
+    clip: {fileID: 0}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
   isRunning: 0
   isRange: 0
   health: 0
+  ammunition: 0
   range: 0
   skin: 0
   squad: {fileID: 0}
   attachment: {fileID: 0}
   selector: {fileID: 0}
+  selectorTransform: {fileID: 0}
+  attachTransform: {fileID: 0}
   worldTransform: {fileID: 0}
   collisions: []
   obstacles: []
   target: {fileID: 0}
   crowd: {fileID: 0}
   subCrowd: {fileID: 0}
+  body: {fileID: 0}
   arrivalWeight: 0
   arrivalRadius: 1
   seekingTarget: {fileID: 0}

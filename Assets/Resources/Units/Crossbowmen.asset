@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14bdd971cc99489cb8cbaca1e2b3abe9, type: 3}
+  m_Name: Crossbowmen
+  m_EditorClassIdentifier: 
+  selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
+  selectorPosition: {x: 0, y: 0.25, z: 0}
+  attachPosition: {x: 0, y: 0, z: 0}
+  unitSize:
+    width: 1.25
+    height: 2
+    center: 1
+    radius: 1
+  unitSpeed: 5
+  unitAccel: 5
+  unitRotation: 280
+  animations: {fileID: 11400000, guid: 13f3860f78b1aab4aa6cdefb75951f8d, type: 2}
+  squadSize: 85
+  squadSpeed: 1.25
+  squadAccel: 5
+  squadRotation: 5
+  attackDistance: 30
+  meleeDistance: 3
+  chargeDistance: 10
+  rangeDistance: 100
+  groupSounds: {fileID: 11400000, guid: 0c6824a69c0e22b4c9d6023b5380023a, type: 2}
+  commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
+  canvasIcon: {fileID: 21300000, guid: bed29e5f6b4c31843a2a1d6e4c3e8c0f, type: 3}
+  layoutIcon: {fileID: 21300000, guid: d047fef1fe59ffc4c8bfd5f9b5f7d811, type: 3}
+  meleeAttack: 11
+  meleeWeapon: {fileID: 11400000, guid: b276671f59b523d4ca285eddcf09a2bb, type: 2}
+  chargeBonus: 7
+  rangeWeapon: {fileID: 11400000, guid: e9f74fe4b26e96146bdd5f539e793f31, type: 2}
+  accuracy: 80
+  ammunition: 50
+  fireRate: 3
+  armor: 20
+  shield: 15
+  defenceSkill: 15
+  manHealth: 80
+  bonusHitPoints: 5
+  mountHealth: 0
+  morale: 50

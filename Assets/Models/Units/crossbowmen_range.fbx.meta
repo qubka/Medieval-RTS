@@ -317,13 +317,13 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: crossbowmen(Clone)
+    - name: crossbowmen_melee(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Armature
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0.000000081460335, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
@@ -518,32 +518,32 @@ ModelImporter:
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: body_LOD0
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0.000000011444091, y: 1.3633637, z: 0.0000002297496}
       rotation: {x: 0.00000016296968, y: -0.0000000013783575, z: 0.0000000016391276, w: 1}
       scale: {x: 100, y: 100, z: 100}
     - name: body_LOD1
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0.000000011444091, y: 1.3633637, z: 0.0000002297496}
       rotation: {x: 0.00000016296968, y: -0.0000000013783575, z: 0.0000000016391276, w: 1}
       scale: {x: 100, y: 100, z: 100}
     - name: body_LOD2
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0.000000011444091, y: 1.3633637, z: 0.0000002297496}
       rotation: {x: 0.00000016296968, y: -0.0000000013783575, z: 0.0000000016391276, w: 1}
       scale: {x: 100, y: 100, z: 100}
     - name: body_LOD3
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0.000000011444091, y: 1.3633637, z: 0.0000002297496}
       rotation: {x: 0.00000016296968, y: -0.0000000013783575, z: 0.0000000016391276, w: 1}
       scale: {x: 100, y: 100, z: 100}
     - name: body_LOD4
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0.000000011444091, y: 1.3633637, z: 0.0000002297496}
       rotation: {x: 0.00000016296968, y: -0.0000000013783575, z: 0.0000000016391276, w: 1}
       scale: {x: 100, y: 100, z: 100}
     - name: body_LOD5
-      parentName: crossbowmen(Clone)
+      parentName: crossbowmen_melee(Clone)
       position: {x: -0.000000011444091, y: 1.3633637, z: 0.0000002297496}
       rotation: {x: 0.00000016296968, y: -0.0000000013783575, z: 0.0000000016391276, w: 1}
       scale: {x: 100, y: 100, z: 100}

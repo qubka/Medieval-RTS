@@ -55,6 +55,8 @@ MonoBehaviour:
   isRunning: 0
   isForward: 1
   isRange: 1
+  heightFactor: 0
+  positionFactor: 0
   state: 0
   agentScript: {fileID: 0}
   idleScript: {fileID: 0}
@@ -81,6 +83,7 @@ MonoBehaviour:
   layoutTransform: {fileID: 0}
   cardTransform: {fileID: 0}
   canShoot: 0
+  circle: {fileID: 0}
   source: {fileID: 8722389834154966228}
   mapMarker: {fileID: 6858779381314954999}
   mapBorder: {fileID: 1609439309022534998}
@@ -99,7 +102,7 @@ MonoBehaviour:
   cardNumber: {fileID: 4863836836886744743}
   unitLayout: {fileID: 6634118863436267813}
   particle: {fileID: 4542322576374665223}
-  circle: {fileID: 1572686340177436137}
+  radiusCircle: {fileID: 1572686340177436137}
   centerTransform: {fileID: 7594045245857739196}
   maximumShake: 0.5
   shakeRange: 50

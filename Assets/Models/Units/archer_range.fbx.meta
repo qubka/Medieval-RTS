@@ -19,7 +19,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
-    optimizeGameObjects: 0
+    optimizeGameObjects: 1
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -245,14 +245,6 @@ ModelImporter:
         modified: 0
     - boneName: mixamorig:RightToeBase
       humanName: RightToes
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: mixamorig:LeftHandThumb1
-      humanName: Left Thumb Proximal
       limit:
         min: {x: 0, y: 0, z: 0}
         max: {x: 0, y: 0, z: 0}
@@ -499,12 +491,50 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
+    - boneName: mixamorig:LeftHandThumb1
+      humanName: Left Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
     skeleton:
     - name: archer_range(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
+    - name: body.000
+      parentName: archer_range(Clone)
+      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
+      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: body.001
+      parentName: archer_range(Clone)
+      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
+      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: body.002
+      parentName: archer_range(Clone)
+      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
+      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: body.003
+      parentName: archer_range(Clone)
+      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
+      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: body.004
+      parentName: archer_range(Clone)
+      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
+      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: body.005
+      parentName: archer_range(Clone)
+      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
+      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
+      scale: {x: 100, y: 100, z: 100}
     - name: Armature
       parentName: archer_range(Clone)
       position: {x: -0, y: 0, z: 0}
@@ -578,7 +608,7 @@ ModelImporter:
     - name: mixamorig:LeftHandThumb1
       parentName: mixamorig:LeftHand
       position: {x: 0.041285608, y: 0.03506287, z: 0.009788588}
-      rotation: {x: 0.0447155, y: -0.015302001, z: -0.3347, w: 0.9411388}
+      rotation: {x: 0.044715505, y: -0.015302001, z: -0.33470002, w: 0.9411388}
       scale: {x: 1.0000001, y: 1.0000004, z: 1.0000001}
     - name: mixamorig:LeftHandThumb2
       parentName: mixamorig:LeftHandThumb1
@@ -965,11 +995,6 @@ ModelImporter:
       position: {x: -0, y: 0.10091673, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: Archer
-      parentName: archer_range(Clone)
-      position: {x: -0.00000001513958, y: -3.3881318e-22, z: 0.000000018551946}
-      rotation: {x: 0.00000016398728, y: -0.0000000023096798, z: 3.7252912e-10, w: 1}
-      scale: {x: 100, y: 100, z: 100}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5

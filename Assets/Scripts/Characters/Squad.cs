@@ -25,9 +25,7 @@ public class Squad : MonoBehaviour
     //public bool isRotating;
     public bool isForward;
     public bool isRange;
-    [Range(0.001f, 1f)] public float heightFactor;
-    [Range(0.001f, 1f)] public float positionFactor;
-    
+
     [Space(10)]
     [ReadOnly] public SquadFSM state;
     [ReadOnly] public Agent agentScript;
@@ -53,7 +51,7 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
     [HideInInspector] public bool canShoot;
-    [HideInInspector] public RaycastHit[] raycasts;
+    [HideInInspector] public Circle circle;
     
     [Header("Children References")] 
     public GameObject source;
@@ -78,7 +76,7 @@ public class Squad : MonoBehaviour
     public GameObject unitLayout;
     [Space(5f)]
     public ParticleSystem particle;
-    public GameObject circle;
+    public GameObject radiusCircle;
     public Transform centerTransform;
     
     [Header("Misc")]
@@ -120,10 +118,9 @@ public class Squad : MonoBehaviour
 
     private void Awake()
     {
-        // Set up the main components 
+        // Set up the squad components 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         colliders = new Collider[32];
-        raycasts = new RaycastHit[32];
         collision = GetComponent<BoxCollider>();
         particleShape = particle.shape;
         //particleTransform = particle.transform;
@@ -137,31 +134,36 @@ public class Squad : MonoBehaviour
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadSpeed;
         agentScript.maxAccel = data.squadAccel;
-        circle.GetComponent<Circle>().radius = data.rangeWeapon ? data.rangeDistance : data.attackDistance;
-        
-        // Lond audio components
+        circle = radiusCircle.GetComponent<Circle>();    
+        circle.radius = data.rangeWeapon ? data.rangeDistance : data.attackDistance;
         var sources = source.GetComponents<AudioSource>();
         mainAudio = sources[0];
         fightAudio = sources[1];
         runAudio = sources[2];
         chargeAudio = sources[3];
+        shakeRange *= shakeRange;
+        
         // TODO: rework to be compatible with save system
         // Set the team properties
         //squadSize = data.squadSize;
         unitSize = data.unitSize;
         phalanxLength = Math.Max(unitSize.width, squadSize / 3f);
-        barHealth.maxValue = squadSize;
-        barHealth.value = squadSize;
-        cardHealth.maxValue = squadSize;
-        cardHealth.value = squadSize;
-        cardAmmo.gameObject.SetActive(data.rangeWeapon);
-        cardNumber.text = squadSize.ToString();
+        
+        // Set up the UI components
         var color = team.GetColor();
         barFill.color = color;
         mapMarker.color = color;
         barIcon.sprite = data.canvasIcon;
         cardIcon.sprite = data.layoutIcon;
-        shakeRange *= shakeRange;
+        barHealth.maxValue = squadSize;
+        barHealth.value = squadSize;
+        cardHealth.maxValue = squadSize;
+        cardHealth.value = squadSize;
+        cardNumber.text = squadSize.ToString();
+        var ammo = squadSize * data.ammunition;
+        cardAmmo.maxValue = ammo;
+        cardAmmo.value = ammo;
+        cardAmmo.gameObject.SetActive(data.rangeWeapon);
         
         // Set up lists
         units = new List<Unit>(squadSize);
@@ -412,7 +414,7 @@ public class Squad : MonoBehaviour
 
         // TODO: Temporary
         // Disable circle radius if we not in range anymore
-        circle.SetActive(team == Team.Self && select && (isRange || Input.GetKey(radiusKey)));
+        radiusCircle.SetActive(team == Team.Self && select && (isRange || Input.GetKey(radiusKey)));
     }
     
     private void UpdateAll()
@@ -632,6 +634,7 @@ public class Squad : MonoBehaviour
         var count = units.Count;
         barHealth.value = count;
         cardHealth.value = count;
+        cardAmmo.value -= unit.ammunition;
         cardNumber.text = count.ToString();
         
         if (count == 0) {
@@ -676,6 +679,16 @@ public class Squad : MonoBehaviour
         var scale = MathExtention.Clamp01(distance / shakeRange);
         var stress = (1f - scale * scale) * maximumShake;
         camController.InduceShake(stress);
+    }
+
+    public void UpdateHP()
+    {
+        
+    }
+    
+    public void UpdateAmmo()
+    {
+        cardAmmo.value--;
     }
 
     #region Sounds

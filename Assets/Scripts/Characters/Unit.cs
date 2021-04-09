@@ -455,13 +455,16 @@ public class Unit : MonoBehaviour
 
     public void PlayAnimation(AnimationData anim, float duration, float speed = 1f, float transition = 0f, float startTime = -1f, bool sound = true)
     {
-	    var hasChild = anim.childList.Count > 0;
-	    
-	    (anim.playOnChild ? subCrowd : crowd).StartAnimation(anim.clip, startTime, speed, transition);
-	    currentAnim = anim;
+	    if (anim.playOnChild) {
+		    subCrowd.StartAnimation(anim.clip, startTime, speed, transition);
+	    } else {
+		    crowd.StartAnimation(anim.clip, startTime, speed, transition);
+		    currentAnim = anim;
+	    }
 	    nextAnimTime = currentTime + duration;
-	    if (sound && anim.sound1) squad.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
 	    
+	    var hasChild = anim.childList.Count > 0;
+	    if (sound && anim.sound1) squad.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
 	    if (hasChild) {
 		    subCrowd.StartAnimation(anim.childList.GetRandom(), startTime, speed, transition);
 		    if (sound && anim.sound2) squad.RequestPlaySound(attachTransform.position, anim.sound2);
@@ -588,7 +591,7 @@ public class Unit : MonoBehaviour
 
 	    // attack success
 	    if (attack > defense) {
-		    return attack;
+		    return attack - defense;
 	    }
 
 	    // attack failure
@@ -696,6 +699,10 @@ public class Unit : MonoBehaviour
 			    PlayAnimation(anim, anim.Length);
 			    Destroy(GetComponent<CapsuleCollider>());
 			    Destroy(GetComponent<Rigidbody>());
+			    Destroy(selector);
+			    entityManager.DestroyEntity(entity);
+			    entityManager.DestroyEntity(formation);
+			    squad.RemoveUnit(this);
 			    inflictor.squad.killed++;
 			    return;
 		    }
@@ -738,11 +745,7 @@ public class Unit : MonoBehaviour
     {
 	    crowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
 	    if (subCrowd) subCrowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
-        entityManager.DestroyEntity(entity);
-        entityManager.DestroyEntity(formation);
-        Destroy(selector);
-        squad.RemoveUnit(this);
-        DestroyImmediate(this);
+	    DestroyImmediate(this);
     }
     
     #endregion
@@ -890,7 +893,7 @@ public class Unit : MonoBehaviour
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			} else {
 				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure).GetRandom();
-				PlayAnimation(anim, anim.Length, 1f, isIdle ? 0.5f : 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
+				PlayAnimation(anim, anim.Length, 1f, 0.5f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
 			}
 		} else {
 			if (isIdle || animations.IsTurn(clip)) {
@@ -930,7 +933,7 @@ public class Unit : MonoBehaviour
 			speed = math.clamp(speed, 0.5f, 1f);
 
 			if (currentTime > nextAnimTime) {
-				speed += Random.Range(0.05f, 0.1f);
+				speed += Random.Range(0.05f, 0.1f) + animations.chargeBoost;
 				var anim = animations.charge[0];
 				PlayAnimation(anim, anim.Length / speed, speed, currentAnim != anim ? 0.5f : 0f);
 			}
@@ -939,7 +942,11 @@ public class Unit : MonoBehaviour
 			if (distance <= squad.data.meleeDistance) {
 				ChangeState(UnitFSM.Strike);
 				var anim = animations.attackCharge.GetRandom();
-				PlayAnimation(anim, anim.Length, 1f, 0.5f);
+				if (anim.clip) {
+					PlayAnimation(anim, anim.Length, 1f, 0.5f);
+				} else {
+					currentAnim = anim;
+				}
 				PrepareDamage(DamageType.Charge);
 			} else {
 				ChangeState(UnitFSM.Attack);
@@ -954,6 +961,7 @@ public class Unit : MonoBehaviour
 
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Attack);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1019,9 +1027,14 @@ public class Unit : MonoBehaviour
 		TriggerDamage(DamageType.Normal);
 
 		if (currentTime > nextAnimTime) {
-			ChangeState(UnitFSM.Wait);
-			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
-			PlayAnimation(anim, Random.Range(1f, math.min(3f, anim.Length)), 1f, 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
+			if (animations.hasMount) {
+				ChangeState(UnitFSM.Attack);
+				TransitionToIdle(0f);
+			} else {
+				ChangeState(UnitFSM.Wait);
+				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
+				PlayAnimation(anim, Random.Range(1f, math.min(3f, anim.Length)), 1f, 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
+			}
 		}
 	}
 	
@@ -1046,6 +1059,7 @@ public class Unit : MonoBehaviour
 		} else {
 			var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
 			ChangeState(distance <= squad.data.rangeDistance ? UnitFSM.RangeTurn : UnitFSM.Attack);
+			TransitionToIdle(0.5f);
 		}
 	}
 	
@@ -1093,6 +1107,9 @@ public class Unit : MonoBehaviour
 			arrow.positionFactor = prop.position;
 			arrow.defaultAccuracy = squad.data.accuracy + prop.accuracy;
 			arrow.enabled = true;
+
+			ammunition--;
+			squad.UpdateAmmo();
 		}
 	}
 	
@@ -1111,13 +1128,21 @@ public class Unit : MonoBehaviour
 		RotateTowards(direction.ToEuler());
 		
 		if (currentTime > nextAnimTime) {
-			ChangeState(UnitFSM.RangeStart);
 			range = animations.GetRangeAnimation(squad.data.rangeWeapon, direction.Magnitude());
 			if (range == 0 && squad.attackScript.hasObstacles) {
 				range++;
 			}
-			var anim = animations.rangeStart[range];
-			PlayAnimation(anim, anim.Length - 0.05f);
+			if (animations.rangeStart.Count > 0) {
+				ChangeState(UnitFSM.RangeStart);
+				var anim = animations.rangeStart[range];
+				PlayAnimation(anim, anim.Length - 0.05f);
+			} else {
+				ChangeState(UnitFSM.RangeHold);
+				var anim = animations.rangeHold[range];
+				PlayAnimation(anim, anim.Length - 0.05f, 1f, 0.5f);
+				nextModeTime = Random.Range(0.5f, squad.data.fireRate - 0.5f);
+				nextAnimTime = currentTime + nextModeTime;
+			}
 			nextModeTime = currentTime + currentAnim.frame2 / currentAnim.FrameRate;
 		}
 	}
@@ -1130,6 +1155,7 @@ public class Unit : MonoBehaviour
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Attack);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1154,8 +1180,8 @@ public class Unit : MonoBehaviour
 					var anim = animations.idleNormal.GetRandom(1); // from 1 (0  should be default one)
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				} else {
-					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0]; // TODO: isIdle fix for defaul idle is well
-					PlayAnimation(anim, anim.Length, 1f, isIdle ? 0.5f : 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
+					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
+					PlayAnimation(anim, anim.Length, 1f, 0.5f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
 				}
 			} else {
 				if (isIdle || animations.IsTurn(clip)) {
@@ -1239,6 +1265,7 @@ public class Unit : MonoBehaviour
 
 		if (currentTime > nextAnimTime) {
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1246,6 +1273,7 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1258,6 +1286,7 @@ public class Unit : MonoBehaviour
 				PlayAnimation(anim, anim.Length);
 			} else {
 				ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
+				TransitionToIdle(0f);
 			}
 		}
 	}
@@ -1266,6 +1295,7 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1273,6 +1303,7 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime || target.state != UnitFSM.Knockdown) {
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1280,6 +1311,7 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1300,6 +1332,7 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Idle);
+			TransitionToIdle(0f);
 		}
 	}
 	
@@ -1324,8 +1357,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			lastDamageTime = currentTime + 5f;
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
-			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
-			PlayAnimation(anim, anim.Length, 1f, 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
+			TransitionToIdle(0f);
 		}
 	}
 
@@ -1340,8 +1372,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			lastDamageTime = currentTime + 5f;
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
-			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
-			PlayAnimation(anim, anim.Length, 1f, 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
+			TransitionToIdle(0f);
 		}
 	}
 	
