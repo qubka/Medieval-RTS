@@ -51,7 +51,6 @@ public class Manager : MonoBehaviour
 	
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
 	public static readonly int Pointer = "PointerMove".GetHashCode();
-	public static readonly int Arrow = "Arrow".GetHashCode();
 	public static readonly int Way = "Way".GetHashCode();
 
 	private void Awake()

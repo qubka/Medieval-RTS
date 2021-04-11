@@ -61,9 +61,8 @@ public class Animations : ScriptableObject
     public bool canCounter;
     public bool canKnockdown;
     public bool hasShield;
-    public float chargeBoost;
-
     [Space]
+    public float knockForce;
     public Vector3 deathPosition;
     public Vector3 deathRotation;
 
@@ -233,10 +232,9 @@ public class AnimationData
     public Sounds sound1;
     public Sounds sound2;
     public List<AnimationClip> childList;
-    public bool playOnChild;
 
     public float Length => clip.length;
-    public float FrameRate => clip.frameRate;
+    public float FrameRate => clip ? clip.frameRate : 30f;
 }
 
 [Serializable]

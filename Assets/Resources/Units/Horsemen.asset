@@ -25,8 +25,9 @@ MonoBehaviour:
   unitRotation: 240
   animations: {fileID: 11400000, guid: 477966f5ce21a9a469948d7359761bf5, type: 2}
   squadSize: 85
-  squadSpeed: 3
-  squadAccel: 3
+  squadWalkSpeed: 2
+  squadRunSpeed: 5
+  squadAccel: 6
   squadRotation: 10
   attackDistance: 30
   meleeDistance: 3.5
@@ -38,14 +39,14 @@ MonoBehaviour:
   layoutIcon: {fileID: 21300000, guid: ba0f425d7b32f97448186453576af757, type: 3}
   meleeAttack: 50
   meleeWeapon: {fileID: 11400000, guid: 7e0036085b3634c45b06ee1b41c0e249, type: 2}
-  chargeBonus: 55
+  chargeBonus: 100
   rangeWeapon: {fileID: 0}
   accuracy: 0
   ammunition: 0
   fireRate: 0
-  armor: 30
+  armor: 60
   shield: 0
-  defenceSkill: 10
+  defenceSkill: 40
   manHealth: 90
   bonusHitPoints: 25
   mountHealth: 135

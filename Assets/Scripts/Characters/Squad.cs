@@ -21,10 +21,6 @@ public class Squad : MonoBehaviour
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
-    public bool isRunning;
-    //public bool isRotating;
-    public bool isForward;
-    public bool isRange;
 
     [Space(10)]
     [ReadOnly] public SquadFSM state;
@@ -43,6 +39,11 @@ public class Squad : MonoBehaviour
     [ReadOnly] public List<Vector3> positions;
     [ReadOnly] public Vector3 centroid;
     [ReadOnly] public int killed;
+    [ReadOnly] public bool isRunning;
+    [ReadOnly] public bool isHolding;
+    [ReadOnly] public bool isForward;
+    [ReadOnly] public bool isRange;
+    [ReadOnly] public bool isFlee;
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public ObjectPool objectPool;
     [HideInInspector] public Transform worldTransform;
@@ -95,7 +96,6 @@ public class Squad : MonoBehaviour
     private UnitManager unitManager;
     private UnitTable unitTable;
     private SoundManager soundManager;
-    private SquadDescription squadDesc;
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
@@ -132,7 +132,7 @@ public class Squad : MonoBehaviour
         cardTransform = unitCard.transform;
         worldTransform = transform;
         agentScript = gameObject.AddComponent<Agent>();
-        agentScript.maxSpeed = data.squadSpeed;
+        agentScript.maxSpeed = data.squadWalkSpeed;
         agentScript.maxAccel = data.squadAccel;
         circle = radiusCircle.GetComponent<Circle>();    
         circle.radius = data.rangeWeapon ? data.rangeDistance : data.attackDistance;
@@ -147,7 +147,7 @@ public class Squad : MonoBehaviour
         // Set the team properties
         //squadSize = data.squadSize;
         unitSize = data.unitSize;
-        phalanxLength = Math.Max(unitSize.width, squadSize / 3f);
+        phalanxLength = Math.Max(unitSize.width, squadSize / 2f * unitSize.width);
         
         // Set up the UI components
         var color = team.GetColor();
@@ -187,7 +187,6 @@ public class Squad : MonoBehaviour
         squadCanvas = Manager.squadCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
-        squadDesc = Manager.squadDesc;
         camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
         var terrain = Manager.terrain;
@@ -601,10 +600,6 @@ public class Squad : MonoBehaviour
                     selectAudio.clip = data.groupSounds.selectSounds.GetRandom();
                     selectAudio.Play();
                 }
-                
-                squadDesc.SetSquad(unitManager.selectedCount == 1 ? this : null);
-            } else {
-                squadDesc.SetSquad(null);
             }
         }
     }
@@ -667,7 +662,7 @@ public class Squad : MonoBehaviour
         
         var anim = newUnit.currentAnim;
         var startTime = anim.frame1 / anim.FrameRate;
-        newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, startTime);
+        newUnit.PlayAnimation(anim, anim.Length - startTime, 1f, 0f, startTime, false);
     }
     
     public void CreateShake(Vector3 position)
@@ -681,11 +676,6 @@ public class Squad : MonoBehaviour
         camController.InduceShake(stress);
     }
 
-    public void UpdateHP()
-    {
-        
-    }
-    
     public void UpdateAmmo()
     {
         cardAmmo.value--;
@@ -808,6 +798,55 @@ public class Squad : MonoBehaviour
         }
     }
 
+    public void SetRunning(bool value)
+    {
+        if (isRunning == value)
+            return;
+
+        isRunning = value;
+        if (value) {
+            agentScript.maxSpeed = data.squadRunSpeed;
+            agentScript.maxAccel = data.squadAccel;
+        } else {
+            agentScript.maxSpeed = data.squadWalkSpeed;
+            agentScript.maxAccel = data.squadAccel;
+        }
+    }
+    
+    public void SetHolding(bool value)
+    {
+        if (isHolding == value)
+            return;
+        
+        //squad.PlaySound(squad.data.commanderSounds.hold);
+    }
+    
+    public void SetRange(bool value)
+    {
+        if (isRange == value)
+            return;
+
+        isRange = value;
+        circle.radius = value ? data.rangeDistance : data.attackDistance;
+        ForceStop();
+    }
+
+    public void SetFlee(bool value)
+    {
+        if (isFlee == value)
+            return;
+    }
+
+    public void ForceStop()
+    {
+        if (idleScript)
+            return;
+        
+        DestroyImmediate(seekScript);
+        DestroyImmediate(attackScript);
+        ChangeState(SquadFSM.Idle);
+    }
+
     #endregion
 
     #region Utils
@@ -857,7 +896,7 @@ public class Squad : MonoBehaviour
             return false;
         
         foreach (var unit in units) {
-            if (unit.target) {
+            if (unit.target && !unit.isRange) {
                 return true;
             }
         }
@@ -869,12 +908,8 @@ public class Squad : MonoBehaviour
     {
         var count = 0;
         foreach (var unit in units) {
-            switch (unit.state) {
-                case UnitFSM.Death:
-                case UnitFSM.Hit:
-                case UnitFSM.RangeHold:
-                    count++;
-                    break;
+            if (unit.state == UnitFSM.RangeHold) {
+                count++;
             }
         }
         

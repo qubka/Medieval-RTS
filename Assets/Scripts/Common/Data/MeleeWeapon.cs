@@ -10,9 +10,8 @@ public class MeleeWeapon : ScriptableObject
     public int armorPiercingDamage;
     public bool armorPiercing;
     public int attackAgainstCavalry;
-    //public int attackAgainstElephants;
     public int attackAgainstInfantry;
-    
+
     [Header("Animation")]
     public float kick;
     public float normal;

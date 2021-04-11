@@ -6,15 +6,24 @@ using UnityEngine;
 [CreateAssetMenu]
 public class RangeWeapon : ScriptableObject
 {
-    [Header("General")]
+    [Header("General")] 
+    public string projectile;
     public int missileDamage;
     public int missileArmorPiercingDamage;
 
     [Header("Animation")]
     public float close;
     public float distant;
-
     public List<Range> ranges;
+
+    
+    private int id;
+    
+    public int GetProjectile()
+    {
+        if (id == 0) id = projectile.GetHashCode(); 
+        return id;
+    }
 }
 
 [Serializable]

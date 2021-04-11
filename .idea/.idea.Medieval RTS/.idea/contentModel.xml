@@ -684,6 +684,7 @@
             <e p="Data" t="Include">
               <e p="Animations.cs" t="Include" />
               <e p="Behavior" t="Include">
+                <e p="AgentBehaviour.cs" t="Include" />
                 <e p="ListBehaviour.cs" t="Include" />
                 <e p="SingletonBehaviour.cs" t="Include" />
                 <e p="SquadBehavior.cs" t="Include" />
@@ -703,8 +704,6 @@
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
-            <e p="AgentBehaviour.cs" t="Include" />
-            <e p="Align.cs" t="Include" />
             <e p="Seek.cs" t="Include" />
             <e p="Steering.cs" t="Include" />
             <e p="Systems" t="Include">
@@ -735,6 +734,7 @@
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />
               <e p="CombatSliderRatio.cs" t="Include" />
+              <e p="ControlBar.cs" t="Include" />
               <e p="EventTriggerInvoker.cs" t="Include" />
               <e p="HideButton.cs" t="Include" />
               <e p="HighlightToggle.cs" t="Include" />
@@ -775,6 +775,7 @@
           <e p="Blur.shader" t="Include" />
           <e p="Default_OverlayNoZTest.shader" t="Include" />
           <e p="Fluid.shader" t="Include" />
+          <e p="SpriteGrayscale.shader" t="Include" />
           <e p="TerrainShader.shader" t="Include" />
           <e p="UnlitVertexColour_Alpha.shader" t="Include" />
           <e p="WaterShader.shader" t="Include" />

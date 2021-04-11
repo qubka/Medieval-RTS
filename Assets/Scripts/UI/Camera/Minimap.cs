@@ -1,4 +1,5 @@
-﻿using DigitalRuby.Tween;
+﻿using System;
+using DigitalRuby.Tween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,9 +8,7 @@ using UnityEngine.UI;
 public class Minimap : MonoBehaviour, IPointerDownHandler
 {
     public GameObject icon;
-    public Sprite active;
-    public Sprite disable;
-
+    
     private TerrainBorder border;
     private ObjectPool objectPool;
     private Camera cam;
@@ -18,11 +17,14 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     private RectTransform rectTransform;
     private RectTransform mapTransform;
     private Image iconImage;
+    private Material iconMaterial;
     
     private float lastClickTime;
     private Vector2 lastClickPos;
     private bool enable = true;
     private bool rotate = true;
+    
+    private static readonly int GrayscaleAmount = Shader.PropertyToID("_GrayscaleAmount");
 
     private void Start()
     {
@@ -34,6 +36,8 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         rectTransform = GetComponent<RectTransform>();
         iconTransform = icon.GetComponent<RectTransform>();
         iconImage = icon.GetComponent<Image>();
+        iconMaterial = iconImage.material;
+        iconMaterial.SetFloat(GrayscaleAmount, enable ? 0f : 1f);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -64,12 +68,12 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     public void Toggle()
     {
         enable = !enable;
-        iconImage.sprite = enable ? active : disable;
-        
+
         var current = rectTransform.localPosition.y;
         var target = enable ? 0f : rectTransform.sizeDelta.y;
 
         gameObject.Tween("MapMove", current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, MapMove);
+        gameObject.Tween("MapScale", iconMaterial.GetFloat(GrayscaleAmount), enable ? 0f : 1f, 1f, TweenScaleFunctions.Linear, MapScale);
         
         if (rotate) {
             var start = iconTransform.localEulerAngles.z;
@@ -90,6 +94,11 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         // start rotation from identity to ensure no stuttering
         iconTransform.rotation = Quaternion.identity;
         iconTransform.Rotate(Vector3.forward, obj.CurrentValue);
+    }
+
+    private void MapScale(ITween<float> obj)
+    {
+        iconMaterial.SetFloat(GrayscaleAmount, obj.CurrentValue);
     }
     
     private void MapMove(ITween<float> obj)

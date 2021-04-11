@@ -18,7 +18,8 @@ public class Squadron : ScriptableObject
 
     [Header("Squad")]
     public int squadSize;
-    public float squadSpeed;
+    public float squadWalkSpeed;
+    public float squadRunSpeed;
     public float squadAccel;
     public float squadRotation;
     public float attackDistance;
@@ -36,7 +37,7 @@ public class Squadron : ScriptableObject
     public int meleeAttack;
     public MeleeWeapon meleeWeapon;
     public int chargeBonus;
-    
+
     [Header("Range")]
     public RangeWeapon rangeWeapon;
     public int accuracy;
@@ -51,7 +52,7 @@ public class Squadron : ScriptableObject
     public int bonusHitPoints;
     public int mountHealth;
     public int morale;
-
+    
     public int TotalStats()
     {
         var damage = meleeAttack;

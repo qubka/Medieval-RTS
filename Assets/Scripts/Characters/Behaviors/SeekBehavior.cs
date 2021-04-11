@@ -12,7 +12,6 @@ public class SeekBehavior : SquadBehavior
     private Queue<(GameObject, float?, float?)> targets;
     private Quaternion? targetOrientation;
     private GameObject target;
-    private GameObject tempTarget;
     private Transform targetTransform;
     
     private ObjectPool objectPool;
@@ -25,15 +24,17 @@ public class SeekBehavior : SquadBehavior
         
         targets = new Queue<(GameObject, float?, float?)>();
         seek = gameObject.AddComponent<Seek>();
-        tempTarget = new GameObject();
-        tempTarget.AddComponent<Agent>();
         objectPool = Manager.objectPool;
     }
 
     protected override void Start()
     {
         base.Start();
-        if (targets.Count == 0) Debug.LogError(squad.name + "No targets in list");
+        /*if (targets.Count == 0) {
+            squad.ChangeState(SquadFSM.Idle);
+            DestroyImmediate(this);
+            return;
+        }*/
         NextTarget();
     }
 
@@ -216,7 +217,6 @@ public class SeekBehavior : SquadBehavior
     public void OnDestroy()
     {
         Destroy(seek);
-        Destroy(tempTarget);
         targets.Clear();
     }
 

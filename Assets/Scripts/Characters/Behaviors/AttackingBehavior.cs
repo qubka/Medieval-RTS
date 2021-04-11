@@ -1,5 +1,4 @@
-﻿using Unity.Mathematics;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 //this is the script attached and active during the "attacking" state
@@ -10,6 +9,7 @@ public class AttackingBehavior : SquadBehavior
     [HideInInspector] public Vector3 direction;
 
     private Seek seek;
+    private GameObject target;
     private Transform targetTransform;
 
     protected override void Awake()
@@ -17,7 +17,7 @@ public class AttackingBehavior : SquadBehavior
         base.Awake();
         agent.enabled = true;
         
-        var target = new GameObject();
+        target = new GameObject("Target Anchor");
         targetTransform = target.transform;
         seek = gameObject.AddComponent<Seek>();
         seek.SetTarget(target);
@@ -54,34 +54,30 @@ public class AttackingBehavior : SquadBehavior
         if (enemy && enemy.hasUnits) {
             direction = enemy.centroid - squad.centroid;
             worldTransform.rotation = Quaternion.LookRotation(direction);
-            
             var distance = direction.Magnitude();
             
-            if (squad.isRange) {
-                targetTransform.position = enemy.centroid;
-                var movement = distance > squad.data.rangeDistance * 0.95f;
-                squad.agentScript.enabled = movement;
-                seek.enabled = movement;
-            } else {
-                if (distance < squad.data.attackDistance) {
-                    targetTransform.position = squad.centroid - worldTransform.forward * squad.phalanxHeight;
-                    squad.agentScript.enabled = true;
-                    seek.enabled = true;
-                }
-            }
-
             if (Physics.Raycast(squad.centroid, direction, out var hit, distance, Manager.Squad)) {
                 hasObstacles = hit.collider.gameObject != enemy.gameObject;
             }
             
-            /* }else {
-                // If target out of range, return to seek state
-                squad.ChangeState(SquadFSM.Idle);
-                squad.PlaySound(squad.data.commanderSounds.dismiss);
-                squad.UpdateFormation(squad.phalanxLength);
-                DestroyImmediate(this);
-            }*/
-        } else {//no
+            if (squad.isRange) {
+                targetTransform.position = enemy.centroid;
+                var movement = distance > squad.data.rangeDistance * 0.85f;
+                agent.enabled = movement;
+                seek.enabled = movement;
+            } else {
+                if (distance > squad.data.attackDistance * 1.15f) {
+                    squad.ChangeState(SquadFSM.Idle);
+                    squad.PlaySound(squad.data.commanderSounds.dismiss);
+                    squad.UpdateFormation(squad.phalanxLength);
+                    DestroyImmediate(this);
+                } else {
+                    targetTransform.position = squad.centroid - worldTransform.forward * squad.phalanxHeight;
+                    agent.enabled = true;
+                    seek.enabled = true;
+                }
+            }
+        } else {
             squad.ChangeState(SquadFSM.Idle);
             squad.PlaySound(squad.data.commanderSounds.victoryIsOurs);
             squad.UpdateFormation(squad.phalanxLength);
@@ -92,6 +88,7 @@ public class AttackingBehavior : SquadBehavior
     private void OnDestroy()
     {
         Destroy(seek);
+        Destroy(target);
     }
 }
 

@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     public Unit target;
     public Sounds hitGround;
     public Sounds hitTarget;
+    public string projectile;
     
     public float defaultSpeed = 1f; // default speed value
     [Range(1, 100)] public int defaultAccuracy = 100; // default accuracity value (as percentage of successful hit)
@@ -24,11 +25,13 @@ public class Projectile : MonoBehaviour
     private Vector3 lastOrigin; // object representing point P0
     private Vector3 lastTarget; // object representing point P2
     private bool randomShot; //
+    private int id;
     
     private void Awake()
     {
-        flying = transform;
-        source = GetComponent<AudioSource>();
+        if (!flying) flying = transform;
+        if (!source) source = GetComponent<AudioSource>();
+        if (id == 0) id = projectile.GetHashCode();
     }
 
     private void OnEnable()
@@ -144,7 +147,7 @@ public class Projectile : MonoBehaviour
         enabled = false;
         if (trigger && target && !randomShot) {
             Manager.soundManager.RequestPlaySound(lastTarget, hitTarget);
-            Manager.objectPool.ReturnToPool(Manager.Arrow, gameObject);
+            Manager.objectPool.ReturnToPool(id, gameObject);
             
             if (origin) {
                 var damage = target.RangeDamage(origin);
@@ -162,6 +165,6 @@ public class Projectile : MonoBehaviour
     private IEnumerator DelayRemove()
     {
         yield return new WaitForSeconds(Random.Range(3f, 5f));
-        Manager.objectPool.ReturnToPool(Manager.Arrow, gameObject);
+        Manager.objectPool.ReturnToPool(id, gameObject);
     }
 }

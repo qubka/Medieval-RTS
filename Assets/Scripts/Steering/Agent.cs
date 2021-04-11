@@ -3,16 +3,12 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
-    //public float orientation;
-    //public float rotation;
     public float2 velocity;
     public Steering steering;
     
-    public float maxSpeed = 10.0f;
-    public float maxAccel = 30.0f;
-    //public float maxRotation = 45.0f;
-    //public float maxAngularAccel = 45.0f;
-    
+    public float maxSpeed = 10f;
+    public float maxAccel = 30f;
+
     private Transform worldTransform;
     private Terrain terrain;
     
@@ -20,7 +16,6 @@ public class Agent : MonoBehaviour
     {
         velocity = float2.zero;
         steering = new Steering();
-        //trueMaxSpeed = maxSpeed;
         worldTransform = transform;
         terrain = Manager.terrain;
     }

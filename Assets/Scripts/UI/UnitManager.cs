@@ -53,17 +53,19 @@ public class UnitManager : MonoBehaviour
 	//private GameObject unitList;
 	[HideInInspector] public Squad target;
 	[HideInInspector] public UnitLayout unitLayout;
+	[HideInInspector] public List<Squad> selectedUnits;
+	//private Dictionary<Entity, GameObject> unitButtons;
+	private Dictionary<Squad, Movement> movementGroup;
+	private List<Formation> placedFormations;
+	private List<Vector3> positions;
 	private EventSystem eventSystem;
 	private TerrainBorder border;
 	private Camera cam;
 	private CamController camController;
+	private SquadDescription squadDesc;
 	private UnitTable unitTable;
 	private ObjectPool objectPool;
-	//private Dictionary<Entity, GameObject> unitButtons;
-	private Dictionary<Squad, Movement> movementGroup;
-	private List<Formation> placedFormations;
-	private List<Squad> selectedUnits;
-	private List<Vector3> positions;
+	//private ControlBar controlBar;
 	private Line drawedLine;
 	private AudioSource clickAudio;
 	private Collider[] colliders;
@@ -104,6 +106,7 @@ public class UnitManager : MonoBehaviour
 		var size = Manager.terrain.terrainData.size;
 		maxDistance = math.max(size.x, size.z) * 2f;
 		unitTable = Manager.unitTable;
+		squadDesc = Manager.squadDesc;
 		objectPool = Manager.objectPool;
 		border = Manager.border;
 		cam = Manager.mainCamera;
@@ -617,6 +620,7 @@ public class UnitManager : MonoBehaviour
 				selectedUnits.Remove(squad);
 				squad.ChangeSelectState(false);
 			}
+			squadDesc.UpdateData();
 		}
 	}
 

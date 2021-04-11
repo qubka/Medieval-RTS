@@ -68,6 +68,7 @@ public class SoundManager : MonoBehaviour
         
         if (Vector.DistanceSq(listener, position) <= playRange) {
             var type = sounds.name.GetHashCode();
+            if (sounds.sounds.Count == 0) Debug.Log(sounds.name);
             
             // Check current sounds
             foreach (var pair in clipTable) {

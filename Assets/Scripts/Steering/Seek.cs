@@ -4,15 +4,6 @@ using UnityEngine;
 public class Seek : AgentBehaviour
 {
     public float targetRadius = 0.1f;
-    
-    private Transform worldTransform;
-    private Transform targetTransform;
-
-    protected override void Start()
-    {
-        base.Start();
-        worldTransform = transform;
-    }
 
     protected override Steering GetSteering()
     {
@@ -27,10 +18,5 @@ public class Seek : AgentBehaviour
         steering.linear = math.normalize(direction);
         steering.linear *= agent.maxAccel;
         return steering;
-    }
-    
-    public override void SetTarget(GameObject obj)
-    {
-        targetTransform = obj.transform;
     }
 }

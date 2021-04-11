@@ -78,7 +78,7 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   idleRange:
-  - clip: {fileID: 7400000, guid: ae974b8959da5554b8b1d24ef2bc2ad3, type: 3}
+  - clip: {fileID: 7400000, guid: 0cf868472f7c20b47b3e388322d98ceb, type: 2}
     frame1: 10
     frame2: 0
     side1: 0
@@ -374,7 +374,7 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   rangeEnd:
-  - clip: {fileID: 7400000, guid: ae974b8959da5554b8b1d24ef2bc2ad3, type: 3}
+  - clip: {fileID: 7400000, guid: 0cf868472f7c20b47b3e388322d98ceb, type: 2}
     frame1: 10
     frame2: 0
     side1: 0
@@ -384,7 +384,7 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   reload:
-  - clip: {fileID: 7400000, guid: b6b6c39c9c245f0419dc45a4e80aef87, type: 3}
+  - clip: {fileID: 7400000, guid: 5613d05ddd125be4c9f9cfeb6dcd6bce, type: 2}
     frame1: 0
     frame2: 0
     side1: 0
@@ -394,12 +394,12 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   equip:
-  - clip: {fileID: 7400000, guid: 631e9f60b3ccce749a47b1b539729e8f, type: 3}
+  - clip: {fileID: 7400000, guid: dd4f0a4ec7188e346a13f36057133814, type: 2}
     frame1: 18
     frame2: 0
     side1: 0
     side2: 0
-    sound1: {fileID: 11400000, guid: 775262736f065eb4188a19f1ac6a9a9c, type: 2}
+    sound1: {fileID: 11400000, guid: 254a39b260b8aa24e8c05dcc8b6af2db, type: 2}
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
@@ -547,6 +547,46 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   - clip: {fileID: 7400050, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 8
+    frame2: 19
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  forwardWalk2:
+  - clip: {fileID: 7400000, guid: 69241272b378bd440b1b27f08e39cdef, type: 2}
+    frame1: 10
+    frame2: 23
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  forwardRun2:
+  - clip: {fileID: 7400000, guid: ea138a734da04a0478894ab74522d161, type: 2}
+    frame1: 7
+    frame2: 19
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  backwardWalk2:
+  - clip: {fileID: 7400000, guid: 21ff0f74458b2f643b3f73a2356952af, type: 2}
+    frame1: 5
+    frame2: 19
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  backwardRun2:
+  - clip: {fileID: 7400000, guid: 75ffc39653fe9cd489ced8fb66bbf1af, type: 2}
     frame1: 8
     frame2: 19
     side1: 0
@@ -783,7 +823,7 @@ MonoBehaviour:
     sound2: {fileID: 0}
     childList: []
     playOnChild: 0
-  - clip: {fileID: 7400000, guid: 4da7be9c216ad334890390562767972b, type: 3}
+  - clip: {fileID: 7400000, guid: 40b1bba9c278cea4bb8fbb0c189636bb, type: 2}
     frame1: 0
     frame2: 0
     side1: 0
@@ -858,7 +898,7 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   deathRange:
-  - clip: {fileID: 7400000, guid: 4da7be9c216ad334890390562767972b, type: 3}
+  - clip: {fileID: 7400000, guid: 40b1bba9c278cea4bb8fbb0c189636bb, type: 2}
     frame1: 0
     frame2: 0
     side1: 0
@@ -924,7 +964,7 @@ MonoBehaviour:
     childList: []
     playOnChild: 0
   hitRange:
-  - clip: {fileID: 7400000, guid: 31b02f7851d499548963ab7528a84440, type: 3}
+  - clip: {fileID: 7400000, guid: e831d91d94c312142999be7a9a841d73, type: 2}
     frame1: 0
     frame2: 0
     side1: 0

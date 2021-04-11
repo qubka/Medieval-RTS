@@ -1,4 +1,3 @@
-using System;
 using DigitalRuby.Tween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,11 +18,12 @@ public class SquadDescription : MonoBehaviour
     public Slider morale;
     public Slider speed;
     public Slider ammunition;
+    public Slider range;
     public Slider missleDamage;
 
     private RectTransform rectTransform;
+    private UnitManager manager;
     private bool enable;
-    private Squad squad;
     
     private void Awake()
     {
@@ -32,41 +32,36 @@ public class SquadDescription : MonoBehaviour
 
     private void Start()
     {
+        manager = Manager.unitManager;
         InvokeRepeating(nameof(UpdateData), 0f, 1f);
     }
 
-    public void SetSquad(Squad squads)
+    public void UpdateData()
     {
-        squad = squads;
-        if (squad) {
-            UpdateData();
+        if (manager.selectedCount == 1) {
             Toggle(true);
+
+            var squad = manager.selectedUnits[0];
+            var data = squad.data;
+            meleeAttack.value = data.meleeAttack;
+            meleeDamage.value = data.meleeWeapon.baseDamage + data.meleeWeapon.armorPiercingDamage;
+            chargeBonus.value = data.chargeBonus;
+            defenseSkill.value = data.defenceSkill;
+            armor.value = data.armor;
+            health.value = data.manHealth + data.mountHealth;
+            shield.value = data.shield;
+            morale.value = data.morale;
+            speed.value = data.squadRunSpeed * 10f;
+            ammunition.value = data.ammunition;
+            range.value = data.rangeDistance;
+            missleDamage.value = (data.rangeWeapon) ? data.rangeWeapon.missileDamage + data.rangeWeapon.missileArmorPiercingDamage : 0f;
+            icon.sprite = data.canvasIcon;
+            caption.text = data.name; //TODO: Translation
+            count.text = $"{squad.unitCount} ({squad.squadSize})";
+            killed.text = squad.killed.ToString();
         } else {
             Toggle(false);
         }
-    }
-
-    private void UpdateData()
-    {
-        if (!squad) 
-            return;
-        
-        var data = squad.data;
-        meleeAttack.value = data.meleeAttack;
-        meleeDamage.value = data.meleeWeapon.baseDamage + data.meleeWeapon.armorPiercingDamage;
-        chargeBonus.value = data.chargeBonus;
-        defenseSkill.value = data.defenceSkill;
-        armor.value = data.armor;
-        health.value = data.manHealth + data.mountHealth;
-        shield.value = data.shield;
-        morale.value = data.morale;
-        speed.value = data.squadSpeed * 10f;
-        ammunition.value = data.ammunition;
-        missleDamage.value = (data.rangeWeapon) ? data.rangeWeapon.missileDamage + data.rangeWeapon.missileArmorPiercingDamage : 0f;
-        icon.sprite = data.canvasIcon;
-        caption.text = data.name; //TODO: Translation
-        count.text = $"{squad.unitCount} ({squad.squadSize})";
-        killed.text = squad.killed.ToString();
     }
 
     private void Toggle(bool value)
