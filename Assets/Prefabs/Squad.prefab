@@ -52,11 +52,6 @@ MonoBehaviour:
   team: 0
   squadSize: 50
   formationShape: 0
-  isRunning: 0
-  isForward: 1
-  isRange: 1
-  heightFactor: 0
-  positionFactor: 0
   state: 0
   agentScript: {fileID: 0}
   idleScript: {fileID: 0}
@@ -71,11 +66,17 @@ MonoBehaviour:
   positions: []
   centroid: {x: 0, y: 0, z: 0}
   killed: 0
+  isRunning: 0
+  isHolding: 0
+  isForward: 1
+  isRange: 1
+  isFlee: 0
   unitSize:
     width: 1.5
     height: 2
     center: 0
     radius: 1
+  soundManager: {fileID: 0}
   objectPool: {fileID: 0}
   worldTransform: {fileID: 0}
   camTransform: {fileID: 0}
@@ -104,6 +105,7 @@ MonoBehaviour:
   particle: {fileID: 4542322576374665223}
   radiusCircle: {fileID: 1572686340177436137}
   centerTransform: {fileID: 7594045245857739196}
+  minimumLength: 10
   maximumShake: 0.5
   shakeRange: 50
   canvasHeight: 10

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class SliderPercentController : MonoBehaviour
 {
-    public Text textComponent;
+    [SerializeField] private Text textComponent;
 
     public void UpdatePercentValue(float value)
     {

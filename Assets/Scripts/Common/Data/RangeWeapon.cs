@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu]
+[InitializeOnLoad]
 public class RangeWeapon : ScriptableObject
 {
     [Header("General")] 
@@ -15,14 +17,12 @@ public class RangeWeapon : ScriptableObject
     public float close;
     public float distant;
     public List<Range> ranges;
+    
+    [HideInInspector] public int id;
 
-    
-    private int id;
-    
-    public int GetProjectile()
+    private void OnEnable()
     {
-        if (id == 0) id = projectile.GetHashCode(); 
-        return id;
+        id = projectile.GetHashCode(); 
     }
 }
 

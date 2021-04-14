@@ -3,11 +3,10 @@ using UnityEngine.UI;
 
 public class BinarySliderController : MonoBehaviour
 {
-    public Text valueTitle;
-    public Slider slider;
-
-    public string[] values;
-    public Color[] titleColors;
+    [SerializeField] private Text valueTitle;
+    [SerializeField] private Slider slider;
+    [SerializeField] private string[] values;
+    [SerializeField] private Color[] titleColors;
 
     private void Start()
     {

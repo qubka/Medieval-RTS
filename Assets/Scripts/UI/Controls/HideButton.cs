@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class HideButton : MonoBehaviour
 {
-    private Image image;
-    public Sprite activate;
-    public Sprite disabled;
-    public List<Rect> rectangles;
-    public bool enable;
+    [SerializeField] private Image image;
+    [SerializeField] private Sprite activate;
+    [SerializeField] private Sprite disabled;
+    [SerializeField] private List<Rect> rectangles;
+    [SerializeField] private bool enable;
     
     [Serializable]
     public class Rect
@@ -21,8 +21,6 @@ public class HideButton : MonoBehaviour
     
     private void Start()
     {
-        image = GetComponent<Image>();
-
         foreach (var rect in rectangles) {
             rect.y = rect.transform.localPosition.y;
         }
@@ -44,7 +42,7 @@ public class HideButton : MonoBehaviour
             }
 
             var obj = trans.gameObject;
-            obj.Tween(obj.name, current, target, 1.0f, TweenScaleFunctions.CubicEaseOut, Movement);
+            obj.Tween(obj.name, current, target, 1f, TweenScaleFunctions.CubicEaseOut, Movement);
         }
     }
 }

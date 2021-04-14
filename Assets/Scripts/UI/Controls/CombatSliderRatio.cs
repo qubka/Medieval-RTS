@@ -1,5 +1,4 @@
 using Unity.Mathematics;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class CombatSliderRatio : ListBehaviour<Squad>
@@ -21,7 +20,7 @@ public class CombatSliderRatio : ListBehaviour<Squad>
             if (squad.state == SquadFSM.Retreat)
                 continue;
             
-            var stats = squad.unitCount * squad.data.TotalStats();
+            var stats = squad.unitCount * squad.data.totalStats;
             if (squad.team == Team.Enemy) {
                 enemies += stats;
             } else {

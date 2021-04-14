@@ -3,10 +3,10 @@ using UnityEngine.UI;
 
 public class SliderValueController : MonoBehaviour
 {
-    public Text textComponent;
+    [SerializeField] private Text textComponent;
     private Slider slider;
     
-    private void Start()
+    private void Awake()
     {
         slider = GetComponent<Slider>();
     }

@@ -4,10 +4,10 @@ using UnityEngine.EventSystems;
 [ExecuteAlways]
 public class TransformInRect : UIBehaviour
 {
-    public bool hold;
-    public Vector2 ratio = Vector2.one;
-    public Transform child;
-    public Canvas canvas;
+    [SerializeField] private bool hold;
+    [SerializeField] private Vector2 ratio = Vector2.one;
+    [SerializeField] private Transform child;
+    [SerializeField] private Canvas canvas;
 
     private RectTransform rectTransform;
     
@@ -18,7 +18,7 @@ public class TransformInRect : UIBehaviour
 
     protected override void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform = transform as RectTransform;
         Resize();
     }
 

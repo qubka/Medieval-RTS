@@ -4,11 +4,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Toggle))]
 public class HighlightToggle : MonoBehaviour
 {
-    public Color onColor;
-    public Color offColor;
-    public Graphic graphic;
+    [SerializeField] private Color onColor;
+    [SerializeField] private Color offColor;
+    [SerializeField] private Graphic graphic;
     
-    private void Start()
+    private void Awake()
     {
         var toggle = GetComponent<Toggle>();
         graphic.color = toggle.isOn ? onColor : offColor;

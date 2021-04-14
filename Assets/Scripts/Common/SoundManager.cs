@@ -22,8 +22,8 @@ public class SoundManager : MonoBehaviour
     private Transform camTransform;
     private CamController camController;
 
-    private Dictionary<Vector3, (Sounds, int)> clipTable;
-    private Dictionary<AudioSource, (Vector3, int)> playTable;
+    private Dictionary<Vector3, Sounds> clipTable;
+    private Dictionary<AudioSource, Vector3> playTable;
     
     private AudioSource ambient;
     private List<AudioSource> sources;
@@ -45,8 +45,8 @@ public class SoundManager : MonoBehaviour
         camTransform = Manager.camTransform;
         camController = Manager.camController;
         
-        clipTable = new Dictionary<Vector3, (Sounds, int)>(1000);
-        playTable = new Dictionary<AudioSource, (Vector3, int)>(maxSounds);
+        clipTable = new Dictionary<Vector3, Sounds>(1000);
+        playTable = new Dictionary<AudioSource, Vector3>(maxSounds);
 
         sources = new List<AudioSource>(maxSounds);
         availables = new List<AudioSource>(maxSounds);
@@ -67,15 +67,15 @@ public class SoundManager : MonoBehaviour
         var listener = camTransform.position;
         
         if (Vector.DistanceSq(listener, position) <= playRange) {
-            var type = sounds.name.GetHashCode();
-            if (sounds.sounds.Count == 0) Debug.Log(sounds.name);
+            var type = sounds.id;
+            //if (sounds.sounds.Count == 0) Debug.Log(sounds.name);
             
             // Check current sounds
             foreach (var pair in clipTable) {
                 // If we already have sound nearby
                 if (Vector.DistanceSq(pair.Key, position) < soundRange) {
                     // If that sound is the same type, then skip
-                    if (type == pair.Value.Item2) {
+                    if (type == pair.Value.id) {
                         return;
                     }
                 }
@@ -86,16 +86,16 @@ public class SoundManager : MonoBehaviour
                 // If we already have sound nearby
                 if (Vector.DistanceSq(pair.Value.Item1, position) < soundRange) {
                     // If that sound is the same type, then skip
-                    if (type == pair.Value.Item2) {
+                    if (type == pair.Value.id) {
                         return;
                     }
                 }
             }*/
 
             if (clipTable.ContainsKey(position)) {
-                clipTable[position] = (sounds, type);
+                clipTable[position] = sounds;
             } else {
-                clipTable.Add(position, (sounds, type));
+                clipTable.Add(position, sounds);
             }
         }
     }
@@ -121,14 +121,12 @@ public class SoundManager : MonoBehaviour
             var listener = camTransform.position;
             foreach (var pair in clipTable.OrderBy(p => Vector.DistanceSq(listener, p.Key))) {
                 var pos = pair.Key;
-                var (sounds, type) = pair.Value;
-                
                 var source = availables[index];
                 source.transform.position = pos;
-                source.clip = sounds.sounds.GetRandom();
+                source.clip = pair.Value.sounds.GetRandom();
                 source.pitch = Random.Range(0.995f, 1.005f);
 
-                playTable.Add(source, (pos, type));
+                playTable.Add(source, pos);
 
                 source.Play();
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.Mathematics;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 //this is the script attached and active during the "attacking" state
@@ -65,6 +67,8 @@ public class AttackingBehavior : SquadBehavior
                 var movement = distance > squad.data.rangeDistance * 0.85f;
                 agent.enabled = movement;
                 seek.enabled = movement;
+                
+                squad.Stamina -= Time.deltaTime / 10f;
             } else {
                 if (distance > squad.data.attackDistance * 1.15f) {
                     squad.ChangeState(SquadFSM.Idle);
@@ -76,7 +80,11 @@ public class AttackingBehavior : SquadBehavior
                     agent.enabled = true;
                     seek.enabled = true;
                 }
+                
+                squad.Stamina -= Time.deltaTime / 2f;
             }
+
+            SetAdvantage(math.abs(direction.y) > 0.5f ? direction.y > 0f ? Advantage.Lower : Advantage.Upper : Advantage.None);
         } else {
             squad.ChangeState(SquadFSM.Idle);
             squad.PlaySound(squad.data.commanderSounds.victoryIsOurs);

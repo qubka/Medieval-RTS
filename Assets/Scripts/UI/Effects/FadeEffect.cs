@@ -8,7 +8,7 @@ public class FadeEffect : MonoBehaviour
     private Image image;
     private bool enable;
 
-    private void Start()
+    private void Awake()
     {
         image = GetComponent<Image>();
     }

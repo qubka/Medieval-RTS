@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class WorldCanvasAlign : MonoBehaviour
 {
-    public float scaleFactor;
-    public float minScale;
-    public float maxScale;
+    [SerializeField] private float scaleFactor;
+    [SerializeField] private float minScale;
+    [SerializeField] private float maxScale;
     
     private Transform worldTransform;
     private Transform camTransform;

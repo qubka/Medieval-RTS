@@ -42,5 +42,7 @@ public class IdleBehavior : SquadBehavior
 
             DestroyImmediate(this);
         }
+        
+        squad.Stamina += Time.deltaTime;
     }
 }

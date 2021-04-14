@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
 {
-	public Squad squad;
+	[SerializeField] private Squad squad;
 	
 	private UnitManager manager;
 	private Transform worldTransform;

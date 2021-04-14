@@ -1,28 +1,28 @@
 ﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Scrollbar))]
 public class ScrollController : MonoBehaviour
 {
-    public float step = 0.1f;
-    
-    private Scrollbar _scrollbar;
+    [SerializeField] private float step = 0.1f;
+    private Scrollbar scrollbar;
 
-    private void Start()
+    private void Awake()
     {
-        _scrollbar = GetComponent<Scrollbar>();
+        scrollbar = GetComponent<Scrollbar>();
     }
 
     public void Increase()
     {
-        if (Math.Abs(_scrollbar.value - 1f) < 0.05) return;
-        _scrollbar.value += step;
+        if (math.abs(scrollbar.value - 1f) < 0.05) return;
+        scrollbar.value += step;
     }
     
     public void Decrease()
     {
-        if (Math.Abs(_scrollbar.value) < 0.05) return;
-        _scrollbar.value -= step;
+        if (math.abs(scrollbar.value) < 0.05) return;
+        scrollbar.value -= step;
     }
 }

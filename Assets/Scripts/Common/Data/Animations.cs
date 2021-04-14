@@ -62,7 +62,7 @@ public class Animations : ScriptableObject
     public bool canKnockdown;
     public bool hasShield;
     [Space]
-    public float knockForce;
+    public Vector2 knockForce;
     public Vector3 deathPosition;
     public Vector3 deathRotation;
 

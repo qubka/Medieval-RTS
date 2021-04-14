@@ -13,8 +13,7 @@ public class SeekBehavior : SquadBehavior
     private Quaternion? targetOrientation;
     private GameObject target;
     private Transform targetTransform;
-    
-    private ObjectPool objectPool;
+
     private bool forwardMove;
 
     protected override void Awake()
@@ -24,7 +23,6 @@ public class SeekBehavior : SquadBehavior
         
         targets = new Queue<(GameObject, float?, float?)>();
         seek = gameObject.AddComponent<Seek>();
-        objectPool = Manager.objectPool;
     }
 
     protected override void Start()
@@ -50,6 +48,8 @@ public class SeekBehavior : SquadBehavior
         } else {
             SeekPoint();
         }
+        
+        squad.Stamina -= squad.isRunning ? Time.deltaTime * 5f : Time.deltaTime;
     }
 
     private void SeekPoint()
@@ -81,27 +81,17 @@ public class SeekBehavior : SquadBehavior
         var distance = Vector.Distance(enemy.centroid, squad.centroid);
 
         // Can we attack the target?
-        if (squad.isRange) {
-            if (distance < squad.data.rangeDistance) {
-                squad.ChangeState(SquadFSM.Attack);
-                //squad.PlaySound(squad.data.commanderSounds.charge); /// FIX THAT ???????????????
-                squad.attackScript.enemy = enemy;
-                DestroyImmediate(this);
-            }
-        } else {
-            if (distance < squad.data.attackDistance) {
-                squad.ChangeState(SquadFSM.Attack);
-                //squad.PlaySound(squad.data.commanderSounds.charge);
-                squad.attackScript.enemy = enemy;
-                DestroyImmediate(this);
-            }
+        if (distance < (squad.isRange ? squad.data.rangeDistance : squad.data.attackDistance)) {
+            CancelInvoke(nameof(UpdateHandler));
+            seek.enabled = false;
+            StartCoroutine(ExitWhenDoneMovements(1f));
         }
     }
 
     public void NextTarget()
     {
         // Remove prev target
-        if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
+        if (target && target.CompareTag("Way")) squad.objectPool.ReturnToPool(Manager.Way, target);
         
         // Store current
         var (obj, orientation, length) = targets.Dequeue();
@@ -208,9 +198,11 @@ public class SeekBehavior : SquadBehavior
         if (length.HasValue) {
             squad.UpdateFormation(length.Value, reverse);
             squad.isForward = true; // to make units move to their desired position normally
-            StartCoroutine(WaitUntilDoneMovements(1.0f));
+            seek.enabled = false;
+            StartCoroutine(WaitUntilDoneMovements(1f));
         } else if (squad.isForward != forwardMove) {
-            StartCoroutine(WaitUntilDoneMovements(1.0f));
+            seek.enabled = false;
+            StartCoroutine(WaitUntilDoneMovements(1f));
         }
     }
 
@@ -234,13 +226,29 @@ public class SeekBehavior : SquadBehavior
 
     private IEnumerator WaitUntilDoneMovements(float duration)
     {
-        seek.enabled = false;
         yield return new WaitForSeconds(duration);
         if (squad.IsUnitsIdling()) {
             seek.enabled = true;
             squad.isForward = forwardMove;
         } else {
             StartCoroutine(WaitUntilDoneMovements(0.1f));
+        }
+    }
+    
+    private IEnumerator ExitWhenDoneMovements(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        if (!enemy) {
+            squad.ChangeState(SquadFSM.Idle);
+            squad.PlaySound(squad.data.commanderSounds.dismiss);
+            DestroyImmediate(this);
+        } else if (squad.IsUnitsStopping() || squad.hasEnemies) {
+            squad.ChangeState(SquadFSM.Attack);
+            squad.PlaySound(squad.data.commanderSounds.charge);
+            squad.attackScript.enemy = enemy;
+            DestroyImmediate(this);
+        } else {
+            StartCoroutine(ExitWhenDoneMovements(0.1f));
         }
     }
 }

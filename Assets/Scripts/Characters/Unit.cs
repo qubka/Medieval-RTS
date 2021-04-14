@@ -46,7 +46,7 @@ public class Unit : MonoBehaviour
     [ReadOnly] public Transform attachTransform;
     [ReadOnly] public Transform worldTransform;
     [ReadOnly] public List<Transform> collisions;
-    [ReadOnly] public List<Obstacle> obstacles;
+    [ReadOnly] public HashSet<Obstacle> obstacles;
     [ReadOnly] public Unit target;
     [ReadOnly] public GPUICrowdPrefab crowd;
     [ReadOnly] public GPUICrowdPrefab subCrowd;
@@ -59,11 +59,11 @@ public class Unit : MonoBehaviour
     [ReadOnly] public Unit seekingTarget;
     [ReadOnly] public BoidBehaviour boid;
 
-    private float rotationSpeed => squad.data.unitRotation * Time.deltaTime;
-    private float moveSpeed => math.length(boid.velocity);
-    private bool hasSpeed => math.lengthsq(boid.velocity) > 0f;
-    private bool isCombat => target || squad.hasEnemies || currentTime < lastDamageTime + 10f;
-    private bool isInjure => health <= squad.data.manHealth / 2f;
+    public float rotationSpeed => squad.data.unitRotation * Time.deltaTime;
+    public float moveSpeed => math.length(boid.velocity);
+    public bool hasSpeed => math.lengthsq(boid.velocity) > 0f;
+    public bool isCombat => target || squad.hasEnemies || currentTime < lastDamageTime + 10f;
+    public bool isInjure => health <= squad.data.manHealth / 2f;
 	
     private Animations animations => squad.data.animations;
 
@@ -85,8 +85,7 @@ public class Unit : MonoBehaviour
 
     private const float Max = float.MaxValue;
     private const float Min = float.MinValue;
-    private bool mirror;
-    
+
     private void Awake()
     {
 		nextModeTime = Max;
@@ -96,9 +95,8 @@ public class Unit : MonoBehaviour
 		nextBlock2Time = Max;
 		lastDamageTime = Min;
         collisions = new List<Transform>();
-        obstacles = new List<Obstacle>();
+        obstacles = new HashSet<Obstacle>();
         body = GetComponent<Rigidbody>();
-        mirror = Random.Range(0, 2) == 1 ? true : false;
         ChangeState(UnitFSM.Idle);
     }
 
@@ -397,9 +395,7 @@ public class Unit : MonoBehaviour
 
         var obstacle = other.GetComponent<Obstacle>();
         if (obstacle) {
-            if (!obstacles.Contains(obstacle)) {
-                obstacles.Add(obstacle);
-            }
+	        obstacles.Add(obstacle);
         }
     }
     
@@ -469,10 +465,10 @@ public class Unit : MonoBehaviour
 	    nextAnimTime = currentTime + duration;
 
 	    var hasChild = anim.childList.Count > 0;
-	    if (sound && anim.sound1) squad.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
+	    if (sound && anim.sound1) squad.soundManager.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
 	    if (hasChild) {
 		    subCrowd.StartAnimation(anim.childList.GetRandom(), -1f, 1f, 0.5f);
-		    if (sound && anim.sound2) squad.RequestPlaySound(attachTransform.position, anim.sound2);
+		    if (sound && anim.sound2) squad.soundManager.RequestPlaySound(attachTransform.position, anim.sound2);
 	    }
     }
 
@@ -549,17 +545,25 @@ public class Unit : MonoBehaviour
         if (currentTime > nextDamageTime) {
 	        var current = worldTransform.position;
 	        var desired = target.worldTransform.position;
-            if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
-	            target.OnDamage(this, type, nextDamage);
-                squad.RequestPlaySound(current, currentAnim.sound2);
+	        if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
+		        if (animations.hasMount && type == DamageType.Charge) {
+			        squad.CreateDamage(this, target, type, nextDamage);
+		        } else {
+			        target.OnDamage(this, type, nextDamage);
+		        }
+		        squad.soundManager.RequestPlaySound(current, currentAnim.sound2);
             }
-            nextDamageTime = Max;
+	        nextDamageTime = Max;
         } else if (currentTime > nextDamage2Time) {
 	        var current = worldTransform.position;
 	        var desired = target.worldTransform.position;
-            if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
-	            target.OnDamage(this, type, nextDamage2);
-                squad.RequestPlaySound(current, currentAnim.sound2);
+	        if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
+	            if (animations.hasMount && type == DamageType.Charge) {
+		            squad.CreateDamage(this, target, type, nextDamage);
+	            } else {
+		            target.OnDamage(this, type, nextDamage);
+	            }
+                squad.soundManager.RequestPlaySound(current, currentAnim.sound2);
             }
             nextDamage2Time = Max;
         }
@@ -637,7 +641,7 @@ public class Unit : MonoBehaviour
 	    return 0;
     }
 
-    public void OnDamage(Unit inflictor, DamageType type, int damage)
+    public void OnDamage(Unit inflictor, DamageType type, int damage, bool knock = false)
     {
 	    if (state == UnitFSM.Death)
 		    return;
@@ -653,11 +657,9 @@ public class Unit : MonoBehaviour
 	                case UnitFSM.Hit:
 	                case UnitFSM.Knockdown:
 		            case UnitFSM.WakeUp:
-                        break;
+		                break;
                     default:
-	                    ChangeState(UnitFSM.Hit);
-	                    var anim = animations.GetHitAnimation(isCombat, isRange);
-	                    PlayAnimation(anim, anim.Length);
+	                    HitStart();
 	                    rotate = true;
 	                    break;
                 }
@@ -667,26 +669,19 @@ public class Unit : MonoBehaviour
                 switch (state) {
 	                case UnitFSM.Hit:
 		                if (inflictor.animations.canKnock && animations.canKnockdown) {
-			                ChangeState(UnitFSM.Knockdown);
-			                var anim = animations.GetKnockdownAnimation(isCombat, isRange);
-			                PlayAnimation(anim, anim.Length);
-			                OnPush(inflictor);
+			                KnockdownStart();
 			                rotate = true;
 		                }
 		                break;
                     case UnitFSM.Knockdown:
                     case UnitFSM.WakeUp:
+	                    if (knock) damage = 0;
                         break;
                     default:
 	                    if (inflictor.animations.canKnock && animations.canKnockdown) {
-		                    ChangeState(UnitFSM.Knockdown);
-		                    var anim = animations.GetKnockdownAnimation(isCombat, isRange);
-		                    PlayAnimation(anim, anim.Length);
-		                    OnPush(inflictor);
+		                    KnockdownStart();
 	                    } else {
-		                    ChangeState(UnitFSM.Hit);
-		                    var anim = animations.GetHitAnimation(isCombat, isRange);
-		                    PlayAnimation(anim, anim.Length);
+		                    HitStart();
 	                    }
 	                    rotate = true;
                         break;
@@ -701,19 +696,22 @@ public class Unit : MonoBehaviour
 	    if (damage > 0) {
 		    health -= damage;
 		    if (health <= 0) {
-			    ChangeState(UnitFSM.Death);
-			    var anim = animations.GetDeathAnimation(isCombat, isRange);
-			    PlayAnimation(anim, anim.Length);
-			    Destroy(GetComponent<CapsuleCollider>());
-			    Destroy(GetComponent<Rigidbody>());
+			    DeathStart();
 			    inflictor.squad.killed++;
 			    return;
 		    }
 	    }
 
-	    if (rotate && !animations.hasMount) {
-	        worldTransform.rotation = Quaternion.LookRotation(inflictor.worldTransform.position - worldTransform.position);
-        }
+	    if (!animations.hasMount) {
+		    if (knock) {
+			    var force = inflictor.animations.knockForce;
+			    body.AddForce(inflictor.worldTransform.forward * Random.Range(force.x, force.y));
+		    }
+		    
+		    if (rotate) {
+			    worldTransform.rotation = Quaternion.LookRotation(inflictor.worldTransform.position - worldTransform.position);
+		    }
+	    }
     }
 
     private bool OnBlock(Unit inflictor, AnimationData anim, bool counter)
@@ -754,15 +752,7 @@ public class Unit : MonoBehaviour
 	    DestroyImmediate(this);
 	    squad.RemoveUnit(this);
     }
-    
-    private void OnPush(Unit inflictor)
-    {
-	    var force = inflictor.animations.knockForce;
-	    if (force > 0f) {
-		    body.AddForce(inflictor.worldTransform.forward * force);
-	    }
-    }
-    
+
     #endregion
 
     #region Selector
@@ -1087,7 +1077,7 @@ public class Unit : MonoBehaviour
 		RotateTowards((target.worldTransform.position - worldTransform.position).ToEuler());
 		
 		if (currentTime > nextModeTime) {
-			squad.RequestPlaySound(worldTransform.position, currentAnim.sound2);
+			squad.soundManager.RequestPlaySound(worldTransform.position, currentAnim.sound2);
 			nextModeTime = Max;
 		}
 		
@@ -1110,7 +1100,7 @@ public class Unit : MonoBehaviour
 			PlayAnimation(anim, anim.Length);
 
 			var data = squad.data.rangeWeapon.ranges[range];
-			var arrow = squad.objectPool.SpawnFromPool(squad.data.rangeWeapon.GetProjectile()).GetComponent<Projectile>();
+			var arrow = squad.objectPool.SpawnFromPool(squad.data.rangeWeapon.id).GetComponent<Projectile>();
 			arrow.origin = this;
 			arrow.target = target;
 			arrow.heightFactor = data.height;
@@ -1292,6 +1282,13 @@ public class Unit : MonoBehaviour
 			TransitionToIdle(0f);
 		}
 	}
+	
+	public void KnockdownStart()
+	{
+		ChangeState(UnitFSM.Knockdown);
+		var anim = animations.GetKnockdownAnimation(isCombat, isRange);
+		PlayAnimation(anim, anim.Length);
+	}
 
 	private void Knockdown()
 	{
@@ -1323,12 +1320,28 @@ public class Unit : MonoBehaviour
 		}
 	}
 
+	private void HitStart()
+	{
+		ChangeState(UnitFSM.Hit);
+		var anim = animations.GetHitAnimation(isCombat, isRange);
+		PlayAnimation(anim, anim.Length);
+	}
+
 	private void Hit()
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
 			TransitionToIdle(0f);
 		}
+	}
+
+	private void DeathStart()
+	{
+		ChangeState(UnitFSM.Death);
+		var anim = animations.GetDeathAnimation(isCombat, isRange);
+		PlayAnimation(anim, anim.Length);
+		Destroy(GetComponent<CapsuleCollider>());
+		Destroy(GetComponent<Rigidbody>());
 	}
 
 	private void Death()
@@ -1447,7 +1460,7 @@ public class Unit : MonoBehaviour
 
 		return false;
 	}
-	
+
 	#endregion
 
     private enum Side

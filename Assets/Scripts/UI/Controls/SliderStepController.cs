@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class SliderStepController : MonoBehaviour
 {
-    public Text textComponent;
-    public Slider sliderComponent;
+    [SerializeField] private Text textComponent;
+    [SerializeField] private Slider sliderComponent;
     public string[] values;
 
     private void Start()

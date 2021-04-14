@@ -1,9 +1,12 @@
 ﻿using System;
 using GPUInstancer;
+using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu]
 [Serializable]
+[InitializeOnLoad]
 public class Squadron : ScriptableObject
 {
     [Header("Unit")]
@@ -52,14 +55,19 @@ public class Squadron : ScriptableObject
     public int bonusHitPoints;
     public int mountHealth;
     public int morale;
-    
-    public int TotalStats()
+
+    [HideInInspector] public Stats stats;
+    [HideInInspector] public int totalStats;
+
+    private void OnEnable()
     {
-        var damage = meleeAttack;
-        if (meleeWeapon) damage += meleeWeapon.baseDamage + meleeWeapon.armorPiercingDamage;
-        if (rangeWeapon) damage += rangeWeapon.missileDamage + rangeWeapon.missileArmorPiercingDamage;
-        damage += chargeBonus;
-        var defense = armor + shield + defenceSkill + manHealth + bonusHitPoints + mountHealth;
-        return damage + defense;
+        var attack = meleeAttack;
+        if (meleeWeapon) attack += meleeWeapon.baseDamage + meleeWeapon.armorPiercingDamage;
+        if (rangeWeapon) attack += rangeWeapon.missileDamage + rangeWeapon.missileArmorPiercingDamage;
+        attack += chargeBonus;
+        var defence = defenceSkill + armor + shield;
+        var health = manHealth + mountHealth;
+        stats = new Stats(attack, defence, Mathf.RoundToInt(squadRunSpeed * 10f), morale, health);
+        totalStats = attack + defence + health;
     }
 }

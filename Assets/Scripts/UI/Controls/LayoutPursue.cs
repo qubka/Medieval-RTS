@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class LayoutPursue : MonoBehaviour
 {
-    public Transform layoutTransform;
+    [SerializeField] private Transform layoutTransform;
     private Transform rectTransform;
     private bool move;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform = transform as RectTransform;
     }
 
     private void Update()

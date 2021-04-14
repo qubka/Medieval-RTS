@@ -18,7 +18,7 @@ public abstract class SquadBehavior : MonoBehaviour
         InvokeRepeating(nameof(UpdateHandler), 0f, 0.1f);
     }
     
-    private void UpdateHandler()
+    protected void UpdateHandler()
     {
         if (!worldTransform) {
             CancelInvoke(nameof(UpdateHandler));

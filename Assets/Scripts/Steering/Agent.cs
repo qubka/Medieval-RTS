@@ -54,9 +54,4 @@ public class Agent : MonoBehaviour
         
         steering = new Steering();
     }
-
-    /*public void ResetSpeed()
-    {
-        maxSpeed = trueMaxSpeed;
-    }*/
 }

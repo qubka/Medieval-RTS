@@ -29,17 +29,17 @@ MonoBehaviour:
   squadRunSpeed: 5
   squadAccel: 6
   squadRotation: 10
-  attackDistance: 30
+  attackDistance: 50
   meleeDistance: 3.5
-  chargeDistance: 10
+  chargeDistance: 30
   rangeDistance: 0
   groupSounds: {fileID: 11400000, guid: 451a0e2558332734d97a83198f14abc0, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
   canvasIcon: {fileID: 21300000, guid: 41269493b2287094dbe6d1364f4654c7, type: 3}
   layoutIcon: {fileID: 21300000, guid: ba0f425d7b32f97448186453576af757, type: 3}
-  meleeAttack: 50
+  meleeAttack: 45
   meleeWeapon: {fileID: 11400000, guid: 7e0036085b3634c45b06ee1b41c0e249, type: 2}
-  chargeBonus: 100
+  chargeBonus: 55
   rangeWeapon: {fileID: 0}
   accuracy: 0
   ammunition: 0

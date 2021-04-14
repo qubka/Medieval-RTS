@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class AnimatedWindowController : WindowController
 {
-    public GraphicRaycaster graphicRaycaster;
-    public Animator animator;
+    [SerializeField] private GraphicRaycaster graphicRaycaster;
+    [SerializeField] private Animator animator;
     private GameObject _windowToOpen;
     private static readonly int RunAnimation = Animator.StringToHash("RunAnimation");
 

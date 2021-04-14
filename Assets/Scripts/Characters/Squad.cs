@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.UI;
+using Wintellect.PowerCollections;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
 
@@ -35,7 +36,8 @@ public class Squad : MonoBehaviour
     [ReadOnly] public List<Unit> units;
     [ReadOnly] public List<Squad> neighbours;
     [ReadOnly] public List<Squad> enemies;
-    [ReadOnly] public List<Obstacle> obstacles;
+    [ReadOnly] public HashSet<Obstacle> obstacles;
+    [ReadOnly] public HashSet<int> attributes;
     [ReadOnly] public List<Vector3> positions;
     [ReadOnly] public Vector3 centroid;
     [ReadOnly] public int killed;
@@ -45,6 +47,7 @@ public class Squad : MonoBehaviour
     [ReadOnly] public bool isRange;
     [ReadOnly] public bool isFlee;
     [HideInInspector] public UnitSize unitSize;
+    [HideInInspector] public SoundManager soundManager;
     [HideInInspector] public ObjectPool objectPool;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform camTransform;
@@ -79,8 +82,10 @@ public class Squad : MonoBehaviour
     public ParticleSystem particle;
     public GameObject radiusCircle;
     public Transform centerTransform;
-    
-    [Header("Misc")]
+
+    [Header("Misc")] 
+    public float stamina = 100f;
+    public float minimumLength = 10f;
     public float maximumShake = 0.5f;
     public float shakeRange = 50f;
     public float canvasHeight = 10f;
@@ -95,7 +100,6 @@ public class Squad : MonoBehaviour
     private RectTransform squadCanvas;
     private UnitManager unitManager;
     private UnitTable unitTable;
-    private SoundManager soundManager;
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
@@ -106,6 +110,8 @@ public class Squad : MonoBehaviour
     private AudioSource runAudio;
     private AudioSource chargeAudio;
     private AudioSource selectAudio;
+    private Advantage groundAdvantage;
+    private int currentStamina;
     private bool select;
     private bool clipCache;
 
@@ -115,6 +121,14 @@ public class Squad : MonoBehaviour
     public int unitCount => units.Count;
     //public int enemyCount => enemies.Count;
     //public int neighbourCount => neighbours.Count;
+    
+    public float Stamina {
+        get => stamina;
+        set {
+            stamina = math.clamp(value, 0f, 100f);
+            SetStaminaStatus(stamina <= 70f ? stamina <= 50f ? stamina <= 20f ? Manager.TotallyExhausted : Manager.Exhausted : Manager.VeryTired : 0);
+        }
+    }
 
     private void Awake()
     {
@@ -131,11 +145,12 @@ public class Squad : MonoBehaviour
         layoutTransform = unitLayout.transform;
         cardTransform = unitCard.transform;
         worldTransform = transform;
+        isRange = data.rangeWeapon;
         agentScript = gameObject.AddComponent<Agent>();
         agentScript.maxSpeed = data.squadWalkSpeed;
         agentScript.maxAccel = data.squadAccel;
         circle = radiusCircle.GetComponent<Circle>();    
-        circle.radius = data.rangeWeapon ? data.rangeDistance : data.attackDistance;
+        circle.radius = isRange ? data.rangeDistance : data.attackDistance;
         var sources = source.GetComponents<AudioSource>();
         mainAudio = sources[0];
         fightAudio = sources[1];
@@ -149,6 +164,7 @@ public class Squad : MonoBehaviour
         unitSize = data.unitSize;
         phalanxLength = Math.Max(unitSize.width, squadSize / 2f * unitSize.width);
         
+        
         // Set up the UI components
         var color = team.GetColor();
         barFill.color = color;
@@ -160,17 +176,18 @@ public class Squad : MonoBehaviour
         cardHealth.maxValue = squadSize;
         cardHealth.value = squadSize;
         cardNumber.text = squadSize.ToString();
-        var ammo = squadSize * data.ammunition;
-        cardAmmo.maxValue = ammo;
-        cardAmmo.value = ammo;
-        cardAmmo.gameObject.SetActive(data.rangeWeapon);
+        var ammunition = squadSize * data.ammunition;
+        cardAmmo.maxValue = ammunition;
+        cardAmmo.value = ammunition;
+        cardAmmo.gameObject.SetActive(isRange);
         
         // Set up lists
         units = new List<Unit>(squadSize);
         positions = new List<Vector3>(squadSize);
         neighbours = new List<Squad>();
         enemies = new List<Squad>();
-        obstacles = new List<Obstacle>();
+        obstacles = new HashSet<Obstacle>();
+        attributes = new HashSet<int>();
         
         // Call some repeat func
         InvokeRepeating(nameof(UpdateAll), 0f, 0.1f);
@@ -206,7 +223,6 @@ public class Squad : MonoBehaviour
         // Load tranform data
         float4x4 local = worldTransform.localToWorldMatrix;
         var rot = worldTransform.rotation;
-        var emission = Shader.PropertyToID("_EmissionColor");
         var color = team.GetColor();
         
         // Add component data to squad
@@ -261,7 +277,7 @@ public class Squad : MonoBehaviour
 
             // Attach selector to the transform
             var selector = Instantiate(data.selectorPrefab, trans);
-            selector.GetComponent<MeshRenderer>().material.SetColor(emission, color);
+            selector.GetComponent<MeshRenderer>().material.SetColor(Manager.EmissionColor, color);
             var selectorTransform = selector.transform;
             selectorTransform.localPosition = data.selectorPosition;
             selector.SetActive(false);
@@ -426,6 +442,20 @@ public class Squad : MonoBehaviour
         DetectCollision();
         DetectObstacles();
         PlaySound();
+
+        switch (state) {
+            case SquadFSM.Idle:
+                break;
+            case SquadFSM.Seek:
+                break;
+            case SquadFSM.Attack:
+                
+                break;
+            case SquadFSM.Retreat:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private void PlaySound()
@@ -615,7 +645,7 @@ public class Squad : MonoBehaviour
     {
         var x = phalanxLength * boundCollision.x;
         var y = boundCollision.y;
-        var z = phalanxHeight * boundCollision.z;
+        var z = math.max(phalanxHeight, minimumLength) * boundCollision.z;
         var size = new Vector3(x, y, z);
         collision.size = size;
         var scale = math.max(x, z);
@@ -644,6 +674,10 @@ public class Squad : MonoBehaviour
         } else {
             if (state != SquadFSM.Attack) {
                 UpdateFormation(phalanxLength);
+            }
+            
+            if (data.rangeWeapon && cardAmmo.value <= 0f) {
+                attributes.Add(Manager.WithoutAmmo);
             }
         }
     }
@@ -676,9 +710,23 @@ public class Squad : MonoBehaviour
         camController.InduceShake(stress);
     }
 
+    public void CreateDamage(Unit inflictor, Unit target, DamageType type, int damage, float radius = 2f)
+    {
+        var size = Physics.OverlapSphereNonAlloc(target.worldTransform.position, radius, colliders, Manager.Unit);
+        for (var i = 0; i < size; i++) {
+            var unit = unitTable[colliders[i].gameObject];
+            if (unit.squad != this) {
+                unit.OnDamage(inflictor, type, damage, true);
+            }
+        }
+    }
+    
     public void UpdateAmmo()
     {
         cardAmmo.value--;
+        if (data.rangeWeapon && cardAmmo.value <= 0f) {
+            attributes.Add(Manager.WithoutAmmo);
+        }
     }
 
     #region Sounds
@@ -702,12 +750,7 @@ public class Squad : MonoBehaviour
         yield return new WaitForSeconds(mainAudio.clip.length + 0.1f);
         PlaySound(clips);
     }
-    
-    public void RequestPlaySound(Vector3 position, Sounds sound)
-    {
-        soundManager.RequestPlaySound(position, sound);
-    }
-    
+
     #endregion
 
     #region Helpers
@@ -827,7 +870,7 @@ public class Squad : MonoBehaviour
             return;
 
         isRange = value;
-        circle.radius = value ? data.rangeDistance : data.attackDistance;
+        circle.radius = isRange ? data.rangeDistance : data.attackDistance;
         ForceStop();
     }
 
@@ -846,6 +889,44 @@ public class Squad : MonoBehaviour
         DestroyImmediate(attackScript);
         ChangeState(SquadFSM.Idle);
     }
+    
+    private void SetStaminaStatus(int attribute)
+    {
+        if (attribute != currentStamina) {
+            if (currentStamina != 0) {
+                attributes.Remove(currentStamina);
+            }
+            currentStamina = attribute;
+            if (currentStamina != 0) {
+                attributes.Add(currentStamina);
+            }
+        }
+    }
+
+    private void SetAdvantage(Advantage advantage)
+    {
+        if (groundAdvantage != advantage) {
+            switch (groundAdvantage) {
+                case Advantage.Upper:
+                    attributes.Remove(Manager.UphillPosition);
+                    break;
+                case Advantage.Lower:
+                    attributes.Remove(Manager.LowGround);
+                    break;
+            }
+
+            switch (advantage) {
+                case Advantage.Upper:
+                    attributes.Add(Manager.UphillPosition);
+                    break;
+                case Advantage.Lower:
+                    attributes.Add(Manager.LowGround);
+                    break;
+            }
+
+            groundAdvantage = advantage;
+        }
+    }
 
     #endregion
 
@@ -858,7 +939,21 @@ public class Squad : MonoBehaviour
                 return false;
             }
         }
+        
         return true;
+    }
+
+    public bool IsUnitsStopping()
+    {
+        var count = 0;
+        
+        foreach (var unit in units) {
+            if (unit.state != UnitFSM.Idle && unit.obstacles.Count == 0 && unit.collisions.Count == 0) {
+                count++;
+            }
+        }
+        
+        return count <= units.Count * 0.9f;
     }
     
     public bool IsUnitsMoving()
@@ -907,6 +1002,7 @@ public class Squad : MonoBehaviour
     public bool IsUnitsHolding()
     {
         var count = 0;
+        
         foreach (var unit in units) {
             if (unit.state == UnitFSM.RangeHold) {
                 count++;
@@ -925,4 +1021,11 @@ public enum SquadFSM
     Seek,
     Attack,
     Retreat
+}
+
+public enum Advantage
+{
+    None,
+    Upper,
+    Lower
 }

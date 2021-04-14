@@ -5,18 +5,15 @@ using UnityEngine.UI;
 
 public class ControlBar : MonoBehaviour
 {
-    public ControlButton run;
-    public ControlButton stop;
-    public ControlButton hold;
-    public ControlButton range;
-    public ControlButton flee;
-    public Material material;
-    
+    [SerializeField] private ControlButton run;
+    [SerializeField] private ControlButton stop;
+    [SerializeField] private ControlButton hold;
+    [SerializeField] private ControlButton range;
+    [SerializeField] private ControlButton flee;
+    [SerializeField] private Material material;
     private UnitManager manager;
     private bool enable;
-    
-    private static readonly int GrayscaleAmount = Shader.PropertyToID("_GrayscaleAmount");
-    
+
     [Serializable]
     public class ControlButton
     {
@@ -28,7 +25,7 @@ public class ControlBar : MonoBehaviour
     private void Start()
     {
         manager = Manager.unitManager;
-        material.SetFloat(GrayscaleAmount, 1f);
+        material.SetFloat(Manager.GrayscaleAmount, 1f);
         InvokeRepeating(nameof(UpdateData), 0f, 0.1f);
     }
     
@@ -72,7 +69,7 @@ public class ControlBar : MonoBehaviour
         flee.button.interactable = value;
 
         if (value) {
-            material.SetFloat(GrayscaleAmount, 0f);
+            material.SetFloat(Manager.GrayscaleAmount, 0f);
         } else {
             run.select.SetActive(false);
             hold.select.SetActive(false);   
@@ -80,7 +77,7 @@ public class ControlBar : MonoBehaviour
             flee.select.SetActive(false);
             range.obj.SetActive(true);
 
-            material.SetFloat(GrayscaleAmount, 1f);
+            material.SetFloat(Manager.GrayscaleAmount, 1f);
         }
     }
 

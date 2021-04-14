@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Terrain))]
 public class TreeManager : MonoBehaviour
 {
-    public GameObject treeCollider;
+    [SerializeField] private GameObject treeCollider;
     
     private void Start()
     {

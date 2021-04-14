@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RawImage))]
 public class Minimap : MonoBehaviour, IPointerDownHandler
 {
-    public GameObject icon;
+    [SerializeField] private GameObject icon;
     
     private TerrainBorder border;
     private ObjectPool objectPool;
@@ -23,8 +23,6 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     private Vector2 lastClickPos;
     private bool enable = true;
     private bool rotate = true;
-    
-    private static readonly int GrayscaleAmount = Shader.PropertyToID("_GrayscaleAmount");
 
     private void Start()
     {
@@ -33,11 +31,11 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         cam = Manager.minimapCamera;
         camController = Manager.camController;
         mapTransform = GetComponent<RawImage>().rectTransform;
-        rectTransform = GetComponent<RectTransform>();
-        iconTransform = icon.GetComponent<RectTransform>();
+        rectTransform = transform as RectTransform;
+        iconTransform = icon.transform as RectTransform;
         iconImage = icon.GetComponent<Image>();
         iconMaterial = iconImage.material;
-        iconMaterial.SetFloat(GrayscaleAmount, enable ? 0f : 1f);
+        iconMaterial.SetFloat(Manager.GrayscaleAmount, enable ? 0f : 1f);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -73,13 +71,13 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         var target = enable ? 0f : rectTransform.sizeDelta.y;
 
         gameObject.Tween("MapMove", current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, MapMove);
-        gameObject.Tween("MapScale", iconMaterial.GetFloat(GrayscaleAmount), enable ? 0f : 1f, 1f, TweenScaleFunctions.Linear, MapScale);
+        gameObject.Tween("MapScale", iconMaterial.GetFloat(Manager.GrayscaleAmount), enable ? 0f : 1f, 1f, TweenScaleFunctions.Linear, MapScale);
         
         if (rotate) {
             var start = iconTransform.localEulerAngles.z;
-            var end = start + 360.0f;
+            var end = start + 360f;
 
-            icon.Tween("MapRotate", start, end, 1.0f, TweenScaleFunctions.CubicEaseInOut, MapRotate, TweenDone);
+            icon.Tween("MapRotate", start, end, 1f, TweenScaleFunctions.CubicEaseInOut, MapRotate, TweenDone);
             rotate = false;
         }
     }
@@ -98,7 +96,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 
     private void MapScale(ITween<float> obj)
     {
-        iconMaterial.SetFloat(GrayscaleAmount, obj.CurrentValue);
+        iconMaterial.SetFloat(Manager.GrayscaleAmount, obj.CurrentValue);
     }
     
     private void MapMove(ITween<float> obj)

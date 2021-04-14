@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class LayoutExpander : UIBehaviour
 {
-    public List<Rect> rectangles;
+    [SerializeField] private List<Rect> rectangles;
     private RectTransform rectTransform;
 
     [Serializable]
@@ -20,7 +20,7 @@ public class LayoutExpander : UIBehaviour
     
     protected override void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform = transform as RectTransform;
     }
 
     protected override void OnRectTransformDimensionsChange()

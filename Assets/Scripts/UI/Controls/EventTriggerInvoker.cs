@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class EventTriggerInvoker : MonoBehaviour
 {
-    public UnityEvent eventToTrigger;
+    [SerializeField] private UnityEvent eventToTrigger;
 
     public void Trigger()
     {
