@@ -1,39 +1,46 @@
+using System.Collections;
 using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class CombatSliderRatio : ListBehaviour<Squad>
+public class CombatSliderRatio : MonoBehaviour
 {
     private Slider slider;
+    private SquadTable squadTable;
     
     private void Start()
     {
         slider = GetComponent<Slider>();
-        InvokeRepeating(nameof(ChangeSlider), 0f, 1f);
+        squadTable = Manager.squadTable;
+        StartCoroutine(ChangeSlider());
+
     }
-    
-    private void ChangeSlider()
+    private IEnumerator ChangeSlider()
     {
-        var allies = 0;
-        var enemies = 0;
-        
-        foreach (var squad in list) {
-            if (squad.state == SquadFSM.Retreat)
-                continue;
+        while (true) {
+            var allies = 0;
+            var enemies = 0;
             
-            var stats = squad.unitCount * squad.data.totalStats;
-            if (squad.team == Team.Enemy) {
-                enemies += stats;
-            } else {
-                allies += stats;
+            foreach (var squad in squadTable) {
+                if (squad.state == SquadFSM.Retreat)
+                    continue;
+                
+                var stats = squad.unitCount * squad.data.totalStats;
+                if (squad.team == Team.Enemy) {
+                    enemies += stats;
+                } else {
+                    allies += stats;
+                }
             }
-        }
-        
-        if (enemies == 0) {
-            slider.value = 2f;
-        } else if (allies == 0) {
-            slider.value = 0;
-        } else {
-            slider.value = math.clamp((float) allies / enemies, 0.1f, 1.9f);
+            
+            if (enemies == 0) {
+                slider.value = 2f;
+            } else if (allies == 0) {
+                slider.value = 0;
+            } else {
+                slider.value = math.clamp((float) allies / enemies, 0.1f, 1.9f);
+            }
+            yield return new WaitForSeconds(1f);
         }
     }
 }

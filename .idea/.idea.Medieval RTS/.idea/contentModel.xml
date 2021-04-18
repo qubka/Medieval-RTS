@@ -652,11 +652,6 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Characters" t="Include">
-            <e p="Behaviors" t="Include">
-              <e p="AttackingBehavior.cs" t="Include" />
-              <e p="IdleBehavior.cs" t="Include" />
-              <e p="SeekBehavior.cs" t="Include" />
-            </e>
             <e p="Projectile.cs" t="Include" />
             <e p="Squad.cs" t="Include" />
             <e p="Unit.cs" t="Include" />
@@ -676,8 +671,10 @@
               <e p="Matrix.cs" t="Include" />
               <e p="ObjectPool.cs" t="Include" />
               <e p="Obstacle.cs" t="Include" />
+              <e p="ObstacleTable.cs" t="Include" />
               <e p="ParticleCallback.cs" t="Include" />
               <e p="RandomExtention.cs" t="Include" />
+              <e p="SquadTable.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
               <e p="Vector.cs" t="Include" />
             </e>
@@ -687,7 +684,6 @@
                 <e p="AgentBehaviour.cs" t="Include" />
                 <e p="ListBehaviour.cs" t="Include" />
                 <e p="SingletonBehaviour.cs" t="Include" />
-                <e p="SquadBehavior.cs" t="Include" />
                 <e p="TableBehaviour.cs" t="Include" />
               </e>
               <e p="Commander.cs" t="Include" />
@@ -705,6 +701,7 @@
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
+            <e p="Flee.cs" t="Include" />
             <e p="Seek.cs" t="Include" />
             <e p="Steering.cs" t="Include" />
             <e p="Systems" t="Include">

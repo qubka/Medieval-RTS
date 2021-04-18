@@ -11,7 +11,6 @@ public class Manager : MonoBehaviour
 	public RectTransform unitCard;
 	public Camera main;
 	public Camera minimap;
-	public CombatSliderRatio combatSliderRatio;
 
 	[Header("Layers")]
 	public LayerMask ground = -1;
@@ -54,34 +53,34 @@ public class Manager : MonoBehaviour
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
-	public static int ChargedInFlank;
-	public static int ChargedInRear;
-	public static int Disordered;
-	public static int Exhausted;
-	public static int FlanksProtected;
-	public static int FlanksThreatened;
-	public static int FoodVariety;
-	public static int GeneralAround;
-	public static int GeneralWound;
-	public static int LosingAttack;
-	public static int LosingBattle;
-	public static int LowGround;
-	public static int Marauding;
-	public static int NoEnemies;
-	public static int NoRetreatOption;
-	public static int OutnumberEnemy;
-	public static int Outnumbered;
-	public static int Rain;
-	public static int RoutingEnemies;
-	public static int RoutingFriends;
-	public static int Starvation;
-	public static int TotallyExhausted;
-	public static int UnderFire;
-	public static int Unity;
-	public static int UphillPosition;
-	public static int VeryTired;
-	public static int WinningBattle;
-	public static int WithoutAmmo;
+	public static MoraleAttribute ChargedInFlank;
+	public static MoraleAttribute ChargedInRear;
+	public static MoraleAttribute Disordered;
+	public static MoraleAttribute Exhausted;
+	public static MoraleAttribute FlanksProtected;
+	public static MoraleAttribute FlanksThreatened;
+	public static MoraleAttribute FoodVariety;
+	public static MoraleAttribute GeneralAround;
+	public static MoraleAttribute GeneralWound;
+	public static MoraleAttribute LosingAttack;
+	public static MoraleAttribute LosingBattle;
+	public static MoraleAttribute LowGround;
+	public static MoraleAttribute Marauding;
+	public static MoraleAttribute NoEnemies;
+	public static MoraleAttribute NoRetreatOption;
+	public static MoraleAttribute OutnumberEnemy;
+	public static MoraleAttribute Outnumbered;
+	public static MoraleAttribute Rain;
+	public static MoraleAttribute RoutingEnemies;
+	public static MoraleAttribute RoutingFriends;
+	public static MoraleAttribute Starvation;
+	public static MoraleAttribute TotallyExhausted;
+	public static MoraleAttribute UnderFire;
+	public static MoraleAttribute Unity;
+	public static MoraleAttribute UphillPosition;
+	public static MoraleAttribute VeryTired;
+	public static MoraleAttribute WinningBattle;
+	public static MoraleAttribute WithoutAmmo;
 	
 	public static int Ground;
 	public static int Unit;
@@ -90,7 +89,7 @@ public class Manager : MonoBehaviour
 	public static int Squad;
 	//public static int Manager;
 	public static int Water;
-	
+
 	public static Terrain terrain;
 	public static TerrainBorder border;
 	public static Camera mainCamera;
@@ -101,11 +100,12 @@ public class Manager : MonoBehaviour
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
 	public static ObjectPool objectPool;
+	public static SquadTable squadTable;
+	public static ObstacleTable obstacleTable;
 	public static UnitTable unitTable;
 	public static UnitManager unitManager;
 	public static SoundManager soundManager;
 	public static GPUICrowdManager modelManager;
-	public static CombatSliderRatio combatSlider;
 	public static AudioSource[] cameraSources;
 	
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
@@ -114,8 +114,10 @@ public class Manager : MonoBehaviour
 	
 	public static readonly int GrayscaleAmount = Shader.PropertyToID("_GrayscaleAmount");
 	public static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
+	
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	private void Awake()
+	protected void Awake()
 	{
 		terrain = Terrain.activeTerrain;
 		border = terrain.GetComponent<TerrainBorder>();
@@ -128,11 +130,12 @@ public class Manager : MonoBehaviour
 		layoutCanvas = unitLayout;
 		cardCanvas = unitCard;
 		cameraSources = main.GetComponents<AudioSource>();
+		squadTable = GetComponent<SquadTable>();
+		obstacleTable = GetComponent<ObstacleTable>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();
 		soundManager = GetComponent<SoundManager>();
 		objectPool = GetComponent<ObjectPool>();
-		combatSlider = combatSliderRatio;
 
 		Ground = ground.value;
 		Unit = unit.value;
@@ -140,33 +143,33 @@ public class Manager : MonoBehaviour
 		Squad = squad.value;		
 		Water = water.value;
 		
-		ChargedInFlank = chargedInFlank.id;
-		ChargedInRear = chargedInRear.id;
-		Disordered = disordered.id;
-		Exhausted = exhausted.id;
-		FlanksProtected = flanksProtected.id;
-		FlanksThreatened = flanksThreatened.id;
-		FoodVariety = foodVariety.id;
-		GeneralAround = generalAround.id;
-		GeneralWound = generalWound.id;
-		LosingAttack = losingAttack.id;
-		LosingBattle = losingBattle.id;
-		LowGround = lowGround.id;
-		Marauding = marauding.id;
-		NoEnemies = noEnemies.id;
-		NoRetreatOption = noRetreatOption.id;
-		OutnumberEnemy = outnumberEnemy.id;
-		Outnumbered = outnumbered.id;
-		Rain = rain.id;
-		RoutingEnemies = routingEnemies.id;
-		RoutingFriends = routingFriends.id;
-		Starvation = starvation.id;
-		TotallyExhausted = totallyExhausted.id;
-		UnderFire = underFire.id;
-		Unity = unity.id;
-		UphillPosition = uphillPosition.id;
-		VeryTired = veryTired.id;
-		WinningBattle = winningBattle.id;
-		WithoutAmmo = withoutAmmo.id;
+		ChargedInFlank = chargedInFlank;
+		ChargedInRear = chargedInRear;
+		Disordered = disordered;
+		Exhausted = exhausted;
+		FlanksProtected = flanksProtected;
+		FlanksThreatened = flanksThreatened;
+		FoodVariety = foodVariety;
+		GeneralAround = generalAround;
+		GeneralWound = generalWound;
+		LosingAttack = losingAttack;
+		LosingBattle = losingBattle;
+		LowGround = lowGround;
+		Marauding = marauding;
+		NoEnemies = noEnemies;
+		NoRetreatOption = noRetreatOption;
+		OutnumberEnemy = outnumberEnemy;
+		Outnumbered = outnumbered;
+		Rain = rain;
+		RoutingEnemies = routingEnemies;
+		RoutingFriends = routingFriends;
+		Starvation = starvation;
+		TotallyExhausted = totallyExhausted;
+		UnderFire = underFire;
+		Unity = unity;
+		UphillPosition = uphillPosition;
+		VeryTired = veryTired;
+		WinningBattle = winningBattle;
+		WithoutAmmo = withoutAmmo;
 	}
 }

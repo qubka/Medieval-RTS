@@ -34,9 +34,9 @@ public abstract class AgentBehaviour : MonoBehaviour
         return rotation;
     }*/
 
-    public void SetTarget(GameObject obj)
+    public void SetTarget(Transform trans)
     {
-        targetTransform = obj.transform;
+        targetTransform = trans;
     }
     
     protected abstract Steering GetSteering();

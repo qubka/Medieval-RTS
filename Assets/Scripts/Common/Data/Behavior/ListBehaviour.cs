@@ -5,12 +5,10 @@ using UnityEngine;
 
 public abstract class ListBehaviour<T> : MonoBehaviour, IEnumerable where T : MonoBehaviour
 {
-    [ReadOnly] public List<T> list;
+    [ReadOnly] public List<T> list = new List<T>();
+    public T this[GameObject o] => list[o.GetInstanceID()];
     
-    protected virtual void Awake()
-    {
-        list = new List<T>();
-    }
+    public int Count => list.Count;
     
     public void Add(T obj)
     {

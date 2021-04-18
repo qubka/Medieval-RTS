@@ -25,7 +25,7 @@ public class AttributeLayout : MonoBehaviour
             arrow.rotation = OFF;
         }
         title.text = attribute.name; // TODO: Translation
-        bonus.text = attribute.bonus.ToString("0:+#;-#;0");
+        bonus.text = attribute.bonus.ToString("+#;-#;0");
         title.color = color;
         bonus.color = color;
         icon.color = color;

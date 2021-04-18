@@ -9,7 +9,7 @@ public class NationPickController : MonoBehaviour
 
     private int _pickedCharacter;
 
-    private void Awake()
+    private void Start()
     {
         if (nations.Length < 1)
         {

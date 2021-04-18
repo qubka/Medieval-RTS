@@ -10,7 +10,7 @@ public class UnitManager : MonoBehaviour
 	[Header("Main")]
 	public GUIStyle rectangleStyle;
 	public SquadDescription squadDesc;
-	public GameObject squadInfo;
+	public SquadInfo squadInfo;
 	
 	[Header("Prefabs")]
 	public GameObject movementLine;
@@ -66,6 +66,7 @@ public class UnitManager : MonoBehaviour
 	private Camera cam;
 	private CamController camController;
 	private UnitTable unitTable;
+	private SquadTable squadTable;
 	private ObjectPool objectPool;
 	private Line drawedLine;
 	private AudioSource clickAudio;
@@ -82,6 +83,7 @@ public class UnitManager : MonoBehaviour
 	private int cursor;
 	private float maxDistance;
 	private float nextHoverTime;
+	private Ray groundRay;
 	private RaycastHit groundHit;
 	private bool groundCast;
 	private bool pointerUI;
@@ -107,6 +109,7 @@ public class UnitManager : MonoBehaviour
 		var size = Manager.terrain.terrainData.size;
 		maxDistance = math.max(size.x, size.z) * 2f;
 		unitTable = Manager.unitTable;
+		squadTable = Manager.squadTable;
 		objectPool = Manager.objectPool;
 		border = Manager.border;
 		cam = Manager.mainCamera;
@@ -117,8 +120,8 @@ public class UnitManager : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		var ray = cam.ScreenPointToRay(Input.mousePosition);
-		groundCast = Physics.Raycast(ray, out groundHit, maxDistance, Manager.Ground);
+		groundRay = cam.ScreenPointToRay(Input.mousePosition);
+		groundCast = Physics.Raycast(groundRay, out groundHit, maxDistance, Manager.Ground);
 		pointerUI = eventSystem.IsPointerOverGameObject();
 		
 		OnDragging();
@@ -184,13 +187,11 @@ public class UnitManager : MonoBehaviour
 				
 				// Try to use sphere to find nearby units
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
-					var unit = unitTable[colliders[0].gameObject];
-					if (unit) {
-						if (Input.GetKey(inclusiveKey)) { //inclusive select
-							AddSelected(unit.squad, true);
-						} else { //exclusive selected
-							DeselectAllExcept(unit.squad);
-						}
+					var squad = unitTable[colliders[0].gameObject].squad;
+					if (Input.GetKey(inclusiveKey)) { //inclusive select
+						AddSelected(squad, true);
+					} else { //exclusive selected
+						DeselectAllExcept(squad);
 					}
 				} else { //if we didnt hit something
 					if (Input.GetKey(inclusiveKey)) {
@@ -561,10 +562,7 @@ public class UnitManager : MonoBehaviour
 
 	private void OnTriggerEnter(Collider collider)
 	{
-		var unit = unitTable[collider.gameObject];
-		if (unit) {
-			AddSelected(unit.squad);
-		}
+		AddSelected(unitTable[collider.gameObject].squad);
 	}
 
 	private void OnGUI()
@@ -593,13 +591,15 @@ public class UnitManager : MonoBehaviour
 	{
 		if (squad.team == Team.Self) {
 			if (!selectedUnits.Contains(squad)) {
-				selectedUnits.Add(squad);
-				squad.ChangeSelectState(true);
+				if (!squad.isEscape) {
+					selectedUnits.Add(squad);
+					squad.ChangeSelectState(true);
+				}
 			} else if (toggle) {
 				selectedUnits.Remove(squad);
 				squad.ChangeSelectState(false);
 			}
-			squadDesc.UpdateData();
+			squadDesc.OnUpdate();
 		}
 	}
 
@@ -965,6 +965,7 @@ public class UnitManager : MonoBehaviour
 		private List<GameObject> targets;
 		private Dictionary<GameObject, Squad> cache;
 		private ObjectPool objectPool;
+		private SquadTable squadTable;
 		private float nextUpdateTime;
 
 		private static readonly Quaternion Left = Quaternion.Euler(0, -150, 0);
@@ -978,6 +979,7 @@ public class UnitManager : MonoBehaviour
 			targets = new List<GameObject>();
 			cache = new Dictionary<GameObject, Squad>();
 			objectPool = Manager.objectPool;
+			squadTable = Manager.squadTable;
 		}
 
 		public void SetActive(bool value)
@@ -1005,7 +1007,7 @@ public class UnitManager : MonoBehaviour
 		private void AddTarget(GameObject target)
 		{
 			targets.Add(target);
-			var enemy = target.GetComponent<Squad>();
+			var enemy = squadTable[target];
 			if (enemy) {
 				cache.Add(target, enemy);
 			}
@@ -1165,16 +1167,19 @@ public class UnitManager : MonoBehaviour
 	private bool HoverOnTarget()
 	{
 		//stop if some interaction is on
-		if (onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit)
+		if (onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit || pointerUI)
 			return false;
 
-		if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
-			var unit = unitTable[colliders[0].gameObject];
-			if (unit) {
-				hover = unit.squad;
-				squadInfo.SetActive(true);
-				return true;
-			}
+		if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) {
+			hover = unitTable[colliders[0].gameObject].squad;
+			squadInfo.OnUpdate();
+			return true;
+		} 
+		
+		if (Physics.Raycast(groundRay, out var hit, maxDistance, Manager.Squad)) {
+			hover = squadTable[hit.transform.gameObject];
+			squadInfo.OnUpdate();
+			return true;
 		}
 
 		return false;

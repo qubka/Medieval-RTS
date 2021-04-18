@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public abstract class TableBehaviour<T> : MonoBehaviour, IEnumerable where T : MonoBehaviour
 {
-    [ReadOnly] public Dictionary<int, T> table;
-    public T this[GameObject o] => table[o.GetInstanceID()];
-    
-    protected virtual void Awake()
-    {
-        table = new Dictionary<int, T>();
+    [ReadOnly] public Dictionary<int, T> table = new Dictionary<int, T>();
+    public T this[GameObject o] {
+        get {
+            table.TryGetValue(o.GetInstanceID(), out var output);
+            return output;
+        }
     }
+
+    public int Count => table.Count;
+    public Dictionary<int, T>.ValueCollection Values => table.Values;
     
     public void Add(GameObject o, T obj)
     {

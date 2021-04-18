@@ -15,4 +15,9 @@ public class MoraleAttribute : ScriptableObject
     {
         id = name.GetHashCode(); 
     }
+
+    public override int GetHashCode()
+    {
+        return id;
+    }
 }

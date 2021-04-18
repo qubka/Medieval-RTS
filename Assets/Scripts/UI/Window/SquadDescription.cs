@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using DigitalRuby.Tween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,24 +17,28 @@ public class SquadDescription : MonoBehaviour
     private RectTransform rectTransform;
     private RectTransform layoutTransform;
     private UnitManager manager;
+    private float initial;
     private bool enable;
     private bool shift;
-    private float initial;
-    
-    private void Awake()
-    {
-        rectTransform = transform as RectTransform;
-        initial = rectTransform.localPosition.y;
-    }
 
     private void Start()
     {
+        rectTransform = transform as RectTransform;
+        initial = rectTransform.localPosition.y;
         manager = Manager.unitManager;
         layoutTransform = Manager.layoutCanvas;
-        InvokeRepeating(nameof(UpdateData), 0f, 1f);
+        StartCoroutine(Tick());
     }
 
-    public void UpdateData()
+    private IEnumerator Tick()
+    {
+        while (true) {
+            OnUpdate();
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    public void OnUpdate()
     {
         if (manager.selectedCount == 1) {
             Toggle(true);

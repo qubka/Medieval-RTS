@@ -46,7 +46,7 @@ public class Unit : MonoBehaviour
     [ReadOnly] public Transform attachTransform;
     [ReadOnly] public Transform worldTransform;
     [ReadOnly] public List<Transform> collisions;
-    [ReadOnly] public HashSet<Obstacle> obstacles;
+    [ReadOnly] public List<Obstacle> obstacles;
     [ReadOnly] public Unit target;
     [ReadOnly] public GPUICrowdPrefab crowd;
     [ReadOnly] public GPUICrowdPrefab subCrowd;
@@ -62,7 +62,7 @@ public class Unit : MonoBehaviour
     public float rotationSpeed => squad.data.unitRotation * Time.deltaTime;
     public float moveSpeed => math.length(boid.velocity);
     public bool hasSpeed => math.lengthsq(boid.velocity) > 0f;
-    public bool isCombat => target || squad.hasEnemies || currentTime < lastDamageTime + 10f;
+    public bool isCombat => target || squad.touchEnemies || currentTime < lastDamageTime + 10f;
     public bool isInjure => health <= squad.data.manHealth / 2f;
 	
     private Animations animations => squad.data.animations;
@@ -95,7 +95,7 @@ public class Unit : MonoBehaviour
 		nextBlock2Time = Max;
 		lastDamageTime = Min;
         collisions = new List<Transform>();
-        obstacles = new HashSet<Obstacle>();
+        obstacles = new List<Obstacle>();
         body = GetComponent<Rigidbody>();
         ChangeState(UnitFSM.Idle);
     }
@@ -105,6 +105,7 @@ public class Unit : MonoBehaviour
         currentTime = Time.time;
         switch (squad.state) {
             case SquadFSM.Seek:
+	        case SquadFSM.Retreat:    
 	            SetArrivalWeight(1f);
 	            SetSeeking(null);
 	            target = null;
@@ -395,7 +396,9 @@ public class Unit : MonoBehaviour
 
         var obstacle = other.GetComponent<Obstacle>();
         if (obstacle) {
-	        obstacles.Add(obstacle);
+	        if (!obstacles.Contains(obstacle)) {
+		        obstacles.Add(obstacle);
+	        }
         }
     }
     
@@ -426,9 +429,14 @@ public class Unit : MonoBehaviour
         for (var i = collisions.Count - 1; i > -1; i--) {
 	        var trans = collisions[i];
 	        if (trans) {
-		        var direction = (trans.position - position).Normalized();
-		        if (Vector.Dot(forward, direction) > MathExtention.A40) {
-			        return true;
+		        var direction = (trans.position - position);
+		        var distance = direction.Magnitude();
+		        if (distance <= squad.data.meleeDistance) {
+			        if (Vector.Dot(forward, direction.Normalized()) > MathExtention.A40) {
+				        return true;
+			        }
+		        } else {
+			        collisions.RemoveAt(i);
 		        }
 	        } else {
 		        collisions.RemoveAt(i);
@@ -438,7 +446,7 @@ public class Unit : MonoBehaviour
         return false;
     }
     
-    private bool IsFacing(Unit enemy, Side side, float angle) 
+    public bool IsFacing(Unit enemy, Side side, float angle) 
     {
         // Check if the gaze is looking at the front side of the object
         var direction = (enemy.worldTransform.position - worldTransform.position).Normalized();
@@ -600,6 +608,7 @@ public class Unit : MonoBehaviour
 
 	    // attack success
 	    if (attack > defense) {
+		    squad.OnMeleeDamage();
 		    return attack;
 	    }
 
@@ -635,6 +644,7 @@ public class Unit : MonoBehaviour
 
 	    // attack success
 	    if (attack > defense) {
+		    squad.OnRangeDamage();
 		    return attack;
 	    }
 
@@ -848,7 +858,7 @@ public class Unit : MonoBehaviour
 				TransitionToIdle(0f);
 				nextAnimTime = 0f;
 			} else {
-				if (squad.data.rangeDistance >= distance) {
+				if (!squad.isMoving) {
 					if (!TurnStart(direction, UnitFSM.RangeTurn)) {
 						ChangeState(UnitFSM.RangeReload);
 						var anim = animations.reload.GetRandom();
@@ -927,7 +937,7 @@ public class Unit : MonoBehaviour
 	{
 		var speed = moveSpeed;
 		if (speed > 0f) {
-			if (squad.hasEnemies && HasCollision()) {
+			if (squad.touchEnemies && HasCollision()) {
 				ChangeState(UnitFSM.Wait);
 				TransitionToIdle(0.5f);
 				return;
@@ -1057,8 +1067,7 @@ public class Unit : MonoBehaviour
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
 		} else {
-			var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
-			ChangeState(distance <= squad.data.rangeDistance ? UnitFSM.RangeTurn : UnitFSM.Attack);
+			ChangeState(!squad.isMoving ? UnitFSM.RangeTurn : UnitFSM.Attack);
 			TransitionToIdle(0.5f);
 		}
 	}
@@ -1066,7 +1075,7 @@ public class Unit : MonoBehaviour
 	private void RangeTurn()
 	{
 		if (!RotateTowards((target.worldTransform.position - worldTransform.position).ToEuler())) {
-			ChangeState(UnitFSM.RangeReload); ;
+			ChangeState(UnitFSM.RangeReload);
 			var anim = animations.reload.GetRandom();
 			PlayAnimation(anim, anim.Length);
 		}
@@ -1094,7 +1103,7 @@ public class Unit : MonoBehaviour
 	{
 		RotateTowards((target.worldTransform.position - worldTransform.position).ToEuler());
 		
-		if (squad.canShoot || !squad.isRange) {
+		if (squad.canShoot || squad.isMoving) {
 			ChangeState(UnitFSM.RangeRelease);
 			var anim = animations.rangeRelease[range];
 			PlayAnimation(anim, anim.Length);
@@ -1109,7 +1118,7 @@ public class Unit : MonoBehaviour
 			arrow.enabled = true;
 
 			ammunition--;
-			squad.UpdateAmmo();
+			squad.ReduceAmmo();
 		}
 	}
 	
@@ -1134,7 +1143,7 @@ public class Unit : MonoBehaviour
 		
 		if (currentTime > nextAnimTime) {
 			range = animations.GetRangeAnimation(squad.data.rangeWeapon, direction.Magnitude());
-			if (range == 0 && squad.attackScript.hasObstacles) {
+			if (range == 0 && squad.seeEnemy) {
 				range++;
 			}
 			if (animations.rangeStart.Count == 0) {
@@ -1463,15 +1472,7 @@ public class Unit : MonoBehaviour
 
 	#endregion
 
-    private enum Side
-    {
-        Forward,
-        Right,
-        Left,
-        Backward
-    }
-    
-    public Unit Clone(GameObject prefab)
+	public Unit Clone(GameObject prefab)
     {
 	    // Create an unit entity
 	    var unitObject = Instantiate(prefab);
@@ -1600,4 +1601,12 @@ public enum DamageType
 	Charge,
 	Counter,
 	Range
+}
+
+public enum Side
+{
+	Forward,
+	Right,
+	Left,
+	Backward
 }

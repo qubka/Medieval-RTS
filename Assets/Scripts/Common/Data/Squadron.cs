@@ -55,7 +55,8 @@ public class Squadron : ScriptableObject
     public int bonusHitPoints;
     public int mountHealth;
     public int morale;
-
+    public bool chargeProtection;
+    
     [HideInInspector] public Stats stats;
     [HideInInspector] public int totalStats;
 

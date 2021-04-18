@@ -6,7 +6,7 @@ public class WindowController : MonoBehaviour
 
     private GameObject _activeWindow;
 
-    private void Awake()
+    private void Start()
     {
         _activeWindow = initialActiveWindow;
     }

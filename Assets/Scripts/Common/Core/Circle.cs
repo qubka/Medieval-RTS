@@ -17,7 +17,11 @@ public class Circle : MonoBehaviour
         terrain = Manager.terrain;
         line = GetComponent<LineRenderer>();
         worldTransform = transform;
-        
+        Render();
+    }
+
+    public void Render()
+    {
         var count = segments + 1;
         line.positionCount = count;
         points = new Vector3[count];

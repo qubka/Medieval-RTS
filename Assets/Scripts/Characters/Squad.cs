@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using Unity.Collections;
@@ -25,27 +26,29 @@ public class Squad : MonoBehaviour
 
     [Space(10)]
     [ReadOnly] public SquadFSM state;
-    [ReadOnly] public Agent agentScript;
-    [ReadOnly] public IdleBehavior idleScript;
-    [ReadOnly] public SeekBehavior seekScript;
-    [ReadOnly] public AttackingBehavior attackScript;
-
-    [Space(10)]
+    [ReadOnly] public Agent agent;
     [ReadOnly] public float phalanxLength;
     [ReadOnly] public float phalanxHeight;
+    [ReadOnly] public float stamina;
+    [ReadOnly] public float morale;
+    [ReadOnly] public Squad enemy;
     [ReadOnly] public List<Unit> units;
     [ReadOnly] public List<Squad> neighbours;
     [ReadOnly] public List<Squad> enemies;
     [ReadOnly] public HashSet<Obstacle> obstacles;
-    [ReadOnly] public HashSet<int> attributes;
+    [ReadOnly] public HashSet<MoraleAttribute> attributes;
     [ReadOnly] public List<Vector3> positions;
     [ReadOnly] public Vector3 centroid;
     [ReadOnly] public int killed;
+    [ReadOnly] public bool select;
     [ReadOnly] public bool isRunning;
     [ReadOnly] public bool isHolding;
     [ReadOnly] public bool isForward;
     [ReadOnly] public bool isRange;
     [ReadOnly] public bool isFlee;
+    [ReadOnly] public bool canShoot;
+    [ReadOnly] public bool seeEnemy;
+    [ReadOnly] public bool touchEnemies;
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public SoundManager soundManager;
     [HideInInspector] public ObjectPool objectPool;
@@ -54,9 +57,11 @@ public class Squad : MonoBehaviour
     [HideInInspector] public Transform barTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
-    [HideInInspector] public bool canShoot;
-    [HideInInspector] public Circle circle;
-    
+    [HideInInspector] public Transform targetTransform;
+    [HideInInspector] public Transform anchorTransform;
+
+    #region Other
+
     [Header("Children References")] 
     public GameObject source;
     [Space(5f)]
@@ -74,7 +79,8 @@ public class Squad : MonoBehaviour
     public Slider cardHealth;
     public Slider cardAmmo;
     public Image cardIcon;
-    public Image cardIndicator;
+    public GameObject cardIndicator;
+    public Image cardFlash;
     public Image cardSelect;
     public Text cardNumber;
     public GameObject unitLayout;
@@ -84,8 +90,8 @@ public class Squad : MonoBehaviour
     public Transform centerTransform;
 
     [Header("Misc")] 
-    public float stamina = 100f;
-    public float minimumLength = 10f;
+    public float initialStamina = 100f;
+    public float initialMorale = 50f;
     public float maximumShake = 0.5f;
     public float shakeRange = 50f;
     public float canvasHeight = 10f;
@@ -93,42 +99,85 @@ public class Squad : MonoBehaviour
     public Vector3 boundCollision = new Vector3(1.25f, 5f, 1.1f);
     public KeyCode radiusKey = KeyCode.LeftAlt;
     
-    // Private data
+    #endregion
+
+    #region Local
+
     private Camera cam;
     private CamController camController;
     private GPUICrowdManager modelManager;
     private RectTransform squadCanvas;
+    private SquadTable squadTable;
+    private ObstacleTable obstacleTable;
     private UnitManager unitManager;
     private UnitTable unitTable;
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
-    private BoxCollider collision;
-    private Collider[] colliders;
+    private Vector3 targetDirection;
+    private Advantage groundAdvantage;
+    private Quaternion? targetOrientation;
+    private GameObject target;
+    private Queue<(GameObject, float?, float?)> targets;
     private AudioSource mainAudio;
     private AudioSource fightAudio;
     private AudioSource runAudio;
     private AudioSource chargeAudio;
     private AudioSource selectAudio;
-    private Advantage groundAdvantage;
-    private int currentStamina;
-    private bool select;
-    private bool clipCache;
-
-    public bool isSelect => select;
+    private BoxCollider collision;
+    private Collider[] colliders;
+    private Circle circle;
+    private Seek seek;
+    private Flee flee;
+    private MoraleAttribute currentStamina;
+    private bool isRunSound;
+    private bool isFarSound;
+    private bool forwardMove;
+    
+    #region Setters
+    
     public bool hasUnits => units.Count > 0;
     public bool hasEnemies => enemies.Count > 0;
+    public bool hasNeighbours => neighbours.Count > 0;
     public int unitCount => units.Count;
-    //public int enemyCount => enemies.Count;
-    //public int neighbourCount => neighbours.Count;
+    public int enemyCount => enemies.Count;
+    public int neighbourCount => neighbours.Count;
+    public float aggroDistance => isRange ? data.rangeDistance : data.attackDistance;
+    public bool isMoving => seek.enabled;
+    public bool isEscape => morale <= 0.1f;
+    public float moveSpeed => isRunning ? data.squadRunSpeed : data.squadWalkSpeed;
     
     public float Stamina {
         get => stamina;
         set {
             stamina = math.clamp(value, 0f, 100f);
-            SetStaminaStatus(stamina <= 70f ? stamina <= 50f ? stamina <= 20f ? Manager.TotallyExhausted : Manager.Exhausted : Manager.VeryTired : 0);
+            SetStamina(stamina <= 70f ? stamina <= 50f ? stamina <= 20f ? Manager.TotallyExhausted : Manager.Exhausted : Manager.VeryTired : null);
         }
     }
+
+    public float Morale {
+        get => morale;
+        set => morale = math.clamp(value, 0f, 100f);
+    }
+
+    #endregion
+
+    #region Coroutines
+
+    private Coroutine cardSelectRoutine;
+    private Coroutine barSelectRoutine;
+    private Coroutine barInnerRoutine;
+    private Coroutine soundRoutine;
+    private Coroutine exitRoutine;
+    private Coroutine waitRoutine;
+    private Coroutine rangeRoutine;
+    private Coroutine meleeRoutine;
+    
+    #endregion
+    
+    #endregion
+
+    #region Constructor
 
     private void Awake()
     {
@@ -136,35 +185,37 @@ public class Squad : MonoBehaviour
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         colliders = new Collider[32];
         collision = GetComponent<BoxCollider>();
-        particleShape = particle.shape;
-        //particleTransform = particle.transform;
-        //circleTransform = circle.transform;
-       // minimapTransform = minimap.transform;
-        //audioTransform = source.transform; // store main one for transform
+        targets = new Queue<(GameObject, float?, float?)>();
+        anchorTransform = new GameObject("Target Anchor").transform;
         barTransform = squadBar.transform;
         layoutTransform = unitLayout.transform;
         cardTransform = unitCard.transform;
         worldTransform = transform;
+        particleShape = particle.shape;
         isRange = data.rangeWeapon;
-        agentScript = gameObject.AddComponent<Agent>();
-        agentScript.maxSpeed = data.squadWalkSpeed;
-        agentScript.maxAccel = data.squadAccel;
+        agent = gameObject.AddComponent<Agent>();
+        agent.maxSpeed = data.squadWalkSpeed;
+        agent.maxAccel = data.squadAccel;
+        seek = gameObject.AddComponent<Seek>();
+        flee = gameObject.AddComponent<Flee>();
+        flee.SetTarget(anchorTransform);
         circle = radiusCircle.GetComponent<Circle>();    
-        circle.radius = isRange ? data.rangeDistance : data.attackDistance;
+        circle.radius = aggroDistance;
         var sources = source.GetComponents<AudioSource>();
         mainAudio = sources[0];
         fightAudio = sources[1];
         runAudio = sources[2];
         chargeAudio = sources[3];
         shakeRange *= shakeRange;
-        
+
         // TODO: rework to be compatible with save system
         // Set the team properties
         //squadSize = data.squadSize;
+        Stamina = initialStamina;
+        Morale = initialMorale;
         unitSize = data.unitSize;
         phalanxLength = Math.Max(unitSize.width, squadSize / 2f * unitSize.width);
-        
-        
+
         // Set up the UI components
         var color = team.GetColor();
         barFill.color = color;
@@ -187,10 +238,7 @@ public class Squad : MonoBehaviour
         neighbours = new List<Squad>();
         enemies = new List<Squad>();
         obstacles = new HashSet<Obstacle>();
-        attributes = new HashSet<int>();
-        
-        // Call some repeat func
-        InvokeRepeating(nameof(UpdateAll), 0f, 0.1f);
+        attributes = new HashSet<MoraleAttribute>();
     }
 
     private void Start()
@@ -206,6 +254,8 @@ public class Squad : MonoBehaviour
         soundManager = Manager.soundManager;
         camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
+        squadTable = Manager.squadTable;
+        obstacleTable = Manager.obstacleTable;
         var terrain = Manager.terrain;
         
         // Disabling the Crowd Manager here to change prototype settings
@@ -236,12 +286,13 @@ public class Squad : MonoBehaviour
 
         // Create units
         var unitBuffer = new NativeArray<UnitBuffer>(squadSize, Allocator.Temp);
-        for (var i = 0; i < positions.Count; i++) {
+        for (var i = 0; i < squadSize; i++) {
             float3 slotPos = positions[i];
 
             // Get world positions
             Vector3 pos = FormationUtils.LocalToWorld(local, slotPos);
             pos.y = terrain.SampleHeight(pos);
+            centroid += pos;
 
             // Create a formation attractor entity
             var formationEntity = entityManager.CreateEntity(formation);
@@ -317,6 +368,8 @@ public class Squad : MonoBehaviour
             instances.Add(crowd);
         }
 
+        centroid /= squadSize;
+        
         // Add buffer filled with neighbours units
         foreach (var unit in unitBuffer) {
             entityManager.AddBuffer<UnitBuffer>(unit.Value).AddRange(unitBuffer);
@@ -335,8 +388,7 @@ public class Squad : MonoBehaviour
         // Parent a bar to the screen
         barTransform.SetParent(squadCanvas, false);
         barTransform.localScale = barScale;
-        squadCanvas.GetComponent<SortByDistance>().Add(squadBar.GetComponent<SquadBar>()); // add bar to the screen distance sort system
-        
+
         // Parent unit to the screen
         if (team == Team.Self) {
             unitCard.SetActive(false);
@@ -345,11 +397,14 @@ public class Squad : MonoBehaviour
             StartCoroutine(RepositionCard()); // fix for re-parenting
         }
         
-        // Add a squad to the combat statistics
-        Manager.combatSlider.Add(this);
+        // Add a squad to the table
+        squadTable.Add(gameObject, this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
+        
+        // Call some repeat func
+        StartCoroutine(Tick());
     }
 
     private IEnumerator RepositionCard()
@@ -358,45 +413,11 @@ public class Squad : MonoBehaviour
         unitCard.SetActive(true);
         cardTransform.position = layoutTransform.position;
     }
-
-    //allow other objects to change the state of the squad
-    public void ChangeState(SquadFSM newState)
-    {
-        switch (newState) {
-            case SquadFSM.Idle:
-                if (!idleScript) {
-                    idleScript = gameObject.AddComponent<IdleBehavior>();
-                }
-                break;
-
-            case SquadFSM.Seek:
-                if (!seekScript) {
-                    seekScript = gameObject.AddComponent<SeekBehavior>();
-                }
-                break;
-
-            case SquadFSM.Attack:
-                if (!attackScript) {
-                    attackScript = gameObject.AddComponent<AttackingBehavior>();
-                }
-                break;
-        }
-
-        state = newState;
-    }
     
-    private void OnDrawGizmos()
-    {
-        if (!Application.isPlaying)
-            return;
+    #endregion
 
-        Gizmos.color = Color.red;
-        foreach (var pos in positions) {
-            Gizmos.DrawSphere(worldTransform.TransformPoint(pos), 0.1f);
-        }
-        UnityEditor.Handles.Label(worldTransform.position + Vector3.up * 5f, state.ToString());
-    }
-
+    #region Systems
+    
     private void Update()
     {
         // Find absolute centroid position
@@ -427,38 +448,54 @@ public class Squad : MonoBehaviour
             squadBar.SetActive(true);
         }
 
-        // TODO: Temporary
         // Disable circle radius if we not in range anymore
         radiusCircle.SetActive(team == Team.Self && select && (isRange || Input.GetKey(radiusKey)));
     }
-    
-    private void UpdateAll()
+
+    private IEnumerator Tick()
     {
-        if (!worldTransform) {
-            CancelInvoke(nameof(UpdateAll));
-            return;
+        while (true) {
+            OnUpdate();
+            yield return new WaitForSeconds(0.1f);
         }
-        
-        DetectCollision();
-        DetectObstacles();
-        PlaySound();
+    }
+    
+    private void OnUpdate()
+    {
+        CollisionDetector();
+        ObstaclesDetector();
+        SoundSystem();
+        MoraleSystem();
 
         switch (state) {
             case SquadFSM.Idle:
+                IdleBehavior();
                 break;
             case SquadFSM.Seek:
+                SeekBehavior();
                 break;
             case SquadFSM.Attack:
-                
+                AttackBehavior();
                 break;
             case SquadFSM.Retreat:
+                RetreatBehavior();
                 break;
-            default:
-                throw new ArgumentOutOfRangeException();
         }
     }
+    
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+            return;
 
-    private void PlaySound()
+        Gizmos.color = Color.red;
+        foreach (var pos in positions) {
+            Gizmos.DrawSphere(worldTransform.TransformPoint(pos), 0.1f);
+        }
+        UnityEditor.Handles.Label(worldTransform.position + Vector3.up * 5f, state.ToString());
+    }
+
+    private void SoundSystem()
     {
         if (IsUnitsFighting()) {
             var listener = camTransform.position;
@@ -466,17 +503,17 @@ public class Squad : MonoBehaviour
             // Play group footstep sound
             var isFarAway = soundManager.playRange < Vector.DistanceSq(listener, centroid);
             var isPlaying = fightAudio.isPlaying;
-            if (isPlaying && isFarAway != clipCache) {
+            if (isPlaying && isFarAway != isFarSound) {
                 isPlaying = false;
             }
 
             if (!isPlaying) {
                 if (isFarAway) {
                     fightAudio.clip = (Random.Range(0, 2) == 0 ? data.groupSounds.distantFightSounds : data.groupSounds.battleCrySounds).GetRandom();
-                    clipCache = true;
+                    isFarSound = true;
                 } else {
                     fightAudio.clip = (Random.Range(0, 2) == 0 ? data.groupSounds.closeFightSounds : data.groupSounds.battleCrySounds).GetRandom();
-                    clipCache = false;
+                    isFarSound = false;
                 }
                 fightAudio.pitch = Random.Range(0.995f, 1.005f);
                 fightAudio.Play();
@@ -490,17 +527,17 @@ public class Squad : MonoBehaviour
         if (IsUnitsMoving()) {
             // Play group footstep sound
             var isPlaying = runAudio.isPlaying;
-            if (isPlaying && isRunning != clipCache) {
+            if (isPlaying && isRunning != isRunSound) {
                 isPlaying = false;
             }
             
             if (!isPlaying) {
                 if (isRunning) {
                     runAudio.clip = data.groupSounds.runSounds.GetRandom();
-                    clipCache = true;
+                    isRunSound = true;
                 } else {
                     runAudio.clip = data.groupSounds.walkSounds.GetRandom();
-                    clipCache = false;
+                    isRunSound = false;
                 }
                 runAudio.pitch = Random.Range(0.995f, 1.005f);
                 runAudio.Play();
@@ -527,41 +564,49 @@ public class Squad : MonoBehaviour
             }
         }
 
-        var temp = canShoot;
         canShoot = isRange && IsUnitsHolding();
-        if (canShoot && !temp && Random.Range(0, 10) == 0) {
-            PlaySound(data.commanderSounds.fire);
+    }
+
+    private void MoraleSystem()
+    {
+        var total = 0;
+        foreach (var attribute in attributes) {
+            total += attribute.bonus;
+        }
+        Morale += total / 100f;
+
+        if (isEscape) {
+            SetFlee(true);
         }
     }
 
-    private void DetectCollision()
+    private void CollisionDetector()
     {
         enemies.Clear();
         neighbours.Clear();
         
-        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size, colliders, worldTransform.rotation, Manager.Squad);
-        if (size <= 1) return;
+        foreach (var squad in squadTable) {
+            if (squad != this && squad.team != team && Vector.Distance(centroid, squad.centroid) < aggroDistance) {
+                enemies.Add(squad);
+            }
+        }
 
+        touchEnemies = false;
+        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size, colliders, worldTransform.rotation, Manager.Squad);
         for (var i = 0; i < size; i++) {
-            var other = colliders[i].gameObject;
-            if (other != gameObject) {
-                var squad = other.GetComponent<Squad>();
-                if (squad.team == team) {
-                    if (!neighbours.Contains(squad)) {
-                        neighbours.Add(squad);
-                    }
-                } else {
-                    if (!enemies.Contains(squad)) {
-                        enemies.Add(squad);
-                    }
+            var squad = squadTable[colliders[i].gameObject];
+            if (squad != this) {
+                neighbours.Add(squad);
+                if (squad.team != team) {
+                    touchEnemies = true;
                 }
             }
         }
     }
 
-    private void DetectObstacles()
+    private void ObstaclesDetector()
     { 
-        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size, colliders, worldTransform.rotation, Manager.Obstacle);
+        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size / 2f, colliders, worldTransform.rotation, Manager.Obstacle);
         if (size <= 0 || state == SquadFSM.Idle) {
             if (obstacles.Count > 0) {
                 foreach (var unit in units) {
@@ -573,7 +618,7 @@ public class Squad : MonoBehaviour
         }
         
         for (var i = 0; i < size; i++) {
-            var obstacle = colliders[i].gameObject.GetComponent<Obstacle>();
+            var obstacle = obstacleTable[colliders[i].gameObject];
             if (!obstacles.Contains(obstacle)) {
                 obstacles.Add(obstacle);
                 foreach (var unit in units) {
@@ -585,18 +630,22 @@ public class Squad : MonoBehaviour
 
     public void SetDestination(bool append, GameObject target, float? orientation = null, float? length = null)
     {
-        if (seekScript) {
+        if (isEscape)
+            return;
+        
+        if (state == SquadFSM.Seek) {
             if (append) {
-                seekScript.AddDestination(target, orientation, length);
+                AddDestination(target, orientation, length);
             } else {
-                seekScript.ResetDestination(target, orientation, length);
+                ResetDestination(target, orientation, length);
             }
         } else {
-            DestroyImmediate(idleScript);
-            DestroyImmediate(attackScript);
+            if (state == SquadFSM.Retreat) {
+                SetFlee(false);
+            }
 
             ChangeState(SquadFSM.Seek);
-            seekScript.AddDestination(target, orientation, length);
+            ResetDestination(target, orientation, length);
         }
     }
 
@@ -609,15 +658,19 @@ public class Squad : MonoBehaviour
             unit.SelectState(value);
         }
 
+        if (cardSelectRoutine != null) StopCoroutine(cardSelectRoutine);
+        if (barSelectRoutine != null) StopCoroutine(barSelectRoutine);
+        if (barInnerRoutine != null) StopCoroutine(barInnerRoutine);
+        
         if (value) {
-            StartCoroutine(cardSelect.Fade(0f, 0.15f));
-            StartCoroutine(barSelect.Fade(0f, 0.15f));
-            StartCoroutine(barInner.Fade(0f, 0.15f));
+            cardSelectRoutine = StartCoroutine(cardSelect.Fade(0f, 0.15f));
+            barSelectRoutine = StartCoroutine(barSelect.Fade(0f, 0.15f));
+            barInnerRoutine = StartCoroutine(barInner.Fade(0f, 0.15f));
             mapBorder.color = Color.yellow;
         } else {
-            StartCoroutine(cardSelect.Fade(1f, 0.15f));
-            StartCoroutine(barSelect.Fade(1f, 0.15f));
-            StartCoroutine(barInner.Fade(1f, 0.15f));
+            cardSelectRoutine = StartCoroutine(cardSelect.Fade(1f, 0.15f));
+            barSelectRoutine = StartCoroutine(barSelect.Fade(1f, 0.15f));
+            barInnerRoutine = StartCoroutine(barInner.Fade(1f, 0.15f));
             mapBorder.color = Color.black;
         }
         select = !select;
@@ -645,26 +698,24 @@ public class Squad : MonoBehaviour
     {
         var x = phalanxLength * boundCollision.x;
         var y = boundCollision.y;
-        var z = math.max(phalanxHeight, minimumLength) * boundCollision.z;
+        var z = phalanxHeight * boundCollision.z;
         var size = new Vector3(x, y, z);
         collision.size = size;
         var scale = math.max(x, z);
         particleShape.scale = new Vector3(scale, 1f, scale / 2f);
     }
     
+    #endregion
+
+    #region Events
+
     public void RemoveUnit(Unit unit)
     {
         units.Remove(unit);
-
-        var count = units.Count;
-        barHealth.value = count;
-        cardHealth.value = count;
-        cardAmmo.value -= unit.ammunition;
-        cardNumber.text = count.ToString();
         
+        var count = units.Count;
         if (count == 0) {
-            Manager.combatSlider.Remove(this);
-            squadCanvas.GetComponent<SortByDistance>().Remove(squadBar.GetComponent<SquadBar>());
+            squadTable.Remove(gameObject);
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
             DestroyImmediate(squadBar);
@@ -676,6 +727,13 @@ public class Squad : MonoBehaviour
                 UpdateFormation(phalanxLength);
             }
             
+            barHealth.value = count;
+            cardHealth.value = count;
+            cardAmmo.value -= unit.ammunition;
+            cardNumber.text = count.ToString();
+
+            Morale -= Morale / count;
+            
             if (data.rangeWeapon && cardAmmo.value <= 0f) {
                 attributes.Add(Manager.WithoutAmmo);
             }
@@ -684,6 +742,7 @@ public class Squad : MonoBehaviour
     
     public void SwapUnit(Unit oldUnit, GameObject newPrefab)
     {
+        // Swap melee and range prefab
         var index = units.IndexOf(oldUnit);
         var newUnit = oldUnit.Clone(newPrefab);
         modelManager.RemovePrefabInstance(oldUnit.crowd);
@@ -715,19 +774,57 @@ public class Squad : MonoBehaviour
         var size = Physics.OverlapSphereNonAlloc(target.worldTransform.position, radius, colliders, Manager.Unit);
         for (var i = 0; i < size; i++) {
             var unit = unitTable[colliders[i].gameObject];
-            if (unit.squad != this) {
+            var squad = unit.squad;
+            if (squad.team != team) {
+                if (squad.data.chargeProtection && unit.IsFacing(inflictor, Side.Forward, MathExtention.A60) && Random.Range(0, 2) == 0) {
+                    inflictor.OnDamage(unit, type, damage);
+                    continue;
+                }
                 unit.OnDamage(inflictor, type, damage, true);
             }
         }
     }
     
-    public void UpdateAmmo()
+    public void OnMeleeDamage()
+    {
+        cardIndicator.SetActive(true);
+        if (meleeRoutine != null) StopCoroutine(meleeRoutine);
+        meleeRoutine = StartCoroutine(MeleeEnd());
+    }
+
+    private IEnumerator MeleeEnd()
+    {
+        yield return new WaitForSeconds(10f);
+        cardIndicator.SetActive(false);
+    }
+     
+    public void OnRangeDamage()
+    {
+        OnMeleeDamage(); // also enable indication
+        if (!attributes.Contains(Manager.UnderFire)) {
+            PlaySound(data.commanderSounds.underfire);
+        }
+        attributes.Add(Manager.UnderFire);
+        if (rangeRoutine != null) StopCoroutine(rangeRoutine);
+        rangeRoutine = StartCoroutine(RangeEnd());
+    }
+    
+    private IEnumerator RangeEnd()
+    {
+        yield return new WaitForSeconds(10f);
+        attributes.Remove(Manager.UnderFire);
+    }
+    
+    public void ReduceAmmo()
     {
         cardAmmo.value--;
+        
         if (data.rangeWeapon && cardAmmo.value <= 0f) {
             attributes.Add(Manager.WithoutAmmo);
         }
     }
+    
+    #endregion
 
     #region Sounds
     
@@ -740,25 +837,26 @@ public class Squad : MonoBehaviour
         }
     }
 
-    public void RequestSound(List<AudioClip> clips)
-    {
-        StartCoroutine(SoundCoroutine(clips));
-    }
-    
-    public IEnumerator SoundCoroutine(List<AudioClip> clips)
+    private IEnumerator PlaySoundDelay(List<AudioClip> clips)
     {
         yield return new WaitForSeconds(mainAudio.clip.length + 0.1f);
         PlaySound(clips);
     }
+    
+    public void DelaySound(List<AudioClip> clips)
+    {
+        if (soundRoutine != null) StopCoroutine(soundRoutine);
+        soundRoutine = StartCoroutine(PlaySoundDelay(clips));
+    }
 
     #endregion
 
-    #region Helpers
+    #region Finders
 
     public Squad FindClosestSquad(Vector3 position)
     {
         switch (enemies.Count) {
-            case 0: return attackScript && attackScript.enemy ? attackScript.enemy : null; // can that happend?
+            case 0: return enemy;
             case 1: return enemies[0];
             default: {
                 Squad closest = null;
@@ -777,9 +875,9 @@ public class Squad : MonoBehaviour
         }
     }
 
-    public Unit FindTargetInFront(Vector3 position)
+    private Unit FindTargetInFront(Vector3 position)
     {
-        var cast = Physics.Raycast(position, attackScript.direction, out var hit, data.attackDistance, Manager.Squad);
+        var cast = Physics.Raycast(position, targetDirection, out var hit, aggroDistance, Manager.Squad);
         if (cast) {
             var size = Physics.OverlapSphereNonAlloc(hit.point, 2f, colliders, Manager.Unit);
             if (size > 0) {
@@ -802,10 +900,10 @@ public class Squad : MonoBehaviour
     public Unit FindClosestEnemy(Vector3 position)
     {
         // TODO: Improve target find system
-        if (enemies.Count == 0) {
-            var target = FindTargetInFront(position);
-            if (target) {
-                return target;
+        if (neighbours.Count == 0 || !touchEnemies) {
+            var unit = FindTargetInFront(position);
+            if (unit) {
+                return unit;
             }
         }
         var squad = FindClosestSquad(position);
@@ -841,63 +939,88 @@ public class Squad : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Tools
+
     public void SetRunning(bool value)
     {
-        if (isRunning == value)
+        if (isRunning == value || isFlee)
             return;
 
         isRunning = value;
-        if (value) {
-            agentScript.maxSpeed = data.squadRunSpeed;
-            agentScript.maxAccel = data.squadAccel;
-        } else {
-            agentScript.maxSpeed = data.squadWalkSpeed;
-            agentScript.maxAccel = data.squadAccel;
-        }
+        agent.maxSpeed = moveSpeed;
     }
     
     public void SetHolding(bool value)
     {
-        if (isHolding == value)
+        if (isHolding == value || isFlee)
             return;
-        
-        //squad.PlaySound(squad.data.commanderSounds.hold);
+
+        isHolding = true;
+        PlaySound(data.commanderSounds.hold);
     }
     
     public void SetRange(bool value)
     {
-        if (isRange == value)
+        if (isRange == value || isFlee)
             return;
 
         isRange = value;
-        circle.radius = isRange ? data.rangeDistance : data.attackDistance;
+        circle.radius = aggroDistance;
+        circle.Render();
         ForceStop();
     }
 
     public void SetFlee(bool value)
     {
-        if (isFlee == value)
+        if (isFlee == value || !value && isEscape)
             return;
+        
+        isFlee = value;
+        flee.enabled = value;
+        if (value) {
+            var squad = FindClosestSquad(centroid);
+            anchorTransform.position = squad ? squad.centroid : centroid;
+            if (isEscape) {
+                ChangeSelectState(false);
+                unitManager.RemoveSquad(this);
+                PlaySound(data.commanderSounds.saveYourLives);
+            } else {
+                PlaySound(data.commanderSounds.retreat);
+            }
+            ChangeState(SquadFSM.Retreat);
+            isForward = true;
+            isRunning = true;
+            agent.maxSpeed = moveSpeed;
+            cardFlash.color = Color.white;
+            cardIndicator.SetActive(true);
+        } else {
+            ChangeState(SquadFSM.Idle);
+            PlaySound(data.commanderSounds.comeBackCowards);
+            cardFlash.color = Color.red;
+            cardIndicator.SetActive(false);
+        }
     }
 
     public void ForceStop()
     {
-        if (idleScript)
+        if (state == SquadFSM.Idle || isFlee)
             return;
-        
-        DestroyImmediate(seekScript);
-        DestroyImmediate(attackScript);
+
         ChangeState(SquadFSM.Idle);
+        PlaySound(data.commanderSounds.halt);
+        DelaySound(data.groupSounds.stopSounds);
     }
     
-    private void SetStaminaStatus(int attribute)
+    private void SetStamina(MoraleAttribute attribute)
     {
         if (attribute != currentStamina) {
-            if (currentStamina != 0) {
+            if (currentStamina != null) {
                 attributes.Remove(currentStamina);
             }
             currentStamina = attribute;
-            if (currentStamina != 0) {
+            if (currentStamina != null) {
                 attributes.Add(currentStamina);
             }
         }
@@ -914,7 +1037,6 @@ public class Squad : MonoBehaviour
                     attributes.Remove(Manager.LowGround);
                     break;
             }
-
             switch (advantage) {
                 case Advantage.Upper:
                     attributes.Add(Manager.UphillPosition);
@@ -923,7 +1045,6 @@ public class Squad : MonoBehaviour
                     attributes.Add(Manager.LowGround);
                     break;
             }
-
             groundAdvantage = advantage;
         }
     }
@@ -1004,13 +1125,392 @@ public class Squad : MonoBehaviour
         var count = 0;
         
         foreach (var unit in units) {
-            if (unit.state == UnitFSM.RangeHold) {
+            if (unit.state == UnitFSM.RangeHold || unit.state == UnitFSM.RangeSeek) {
                 count++;
             }
         }
         
         return count >= units.Count;
     }
+
+    #endregion
+
+    #region Behaviors
+
+    //allow other objects to change the state of the squad
+    public void ChangeState(SquadFSM newState)
+    {
+        SetAdvantage(Advantage.None);
+        UpdateFormation(phalanxLength);
+        if (exitRoutine != null) StopCoroutine(exitRoutine);
+        if (waitRoutine != null) StopCoroutine(waitRoutine);
+        
+        switch (newState) {
+            case SquadFSM.Idle:
+                agent.enabled = false;
+                seek.enabled = false;
+                enemy = null;
+                break;
+            case SquadFSM.Seek:
+                agent.enabled = true;
+                break;
+            case SquadFSM.Attack:
+                agent.enabled = true;
+                seek.SetTarget(anchorTransform);
+                seek.enabled = true;
+                switch (Random.Range(0, 6)) {
+                    case 0:
+                        PlaySound(data.commanderSounds.toArms);
+                        break;
+                    case 1:
+                        PlaySound(data.commanderSounds.forGlory);
+                        break;
+                    case 2:
+                        PlaySound(data.commanderSounds.forKing);
+                        break;
+                    case 3:
+                        PlaySound(data.commanderSounds.forRealm);
+                        break;
+                    case 4:
+                        PlaySound(data.commanderSounds.forVictory);
+                        break;
+                    case 5: 
+                        PlaySound(data.commanderSounds.fightUntilYouDie);
+                        break;
+                }
+                break;
+            case SquadFSM.Retreat:
+                agent.enabled = true;
+                seek.enabled = false;
+                //flee.enabled = true;
+                //flee.SetTarget(anchorTransform);
+                break;
+        }
+        state = newState;
+    }
+    
+    #region Idle
+    
+    private void IdleBehavior()
+    {
+        // If we touvh an enemy, exit idle mode
+        if (touchEnemies) {
+            if (isRange) {
+                SetRange(false);
+            }
+            ChangeState(SquadFSM.Attack);
+            enemy = FindClosestSquad(centroid);
+
+            // Play sound
+            var direction = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, (enemy.centroid - centroid).Normalized(), Vector3.up));
+            switch (direction) {
+                case Direction.Forward:
+                    PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.prepare : data.commanderSounds.braceYourselves);
+                    break;
+                case Direction.ForwardLeft:
+                case Direction.Left:
+                    PlaySound(data.commanderSounds.fromLeftFlank);
+                    break;
+                case Direction.ForwardRight:
+                case Direction.Right:
+                    PlaySound(data.commanderSounds.fromRightFlank);
+                    break;
+                case Direction.BackwardRight:
+                case Direction.BackwardLeft:
+                case Direction.Backward:
+                    PlaySound(data.commanderSounds.theyComeFromBehind);
+                    break;
+            }
+        } else if (!isHolding && hasEnemies) {
+            ChangeState(SquadFSM.Attack);
+            enemy = FindClosestSquad(centroid);
+            PlaySound(isRange ? data.commanderSounds.fire : data.commanderSounds.charge);
+        }
+        
+        Stamina += Time.deltaTime;
+    }
+    
+    #endregion
+
+    #region Attack
+
+    private void AttackBehavior()
+    {
+        if (enemy && enemy.hasUnits) {
+            targetDirection = enemy.centroid - centroid;
+            worldTransform.rotation = Quaternion.LookRotation(targetDirection);
+            var distance = targetDirection.Magnitude();
+            
+            if (Physics.Raycast(centroid, targetDirection, out var hit, distance, Manager.Squad)) {
+                seeEnemy = hit.transform.gameObject != enemy.gameObject;
+            }
+            
+            if (isRange) {
+                anchorTransform.position = enemy.centroid;
+                var movement = distance > data.rangeDistance * 0.95f;
+                agent.enabled = movement;
+                seek.enabled = movement;
+                
+                SetAdvantage(Advantage.None);
+                Stamina -= Time.deltaTime / 10f;
+            } else {
+                if (distance > data.attackDistance * 1.05f) {
+                    ChangeState(SquadFSM.Idle);
+                    PlaySound(data.commanderSounds.dismiss);
+                } else {
+                    anchorTransform.position = centroid - worldTransform.forward * phalanxHeight;
+                    agent.enabled = true;
+                    seek.enabled = true;
+                }
+                
+                SetAdvantage(math.abs(targetDirection.y) > 1f ? targetDirection.y > 0f ? Advantage.Lower : Advantage.Upper : Advantage.None);
+                Stamina -= Time.deltaTime / 2f;
+            }
+        } else {
+            ChangeState(SquadFSM.Idle);
+            PlaySound(data.commanderSounds.victoryIsOurs);
+        }
+    }
+
+    #endregion
+
+    #region Retreat
+
+    private void RetreatBehavior()
+    {
+        if (math.lengthsq(agent.velocity) > 0f) {
+            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, agent.velocity.ToEuler(), data.squadRotation);
+        }
+        
+        if (hasEnemies) {
+            anchorTransform.position = FindClosestSquad(centroid).centroid;
+        }
+        
+        Stamina -= Time.deltaTime;
+    }
+
+    #endregion
+    
+    #region Seek
+    
+    private void SeekBehavior()
+    {
+        if (math.lengthsq(agent.velocity) > 0f) {
+            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (isForward ? agent.velocity : -agent.velocity).ToEuler(), data.squadRotation);
+        }
+
+        if (enemy) {
+            SeekEnemy();
+        } else {
+            SeekPoint();
+        }
+        
+        Stamina -= isRunning ? Time.deltaTime * 5f : Time.deltaTime;
+    }
+
+    private void SeekPoint()
+    {
+        // Get distance to target if it exist
+        var distance = 0f;
+        if (target) distance = Vector.TruncDistance(worldTransform.position, targetTransform.position);
+        
+        // Seek a non-enemy target
+        if (distance < 0.1f) {
+            //we are at the target
+            if (targets.Count != 0) {
+                NextTarget();
+            } else {
+                ChangeState(SquadFSM.Idle);
+                PlaySound(data.commanderSounds.halt);
+                DelaySound(data.groupSounds.stopSounds);
+                if (targetOrientation.HasValue) {
+                    worldTransform.rotation = targetOrientation.Value;
+                }
+            }
+        }
+    }
+
+    private void SeekEnemy()
+    {
+        // Get distance to target if it exist
+        var distance = Vector.Distance(enemy.centroid, centroid);
+
+        // Can we attack the target?
+        if (distance < aggroDistance) {
+            if (exitRoutine == null) {
+                seek.enabled = false;
+                exitRoutine = StartCoroutine(ExitWhenDoneMovements());
+            }
+        }
+    }
+
+    public void NextTarget()
+    {
+        // Remove prev target
+        if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
+        
+        // Store current
+        var (obj, orientation, length) = targets.Dequeue();
+        target = obj;
+        targetTransform = target.transform;
+
+        // If no more targets, rotate to desired orientation
+        if (targets.Count == 0 && orientation.HasValue) {
+            targetOrientation = Quaternion.Euler(0f, orientation.Value, 0f);
+        } else {
+            targetOrientation = null;
+        }
+        
+        // Set seek target
+        seek.SetTarget(targetTransform);
+        
+        // Check the enemy
+        Vector3 targetPos;
+        var squad = squadTable[target];
+        if (squad && squad.team != team) {
+            enemy = squad;
+            targetPos = squad.centroid;
+        } else {
+            enemy = null;
+            targetPos = targetTransform.position;
+        }
+        
+        // Direction of rotation
+        var direction = targetPos - centroid;
+        var reverse = false;
+        
+        // Remove all corontines just in case
+        if (waitRoutine != null) StopCoroutine(waitRoutine);
+
+        seek.enabled = true;
+        forwardMove = true;
+        
+        // Get the direction of movement
+        var dir = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, direction.Normalized(), Vector3.up));
+        
+        // Play sounds
+        var sounds = data.commanderSounds;
+        if (enemy) {
+            switch (Random.Range(0, 4)) {
+                case 0:
+                    PlaySound(sounds.killThemAll);
+                    break;
+                case 1:
+                    PlaySound(sounds.inTheNameOfLord);
+                    break;
+                case 2:
+                    PlaySound(sounds.takeNoPrisoners);
+                    break;
+                case 3:
+                    PlaySound(sounds.noneShallStopUs);
+                    break;
+            }
+        } else if (length.HasValue) {
+            PlaySound(Random.Range(0, 2) == 0 ? sounds.regroup : sounds.takeYourPosition);
+        } else if (orientation.HasValue) {
+            PlaySound(Random.Range(0, 2) == 0 ? sounds.steady : sounds.standInLine);
+        } else {
+            switch (dir) {
+                case Direction.Forward:
+                case Direction.ForwardLeft:
+                case Direction.ForwardRight:
+                    PlaySound(sounds.forward);
+                    break;
+                case Direction.Left:
+                    //if (Physics.OverlapSphereNonAlloc(target.transform.position, 2f, colliders, sounds.Squad) != 0 && colliders[0].gameObject == gameObject)
+                    PlaySound(sounds.toTheLeftFlank);
+                    break;
+                case Direction.Right:
+                    //if (Physics.OverlapSphereNonAlloc(target.transform.position, 2f, colliders, sounds.Squad) != 0 && colliders[0].gameObject == gameObject)
+                    PlaySound(sounds.toTheRightFlank);
+                    break;
+                case Direction.Backward:
+                case Direction.BackwardLeft:
+                case Direction.BackwardRight:
+                    PlaySound(sounds.standBack);
+                    break;
+            }
+        }
+
+        // Use that mono to start coroutine to avoid duplicated execution
+        DelaySound(data.groupSounds.goSounds);
+
+        if (targetOrientation.HasValue) {
+            // If differerence is too big, rotate instantly
+            var diff = targetOrientation.Value.eulerAngles.y - worldTransform.rotation.eulerAngles.y;
+            if (!(diff <= 22.5f && diff > -22.5f)) {
+                worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * phalanxHeight, targetOrientation.Value);
+            } else if (direction.Magnitude() <= 30.0f) {
+                targetOrientation = worldTransform.rotation;
+                if (dir == Direction.Backward) {
+                    forwardMove = false; // disable when enemies nearby
+                }
+            }
+        } else if (dir == Direction.Backward) {
+            worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * phalanxHeight, direction.ToEuler());
+            if (!length.HasValue) length = phalanxLength; // use to reverse formation for correct backward repositioning
+            reverse = true;
+        }
+        
+        if (length.HasValue) {
+            UpdateFormation(length.Value, reverse);
+            isForward = true; // to make units move to their desired position normally
+            seek.enabled = false;
+            waitRoutine = StartCoroutine(WaitUntilDoneMovements());
+        } else if (isForward != forwardMove) {
+            seek.enabled = false;
+            waitRoutine = StartCoroutine(WaitUntilDoneMovements());
+        }
+    }
+    
+    private void AddDestination(GameObject obj, float? orientation = null, float? length = null)
+    {
+        targets.Enqueue((obj, orientation, length));
+    }
+
+    private void ResetDestination(GameObject obj, float? orientation = null, float? length = null)
+    {
+        targets.Clear();
+        targets.Enqueue((obj, orientation, length));
+        NextTarget();
+    }
+    
+    private IEnumerator WaitUntilDoneMovements()
+    {
+        while (true) {
+            if (touchEnemies || IsUnitsIdling()) {
+                waitRoutine = null;
+                seek.enabled = true;
+                isForward = forwardMove;
+                yield break;
+            }
+            
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    
+    private IEnumerator ExitWhenDoneMovements()
+    {
+        while (true) {
+            if (!enemy) {
+                exitRoutine = null;
+                ChangeState(SquadFSM.Idle);
+                PlaySound(data.commanderSounds.dismiss);
+                yield break;
+            }
+
+            if (touchEnemies || IsUnitsStopping()) {
+                exitRoutine = null;
+                ChangeState(SquadFSM.Attack);
+                PlaySound(data.commanderSounds.charge);
+                yield break;
+            }
+            
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    
+    #endregion
 
     #endregion
 }

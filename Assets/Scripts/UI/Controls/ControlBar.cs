@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,10 +27,18 @@ public class ControlBar : MonoBehaviour
     {
         manager = Manager.unitManager;
         material.SetFloat(Manager.GrayscaleAmount, 1f);
-        InvokeRepeating(nameof(UpdateData), 0f, 0.1f);
+        StartCoroutine(Tick());
     }
-    
-    public void UpdateData()
+
+    private IEnumerator Tick()
+    {
+        while (true) {
+            OnUpdate();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public void OnUpdate()
     {
         var count = manager.selectedCount;
         if (count > 0) {

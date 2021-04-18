@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 2966289934880963638}
   - component: {fileID: 3693780334876467564}
   - component: {fileID: 7014365690190988827}
+  - component: {fileID: 2471739152849571765}
   - component: {fileID: -1217265927458176945}
+  - component: {fileID: 3421342263865875661}
   m_Layer: 12
   m_Name: Manager
   m_TagString: Untagged
@@ -53,7 +55,6 @@ MonoBehaviour:
   unitCard: {fileID: 0}
   main: {fileID: 0}
   minimap: {fileID: 0}
-  combatSliderRatio: {fileID: 0}
   ground:
     serializedVersion: 2
     m_Bits: 512
@@ -282,6 +283,19 @@ MonoBehaviour:
     size: 150
   - prefab: {fileID: 3630492352021244444, guid: 61c804cc2e9e7824ebf8a9c6c16b5ea8, type: 3}
     size: 150
+--- !u!114 &2471739152849571765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dedcfe36782415bb2bcf7211566ec5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  list: []
 --- !u!114 &-1217265927458176945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,5 +306,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5cb3a54178354ea98dee919e990e664d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3421342263865875661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deaa2a0d74794b8ea26597a9d5dc5d2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     public Entity entity;
+    public Vector3 position;
     
     private void Start()
     {
@@ -15,8 +16,12 @@ public class Obstacle : MonoBehaviour
         var obstacle = entityManager.CreateArchetype(typeof(Translation));
 
         // Add component data to squad
+        position = transform.position;
         entity = entityManager.CreateEntity(obstacle);
         entityManager.SetName(entity, "obstacle");
-        entityManager.SetComponentData(entity, new Translation { Value = transform.position });
+        entityManager.SetComponentData(entity, new Translation { Value = position });
+        
+        // Add component to the list
+        Manager.obstacleTable.Add(gameObject, this);
     }
 }

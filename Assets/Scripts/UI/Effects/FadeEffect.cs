@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,23 +16,23 @@ public class FadeEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        InvokeRepeating(nameof(ToggleState), 0f, fadeSpeed);
+        StartCoroutine(Toggle());
     }
 
     private void OnDisable()
     {
-        if (IsInvoking(nameof(ToggleState))) {
-            CancelInvoke(nameof(ToggleState));
-            var color = image.color;
-            color.a = 0f;
-            image.color = color;
-            enable = false;
-        }
+        var color = image.color;
+        color.a = 0f;
+        image.color = color;
+        enable = false;
     }
 
-    private void ToggleState()
+    private IEnumerator Toggle()
     {
-        enable = !enable;
-        StartCoroutine(image.Fade(enable ? 0f : 1f, fadeSpeed - 0.1f));
+        while (true) {
+            enable = !enable;
+            StartCoroutine(image.Fade(enable ? 0f : 1f, fadeSpeed - 0.1f));
+            yield return new WaitForSeconds(fadeSpeed);
+        }
     }
 }
