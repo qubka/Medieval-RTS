@@ -65,7 +65,6 @@ MonoBehaviour:
   positions: []
   centroid: {x: 0, y: 0, z: 0}
   killed: 0
-  select: 0
   isRunning: 0
   isHolding: 0
   isForward: 1
@@ -114,8 +113,9 @@ MonoBehaviour:
   maximumShake: 0.5
   shakeRange: 50
   canvasHeight: 10
+  removeRange: 700
   barScale: {x: 1.15, y: 1.15, z: 1.15}
-  boundCollision: {x: 1, y: 5, z: 1}
+  boundCollision: {x: 1.25, y: 5, z: 1.1}
   radiusKey: 308
 --- !u!65 &2053806470803109941
 BoxCollider:

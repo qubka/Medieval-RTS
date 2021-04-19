@@ -57,7 +57,12 @@ public static class MathExtention
 
     public static Quaternion ToEuler(this float2 vector) 
     {
-        return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, new Vector3(vector.x, 0f, vector.y), Vector3.up), 0f);
+        return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, vector.Project(), Vector3.up), 0f);
+    }
+
+    public static Vector3 Project(this float2 vector)
+    {
+        return new Vector3(vector.x, 0f, vector.y);
     }
 
     public static float SqMagnitude(this Vector3 vector) 

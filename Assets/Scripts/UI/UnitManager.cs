@@ -643,25 +643,26 @@ public class UnitManager : MonoBehaviour
 		lastSelectSquad = filter;
 	}
 
-	private void AddToDynamicGroup(Squad squad, GameObject target, float? orientation = null, float? length = null)
+	private void AddToDynamicGroup(Squad squad, GameObject obj, float? orientation = null, float? length = null)
 	{
+		var target = new Target(obj, orientation, length);
 		if (movementGroup.ContainsKey(squad)) {
 			var movement = movementGroup[squad];
 			if (movement is DynamicMovement) {
 				if (Input.GetKey(addKey)) {
-					movement.Append(target, orientation, length);
+					movement.Append(target);
 				} else {
-					movement.Reset(target, orientation, length);
+					movement.Reset(target);
 				}
 			} else {
 				movement.DestroyAll();
 				movement = new DynamicMovement(squad, movementLine, arrowLine);
-				movement.Reset(target, orientation, length);
+				movement.Reset(target);
 				movementGroup[squad] = movement;
 			}
 		} else {
 			var movement = new DynamicMovement(squad, movementLine, arrowLine);
-			movement.Reset(target, orientation, length);
+			movement.Reset(target);
 			movementGroup.Add(squad, movement);
 		}
 	}
@@ -915,18 +916,18 @@ public class UnitManager : MonoBehaviour
 			if (output.Count > 0) {
 				var objectPool = Manager.objectPool;
 				
-				squad.SetDestination(false, objectPool.SpawnFromPool(Manager.Way, output[0]));
+				squad.SetDestination(false, new Target(objectPool.SpawnFromPool(Manager.Way, output[0])));
 				for (var i = 1; i < output.Count; i++) {
-					squad.SetDestination(true, objectPool.SpawnFromPool(Manager.Way, output[i]));
+					squad.SetDestination(true, new Target(objectPool.SpawnFromPool(Manager.Way, output[i])));
 				}
 			}
 		}
 		
-		public void Append(GameObject target, float? orientation = null, float? length = null)
+		public void Append(Target target)
 		{
 		}
 
-		public void Reset(GameObject target, float? orientation = null, float? length = null)
+		public void Reset(Target target)
 		{
 		}
 
@@ -946,7 +947,7 @@ public class UnitManager : MonoBehaviour
 				}
 			}
 			
-			return squad.state != SquadFSM.Idle;
+			return squad.isActive;
 		}
 
 		public void DestroyAll()
@@ -988,20 +989,20 @@ public class UnitManager : MonoBehaviour
 			head.SetActive(value);
 		}
 		
-		public void Append(GameObject target, float? orientation = null, float? length = null)
+		public void Append(Target target)
 		{
 			if (targets.Count > 10)
 				return;
 			
-			AddTarget(target);
-			squad.SetDestination(true, target, orientation, length);
+			AddTarget(target.obj);
+			squad.SetDestination(true, target);
 		}
 		
-		public void Reset(GameObject target, float? orientation = null, float? length = null)
+		public void Reset(Target target)
 		{
 			ClearAll();
-			AddTarget(target);
-			squad.SetDestination(false, target, orientation, length);
+			AddTarget(target.obj);
+			squad.SetDestination(false, target);
 		}
 		
 		private void AddTarget(GameObject target)
@@ -1072,7 +1073,7 @@ public class UnitManager : MonoBehaviour
 				}
 			}
 			
-			return squad.state != SquadFSM.Idle;
+			return squad.isActive;
 		}
 
 		private void DrawArrow()
@@ -1111,8 +1112,8 @@ public class UnitManager : MonoBehaviour
 	
 	private interface Movement
 	{
-		void Append(GameObject target, float? orientation = null, float? length = null);
-		void Reset(GameObject target, float? orientation = null, float? length = null);
+		void Append(Target target);
+		void Reset(Target target);
 		void SetActive(bool value);
 		bool Update();
 		void DestroyAll();

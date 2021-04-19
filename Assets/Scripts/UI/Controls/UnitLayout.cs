@@ -34,7 +34,7 @@ public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
 				
 				for (var i = 0; i < count; i++) {
 					var squad = parentTransform.GetChild(i).GetComponent<UnitLayout>().squad;
-					if (squad.select) {
+					if (squad.isSelect) {
 						min = math.min(min, i);
 						max = math.max(max, i);
 					}

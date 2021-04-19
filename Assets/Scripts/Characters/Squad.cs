@@ -40,7 +40,6 @@ public class Squad : MonoBehaviour
     [ReadOnly] public List<Vector3> positions;
     [ReadOnly] public Vector3 centroid;
     [ReadOnly] public int killed;
-    [ReadOnly] public bool select;
     [ReadOnly] public bool isRunning;
     [ReadOnly] public bool isHolding;
     [ReadOnly] public bool isForward;
@@ -95,6 +94,7 @@ public class Squad : MonoBehaviour
     public float maximumShake = 0.5f;
     public float shakeRange = 50f;
     public float canvasHeight = 10f;
+    public float removeRange = 1000f;
     public Vector3 barScale = new Vector3(1.15f, 1.15f, 1.15f);
     public Vector3 boundCollision = new Vector3(1.25f, 5f, 1.1f);
     public KeyCode radiusKey = KeyCode.LeftAlt;
@@ -105,6 +105,7 @@ public class Squad : MonoBehaviour
 
     private Camera cam;
     private CamController camController;
+    private TerrainBorder border;
     private GPUICrowdManager modelManager;
     private RectTransform squadCanvas;
     private SquadTable squadTable;
@@ -114,11 +115,13 @@ public class Squad : MonoBehaviour
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
-    private Vector3 targetDirection;
     private Advantage groundAdvantage;
+    private Vector3? crossBorder;
     private Quaternion? targetOrientation;
+    private Vector3 targetDirection;
     private GameObject target;
-    private Queue<(GameObject, float?, float?)> targets;
+    private Queue<Target> targets;
+    private MoraleAttribute currentStamina;
     private AudioSource mainAudio;
     private AudioSource fightAudio;
     private AudioSource runAudio;
@@ -129,13 +132,20 @@ public class Squad : MonoBehaviour
     private Circle circle;
     private Seek seek;
     private Flee flee;
-    private MoraleAttribute currentStamina;
     private bool isRunSound;
     private bool isFarSound;
     private bool forwardMove;
+    private bool select;
     
-    #region Setters
+    #region SettersAndGetters
     
+    public bool isMoving => seek.enabled;
+    public bool isSelect => select;
+    public bool isActive => state != SquadFSM.Idle && state != SquadFSM.Retreat;
+    public bool isEscape => morale <= 10f || isUnreachable;
+    public bool isValidEnemy => enemy && enemy.hasUnits && !enemy.isUnreachable;
+    public bool isUnreachable => crossBorder.HasValue;
+    public bool hasRange => data.rangeWeapon;
     public bool hasUnits => units.Count > 0;
     public bool hasEnemies => enemies.Count > 0;
     public bool hasNeighbours => neighbours.Count > 0;
@@ -143,9 +153,18 @@ public class Squad : MonoBehaviour
     public int enemyCount => enemies.Count;
     public int neighbourCount => neighbours.Count;
     public float aggroDistance => isRange ? data.rangeDistance : data.attackDistance;
-    public bool isMoving => seek.enabled;
-    public bool isEscape => morale <= 0.1f;
     public float moveSpeed => isRunning ? data.squadRunSpeed : data.squadWalkSpeed;
+
+    #region Stamina
+
+    private static float idleStamina => Time.deltaTime;
+    private static float shotStamina => Time.deltaTime / 10f;
+    private static float meleeStamina => Time.deltaTime / 2f;
+    private static float retreatStamina => Time.deltaTime;
+    private static float runStamina => Time.deltaTime * 5f;
+    private static float walkStamina => Time.deltaTime;
+
+    #endregion
     
     public float Stamina {
         get => stamina;
@@ -172,6 +191,7 @@ public class Squad : MonoBehaviour
     private Coroutine waitRoutine;
     private Coroutine rangeRoutine;
     private Coroutine meleeRoutine;
+    private Coroutine removeCoroutine;
     
     #endregion
     
@@ -185,20 +205,21 @@ public class Squad : MonoBehaviour
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         colliders = new Collider[32];
         collision = GetComponent<BoxCollider>();
-        targets = new Queue<(GameObject, float?, float?)>();
+        targets = new Queue<Target>();
         anchorTransform = new GameObject("Target Anchor").transform;
         barTransform = squadBar.transform;
         layoutTransform = unitLayout.transform;
         cardTransform = unitCard.transform;
         worldTransform = transform;
         particleShape = particle.shape;
-        isRange = data.rangeWeapon;
+        isRange = hasRange;
         agent = gameObject.AddComponent<Agent>();
         agent.maxSpeed = data.squadWalkSpeed;
         agent.maxAccel = data.squadAccel;
         seek = gameObject.AddComponent<Seek>();
         flee = gameObject.AddComponent<Flee>();
         flee.SetTarget(anchorTransform);
+        flee.enabled = false;       
         circle = radiusCircle.GetComponent<Circle>();    
         circle.radius = aggroDistance;
         var sources = source.GetComponents<AudioSource>();
@@ -207,7 +228,8 @@ public class Squad : MonoBehaviour
         runAudio = sources[2];
         chargeAudio = sources[3];
         shakeRange *= shakeRange;
-
+        removeRange *= removeRange;
+        
         // TODO: rework to be compatible with save system
         // Set the team properties
         //squadSize = data.squadSize;
@@ -256,6 +278,7 @@ public class Squad : MonoBehaviour
         selectAudio = Manager.cameraSources[1];
         squadTable = Manager.squadTable;
         obstacleTable = Manager.obstacleTable;
+        border = Manager.border;
         var terrain = Manager.terrain;
         
         // Disabling the Crowd Manager here to change prototype settings
@@ -586,16 +609,19 @@ public class Squad : MonoBehaviour
         neighbours.Clear();
         
         foreach (var squad in squadTable) {
-            if (squad != this && squad.team != team && Vector.Distance(centroid, squad.centroid) < aggroDistance) {
-                enemies.Add(squad);
+            if (squad != this && squad.team != team && !squad.isUnreachable) {
+                var distance = Vector.Distance(centroid, squad.centroid);
+                if (distance < aggroDistance) {
+                    enemies.Add(squad);
+                }
             }
         }
 
         touchEnemies = false;
-        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size, colliders, worldTransform.rotation, Manager.Squad);
+        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size / 2f, colliders, worldTransform.rotation, Manager.Squad);
         for (var i = 0; i < size; i++) {
             var squad = squadTable[colliders[i].gameObject];
-            if (squad != this) {
+            if (squad != this && !squad.isUnreachable) {
                 neighbours.Add(squad);
                 if (squad.team != team) {
                     touchEnemies = true;
@@ -628,16 +654,16 @@ public class Squad : MonoBehaviour
         }
     }
 
-    public void SetDestination(bool append, GameObject target, float? orientation = null, float? length = null)
+    public void SetDestination(bool append, Target target)
     {
         if (isEscape)
             return;
         
         if (state == SquadFSM.Seek) {
             if (append) {
-                AddDestination(target, orientation, length);
+                AddDestination(target);
             } else {
-                ResetDestination(target, orientation, length);
+                ResetDestination(target);
             }
         } else {
             if (state == SquadFSM.Retreat) {
@@ -645,7 +671,7 @@ public class Squad : MonoBehaviour
             }
 
             ChangeState(SquadFSM.Seek);
-            ResetDestination(target, orientation, length);
+            ResetDestination(target);
         }
     }
 
@@ -708,7 +734,7 @@ public class Squad : MonoBehaviour
     #endregion
 
     #region Events
-
+    
     public void RemoveUnit(Unit unit)
     {
         units.Remove(unit);
@@ -732,9 +758,9 @@ public class Squad : MonoBehaviour
             cardAmmo.value -= unit.ammunition;
             cardNumber.text = count.ToString();
 
-            Morale -= Morale / count;
+            Morale -= morale / count;
             
-            if (data.rangeWeapon && cardAmmo.value <= 0f) {
+            if (hasRange && cardAmmo.value <= 0f) {
                 attributes.Add(Manager.WithoutAmmo);
             }
         }
@@ -769,9 +795,9 @@ public class Squad : MonoBehaviour
         camController.InduceShake(stress);
     }
 
-    public void CreateDamage(Unit inflictor, Unit target, DamageType type, int damage, float radius = 2f)
+    public void CreateDamage(Unit inflictor, Vector3 position, DamageType type, int damage, float radius = 2f)
     {
-        var size = Physics.OverlapSphereNonAlloc(target.worldTransform.position, radius, colliders, Manager.Unit);
+        var size = Physics.OverlapSphereNonAlloc(position, radius, colliders, Manager.Unit);
         for (var i = 0; i < size; i++) {
             var unit = unitTable[colliders[i].gameObject];
             var squad = unit.squad;
@@ -803,8 +829,8 @@ public class Squad : MonoBehaviour
         OnMeleeDamage(); // also enable indication
         if (!attributes.Contains(Manager.UnderFire)) {
             PlaySound(data.commanderSounds.underfire);
+            attributes.Add(Manager.UnderFire);
         }
-        attributes.Add(Manager.UnderFire);
         if (rangeRoutine != null) StopCoroutine(rangeRoutine);
         rangeRoutine = StartCoroutine(RangeEnd());
     }
@@ -819,7 +845,7 @@ public class Squad : MonoBehaviour
     {
         cardAmmo.value--;
         
-        if (data.rangeWeapon && cardAmmo.value <= 0f) {
+        if (hasRange && cardAmmo.value <= 0f) {
             attributes.Add(Manager.WithoutAmmo);
         }
     }
@@ -853,7 +879,7 @@ public class Squad : MonoBehaviour
 
     #region Finders
 
-    public Squad FindClosestSquad(Vector3 position)
+    public Squad FindClosestEnemy(Vector3 position)
     {
         switch (enemies.Count) {
             case 0: return enemy;
@@ -875,11 +901,29 @@ public class Squad : MonoBehaviour
         }
     }
 
-    private Unit FindTargetInFront(Vector3 position)
+    private Squad FindClosestSquad(Vector3 position)
+    {
+        Squad closest = null;
+        var nearest = float.MaxValue;
+                
+        foreach (var squad in squadTable) {
+            if (squad != this && squad.team != team && !squad.isUnreachable) {
+                var distance = Vector.DistanceSq(squad.centroid, position);
+                if (distance < nearest) {
+                    closest = squad;
+                    nearest = distance;
+                }
+            }
+        }
+        
+        return closest;
+    }
+
+    private Unit FindTargetInFront(Vector3 position, float radius = 2f)
     {
         var cast = Physics.Raycast(position, targetDirection, out var hit, aggroDistance, Manager.Squad);
         if (cast) {
-            var size = Physics.OverlapSphereNonAlloc(hit.point, 2f, colliders, Manager.Unit);
+            var size = Physics.OverlapSphereNonAlloc(hit.point, radius, colliders, Manager.Unit);
             if (size > 0) {
                 var unit = unitTable[colliders[0].gameObject];
                 if (unit.squad.team != team) {
@@ -891,13 +935,13 @@ public class Squad : MonoBehaviour
         return null;
     }
 
-    public Unit FindRandomEnemy(Vector3 position)
+    public Unit FindRandomTarget(Vector3 position)
     {
-        var squad = FindClosestSquad(position);
+        var squad = FindClosestEnemy(position);
         return squad ? squad.units[Random.Range(0, squad.unitCount)] : null;
     }
     
-    public Unit FindClosestEnemy(Vector3 position)
+    public Unit FindClosestTarget(Vector3 position)
     {
         // TODO: Improve target find system
         if (neighbours.Count == 0 || !touchEnemies) {
@@ -906,7 +950,7 @@ public class Squad : MonoBehaviour
                 return unit;
             }
         }
-        var squad = FindClosestSquad(position);
+        var squad = FindClosestEnemy(position);
         return squad ? squad.FindClosestUnit(position) : null;
     }
     
@@ -945,7 +989,7 @@ public class Squad : MonoBehaviour
 
     public void SetRunning(bool value)
     {
-        if (isRunning == value || isFlee)
+        if (isRunning == value || isEscape)
             return;
 
         isRunning = value;
@@ -954,7 +998,7 @@ public class Squad : MonoBehaviour
     
     public void SetHolding(bool value)
     {
-        if (isHolding == value || isFlee)
+        if (isHolding == value || isEscape)
             return;
 
         isHolding = true;
@@ -963,7 +1007,7 @@ public class Squad : MonoBehaviour
     
     public void SetRange(bool value)
     {
-        if (isRange == value || isFlee)
+        if (isRange == value || isEscape || hasRange)
             return;
 
         isRange = value;
@@ -986,13 +1030,13 @@ public class Squad : MonoBehaviour
                 ChangeSelectState(false);
                 unitManager.RemoveSquad(this);
                 PlaySound(data.commanderSounds.saveYourLives);
+                isForward = true;
+                isRunning = true;
+                agent.maxSpeed = moveSpeed;
             } else {
                 PlaySound(data.commanderSounds.retreat);
             }
             ChangeState(SquadFSM.Retreat);
-            isForward = true;
-            isRunning = true;
-            agent.maxSpeed = moveSpeed;
             cardFlash.color = Color.white;
             cardIndicator.SetActive(true);
         } else {
@@ -1005,12 +1049,16 @@ public class Squad : MonoBehaviour
 
     public void ForceStop()
     {
-        if (state == SquadFSM.Idle || isFlee)
+        if (state == SquadFSM.Idle || isEscape)
             return;
 
-        ChangeState(SquadFSM.Idle);
-        PlaySound(data.commanderSounds.halt);
-        DelaySound(data.groupSounds.stopSounds);
+        if (isFlee) {
+            SetFlee(false);
+        } else {
+            ChangeState(SquadFSM.Idle);
+            PlaySound(data.commanderSounds.halt);
+            DelaySound(data.groupSounds.stopSounds);
+        }
     }
     
     private void SetStamina(MoraleAttribute attribute)
@@ -1190,44 +1238,45 @@ public class Squad : MonoBehaviour
     }
     
     #region Idle
-    
+
     private void IdleBehavior()
     {
-        // If we touvh an enemy, exit idle mode
-        if (touchEnemies) {
-            if (isRange) {
-                SetRange(false);
-            }
-            ChangeState(SquadFSM.Attack);
-            enemy = FindClosestSquad(centroid);
+        if (hasEnemies) {
+            if (touchEnemies) {
+                if (isRange) {
+                    SetRange(false);
+                }
 
-            // Play sound
-            var direction = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, (enemy.centroid - centroid).Normalized(), Vector3.up));
-            switch (direction) {
-                case Direction.Forward:
-                    PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.prepare : data.commanderSounds.braceYourselves);
-                    break;
-                case Direction.ForwardLeft:
-                case Direction.Left:
-                    PlaySound(data.commanderSounds.fromLeftFlank);
-                    break;
-                case Direction.ForwardRight:
-                case Direction.Right:
-                    PlaySound(data.commanderSounds.fromRightFlank);
-                    break;
-                case Direction.BackwardRight:
-                case Direction.BackwardLeft:
-                case Direction.Backward:
-                    PlaySound(data.commanderSounds.theyComeFromBehind);
-                    break;
+                ChangeState(SquadFSM.Attack);
+                enemy = FindClosestEnemy(centroid);
+
+                var direction = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, (enemy.centroid - centroid).Normalized(), Vector3.up));
+                switch (direction) {
+                    case Direction.Forward:
+                        PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.prepare : data.commanderSounds.braceYourselves);
+                        break;
+                    case Direction.ForwardLeft:
+                    case Direction.Left:
+                        PlaySound(data.commanderSounds.fromLeftFlank);
+                        break;
+                    case Direction.ForwardRight:
+                    case Direction.Right:
+                        PlaySound(data.commanderSounds.fromRightFlank);
+                        break;
+                    case Direction.BackwardRight:
+                    case Direction.BackwardLeft:
+                    case Direction.Backward:
+                        PlaySound(data.commanderSounds.theyComeFromBehind);
+                        break;
+                }
+            } else if (!isHolding) {
+                ChangeState(SquadFSM.Attack);
+                enemy = FindClosestEnemy(centroid);
+                PlaySound(isRange ? data.commanderSounds.fire : data.commanderSounds.charge);
             }
-        } else if (!isHolding && hasEnemies) {
-            ChangeState(SquadFSM.Attack);
-            enemy = FindClosestSquad(centroid);
-            PlaySound(isRange ? data.commanderSounds.fire : data.commanderSounds.charge);
         }
-        
-        Stamina += Time.deltaTime;
+
+        Stamina += idleStamina;
     }
     
     #endregion
@@ -1236,7 +1285,7 @@ public class Squad : MonoBehaviour
 
     private void AttackBehavior()
     {
-        if (enemy && enemy.hasUnits) {
+        if (isValidEnemy) {
             targetDirection = enemy.centroid - centroid;
             worldTransform.rotation = Quaternion.LookRotation(targetDirection);
             var distance = targetDirection.Magnitude();
@@ -1252,7 +1301,7 @@ public class Squad : MonoBehaviour
                 seek.enabled = movement;
                 
                 SetAdvantage(Advantage.None);
-                Stamina -= Time.deltaTime / 10f;
+                Stamina -= shotStamina;
             } else {
                 if (distance > data.attackDistance * 1.05f) {
                     ChangeState(SquadFSM.Idle);
@@ -1264,7 +1313,7 @@ public class Squad : MonoBehaviour
                 }
                 
                 SetAdvantage(math.abs(targetDirection.y) > 1f ? targetDirection.y > 0f ? Advantage.Lower : Advantage.Upper : Advantage.None);
-                Stamina -= Time.deltaTime / 2f;
+                Stamina -= meleeStamina;
             }
         } else {
             ChangeState(SquadFSM.Idle);
@@ -1278,15 +1327,31 @@ public class Squad : MonoBehaviour
 
     private void RetreatBehavior()
     {
-        if (math.lengthsq(agent.velocity) > 0f) {
-            worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, agent.velocity.ToEuler(), data.squadRotation);
+        worldTransform.rotation = Quaternion.LookRotation(agent.velocity.Project());
+
+        var squad = FindClosestSquad(centroid);
+        if (squad) {
+            anchorTransform.position = squad.centroid;
         }
         
-        if (hasEnemies) {
-            anchorTransform.position = FindClosestSquad(centroid).centroid;
+        if (border.IsOutsideBorder(centroid)) {
+            if (!crossBorder.HasValue) {
+                crossBorder = centroid;
+                ChangeSelectState(false);
+                unitManager.RemoveSquad(this);
+            } else if (Vector.DistanceSq(crossBorder.Value, centroid) > removeRange) {
+                foreach (var unit in units) {
+                    unit.OnRemove();
+                }
+                entityManager.DestroyEntity(squadEntity);
+                //DestroyImmediate(squadBar);
+                DestroyImmediate(unitCard);
+                DestroyImmediate(unitLayout);
+                gameObject.SetActive(false);
+            }
         }
         
-        Stamina -= Time.deltaTime;
+        Stamina -= retreatStamina;
     }
 
     #endregion
@@ -1299,13 +1364,13 @@ public class Squad : MonoBehaviour
             worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (isForward ? agent.velocity : -agent.velocity).ToEuler(), data.squadRotation);
         }
 
-        if (enemy) {
+        if (isValidEnemy) {
             SeekEnemy();
         } else {
             SeekPoint();
         }
         
-        Stamina -= isRunning ? Time.deltaTime * 5f : Time.deltaTime;
+        Stamina -= isRunning ? runStamina : walkStamina;
     }
 
     private void SeekPoint()
@@ -1350,13 +1415,13 @@ public class Squad : MonoBehaviour
         if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
         
         // Store current
-        var (obj, orientation, length) = targets.Dequeue();
-        target = obj;
+        var t = targets.Dequeue();
+        target = t.obj;
         targetTransform = target.transform;
 
         // If no more targets, rotate to desired orientation
-        if (targets.Count == 0 && orientation.HasValue) {
-            targetOrientation = Quaternion.Euler(0f, orientation.Value, 0f);
+        if (targets.Count == 0 && t.orientation.HasValue) {
+            targetOrientation = Quaternion.Euler(0f, t.orientation.Value, 0f);
         } else {
             targetOrientation = null;
         }
@@ -1380,6 +1445,7 @@ public class Squad : MonoBehaviour
         var reverse = false;
         
         // Remove all corontines just in case
+        if (exitRoutine != null) StopCoroutine(exitRoutine);
         if (waitRoutine != null) StopCoroutine(waitRoutine);
 
         seek.enabled = true;
@@ -1405,9 +1471,9 @@ public class Squad : MonoBehaviour
                     PlaySound(sounds.noneShallStopUs);
                     break;
             }
-        } else if (length.HasValue) {
+        } else if (t.length.HasValue) {
             PlaySound(Random.Range(0, 2) == 0 ? sounds.regroup : sounds.takeYourPosition);
-        } else if (orientation.HasValue) {
+        } else if (t.orientation.HasValue) {
             PlaySound(Random.Range(0, 2) == 0 ? sounds.steady : sounds.standInLine);
         } else {
             switch (dir) {
@@ -1417,11 +1483,9 @@ public class Squad : MonoBehaviour
                     PlaySound(sounds.forward);
                     break;
                 case Direction.Left:
-                    //if (Physics.OverlapSphereNonAlloc(target.transform.position, 2f, colliders, sounds.Squad) != 0 && colliders[0].gameObject == gameObject)
                     PlaySound(sounds.toTheLeftFlank);
                     break;
                 case Direction.Right:
-                    //if (Physics.OverlapSphereNonAlloc(target.transform.position, 2f, colliders, sounds.Squad) != 0 && colliders[0].gameObject == gameObject)
                     PlaySound(sounds.toTheRightFlank);
                     break;
                 case Direction.Backward:
@@ -1436,7 +1500,7 @@ public class Squad : MonoBehaviour
         DelaySound(data.groupSounds.goSounds);
 
         if (targetOrientation.HasValue) {
-            // If differerence is too big, rotate instantly
+            // If difference is too big, rotate instantly
             var diff = targetOrientation.Value.eulerAngles.y - worldTransform.rotation.eulerAngles.y;
             if (!(diff <= 22.5f && diff > -22.5f)) {
                 worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * phalanxHeight, targetOrientation.Value);
@@ -1448,12 +1512,12 @@ public class Squad : MonoBehaviour
             }
         } else if (dir == Direction.Backward) {
             worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * phalanxHeight, direction.ToEuler());
-            if (!length.HasValue) length = phalanxLength; // use to reverse formation for correct backward repositioning
+            if (!t.length.HasValue) t.length = phalanxLength; // use to reverse formation for correct backward repositioning
             reverse = true;
         }
         
-        if (length.HasValue) {
-            UpdateFormation(length.Value, reverse);
+        if (t.length.HasValue) {
+            UpdateFormation(t.length.Value, reverse);
             isForward = true; // to make units move to their desired position normally
             seek.enabled = false;
             waitRoutine = StartCoroutine(WaitUntilDoneMovements());
@@ -1463,15 +1527,15 @@ public class Squad : MonoBehaviour
         }
     }
     
-    private void AddDestination(GameObject obj, float? orientation = null, float? length = null)
+    private void AddDestination(Target target)
     {
-        targets.Enqueue((obj, orientation, length));
+        targets.Enqueue(target);
     }
 
-    private void ResetDestination(GameObject obj, float? orientation = null, float? length = null)
+    private void ResetDestination(Target target)
     {
         targets.Clear();
-        targets.Enqueue((obj, orientation, length));
+        targets.Enqueue(target);
         NextTarget();
     }
     
@@ -1492,7 +1556,7 @@ public class Squad : MonoBehaviour
     private IEnumerator ExitWhenDoneMovements()
     {
         while (true) {
-            if (!enemy) {
+            if (!isValidEnemy) {
                 exitRoutine = null;
                 ChangeState(SquadFSM.Idle);
                 PlaySound(data.commanderSounds.dismiss);

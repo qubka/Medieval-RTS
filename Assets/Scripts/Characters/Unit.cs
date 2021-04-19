@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour
     public EntityManager entityManager;
     public Entity entity;
     public Entity formation;
+    [Space]
     
     // Main
     [ReadOnly] public UnitFSM state;
@@ -37,23 +38,25 @@ public class Unit : MonoBehaviour
     [ReadOnly] public int ammunition;
     [ReadOnly] public int range;
     [ReadOnly] public int skin;
-
+	[Space]
+	
     // Misc
     [ReadOnly] public Squad squad;
-    [ReadOnly] public GameObject attachment;
-    [ReadOnly] public GameObject selector;
-    [ReadOnly] public Transform selectorTransform;
-    [ReadOnly] public Transform attachTransform;
-    [ReadOnly] public Transform worldTransform;
+    [ReadOnly] public Unit target;
     [ReadOnly] public List<Transform> collisions;
     [ReadOnly] public List<Obstacle> obstacles;
-    [ReadOnly] public Unit target;
-    [ReadOnly] public GPUICrowdPrefab crowd;
-    [ReadOnly] public GPUICrowdPrefab subCrowd;
-    [ReadOnly] public Rigidbody body;
+    [HideInInspector] public GameObject attachment;
+    [HideInInspector] public GameObject selector;
+    [HideInInspector] public Transform selectorTransform;
+    [HideInInspector] public Transform attachTransform;
+    [HideInInspector] public Transform worldTransform;
+    [HideInInspector] public GPUICrowdPrefab crowd;
+    [HideInInspector] public GPUICrowdPrefab subCrowd;
+    [HideInInspector] public Rigidbody body;
+    [HideInInspector] public CapsuleCollider capsule;
+    [Space]
     
     // Steering cache valuers
-    [Space(10)]
     [ReadOnly] public float arrivalWeight;
     [ReadOnly] public float arrivalRadius = 1f; // initial value
     [ReadOnly] public Unit seekingTarget;
@@ -97,6 +100,7 @@ public class Unit : MonoBehaviour
         collisions = new List<Transform>();
         obstacles = new List<Obstacle>();
         body = GetComponent<Rigidbody>();
+        capsule = GetComponent<CapsuleCollider>();
         ChangeState(UnitFSM.Idle);
     }
 
@@ -125,9 +129,9 @@ public class Unit : MonoBehaviour
 	            SetArrivalWeight(isRange ? 1f : 0f);
 	            if (currentTime > nextTargetTime || !target) {
 		            var pos = worldTransform.position;
-                    var enemy = isRange ? squad.FindRandomEnemy(pos) : squad.FindClosestEnemy(pos);
-                    if (enemy) {
-	                    target = enemy;
+                    var unit = isRange ? squad.FindRandomTarget(pos) : squad.FindClosestTarget(pos);
+                    if (unit) {
+	                    target = unit;
 	                    SetSeeking(isRange ? null : target);
 	                    nextTargetTime = currentTime + Random.Range(3f, 6f);
                     } else {
@@ -355,22 +359,11 @@ public class Unit : MonoBehaviour
             case UnitFSM.Idle:
             case UnitFSM.Attack:
 	            SetArrivalRadius(1f);
-	            body.Sleep();
-                break;
-            
-            case UnitFSM.Wait:
-	        case UnitFSM.KnockdownWait:
-	            body.Sleep();
 	            break;
-            
+
             case UnitFSM.Seek:
             case UnitFSM.RangeSeek:
 	            SetArrivalRadius(0.25f);
-	            body.WakeUp();
-                break;
-            
-            default:
-	            body.WakeUp();
 	            break;
         }
 
@@ -555,7 +548,7 @@ public class Unit : MonoBehaviour
 	        var desired = target.worldTransform.position;
 	        if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
 		        if (animations.hasMount && type == DamageType.Charge) {
-			        squad.CreateDamage(this, target, type, nextDamage);
+			        squad.CreateDamage(this, desired, type, nextDamage);
 		        } else {
 			        target.OnDamage(this, type, nextDamage);
 		        }
@@ -567,7 +560,7 @@ public class Unit : MonoBehaviour
 	        var desired = target.worldTransform.position;
 	        if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
 	            if (animations.hasMount && type == DamageType.Charge) {
-		            squad.CreateDamage(this, target, type, nextDamage);
+		            squad.CreateDamage(this, desired, type, nextDamage);
 	            } else {
 		            target.OnDamage(this, type, nextDamage);
 	            }
@@ -756,11 +749,19 @@ public class Unit : MonoBehaviour
     {
 	    crowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
 	    if (subCrowd) subCrowd.crowdAnimator.currentAnimationClipData[0].isLoopDisabled = true;
+	    
 	    entityManager.DestroyEntity(entity);
 	    entityManager.DestroyEntity(formation);
 	    Destroy(selector);
 	    DestroyImmediate(this);
 	    squad.RemoveUnit(this);
+    }
+
+    public void OnRemove()
+    {
+	    entityManager.DestroyEntity(entity);
+	    entityManager.DestroyEntity(formation);
+	    Destroy(gameObject);
     }
 
     #endregion
@@ -1349,8 +1350,9 @@ public class Unit : MonoBehaviour
 		ChangeState(UnitFSM.Death);
 		var anim = animations.GetDeathAnimation(isCombat, isRange);
 		PlayAnimation(anim, anim.Length);
-		Destroy(GetComponent<CapsuleCollider>());
-		Destroy(GetComponent<Rigidbody>());
+		Destroy(capsule);
+		Destroy(body);
+		Destroy(boid);
 	}
 
 	private void Death()
@@ -1484,6 +1486,7 @@ public class Unit : MonoBehaviour
 	    var crowd = unitObject.GetComponent<GPUICrowdPrefab>();
 	    var unit = unitObject.GetComponent<Unit>();
 	    var body = unitObject.GetComponent<Rigidbody>();
+	    var capsule = unitObject.GetComponent<CapsuleCollider>();
 	    
 	    // Update transforms
 	    if (selectorTransform) {
@@ -1530,6 +1533,7 @@ public class Unit : MonoBehaviour
 	    unit.range = range;
 	    unit.skin = skin;
 	    unit.body = body;
+	    unit.capsule = capsule;
 	    unit.squad = squad;
 	    unit.collisions = collisions;
 	    unit.obstacles = obstacles;
