@@ -645,9 +645,17 @@
           <e p="License.txt" t="Include" />
         </e>
         <e p="Scenes" t="Include">
-          <e p="MicroSplatData" t="Include">
-            <e p="MicroSplat.shader" t="Include" />
-            <e p="MicroSplat_Base.shader" t="Include" />
+          <e p="Campain" t="Include">
+            <e p="MicroSplatData" t="Include">
+              <e p="MicroSplat.shader" t="Include" />
+              <e p="MicroSplat_Base.shader" t="Include" />
+            </e>
+          </e>
+          <e p="Combat" t="Include">
+            <e p="MicroSplatData" t="Include">
+              <e p="MicroSplat.shader" t="Include" />
+              <e p="MicroSplat_Base.shader" t="Include" />
+            </e>
           </e>
         </e>
         <e p="Scripts" t="Include">
@@ -725,7 +733,6 @@
           <e p="UI" t="Include">
             <e p="Camera" t="Include">
               <e p="CamController.cs" t="Include" />
-              <e p="CameraAttach.cs" t="Include" />
               <e p="Minimap.cs" t="Include" />
               <e p="SortByDistance.cs" t="Include" />
               <e p="WorldCanvasAlign.cs" t="Include" />

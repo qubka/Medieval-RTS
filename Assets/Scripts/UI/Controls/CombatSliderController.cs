@@ -40,7 +40,7 @@ public class CombatSliderController : MonoBehaviour
             } else {
                 slider.value = math.clamp((float) allies / enemies, 0.1f, 1.9f);
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSecondsRealtime(1f);
         }
     }
 }

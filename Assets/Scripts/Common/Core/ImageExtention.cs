@@ -17,7 +17,7 @@ public static class ImageExtention
             color.a = alpha;
             image.color = color;
 
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             yield return null;
         }
     }

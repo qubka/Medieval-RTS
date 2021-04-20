@@ -118,7 +118,7 @@ public class UnitManager : MonoBehaviour
 		SetCursor(basicCursor);
 	}
 
-	private void LateUpdate()
+	private void Update()
 	{
 		groundRay = cam.ScreenPointToRay(Input.mousePosition);
 		groundCast = Physics.Raycast(groundRay, out groundHit, maxDistance, Manager.Ground);
@@ -633,7 +633,7 @@ public class UnitManager : MonoBehaviour
 		if ((time - lastSelectTime < 0.5f) && lastSelectSquad == filter) {
 			var trans = filter.centerTransform;
 			if (camController.target != trans) {
-				camController.SetTarget(trans, true);
+				camController.SetTarget(trans);
 				clickAudio.clip = targetSound;
 				clickAudio.Play();
 			}

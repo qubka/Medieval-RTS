@@ -31,8 +31,9 @@ public class CamController : MonoBehaviour
 
 	[Header("Movement")]
 	public float keyboardMovementSpeed = 80f; //speed with keyboard movement
-	public float screenEdgeMovementSpeed = 40f; //spee with screen edge movement
+	public float screenEdgeMovementSpeed = 40f; //speed with screen edge movement
 	public float followingSpeed = 50f; //speed when following a target
+	public float lookingSpeed = 10f; // speed when looking at target
 	public float rotationSpeed = 100f;
 	public float panningSpeed = 50f;
 	public float mouseRotationSpeed = 80f;
@@ -53,6 +54,7 @@ public class CamController : MonoBehaviour
 	public float smoothZoomTime = 0.1f; //
 	private float currentHeight;
 	private float currentZoomVelocity;
+	private RaycastHit groundHit;
 	
 	public float DistToGround => currentHeight / maxHeight;
 	
@@ -74,8 +76,8 @@ public class CamController : MonoBehaviour
 	public Transform target; //target to follow
 	public float distance = 10.0f;
 	public float smoothRotationTime = 0.0001f;
+	public bool lookAtTarget;
 	private float currentRotationVelocity;
-	//private bool lookAtTarget;
 
 	#endregion
 
@@ -107,6 +109,8 @@ public class CamController : MonoBehaviour
 	[Space]
 	public bool useScrollwheelZooming = true;
 	public string zoomingAxis = "Mouse ScrollWheel";
+	public string mouseHorizontalAxis = "Mouse X";
+	public string mouseVerticalAxis = "Mouse Y";
 	[Space]
 	public bool useKeyboardRotation = true;
 	public KeyCode rotateRightKey = KeyCode.E;
@@ -125,11 +129,13 @@ public class CamController : MonoBehaviour
 		public KeyCode mouseMovementKey = KeyCode.Mouse0;
 	*/
 	
-	private Vector2 KeyboardInput => useKeyboardInput ? new Vector2(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis)) : Vector2.zero;
+	//TODO: Replace by Raw with smoothing
+	private Vector2 KeyboardInput => new Vector2(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
 	private Vector2 MouseInput => Input.mousePosition;
 	private float ScrollWheel => -Input.GetAxis(zoomingAxis);
-	private Vector2 MouseAxis => new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+	private Vector2 MouseAxis => new Vector2(Input.GetAxis(mouseHorizontalAxis), Input.GetAxis(mouseVerticalAxis));
 	private int TouchCount => Input.touchCount;
+	private static float DeltaTime => Time.unscaledDeltaTime;
 
 	private int ZoomDirection {
 		get {
@@ -208,13 +214,15 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	private void PcCamera()
 	{
-		if (target) 
+		if (target) {
 			FollowTarget();
-		else
+			if (!lookAtTarget) Rotation();
+		} else {
 			Move();
+			Rotation();
+		}
 		
 		HeightCalculation();
-		Rotation();
 		LimitPosition();
 		Shake();
 	}
@@ -225,12 +233,15 @@ public class CamController : MonoBehaviour
 	private void Move()
 	{
 		if (useKeyboardInput) {
-			var desiredMove = new Vector3(KeyboardInput.x, 0f, KeyboardInput.y);
+			var input = KeyboardInput;
+			if (input.SqMagnitude() > 0f) {
+				var desiredMove = input.Project();
 
-			desiredMove *= keyboardMovementSpeed;
-			desiredMove *= Time.deltaTime;
-			desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
-			camTransform.position += desiredMove;
+				desiredMove *= keyboardMovementSpeed;
+				desiredMove *= DeltaTime;
+				desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
+				camTransform.position += desiredMove;
+			}
 		}
 
 		if (useScreenEdgeInput) {
@@ -244,22 +255,26 @@ public class CamController : MonoBehaviour
 			var upRect = new Rect(0f, height - screenEdgeBorder, width, screenEdgeBorder);
 			var downRect = new Rect(0f, 0f, width, screenEdgeBorder);
 
-			desiredMove.x = leftRect.Contains(MouseInput) ? -1f : rightRect.Contains(MouseInput) ? 1f : 0f;
-			desiredMove.z = upRect.Contains(MouseInput) ? 1f : downRect.Contains(MouseInput) ? -1f : 0f;
+			var input = MouseInput;
+			desiredMove.x = leftRect.Contains(input) ? -1f : rightRect.Contains(input) ? 1f : 0f;
+			desiredMove.z = upRect.Contains(input) ? 1f : downRect.Contains(input) ? -1f : 0f;
 
 			desiredMove *= screenEdgeMovementSpeed;
-			desiredMove *= Time.deltaTime;
+			desiredMove *= DeltaTime;
 			desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
 			camTransform.position += desiredMove;
 		}
+		
+		if (useMousePanning && Input.GetKey(mousePanningKey)) {
+			var axis = MouseAxis;
+			if (axis.SqMagnitude() > 0f) {
+				var desiredMove = -axis.Project();
 
-		if (useMousePanning && Input.GetKey(mousePanningKey) && MouseAxis.SqMagnitude() > 0f) {
-			var desiredMove = new Vector3(-MouseAxis.x, 0f, -MouseAxis.y);
-
-			desiredMove *= panningSpeed;
-			desiredMove *= Time.deltaTime;
-			desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
-			camTransform.position += desiredMove;
+				desiredMove *= panningSpeed;
+				desiredMove *= DeltaTime;
+				desiredMove = Quaternion.Euler(new Vector3(0f, camTransform.eulerAngles.y, 0f)) * desiredMove;
+				camTransform.position += desiredMove;
+			}
 		}
 	}
 
@@ -269,19 +284,19 @@ public class CamController : MonoBehaviour
 	private void HeightCalculation()
 	{
 		if (useScrollwheelZooming)
-			zoomPos += ScrollWheel * Time.deltaTime * scrollWheelZoomingSensitivity;
+			zoomPos += ScrollWheel * DeltaTime * scrollWheelZoomingSensitivity;
 		if (useKeyboardZooming)
-			zoomPos += ZoomDirection * Time.deltaTime * keyboardZoomingSensitivity;
+			zoomPos += ZoomDirection * DeltaTime * keyboardZoomingSensitivity;
 
 		zoomPos = MathExtention.Clamp01(zoomPos);
 		
 		var position = camTransform.position;
 		var ray = new Ray(position, Vector3.down);
-		if (Physics.Raycast(ray, out var hit, 1000f, Manager.Ground | Manager.Water)) {
-			var desiredHeight = hit.point.y + math.lerp(minHeight, maxHeight, zoomPos);
-			position.y = Mathf.SmoothDamp(position.y, desiredHeight, ref currentZoomVelocity, smoothZoomTime);
+		if (Physics.Raycast(ray, out groundHit, 1000f, Manager.Ground | Manager.Water)) {
+			var desiredHeight = groundHit.point.y + math.lerp(minHeight, maxHeight, zoomPos);
+			position.y = Mathf.SmoothDamp(position.y, desiredHeight, ref currentZoomVelocity, smoothZoomTime, float.PositiveInfinity, DeltaTime);
 			camTransform.position = position;
-			currentHeight = hit.distance;
+			currentHeight = groundHit.distance;
 		}
 	}
 
@@ -291,7 +306,7 @@ public class CamController : MonoBehaviour
 	private void Rotation()
 	{
 		if (useKeyboardRotation) {
-			var speed = Time.deltaTime * rotationSpeed;
+			var speed = DeltaTime * rotationSpeed;
 			rotationX -= VerticalRotation * speed;
 			rotationY += HorizontalRotation * speed;
 			
@@ -300,7 +315,7 @@ public class CamController : MonoBehaviour
 		}
 
 		if (useMouseRotation && Input.GetKey(mouseRotationKey)) {
-			var axis = MouseAxis * (Time.deltaTime * mouseRotationSpeed);
+			var axis = MouseAxis * (DeltaTime * mouseRotationSpeed);
 			rotationX -= axis.y;
 			rotationY += axis.x;
 			
@@ -322,7 +337,9 @@ public class CamController : MonoBehaviour
 		camTransform.position = position;
 	}
 
-	// TODO:
+	/// <summary>
+	/// shake camera
+	/// </summary>
 	private void Shake()
 	{
 		var shake = math.pow(trauma, TraumaExponent);
@@ -348,7 +365,7 @@ public class CamController : MonoBehaviour
 
 			worldTrasnform.localPosition += lastPosition - previousPosition;
 			worldTrasnform.localRotation = Quaternion.Euler(worldTrasnform.localRotation.eulerAngles + lastRotation - previousRotation);
-			trauma = MathExtention.Clamp01(trauma - Time.deltaTime);
+			trauma = MathExtention.Clamp01(trauma - DeltaTime);
 		} else {
 			if (lastPosition == Vector3.zero && lastRotation == Vector3.zero)
 				return;
@@ -375,34 +392,39 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	private void FollowTarget()
 	{
-		// Calculate the current rotation angles
-		var desiredRotationAngle = target.eulerAngles.y;
-		var desiredPosition = target.position;
-		var currentRotationAngle = camTransform.eulerAngles.y;
+		// Get current information
 		var currentPosition = camTransform.position;
-
+		var currentRotation = camTransform.rotation;
+		var currentRotationAngle = currentRotation.eulerAngles.y;
+		var desiredPosition = target.position;
+		var desiredRotation = Quaternion.LookRotation(desiredPosition - currentPosition);
+		var desiredRotationAngle = target.eulerAngles.y;
+		
 		// Damp the rotation around the y-axis
-		currentRotationAngle = Mathf.SmoothDampAngle(currentRotationAngle, desiredRotationAngle, ref currentRotationVelocity, smoothRotationTime);
-
-		// Convert the angle into a rotation
-		var currentRotation = Quaternion.Euler(0f, currentRotationAngle, 0f);
+		currentRotationAngle = Mathf.SmoothDampAngle(currentRotationAngle, desiredRotationAngle, ref currentRotationVelocity, smoothRotationTime, float.PositiveInfinity, DeltaTime);
 
 		// Set the position of the camera on the x-z plane to:
 		// distance meters behind the target
-		desiredPosition -= currentRotation * Vector3.forward * distance;
+		desiredPosition -= Quaternion.Euler(0f, currentRotationAngle, 0f) * Vector3.forward * distance;
 
 		// Move to the desired position
 		desiredPosition = new Vector3(desiredPosition.x, currentPosition.y, desiredPosition.z);
-		currentPosition = Vector.MoveTowards(currentPosition, desiredPosition,  followingSpeed * Time.deltaTime);
-		camTransform.position = currentPosition;
-
-		// Always look at the target
-		/*if (lookAtTarget) {
-			worldTrasnform.LookAt(target);
-		}*/
-
+		currentPosition = Vector.MoveTowards(currentPosition, desiredPosition,  followingSpeed * DeltaTime);
+		
+		// If look at target is enabled, set smooth rotation
+		if (lookAtTarget) {
+			// Smoothly rotate towards the target point
+			currentRotation = Quaternion.Slerp(currentRotation, desiredRotation, lookingSpeed * DeltaTime);
+			
+			// Set position and rotation
+			camTransform.SetPositionAndRotation(currentPosition, currentRotation);
+		} else {
+			// Set only position
+			camTransform.position = currentPosition;
+		}
+		
 		// Reset target if press any key
-		if (KeyboardInput.SqMagnitude() > 0f) {
+		if (useKeyboardInput && KeyboardInput.SqMagnitude() > 0f) {
 			ResetTarget();
 		}
 	}
@@ -411,13 +433,10 @@ public class CamController : MonoBehaviour
 	/// set the target
 	/// </summary>
 	/// <param name="trans">Any object transform to follow</param>
-	/// <param name="lookAt">True to use look at feature on the target transform.</param>
-	public void SetTarget(Transform trans, bool lookAt = false)
+	public void SetTarget(Transform trans)
 	{
 		if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target.gameObject);
-		//worldTrasnform.localRotation = Quaternion.identity;
 		target = trans;
-		//lookAtTarget = lookAt;
 	}
 
 	/// <summary>
@@ -426,9 +445,7 @@ public class CamController : MonoBehaviour
 	public void ResetTarget()
 	{
 		if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target.gameObject);
-		//worldTrasnform.localRotation = Quaternion.identity;
 		target = null;
-		//lookAtTarget = false;
 	}
 
 	#endregion
@@ -472,10 +489,10 @@ public class CamController : MonoBehaviour
 		var mouseX = touch.deltaPosition.x;
 		var mouseY = -touch.deltaPosition.y;
 		
-		rotationY += mouseX * mouseSensitivity * deltaTime * 0.02f;
-		rotationX += mouseY * mouseSensitivity * deltaTime * 0.02f;	
+		rotationY += mouseX * mouseSensitivity * DeltaTime * 0.02f;
+		rotationX += mouseY * mouseSensitivity * DeltaTime * 0.02f;	
 		rotationX = math.clamp(rotationX, -clampAngle, clampAngle);
-		worldTransform.rotation = Quaternion.Euler(rotationX, rotationY, 0f);
+		cameraTransform.rotation = Quaternion.Euler(rotationX, rotationY, 0f);
 	}
 
 	/// <summary>

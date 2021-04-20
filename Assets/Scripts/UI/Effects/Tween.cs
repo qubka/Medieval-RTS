@@ -666,7 +666,7 @@ namespace DigitalRuby.Tween
 
 #if IS_UNITY
 
-            TimeFunc = TweenFactory.DefaultTimeFunc;
+            TimeFunc = TweenFactory.TimeFuncUnscaledDeltaTimeFunc;
 
 #else
 

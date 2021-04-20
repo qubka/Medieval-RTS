@@ -32,7 +32,7 @@ public class FadeEffect : MonoBehaviour
         while (true) {
             enable = !enable;
             StartCoroutine(image.Fade(enable ? 0f : 1f, fadeSpeed - 0.1f));
-            yield return new WaitForSeconds(fadeSpeed);
+            yield return new WaitForSecondsRealtime(fadeSpeed);
         }
     }
 }

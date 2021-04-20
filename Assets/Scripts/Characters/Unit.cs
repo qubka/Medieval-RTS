@@ -1395,7 +1395,7 @@ public class Unit : MonoBehaviour
 		}
 		
 		if (currentTime > nextAnimTime) {
-			lastDamageTime = currentTime + 5f;
+			lastDamageTime = Min;
 			ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
 			TransitionToIdle(0f);
 		}

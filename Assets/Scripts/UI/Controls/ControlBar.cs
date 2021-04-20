@@ -11,22 +11,20 @@ public class ControlBar : MonoBehaviour
     [SerializeField] private ControlButton hold;
     [SerializeField] private ControlButton range;
     [SerializeField] private ControlButton flee;
-    [SerializeField] private Material material;
     private UnitManager manager;
     private bool enable;
 
     [Serializable]
     public class ControlButton
     {
-        public GameObject obj;
         public GameObject select;
         public Button button;
+        public Material material;
     }
     
     private void Start()
     {
         manager = Manager.unitManager;
-        material.SetFloat(Manager.GrayscaleAmount, 1f);
         StartCoroutine(Tick());
     }
 
@@ -34,7 +32,7 @@ public class ControlBar : MonoBehaviour
     {
         while (true) {
             OnUpdate();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
@@ -47,17 +45,15 @@ public class ControlBar : MonoBehaviour
             if (count == 1) {
                 var squad = manager.selectedUnits[0];
                 run.select.SetActive(squad.isRunning);
-                hold.select.SetActive(squad.isHolding);   
-                range.select.SetActive(squad.isRange);
+                hold.select.SetActive(squad.isHolding);
                 flee.select.SetActive(squad.isFlee);
-                range.obj.SetActive(squad.data.rangeWeapon);
+                SetInteractable(range, squad.hasRange, squad.isRange);
             } else {
                 var selected = manager.selectedUnits;
                 run.select.SetActive(selected.Any(squad => squad.isRunning));
-                hold.select.SetActive(selected.Any(squad => squad.isHolding));   
-                range.select.SetActive(selected.Any(squad => squad.isRange));
+                hold.select.SetActive(selected.Any(squad => squad.isHolding));
                 flee.select.SetActive(selected.Any(squad => squad.isFlee));
-                range.obj.SetActive(selected.Any(squad => squad.data.rangeWeapon));
+                SetInteractable(range, selected.Any(squad => squad.hasRange), selected.Any(squad => squad.isRange));
             }
         } else {
             Toggle(false);
@@ -71,23 +67,11 @@ public class ControlBar : MonoBehaviour
         
         enable = value;
 
-        run.button.interactable = value;
-        stop.button.interactable = value;
-        hold.button.interactable = value;
-        range.button.interactable = value;
-        flee.button.interactable = value;
-
-        if (value) {
-            material.SetFloat(Manager.GrayscaleAmount, 0f);
-        } else {
-            run.select.SetActive(false);
-            hold.select.SetActive(false);   
-            range.select.SetActive(false);
-            flee.select.SetActive(false);
-            range.obj.SetActive(true);
-
-            material.SetFloat(Manager.GrayscaleAmount, 1f);
-        }
+        SetInteractable(run, value);
+        SetInteractable(stop, value);
+        SetInteractable(hold, value);
+        SetInteractable(range, value);
+        SetInteractable(flee, value);
     }
 
     public void ToggleRun()
@@ -99,8 +83,9 @@ public class ControlBar : MonoBehaviour
                 squad.SetRunning(!squad.isRunning);
             } else {
                 var selected = manager.selectedUnits;
+                var status = !selected.All(s => s.isRunning);
                 foreach (var squad in selected) {
-                    squad.SetRunning(!selected.All(s => s.isRunning));
+                    squad.SetRunning(status);
                 }
             }
         }
@@ -131,8 +116,9 @@ public class ControlBar : MonoBehaviour
                 squad.SetHolding(!squad.isHolding);
             } else {
                 var selected = manager.selectedUnits;
+                var status = !selected.All(s => s.isHolding);
                 foreach (var squad in selected) {
-                    squad.SetHolding(!selected.All(s => s.isHolding));
+                    squad.SetHolding(status);
                 }
             }
         }
@@ -146,9 +132,15 @@ public class ControlBar : MonoBehaviour
                 var squad = manager.selectedUnits[0];
                 squad.SetRange(!squad.isRange);
             } else {
-                var selected = manager.selectedUnits;
+                var selected = manager.selectedUnits.ToList();
+                for (var i = selected.Count - 1; i > -1; i--) {
+                    if (!selected[i].hasRange) {
+                        selected.RemoveAt(i);
+                    }
+                }
+                var status = !selected.All(s => s.isRange);
                 foreach (var squad in selected) {
-                    squad.SetRange(!selected.All(s => s.isRange));
+                    squad.SetRange(status);
                 }
             }
         }
@@ -163,10 +155,18 @@ public class ControlBar : MonoBehaviour
                 squad.SetFlee(!squad.isFlee);
             } else {
                 var selected = manager.selectedUnits;
+                var status = !selected.All(s => s.isFlee);
                 foreach (var squad in selected) {
-                    squad.SetFlee(!selected.All(s => s.isFlee));
+                    squad.SetFlee(status);
                 }
             }
         }
+    }
+
+    private static void SetInteractable(ControlButton control, bool value, bool select = false)
+    {
+        control.button.interactable = value;
+        control.material.SetFloat(Manager.GrayscaleAmount, value ? 0f : 1f);
+        control.select.SetActive(value && select);
     }
 }

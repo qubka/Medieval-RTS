@@ -146,6 +146,7 @@ public class Squad : MonoBehaviour
     public bool isValidEnemy => enemy && enemy.hasUnits && !enemy.isUnreachable;
     public bool isUnreachable => crossBorder.HasValue;
     public bool hasRange => data.rangeWeapon;
+    public bool hasSpeed => math.lengthsq(agent.velocity) > 0f;
     public bool hasUnits => units.Count > 0;
     public bool hasEnemies => enemies.Count > 0;
     public bool hasNeighbours => neighbours.Count > 0;
@@ -994,6 +995,7 @@ public class Squad : MonoBehaviour
 
         isRunning = value;
         agent.maxSpeed = moveSpeed;
+        PlaySound(value ? data.commanderSounds.move : data.commanderSounds.lego);
     }
     
     public void SetHolding(bool value)
@@ -1001,18 +1003,19 @@ public class Squad : MonoBehaviour
         if (isHolding == value || isEscape)
             return;
 
-        isHolding = true;
-        PlaySound(data.commanderSounds.hold);
+        isHolding = value;
+        PlaySound(value ? data.commanderSounds.hold : data.commanderSounds.halt);
     }
     
     public void SetRange(bool value)
     {
-        if (isRange == value || isEscape || hasRange)
+        if (isRange == value || isEscape || !hasRange)
             return;
 
         isRange = value;
         circle.radius = aggroDistance;
         circle.Render();
+        
         ForceStop();
     }
 
@@ -1025,7 +1028,11 @@ public class Squad : MonoBehaviour
         flee.enabled = value;
         if (value) {
             var squad = FindClosestSquad(centroid);
-            anchorTransform.position = squad ? squad.centroid : centroid;
+            if (squad) {
+                RetreatRotation(squad.centroid);
+            } else {
+                anchorTransform.position = centroid;
+            }
             if (isEscape) {
                 ChangeSelectState(false);
                 unitManager.RemoveSquad(this);
@@ -1327,11 +1334,13 @@ public class Squad : MonoBehaviour
 
     private void RetreatBehavior()
     {
-        worldTransform.rotation = Quaternion.LookRotation(agent.velocity.Project());
+        if (hasSpeed) {
+            worldTransform.rotation = Quaternion.LookRotation(agent.velocity.Project());
+        }
 
         var squad = FindClosestSquad(centroid);
         if (squad) {
-            anchorTransform.position = squad.centroid;
+            RetreatRotation(squad.centroid);
         }
         
         if (border.IsOutsideBorder(centroid)) {
@@ -1345,6 +1354,7 @@ public class Squad : MonoBehaviour
                 }
                 entityManager.DestroyEntity(squadEntity);
                 //DestroyImmediate(squadBar);
+                squadBar.SetActive(false);
                 DestroyImmediate(unitCard);
                 DestroyImmediate(unitLayout);
                 gameObject.SetActive(false);
@@ -1354,13 +1364,25 @@ public class Squad : MonoBehaviour
         Stamina -= retreatStamina;
     }
 
+    private void RetreatRotation(Vector3 position)
+    {
+        anchorTransform.position = position;
+        var direction = centroid - position;
+        var fwd = worldTransform.forward;
+        var dir = DirectionUtils.AngleToDirection(Vector.SignedAngle(fwd, direction.Normalized(), Vector3.up));
+        if (dir == Direction.Backward) {
+            worldTransform.SetPositionAndRotation(worldTransform.position + fwd * phalanxHeight, direction.ToEuler());
+            UpdateFormation(phalanxLength, true); // use to reverse formation for correct backward repositioning 
+        }
+    }
+
     #endregion
     
     #region Seek
     
     private void SeekBehavior()
     {
-        if (math.lengthsq(agent.velocity) > 0f) {
+        if (hasSpeed) {
             worldTransform.rotation = Quaternion.RotateTowards(worldTransform.rotation, targetOrientation ?? (isForward ? agent.velocity : -agent.velocity).ToEuler(), data.squadRotation);
         }
 
@@ -1430,18 +1452,18 @@ public class Squad : MonoBehaviour
         seek.SetTarget(targetTransform);
         
         // Check the enemy
-        Vector3 targetPos;
+        Vector3 dest;
         var squad = squadTable[target];
         if (squad && squad.team != team) {
             enemy = squad;
-            targetPos = squad.centroid;
+            dest = squad.centroid;
         } else {
             enemy = null;
-            targetPos = targetTransform.position;
+            dest = targetTransform.position;
         }
         
         // Direction of rotation
-        var direction = targetPos - centroid;
+        var direction = dest - centroid;
         var reverse = false;
         
         // Remove all corontines just in case
@@ -1452,7 +1474,8 @@ public class Squad : MonoBehaviour
         forwardMove = true;
         
         // Get the direction of movement
-        var dir = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, direction.Normalized(), Vector3.up));
+        var fwd = worldTransform.forward;
+        var dir = DirectionUtils.AngleToDirection(Vector.SignedAngle(fwd, direction.Normalized(), Vector3.up));
         
         // Play sounds
         var sounds = data.commanderSounds;
@@ -1501,9 +1524,9 @@ public class Squad : MonoBehaviour
 
         if (targetOrientation.HasValue) {
             // If difference is too big, rotate instantly
-            var diff = targetOrientation.Value.eulerAngles.y - worldTransform.rotation.eulerAngles.y;
+            var diff = targetOrientation.Value.eulerAngles.y - worldTransform.eulerAngles.y;
             if (!(diff <= 22.5f && diff > -22.5f)) {
-                worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * phalanxHeight, targetOrientation.Value);
+                worldTransform.SetPositionAndRotation(worldTransform.position + fwd * phalanxHeight, targetOrientation.Value);
             } else if (direction.Magnitude() <= 30.0f) {
                 targetOrientation = worldTransform.rotation;
                 if (dir == Direction.Backward) {
@@ -1511,7 +1534,7 @@ public class Squad : MonoBehaviour
                 }
             }
         } else if (dir == Direction.Backward) {
-            worldTransform.SetPositionAndRotation(worldTransform.position + worldTransform.forward * phalanxHeight, direction.ToEuler());
+            worldTransform.SetPositionAndRotation(worldTransform.position + fwd * phalanxHeight, direction.ToEuler());
             if (!t.length.HasValue) t.length = phalanxLength; // use to reverse formation for correct backward repositioning
             reverse = true;
         }

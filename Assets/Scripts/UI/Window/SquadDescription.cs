@@ -34,7 +34,7 @@ public class SquadDescription : MonoBehaviour
     {
         while (true) {
             OnUpdate();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSecondsRealtime(1f);
         }
     }
 

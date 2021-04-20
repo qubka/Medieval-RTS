@@ -11,7 +11,9 @@ public class TerrainBorder : MonoBehaviour
 	
 	private void Start()
 	{
-		DrawBorder();
+		if (borderPrefab) {
+			DrawBorder();
+		}
 	}
 
 	private void DrawBorder()
@@ -34,7 +36,9 @@ public class TerrainBorder : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		line.Destroy();
+		if (borderPrefab) {
+			line.Destroy();
+		}
 	}
 	
 	public bool IsOutsideBorder(Vector3 point)

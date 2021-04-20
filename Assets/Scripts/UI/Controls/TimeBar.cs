@@ -1,24 +1,48 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TimeBar : MonoBehaviour
 {
-    public void Stop()
+    [SerializeField] private Material play;
+    [SerializeField] private Material stop;
+    [SerializeField] private Material fast;
+    [SerializeField] private Material rapid;
+
+    private void Awake()
     {
-        Time.timeScale = 0f;
+        Normal();
     }
-    
+
     public void Normal()
     {
         Time.timeScale = 1f;
+        Switch(true);
+    }
+    
+    public void Stop()
+    {
+        Time.timeScale = 0f;
+        Switch(isStop: true);
     }
 
     public void Fast()
     {
         Time.timeScale = 2f;
+        Switch(isFast: true);
     }
 
     public void Rapid()
     {
         Time.timeScale = 4f;
+        Switch(isRapid: true);
+    }
+
+    public void Switch(bool isPlay = false, bool isStop = false, bool isFast = false, bool isRapid = false)
+    {
+        var id = Manager.GrayscaleAmount;
+        play.SetFloat(id, isPlay ? 1f : 0f);
+        stop.SetFloat(id, isStop ? 1f : 0f);
+        fast.SetFloat(id, isFast ? 1f : 0f);
+        rapid.SetFloat(id, isRapid ? 1f : 0f);
     }
 }

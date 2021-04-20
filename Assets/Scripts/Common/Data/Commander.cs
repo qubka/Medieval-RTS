@@ -22,6 +22,8 @@ public class Commander : ScriptableObject
     public List<AudioClip> forward;
     public List<AudioClip> regroup;
     public List<AudioClip> fire;
+    public List<AudioClip> move;
+    public List<AudioClip> lego;
     public List<AudioClip> underfire;
     public List<AudioClip> dismiss;
     public List<AudioClip> prepare;

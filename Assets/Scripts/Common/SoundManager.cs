@@ -100,13 +100,10 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void Update()
-    {
-        ambient.volume = ambientCurve.Evaluate(MathExtention.Clamp01(camController.DistToGround));
-    }
-
     public void LateUpdate()
     {
+        ambient.volume = ambientCurve.Evaluate(MathExtention.Clamp01(camController.DistToGround));
+        
         foreach (var source in sources) {
             if (!source.isPlaying) {
                 availables.Add(source);

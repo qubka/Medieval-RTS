@@ -59,6 +59,11 @@ public static class MathExtention
     {
         return Quaternion.Euler(0f, Vector.SignedAngle(Vector3.forward, vector.Project(), Vector3.up), 0f);
     }
+    
+    public static Vector3 Project(this Vector2 vector)
+    {
+        return new Vector3(vector.x, 0f, vector.y);
+    }
 
     public static Vector3 Project(this float2 vector)
     {
