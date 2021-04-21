@@ -28,17 +28,16 @@ public class SquadInfo : MonoBehaviour
         rectTransform = transform as RectTransform;
         Resize();
         rectTransform.position = Input.mousePosition + shift;
-        // You can directly tell LoadAll to only load assets of the correct type
-        // even if there would be other assets in the same folder
-        var attributeObjects = Resources.LoadAll<MoraleAttribute>("Morale/").ToList();
-        attributes = new Dictionary<MoraleAttribute, GameObject>(attributeObjects.Count);
-        foreach (var attribute in attributeObjects.OrderByDescending(a => a.bonus)) {
+
+        manager = Manager.unitManager;
+        attributes = new Dictionary<MoraleAttribute, GameObject>(Manager.moraleAttributes.Count);
+        foreach (var attribute in Manager.moraleAttributes.OrderByDescending(a => a.bonus)) {
             var obj = Instantiate(attributeLayout, attributeCanvas);
             obj.GetComponent<AttributeLayout>().SetAttribute(attribute);
             obj.SetActive(false);
             attributes.Add(attribute, obj);
         }
-        manager = Manager.unitManager;
+        
         StartCoroutine(Tick());
     }
 

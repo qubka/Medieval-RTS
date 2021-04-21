@@ -120,7 +120,7 @@ public class SoundManager : MonoBehaviour
                 var pos = pair.Key;
                 var source = availables[index];
                 source.transform.position = pos;
-                source.clip = pair.Value.sounds.GetRandom();
+                source.clip = pair.Value.Clip;
                 source.pitch = Random.Range(0.995f, 1.005f);
 
                 playTable.Add(source, pos);

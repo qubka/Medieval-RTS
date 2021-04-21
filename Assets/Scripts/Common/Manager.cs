@@ -1,4 +1,6 @@
-﻿﻿using GPUInstancer.CrowdAnimations;
+﻿﻿using System.Collections.Generic;
+ using System.Linq;
+ using GPUInstancer.CrowdAnimations;
 using UnityEngine;
  
 [RequireComponent(typeof(Manager))]
@@ -108,6 +110,8 @@ public class Manager : MonoBehaviour
 	public static GPUICrowdManager modelManager;
 	public static AudioSource[] cameraSources;
 	
+	public static List<MoraleAttribute> moraleAttributes;
+
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
 	public static readonly int Pointer = "PointerMove".GetHashCode();
 	public static readonly int Way = "Way".GetHashCode();
@@ -137,11 +141,15 @@ public class Manager : MonoBehaviour
 		soundManager = GetComponent<SoundManager>();
 		objectPool = GetComponent<ObjectPool>();
 
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
 		Ground = ground.value;
 		Unit = unit.value;
 		Obstacle = obstacle.value;
 		Squad = squad.value;		
 		Water = water.value;
+		
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
 		ChargedInFlank = chargedInFlank;
 		ChargedInRear = chargedInRear;
@@ -171,5 +179,42 @@ public class Manager : MonoBehaviour
 		VeryTired = veryTired;
 		WinningBattle = winningBattle;
 		WithoutAmmo = withoutAmmo;
+
+		moraleAttributes = new List<MoraleAttribute>(32) {
+			chargedInFlank,
+			chargedInRear,
+			disordered,
+			exhausted,
+			flanksProtected,
+			flanksThreatened,
+			foodVariety,
+			generalAround,
+			generalWound,
+			losingAttack,
+			losingBattle,
+			lowGround,
+			marauding,
+			noEnemies,
+			noRetreatOption,
+			outnumberEnemy,
+			outnumbered,
+			rain,
+			routingEnemies,
+			routingFriends,
+			starvation,
+			totallyExhausted,
+			underFire,
+			unity,
+			uphillPosition,
+			veryTired,
+			winningBattle,
+			withoutAmmo
+		};
+		
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+		// You can directly tell LoadAll to only load assets of the correct type
+		// even if there would be other assets in the same folder
+		//moraleAttributes = Resources.LoadAll<MoraleAttribute>("Morale/").ToList();
 	}
 }

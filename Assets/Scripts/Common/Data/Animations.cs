@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu]
@@ -231,10 +230,12 @@ public class AnimationData
     public AnimSide side2;
     public Sounds sound1;
     public Sounds sound2;
-    public List<AnimationClip> childList;
-
+    [SerializeField] private List<AnimationClip> childList;
+    
     public float Length => clip.length;
     public float FrameRate => clip ? clip.frameRate : 30f;
+    public bool HasChild => childList.Count > 0;
+    public AnimationClip Child => childList.GetRandom();
 }
 
 [Serializable]

@@ -640,6 +640,7 @@
           <e p="AutoNameAnimations.cs" t="Include" />
           <e p="DeletePlayerPrefs.cs" t="Include" />
           <e p="ReadOnlyDrawer.cs" t="Include" />
+          <e p="TownEditor.cs" t="Include" />
         </e>
         <e p="Libs" t="Include">
           <e p="License.txt" t="Include" />
@@ -662,6 +663,7 @@
           <e p="Characters" t="Include">
             <e p="Projectile.cs" t="Include" />
             <e p="Squad.cs" t="Include" />
+            <e p="Town.cs" t="Include" />
             <e p="Unit.cs" t="Include" />
           </e>
           <e p="Common" t="Include">
@@ -683,6 +685,7 @@
               <e p="ParticleCallback.cs" t="Include" />
               <e p="RandomExtention.cs" t="Include" />
               <e p="SquadTable.cs" t="Include" />
+              <e p="StringExtention.cs" t="Include" />
               <e p="Target.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
               <e p="Vector.cs" t="Include" />
@@ -704,6 +707,7 @@
               <e p="Sounds.cs" t="Include" />
               <e p="Squadron.cs" t="Include" />
               <e p="Team.cs" t="Include" />
+              <e p="TownNames.cs" t="Include" />
             </e>
             <e p="Manager.cs" t="Include" />
             <e p="SoundManager.cs" t="Include" />
@@ -733,9 +737,9 @@
           <e p="UI" t="Include">
             <e p="Camera" t="Include">
               <e p="CamController.cs" t="Include" />
+              <e p="FacingBillboard.cs" t="Include" />
               <e p="Minimap.cs" t="Include" />
               <e p="SortByDistance.cs" t="Include" />
-              <e p="WorldCanvasAlign.cs" t="Include" />
             </e>
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />

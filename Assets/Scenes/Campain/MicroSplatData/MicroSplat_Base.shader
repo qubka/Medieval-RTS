@@ -12,7 +12,7 @@
 ////////////////////////////////////////
 
 
-Shader "Hidden/Campain_Base-1089249638"
+Shader "Hidden/Campain_Base-1134248131"
 {
    Properties
    {
@@ -75,6 +75,7 @@ Shader "Hidden/Campain_Base-1089249638"
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _MSRENDERLOOP_SURFACESHADER 1
@@ -4356,6 +4357,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _MSRENDERLOOP_SURFACESHADER 1
@@ -8560,6 +8562,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _MSRENDERLOOP_SURFACESHADER 1
@@ -12853,6 +12856,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _MSRENDERLOOP_SURFACESHADER 1
@@ -16974,6 +16978,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _MSRENDERLOOP_SURFACESHADER 1

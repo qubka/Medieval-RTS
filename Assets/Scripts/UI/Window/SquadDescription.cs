@@ -25,6 +25,7 @@ public class SquadDescription : MonoBehaviour
     {
         rectTransform = transform as RectTransform;
         initial = rectTransform.localPosition.y;
+        
         manager = Manager.unitManager;
         layoutTransform = Manager.layoutCanvas;
         StartCoroutine(Tick());

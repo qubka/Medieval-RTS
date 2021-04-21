@@ -52,10 +52,11 @@ public class CamController : MonoBehaviour
 	public float scrollWheelZoomingSensitivity = 40f;
 	public float zoomPos = 0.5f; //value in range (0, 1) used as t in Matf.Lerp
 	public float smoothZoomTime = 0.1f; //
+	public bool useZoomRotation;
 	private float currentHeight;
 	private float currentZoomVelocity;
 	private RaycastHit groundHit;
-	
+
 	public float DistToGround => currentHeight / maxHeight;
 	
 	#endregion
@@ -109,14 +110,16 @@ public class CamController : MonoBehaviour
 	[Space]
 	public bool useScrollwheelZooming = true;
 	public string zoomingAxis = "Mouse ScrollWheel";
-	public string mouseHorizontalAxis = "Mouse X";
-	public string mouseVerticalAxis = "Mouse Y";
 	[Space]
 	public bool useKeyboardRotation = true;
 	public KeyCode rotateRightKey = KeyCode.E;
 	public KeyCode rotateLeftKey = KeyCode.Q;
+	public string mouseHorizontalAxis = "Mouse X";
+	public bool useHorizontalRotation = true;
 	public KeyCode rotateUpKey = KeyCode.R;
 	public KeyCode rotateDownKey = KeyCode.F;
+	public string mouseVerticalAxis = "Mouse Y";
+	public bool useVerticalRotation = true;
 	[Space]
 	public bool useMousePanning = true;
 	public KeyCode mousePanningKey = KeyCode.Mouse3;
@@ -214,17 +217,16 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	private void PcCamera()
 	{
+		HeightCalculation();
+		LimitPosition();
+		ShakeEffect();
+		
 		if (target) {
 			FollowTarget();
-			if (!lookAtTarget) Rotation();
 		} else {
 			Move();
 			Rotation();
 		}
-		
-		HeightCalculation();
-		LimitPosition();
-		Shake();
 	}
 
 	/// <summary>
@@ -307,8 +309,10 @@ public class CamController : MonoBehaviour
 	{
 		if (useKeyboardRotation) {
 			var speed = DeltaTime * rotationSpeed;
-			rotationX -= VerticalRotation * speed;
-			rotationY += HorizontalRotation * speed;
+			if (useVerticalRotation)
+				rotationX -= VerticalRotation * speed;
+			if (useHorizontalRotation)
+				rotationY += HorizontalRotation * speed;
 			
 			rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
@@ -320,6 +324,11 @@ public class CamController : MonoBehaviour
 			rotationY += axis.x;
 			
 			rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
+			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
+		}
+
+		if (useZoomRotation) {
+			rotationX = math.clamp(DistToGround * clampRotationAngle.y, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 	}
@@ -340,7 +349,7 @@ public class CamController : MonoBehaviour
 	/// <summary>
 	/// shake camera
 	/// </summary>
-	private void Shake()
+	private void ShakeEffect()
 	{
 		var shake = math.pow(trauma, TraumaExponent);
 		
@@ -392,38 +401,33 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	private void FollowTarget()
 	{
-		// Get current information
 		var currentPosition = camTransform.position;
 		var currentRotation = camTransform.rotation;
 		var currentRotationAngle = currentRotation.eulerAngles.y;
-		var desiredPosition = target.position;
-		var desiredRotation = Quaternion.LookRotation(desiredPosition - currentPosition);
-		var desiredRotationAngle = target.eulerAngles.y;
-		
-		// Damp the rotation around the y-axis
-		currentRotationAngle = Mathf.SmoothDampAngle(currentRotationAngle, desiredRotationAngle, ref currentRotationVelocity, smoothRotationTime, float.PositiveInfinity, DeltaTime);
+		var targetPosition = target.position;
+		var targetRotation = Quaternion.LookRotation(targetPosition - currentPosition);
+		var targetRotationAngle = target.eulerAngles.y;
 
-		// Set the position of the camera on the x-z plane to:
-		// distance meters behind the target
-		desiredPosition -= Quaternion.Euler(0f, currentRotationAngle, 0f) * Vector3.forward * distance;
+		currentRotationAngle = Mathf.SmoothDampAngle(currentRotationAngle, targetRotationAngle, ref currentRotationVelocity, smoothRotationTime, float.PositiveInfinity, DeltaTime);
 
-		// Move to the desired position
-		desiredPosition = new Vector3(desiredPosition.x, currentPosition.y, desiredPosition.z);
-		currentPosition = Vector.MoveTowards(currentPosition, desiredPosition,  followingSpeed * DeltaTime);
+		targetPosition -= Quaternion.Euler(0f, currentRotationAngle, 0f) * Vector3.forward * distance;
+		targetPosition = new Vector3(targetPosition.x, currentPosition.y, targetPosition.z);
 		
-		// If look at target is enabled, set smooth rotation
+		currentPosition = Vector.MoveTowards(currentPosition, targetPosition,  followingSpeed * DeltaTime);
+
 		if (lookAtTarget) {
-			// Smoothly rotate towards the target point
-			currentRotation = Quaternion.Slerp(currentRotation, desiredRotation, lookingSpeed * DeltaTime);
+			currentRotation = Quaternion.Slerp(currentRotation, targetRotation, lookingSpeed * DeltaTime);
+
+			var rotation = currentRotation.eulerAngles;
+			rotationX = rotation.x;
+			rotationY = rotation.y;
 			
-			// Set position and rotation
 			camTransform.SetPositionAndRotation(currentPosition, currentRotation);
 		} else {
-			// Set only position
 			camTransform.position = currentPosition;
+			Rotation();
 		}
-		
-		// Reset target if press any key
+
 		if (useKeyboardInput && KeyboardInput.SqMagnitude() > 0f) {
 			ResetTarget();
 		}

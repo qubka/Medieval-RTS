@@ -465,10 +465,10 @@ public class Unit : MonoBehaviour
 	    currentAnim = anim;
 	    nextAnimTime = currentTime + duration;
 
-	    var hasChild = anim.childList.Count > 0;
+	    var hasChild = anim.HasChild;
 	    if (sound && anim.sound1) squad.soundManager.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
 	    if (hasChild) {
-		    subCrowd.StartAnimation(anim.childList.GetRandom(), -1f, 1f, 0.5f);
+		    subCrowd.StartAnimation(anim.Child, -1f, 1f, 0.5f);
 		    if (sound && anim.sound2) squad.soundManager.RequestPlaySound(attachTransform.position, anim.sound2);
 	    }
     }

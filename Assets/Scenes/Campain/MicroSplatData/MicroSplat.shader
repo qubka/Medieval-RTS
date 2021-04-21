@@ -75,6 +75,7 @@ Shader "Campain"
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
 
@@ -4354,6 +4355,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
 
@@ -8556,6 +8558,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
 
@@ -12847,6 +12850,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
 
@@ -16966,6 +16970,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _USEGRADMIP 1
       #define _MAX24TEXTURES 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
 
@@ -21075,7 +21080,7 @@ float3 GetTessFactors ()
       UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
 
    }
-   Dependency "BaseMapShader" =  "Hidden/Campain_Base-1089249638"
-   Fallback "Hidden/Campain_Base-1089249638"
+   Dependency "BaseMapShader" =  "Hidden/Campain_Base-1134248131"
+   Fallback "Hidden/Campain_Base-1134248131"
    CustomEditor "MicroSplatShaderGUI"
 }

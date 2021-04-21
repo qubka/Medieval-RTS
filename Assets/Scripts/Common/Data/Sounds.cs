@@ -8,7 +8,9 @@ using UnityEngine;
 [InitializeOnLoad]
 public class Sounds : ScriptableObject
 {
-    public List<AudioClip> sounds;
+    [SerializeField] private List<AudioClip> sounds;
+
+    public AudioClip Clip => sounds.GetRandom();
     
     [HideInInspector] public int id;
     
