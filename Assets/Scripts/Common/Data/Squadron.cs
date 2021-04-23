@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Medieval/Squadron Config", order = 0)]
 [Serializable]
 [InitializeOnLoad]
 public class Squadron : ScriptableObject

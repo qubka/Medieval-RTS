@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Medieval/Animations Config", order = 0)]
 [Serializable]
 public class Animations : ScriptableObject
 {

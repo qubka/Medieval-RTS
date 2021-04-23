@@ -33,7 +33,7 @@ public class CamController : MonoBehaviour
 	public float keyboardMovementSpeed = 80f; //speed with keyboard movement
 	public float screenEdgeMovementSpeed = 40f; //speed with screen edge movement
 	public float followingSpeed = 50f; //speed when following a target
-	public float lookingSpeed = 10f; // speed when looking at target
+	//public float lookingSpeed = 10f; // speed when looking at target
 	public float rotationSpeed = 100f;
 	public float panningSpeed = 50f;
 	public float mouseRotationSpeed = 80f;
@@ -53,6 +53,7 @@ public class CamController : MonoBehaviour
 	public float zoomPos = 0.5f; //value in range (0, 1) used as t in Matf.Lerp
 	public float smoothZoomTime = 0.1f; //
 	public bool useZoomRotation;
+	public AnimationCurve rotationCurve;
 	private float currentHeight;
 	private float currentZoomVelocity;
 	private RaycastHit groundHit;
@@ -76,9 +77,6 @@ public class CamController : MonoBehaviour
 	[Header("Targeting")]
 	public Transform target; //target to follow
 	public float distance = 10.0f;
-	public float smoothRotationTime = 0.0001f;
-	public bool lookAtTarget;
-	private float currentRotationVelocity;
 
 	#endregion
 
@@ -220,12 +218,12 @@ public class CamController : MonoBehaviour
 		HeightCalculation();
 		LimitPosition();
 		ShakeEffect();
+		Rotation();
 		
 		if (target) {
 			FollowTarget();
 		} else {
 			Move();
-			Rotation();
 		}
 	}
 
@@ -313,8 +311,11 @@ public class CamController : MonoBehaviour
 				rotationX -= VerticalRotation * speed;
 			if (useHorizontalRotation)
 				rotationY += HorizontalRotation * speed;
-			
-			rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
+
+			if (useZoomRotation)
+				rotationX = rotationCurve.Evaluate(DistToGround);
+			else
+				rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 
@@ -324,11 +325,6 @@ public class CamController : MonoBehaviour
 			rotationY += axis.x;
 			
 			rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
-			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
-		}
-
-		if (useZoomRotation) {
-			rotationX = math.clamp(DistToGround * clampRotationAngle.y, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 	}
@@ -402,31 +398,15 @@ public class CamController : MonoBehaviour
 	private void FollowTarget()
 	{
 		var currentPosition = camTransform.position;
-		var currentRotation = camTransform.rotation;
-		var currentRotationAngle = currentRotation.eulerAngles.y;
+		//var currentRotation = camTransform.rotation;
 		var targetPosition = target.position;
-		var targetRotation = Quaternion.LookRotation(targetPosition - currentPosition);
-		var targetRotationAngle = target.eulerAngles.y;
-
-		currentRotationAngle = Mathf.SmoothDampAngle(currentRotationAngle, targetRotationAngle, ref currentRotationVelocity, smoothRotationTime, float.PositiveInfinity, DeltaTime);
-
-		targetPosition -= Quaternion.Euler(0f, currentRotationAngle, 0f) * Vector3.forward * distance;
-		targetPosition = new Vector3(targetPosition.x, currentPosition.y, targetPosition.z);
+		//var targetRotation = Quaternion.LookRotation(targetPosition - currentPosition);
 		
+		targetPosition -= Quaternion.Euler(0f, rotationY, 0f) * Vector3.forward * distance;
+		targetPosition = new Vector3(targetPosition.x, currentPosition.y, targetPosition.z);
+		//currentRotation = Quaternion.Slerp(currentRotation, targetRotation, lookingSpeed * DeltaTime);
 		currentPosition = Vector.MoveTowards(currentPosition, targetPosition,  followingSpeed * DeltaTime);
-
-		if (lookAtTarget) {
-			currentRotation = Quaternion.Slerp(currentRotation, targetRotation, lookingSpeed * DeltaTime);
-
-			var rotation = currentRotation.eulerAngles;
-			rotationX = rotation.x;
-			rotationY = rotation.y;
-			
-			camTransform.SetPositionAndRotation(currentPosition, currentRotation);
-		} else {
-			camTransform.position = currentPosition;
-			Rotation();
-		}
+		camTransform.position = currentPosition;
 
 		if (useKeyboardInput && KeyboardInput.SqMagnitude() > 0f) {
 			ResetTarget();

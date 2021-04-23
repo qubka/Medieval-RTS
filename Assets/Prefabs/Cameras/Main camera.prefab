@@ -275,7 +275,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 32311
+    m_Bits: 65079
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -616,10 +616,16 @@ MonoBehaviour:
   scrollWheelZoomingSensitivity: 40
   zoomPos: 0.5
   smoothZoomTime: 0.1
+  useZoomRotation: 0
+  rotationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   limitMap: 1
   target: {fileID: 0}
   distance: 10
-  smoothRotationTime: 0.0001
   TraumaExponent: 1
   MaximumAngularShake: {x: 0.25, y: 0.25, z: 0.25}
   MaximumTranslationShake: {x: 0.01, y: 0.01, z: 0.01}
@@ -636,8 +642,12 @@ MonoBehaviour:
   useKeyboardRotation: 1
   rotateRightKey: 101
   rotateLeftKey: 113
+  mouseHorizontalAxis: Mouse X
+  useHorizontalRotation: 1
   rotateUpKey: 114
   rotateDownKey: 102
+  mouseVerticalAxis: Mouse Y
+  useVerticalRotation: 1
   useMousePanning: 1
   mousePanningKey: 326
   useMouseRotation: 1

@@ -23,7 +23,6 @@ public class Squad : MonoBehaviour
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
-
     [Space(10)]
     [ReadOnly] public SquadFSM state;
     [ReadOnly] public Agent agent;

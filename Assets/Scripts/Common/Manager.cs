@@ -1,11 +1,14 @@
 ﻿﻿using System.Collections.Generic;
  using System.Linq;
  using GPUInstancer.CrowdAnimations;
-using UnityEngine;
+ using Unity.Mathematics;
+ using UnityEngine;
  
 [RequireComponent(typeof(Manager))]
 public class Manager : MonoBehaviour
 {
+	#region Refs
+	
 	[Header("Refs")]
 	public GPUICrowdManager crowdManager;
 	public RectTransform squadFrames;
@@ -13,6 +16,10 @@ public class Manager : MonoBehaviour
 	public RectTransform unitCard;
 	public Camera main;
 	public Camera minimap;
+
+	#endregion
+	
+	#region Layers
 
 	[Header("Layers")]
 	public LayerMask ground = -1;
@@ -22,7 +29,21 @@ public class Manager : MonoBehaviour
 	public LayerMask squad = -1;
 	public LayerMask manager = -1;
 	public LayerMask water = -1;
-
+	
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	public static int Ground;
+	public static int Unit;
+	public static int Obstacle;
+	//public static int Building;
+	public static int Squad;
+	//public static int Manager;
+	public static int Water;
+	
+	#endregion
+	
+	#region Morale
+	
 	[Header("Attributes")] 
 	public MoraleAttribute chargedInFlank;
 	public MoraleAttribute chargedInRear;
@@ -54,7 +75,7 @@ public class Manager : MonoBehaviour
 	public MoraleAttribute withoutAmmo;
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
+
 	public static MoraleAttribute ChargedInFlank;
 	public static MoraleAttribute ChargedInRear;
 	public static MoraleAttribute Disordered;
@@ -84,42 +105,40 @@ public class Manager : MonoBehaviour
 	public static MoraleAttribute WinningBattle;
 	public static MoraleAttribute WithoutAmmo;
 	
-	public static int Ground;
-	public static int Unit;
-	public static int Obstacle;
-	//public static int Building;
-	public static int Squad;
-	//public static int Manager;
-	public static int Water;
-
+	#endregion
+	
 	public static Terrain terrain;
 	public static TerrainBorder border;
 	public static Camera mainCamera;
 	public static Camera minimapCamera;
 	public static Transform camTransform;
 	public static CamController camController;
+	public static AudioSource[] cameraSources;
 	public static RectTransform squadCanvas;
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
-	public static ObjectPool objectPool;
 	public static SquadTable squadTable;
 	public static ObstacleTable obstacleTable;
+	public static ArmyTable armyTable;
+	public static TownTable townTable;
 	public static UnitTable unitTable;
 	public static UnitManager unitManager;
 	public static SoundManager soundManager;
+	public static ObjectPool objectPool;
 	public static GPUICrowdManager modelManager;
-	public static AudioSource[] cameraSources;
 	
 	public static List<MoraleAttribute> moraleAttributes;
 
+	#region Other
+	
+	public static float TerrainDistance;
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
 	public static readonly int Pointer = "PointerMove".GetHashCode();
 	public static readonly int Way = "Way".GetHashCode();
-	
 	public static readonly int GrayscaleAmount = Shader.PropertyToID("_GrayscaleAmount");
 	public static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
 	
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	#endregion
 
 	protected void Awake()
 	{
@@ -130,12 +149,20 @@ public class Manager : MonoBehaviour
 		minimapCamera = minimap;
 		camTransform = main.transform;
 		camController = main.GetComponent<CamController>();
+		cameraSources = main.GetComponents<AudioSource>();
 		squadCanvas = squadFrames;
 		layoutCanvas = unitLayout;
 		cardCanvas = unitCard;
-		cameraSources = main.GetComponents<AudioSource>();
+		
+		var size = terrain.terrainData.size;
+		TerrainDistance = math.max(size.x, size.z) * 2f;
+
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
 		squadTable = GetComponent<SquadTable>();
 		obstacleTable = GetComponent<ObstacleTable>();
+		armyTable = GetComponent<ArmyTable>();
+		townTable = GetComponent<TownTable>();
 		unitTable = GetComponent<UnitTable>();
 		unitManager = GetComponent<UnitManager>();
 		soundManager = GetComponent<SoundManager>();
@@ -210,11 +237,5 @@ public class Manager : MonoBehaviour
 			winningBattle,
 			withoutAmmo
 		};
-		
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-		// You can directly tell LoadAll to only load assets of the correct type
-		// even if there would be other assets in the same folder
-		//moraleAttributes = Resources.LoadAll<MoraleAttribute>("Morale/").ToList();
 	}
 }

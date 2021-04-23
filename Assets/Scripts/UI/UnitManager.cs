@@ -81,7 +81,6 @@ public class UnitManager : MonoBehaviour
 	private Interaction onPlace;
 	private Interaction onShift;
 	private int cursor;
-	private float maxDistance;
 	private float nextHoverTime;
 	private Ray groundRay;
 	private RaycastHit groundHit;
@@ -106,8 +105,6 @@ public class UnitManager : MonoBehaviour
 		//entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 		//unitList = GameObject.Find("Unit list");
 		eventSystem = EventSystem.current;
-		var size = Manager.terrain.terrainData.size;
-		maxDistance = math.max(size.x, size.z) * 2f;
 		unitTable = Manager.unitTable;
 		squadTable = Manager.squadTable;
 		objectPool = Manager.objectPool;
@@ -121,7 +118,7 @@ public class UnitManager : MonoBehaviour
 	private void Update()
 	{
 		groundRay = cam.ScreenPointToRay(Input.mousePosition);
-		groundCast = Physics.Raycast(groundRay, out groundHit, maxDistance, Manager.Ground);
+		groundCast = Physics.Raycast(groundRay, out groundHit, Manager.TerrainDistance, Manager.Ground);
 		pointerUI = eventSystem.IsPointerOverGameObject();
 		
 		OnDragging();
@@ -213,7 +210,7 @@ public class UnitManager : MonoBehaviour
 				for (var i = 0; i < corners.Length; i++) {
 					var corner = corners[i];
 					var ray = cam.ScreenPointToRay(corner); //cast out to world space
-					if (Physics.Raycast(ray, out var hit, maxDistance, Manager.Ground)) {
+					if (Physics.Raycast(ray, out var hit, Manager.TerrainDistance, Manager.Ground)) {
 						vertices[i] = transform.InverseTransformPoint(hit.point);
 						Debug.DrawLine(cam.ScreenToWorldPoint(corner), hit.point, Color.red, 5.0f);
 					} else {
@@ -1177,7 +1174,7 @@ public class UnitManager : MonoBehaviour
 			return true;
 		} 
 		
-		if (Physics.Raycast(groundRay, out var hit, maxDistance, Manager.Squad)) {
+		if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Squad)) {
 			hover = squadTable[hit.transform.gameObject];
 			squadInfo.OnUpdate();
 			return true;

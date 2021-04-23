@@ -1,23 +1,31 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class Town : MonoBehaviour
 {
+    [SerializeField] private Faction faction;
+    [SerializeField] private Character owner;
+
+    [SerializeField] private Image flag;
+    [SerializeField] private Image shadow;
     [SerializeField] private Text title;
 
-    public void GenerateName()
+    private void Start()
     {
-        var names = Resources.LoadAll<TownNames>("Names/");
-        var db = names[Random.Range(0, names.Length)];
-        var prefix = db.RandomPrefix;
-        var anyfix = db.RandomAnyfix;
-        while (string.Equals(prefix, anyfix, StringComparison.OrdinalIgnoreCase)){
-            anyfix = db.RandomAnyfix;
-        }
-        var generated = prefix.FirstLetterCapital() + anyfix;
-        title.text = generated;
-        name = generated;
+        shadow.color = faction.color;
+        Manager.townTable.Add(gameObject, this);
     }
+
+#if UNITY_EDITOR    
+    public void GenerateName(TownNames names)
+    {
+        var prefix = names.RandomPrefix;
+        var anyfix = names.RandomAnyfix;
+        while (string.Equals(prefix, anyfix, StringComparison.OrdinalIgnoreCase)){
+            anyfix = names.RandomAnyfix;
+        }
+        title.text = prefix.FirstLetterCapital() + anyfix;
+    }
+#endif    
 }
