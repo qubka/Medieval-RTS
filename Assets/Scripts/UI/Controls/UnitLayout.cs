@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,12 +13,16 @@ public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
 	private Transform cardTransform;
 	private LayoutPursue cardPursue;
 
-	private void Start()
+	private void Awake()
 	{
 		worldTransform = transform;
 		parentTransform = worldTransform.parent;
 		cardTransform = squad.cardTransform;
 		cardPursue = squad.unitCard.GetComponent<LayoutPursue>();
+	}
+
+	private void Start()
+	{
 		manager = Manager.unitManager;
 	}
 

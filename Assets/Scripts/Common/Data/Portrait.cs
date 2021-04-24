@@ -9,7 +9,8 @@ public class Portrait : MonoBehaviour
     public Texture2D pack;
     public Transform figure;
     public Transform background;
-    [ReadOnly] public List<Image> characterParts = new List<Image>();
+    
+    [ReadOnly] public readonly List<Image> characterParts = new List<Image>();
 
     private string characterPartType;
     private string imageType;
@@ -17,8 +18,9 @@ public class Portrait : MonoBehaviour
     private int currentIndex;
     private int lastIndex;
     private Sprite[] images;
-    private List<Sprite> sprites = new List<Sprite>();
     private const string devisionSymbol = "-";
+    
+    private readonly List<Sprite> sprites = new List<Sprite>();
 
     public void ReadImageFile()
     {

@@ -19,7 +19,7 @@ public class HideButton : MonoBehaviour
         [HideInInspector] public float y;
     }
     
-    private void Start()
+    private void Awake()
     {
         foreach (var rect in rectangles) {
             rect.y = rect.transform.localPosition.y;

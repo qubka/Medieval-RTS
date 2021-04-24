@@ -421,7 +421,7 @@ public class Settings : MonoBehaviour
 	public void OpenSettingsMenu()
 	{
 		if (!multiplayer) {
-			Time.timeScale = 0;
+			Time.timeScale = 0f;
 		}
 
 		settingsMenu.SetActive(true);
@@ -431,7 +431,7 @@ public class Settings : MonoBehaviour
 	public void CloseSettingsMenu()
 	{
 		if (!multiplayer) {
-			Time.timeScale = 1;
+			Time.timeScale = 1f;
 		}
 
 		settingsMenu.SetActive(false);

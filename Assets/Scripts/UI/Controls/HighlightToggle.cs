@@ -8,7 +8,7 @@ public class HighlightToggle : MonoBehaviour
     [SerializeField] private Color offColor;
     [SerializeField] private Graphic graphic;
     
-    private void Start()
+    private void Awake()
     {
         var toggle = GetComponent<Toggle>();
         graphic.color = toggle.isOn ? onColor : offColor;

@@ -21,18 +21,19 @@ public class SoundManager : MonoBehaviour
     //private Transform worldTransform;
     private Transform camTransform;
     private CamController camController;
-
-    private Dictionary<Vector3, Sounds> clipTable;
-    private Dictionary<AudioSource, Vector3> playTable;
-    
     private AudioSource ambient;
-    private List<AudioSource> sources;
-    private List<AudioSource> availables;
-
+    
+    private readonly Dictionary<Vector3, Sounds> clipTable = new Dictionary<Vector3, Sounds>(1000);
+    //private readonly Dictionary<AudioSource, Vector3> playTable = new Dictionary<AudioSource, Vector3>();
+    private readonly List<AudioSource> sources = new List<AudioSource>();
+    private readonly List<AudioSource> available = new List<AudioSource>();
+    
     private void Awake()
     {
         playRange *= playRange;
         soundRange *= soundRange;
+        sources.Capacity = maxSounds;
+        available.Capacity = maxSounds;
     }
 
     private void Start()
@@ -44,12 +45,6 @@ public class SoundManager : MonoBehaviour
         
         camTransform = Manager.camTransform;
         camController = Manager.camController;
-        
-        clipTable = new Dictionary<Vector3, Sounds>(1000);
-        playTable = new Dictionary<AudioSource, Vector3>(maxSounds);
-
-        sources = new List<AudioSource>(maxSounds);
-        availables = new List<AudioSource>(maxSounds);
         
         for (var i = 0; i < maxSounds; i++) {
             var source = new GameObject("Audio shot").AddComponent<AudioSource>();
@@ -106,24 +101,24 @@ public class SoundManager : MonoBehaviour
         
         foreach (var source in sources) {
             if (!source.isPlaying) {
-                availables.Add(source);
-                playTable.Remove(source);
+                available.Add(source);
+                //playTable.Remove(source);
             }
         }
 
-        var index = availables.Count - 1;
+        var index = available.Count - 1;
         if (index >= 0) {
             //var currentTime = AudioSettings.dspTime;
             
             var listener = camTransform.position;
             foreach (var pair in clipTable.OrderBy(p => Vector.DistanceSq(listener, p.Key))) {
                 var pos = pair.Key;
-                var source = availables[index];
+                var source = available[index];
                 source.transform.position = pos;
                 source.clip = pair.Value.Clip;
                 source.pitch = Random.Range(0.995f, 1.005f);
 
-                playTable.Add(source, pos);
+                //playTable.Add(source, pos);
 
                 source.Play();
 
@@ -131,7 +126,7 @@ public class SoundManager : MonoBehaviour
                 if (index <= 0)
                     break;
             }
-            availables.Clear();
+            available.Clear();
         }
         
         clipTable.Clear();

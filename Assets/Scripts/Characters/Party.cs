@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Party : MonoBehaviour
 {
-    [SerializeField] private Army army;
+    public Army army;
     [SerializeField] private AnimationClip idle;
     [SerializeField] private AnimationClip walk;
     

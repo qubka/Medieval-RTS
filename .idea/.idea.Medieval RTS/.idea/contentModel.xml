@@ -1314,20 +1314,13 @@
             <e p="Party.cs" t="Include" />
             <e p="Projectile.cs" t="Include" />
             <e p="Squad.cs" t="Include" />
-            <e p="Tables" t="Include">
-              <e p="ArmyTable.cs" t="Include" />
-              <e p="ObstacleTable.cs" t="Include" />
-              <e p="SquadTable.cs" t="Include" />
-              <e p="TownTable.cs" t="Include" />
-              <e p="UnitTable.cs" t="Include" />
-            </e>
             <e p="Town.cs" t="Include" />
             <e p="Unit.cs" t="Include" />
           </e>
           <e p="Common" t="Include">
             <e p="Core" t="Include">
               <e p="AnimatedUVs.cs" t="Include" />
-              <e p="BlockRotation.cs" t="Include" />
+              <e p="Attachment.cs" t="Include" />
               <e p="Circle.cs" t="Include" />
               <e p="Direction.cs" t="Include" />
               <e p="ImageExtention.cs" t="Include" />
@@ -1382,6 +1375,17 @@
             </e>
             <e p="SoundManager.cs" t="Include" />
             <e p="Spawner.cs" t="Include" />
+            <e p="Tables" t="Include">
+              <e p="ArmyTable.cs" t="Include" />
+              <e p="Interface" t="Include">
+                <e p="ISortable.cs" t="Include" />
+              </e>
+              <e p="ObstacleTable.cs" t="Include" />
+              <e p="SortList.cs" t="Include" />
+              <e p="SquadTable.cs" t="Include" />
+              <e p="TownTable.cs" t="Include" />
+              <e p="UnitTable.cs" t="Include" />
+            </e>
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
@@ -1406,11 +1410,11 @@
             <e p="TreeManager.cs" t="Include" />
           </e>
           <e p="UI" t="Include">
+            <e p="ArmyManager.cs" t="Include" />
             <e p="Camera" t="Include">
               <e p="CamController.cs" t="Include" />
               <e p="FacingBillboard.cs" t="Include" />
               <e p="Minimap.cs" t="Include" />
-              <e p="SortByDistance.cs" t="Include" />
             </e>
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />
@@ -1446,6 +1450,7 @@
               <e p="Tween.cs" t="Include" />
             </e>
             <e p="Settings.cs" t="Include" />
+            <e p="SortByDistance.cs" t="Include" />
             <e p="UnitManager.cs" t="Include" />
             <e p="Window" t="Include">
               <e p="AnimatedWindowController.cs" t="Include" />

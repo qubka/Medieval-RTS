@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -190,13 +191,17 @@ public class CamController : MonoBehaviour
 
 	#region Unity_Methods
 
-	private void Start()
+	private void Awake()
 	{
 		worldTrasnform = transform;
 		camTransform = worldTrasnform.parent;
 		var euler = camTransform.eulerAngles;
 		rotationX = euler.x;
 		rotationY = euler.y;
+	}
+
+	private void Start()
+	{
 		border = Manager.border;
 		objectPool = Manager.objectPool;
 	}
@@ -312,10 +317,7 @@ public class CamController : MonoBehaviour
 			if (useHorizontalRotation)
 				rotationY += HorizontalRotation * speed;
 
-			if (useZoomRotation)
-				rotationX = rotationCurve.Evaluate(DistToGround);
-			else
-				rotationX = math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
+			rotationX = useZoomRotation ? rotationCurve.Evaluate(DistToGround) : math.clamp(rotationX, clampRotationAngle.x, clampRotationAngle.y);
 			camTransform.eulerAngles = new Vector3(rotationX, rotationY, 0f);
 		}
 

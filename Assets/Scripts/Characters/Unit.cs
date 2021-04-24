@@ -43,8 +43,8 @@ public class Unit : MonoBehaviour
     // Misc
     [ReadOnly] public Squad squad;
     [ReadOnly] public Unit target;
-    [ReadOnly] public List<Transform> collisions;
-    [ReadOnly] public List<Obstacle> obstacles;
+    [ReadOnly] public List<Transform> collisions = new List<Transform>();
+    [ReadOnly] public List<Obstacle> obstacles = new List<Obstacle>();
     [HideInInspector] public GameObject attachment;
     [HideInInspector] public GameObject selector;
     [HideInInspector] public Transform selectorTransform;
@@ -97,9 +97,7 @@ public class Unit : MonoBehaviour
 		nextBlockTime = Max;
 		nextBlock2Time = Max;
 		lastDamageTime = Min;
-        collisions = new List<Transform>();
-        obstacles = new List<Obstacle>();
-        body = GetComponent<Rigidbody>();
+		body = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
         ChangeState(UnitFSM.Idle);
     }

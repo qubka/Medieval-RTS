@@ -14,7 +14,7 @@ using Wintellect.PowerCollections;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
 
-public class Squad : MonoBehaviour
+public class Squad : MonoBehaviour, ISortable
 {
     [Header("Main Information")]
     public Squadron data;
@@ -23,7 +23,7 @@ public class Squad : MonoBehaviour
     public Team team;
     public int squadSize;
     public FormationShape formationShape;
-    [Space(10)]
+    [Space(10f)]
     [ReadOnly] public SquadFSM state;
     [ReadOnly] public Agent agent;
     [ReadOnly] public float phalanxLength;
@@ -31,12 +31,12 @@ public class Squad : MonoBehaviour
     [ReadOnly] public float stamina;
     [ReadOnly] public float morale;
     [ReadOnly] public Squad enemy;
-    [ReadOnly] public List<Unit> units;
-    [ReadOnly] public List<Squad> neighbours;
-    [ReadOnly] public List<Squad> enemies;
-    [ReadOnly] public HashSet<Obstacle> obstacles;
-    [ReadOnly] public HashSet<MoraleAttribute> attributes;
-    [ReadOnly] public List<Vector3> positions;
+    [ReadOnly] public List<Unit> units = new List<Unit>();
+    [ReadOnly] public List<Squad> neighbours = new List<Squad>();
+    [ReadOnly] public List<Squad> enemies = new List<Squad>();
+    [ReadOnly] public HashSet<Obstacle> obstacles = new HashSet<Obstacle>();
+    [ReadOnly] public HashSet<MoraleAttribute> attributes = new HashSet<MoraleAttribute>();
+    [ReadOnly] public List<Vector3> positions = new List<Vector3>();
     [ReadOnly] public Vector3 centroid;
     [ReadOnly] public int killed;
     [ReadOnly] public bool isRunning;
@@ -106,7 +106,8 @@ public class Squad : MonoBehaviour
     private CamController camController;
     private TerrainBorder border;
     private GPUICrowdManager modelManager;
-    private RectTransform squadCanvas;
+    private RectTransform holderCanvas;
+    private SortList sortList;
     private SquadTable squadTable;
     private ObstacleTable obstacleTable;
     private UnitManager unitManager;
@@ -119,7 +120,7 @@ public class Squad : MonoBehaviour
     private Quaternion? targetOrientation;
     private Vector3 targetDirection;
     private GameObject target;
-    private Queue<Target> targets;
+    private Queue<Target> targets = new Queue<Target>();
     private MoraleAttribute currentStamina;
     private AudioSource mainAudio;
     private AudioSource fightAudio;
@@ -127,7 +128,6 @@ public class Squad : MonoBehaviour
     private AudioSource chargeAudio;
     private AudioSource selectAudio;
     private BoxCollider collision;
-    private Collider[] colliders;
     private Circle circle;
     private Seek seek;
     private Flee flee;
@@ -135,6 +135,8 @@ public class Squad : MonoBehaviour
     private bool isFarSound;
     private bool forwardMove;
     private bool select;
+    
+    private Collider[] colliders = new Collider[32];
     
     #region SettersAndGetters
     
@@ -203,9 +205,7 @@ public class Squad : MonoBehaviour
     {
         // Set up the squad components 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        colliders = new Collider[32];
         collision = GetComponent<BoxCollider>();
-        targets = new Queue<Target>();
         anchorTransform = new GameObject("Target Anchor").transform;
         barTransform = squadBar.transform;
         layoutTransform = unitLayout.transform;
@@ -255,12 +255,8 @@ public class Squad : MonoBehaviour
         cardAmmo.gameObject.SetActive(isRange);
         
         // Set up lists
-        units = new List<Unit>(squadSize);
-        positions = new List<Vector3>(squadSize);
-        neighbours = new List<Squad>();
-        enemies = new List<Squad>();
-        obstacles = new HashSet<Obstacle>();
-        attributes = new HashSet<MoraleAttribute>();
+        units.Capacity = squadSize;
+        positions.Capacity = squadSize;
     }
 
     private void Start()
@@ -271,11 +267,12 @@ public class Squad : MonoBehaviour
         cam = Manager.mainCamera;
         camController = Manager.camController;
         objectPool = Manager.objectPool;
-        squadCanvas = Manager.squadCanvas;
+        holderCanvas = Manager.holderCanvas;
         unitManager = Manager.unitManager;
         soundManager = Manager.soundManager;
         camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
+        sortList = Manager.sortList;
         squadTable = Manager.squadTable;
         obstacleTable = Manager.obstacleTable;
         border = Manager.border;
@@ -409,7 +406,7 @@ public class Squad : MonoBehaviour
         UpdateCollision();
         
         // Parent a bar to the screen
-        barTransform.SetParent(squadCanvas, false);
+        barTransform.SetParent(holderCanvas, false);
         barTransform.localScale = barScale;
 
         // Parent unit to the screen
@@ -420,8 +417,9 @@ public class Squad : MonoBehaviour
             StartCoroutine(RepositionCard()); // fix for re-parenting
         }
         
-        // Add a squad to the table
+        // Add a squad to the tables
         squadTable.Add(gameObject, this);
+        sortList.Add(this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
@@ -466,7 +464,7 @@ public class Squad : MonoBehaviour
         if (center.z < 0f) {
             squadBar.SetActive(false);
         } else {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(squadCanvas, center, null, out var canvasPos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, center, null, out var canvasPos);
             barTransform.localPosition = canvasPos;
             squadBar.SetActive(true);
         }
@@ -741,6 +739,7 @@ public class Squad : MonoBehaviour
         
         var count = units.Count;
         if (count == 0) {
+            sortList.Remove(this);
             squadTable.Remove(gameObject);
             entityManager.DestroyEntity(squadEntity);
             unitManager.RemoveSquad(this);
@@ -1351,9 +1350,9 @@ public class Squad : MonoBehaviour
                 foreach (var unit in units) {
                     unit.OnRemove();
                 }
+                sortList.Remove(this);
                 entityManager.DestroyEntity(squadEntity);
-                //DestroyImmediate(squadBar);
-                squadBar.SetActive(false);
+                DestroyImmediate(squadBar);
                 DestroyImmediate(unitCard);
                 DestroyImmediate(unitLayout);
                 gameObject.SetActive(false);
@@ -1597,6 +1596,20 @@ public class Squad : MonoBehaviour
     }
     
     #endregion
+
+    #endregion
+
+    #region Sorting
+
+    public Vector3 GetPosition()
+    {
+        return centroid;
+    }
+
+    public Transform GetTransform()
+    {
+        return barTransform;
+    }
 
     #endregion
 }

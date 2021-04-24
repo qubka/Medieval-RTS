@@ -34,7 +34,7 @@ public class Squadron : ScriptableObject
     public Sprite canvasIcon;
     public Sprite layoutIcon;
 
-    [Space(10)]
+    [Space(10f)]
     
     [Header("Melee")]
     public int meleeAttack;

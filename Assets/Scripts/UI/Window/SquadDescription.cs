@@ -21,11 +21,14 @@ public class SquadDescription : MonoBehaviour
     private bool enable;
     private bool shift;
 
-    private void Start()
+    private void Awake()
     {
         rectTransform = transform as RectTransform;
         initial = rectTransform.localPosition.y;
-        
+    }
+
+    private void Start()
+    {
         manager = Manager.unitManager;
         layoutTransform = Manager.layoutCanvas;
         StartCoroutine(Tick());

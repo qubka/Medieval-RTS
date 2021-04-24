@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,9 +13,13 @@ public class FacingBillboard : MonoBehaviour
     private Transform worldTransform;
     private Transform camTransform;
 
-    private void Start()
+    private void Awake()
     {
         worldTransform = transform;
+    }
+
+    private void Start()
+    {
         camTransform = Manager.camTransform;
         scaleFactor = Manager.mainCamera.fieldOfView;
     }

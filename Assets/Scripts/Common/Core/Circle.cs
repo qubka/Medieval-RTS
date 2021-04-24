@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -11,12 +12,16 @@ public class Circle : MonoBehaviour
     private LineRenderer line;
     private Transform worldTransform;
     private Vector3[] points;
-    
+
+    private void Awake()
+    {
+        line = GetComponent<LineRenderer>();
+        worldTransform = transform;
+    }
+
     private void Start()
     {
         terrain = Manager.terrain;
-        line = GetComponent<LineRenderer>();
-        worldTransform = transform;
         Render();
     }
 

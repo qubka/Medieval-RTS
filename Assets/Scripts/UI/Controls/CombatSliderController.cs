@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -7,10 +8,14 @@ public class CombatSliderController : MonoBehaviour
 {
     private Slider slider;
     private SquadTable squadTable;
-    
-    private void Start()
+
+    private void Awake()
     {
         slider = GetComponent<Slider>();
+    }
+
+    private void Start()
+    {
         squadTable = Manager.squadTable;
         StartCoroutine(ChangeSlider());
 

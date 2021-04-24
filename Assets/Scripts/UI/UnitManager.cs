@@ -52,15 +52,13 @@ public class UnitManager : MonoBehaviour
 	public KeyCode stopKey = KeyCode.Escape;
 
 	//variables not visible in the inspector
-	//private EntityManager entityManager;
-	//private GameObject unitList;
 	[HideInInspector] public Squad hover;
 	[HideInInspector] public UnitLayout unitLayout;
-	[HideInInspector] public List<Squad> selectedUnits;
-	//private Dictionary<Entity, GameObject> unitButtons;
-	private Dictionary<Squad, Movement> movementGroup;
-	private List<Formation> placedFormations;
-	private List<Vector3> positions;
+	[HideInInspector] public List<Squad> selectedUnits = new List<Squad>();
+	private Dictionary<Squad, IMovement> movementGroup = new Dictionary<Squad, IMovement>();
+	private List<Formation> placedFormations = new List<Formation>();
+	private List<Vector3> positions = new List<Vector3>();
+	private Collider[] colliders = new Collider[1];
 	private EventSystem eventSystem;
 	private TerrainBorder border;
 	private Camera cam;
@@ -70,7 +68,6 @@ public class UnitManager : MonoBehaviour
 	private ObjectPool objectPool;
 	private Line drawedLine;
 	private AudioSource clickAudio;
-	private Collider[] colliders;
 	private Squad lastSelectSquad;
 	private float lastSelectTime;
 	private float lastClickTime;
@@ -89,21 +86,9 @@ public class UnitManager : MonoBehaviour
 
 	private bool InvalidHit => !groundCast || border.IsOutsideBorder(groundHit.point) || Input.GetKey(KeyCode.Escape);
 	public int selectedCount => selectedUnits.Count;
-	
-	private void Awake()
-	{
-		colliders = new Collider[1];
-		//unitButtons = new Dictionary<Entity, GameObject>();
-		movementGroup = new Dictionary<Squad, Movement>();
-		placedFormations = new List<Formation>();
-		selectedUnits = new List<Squad>();
-		positions = new List<Vector3>();
-	}
 
 	private void Start()
 	{
-		//entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-		//unitList = GameObject.Find("Unit list");
 		eventSystem = EventSystem.current;
 		unitTable = Manager.unitTable;
 		squadTable = Manager.squadTable;
@@ -151,7 +136,7 @@ public class UnitManager : MonoBehaviour
 			if (InvalidHit || pointerUI)
 				return;
 
-			var currentTime = Time.time;
+			var currentTime = Time.unscaledTime;
 			if ((currentTime - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, groundHit.point) <= 1f) {
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Squad) == 0) {
 					camController.SetTarget(objectPool.SpawnFromPool(Manager.Way, groundHit.point).transform);
@@ -520,7 +505,7 @@ public class UnitManager : MonoBehaviour
 	
 	private void OnHover()
 	{
-		var currentTime = Time.time;
+		var currentTime = Time.unscaledTime;
 		if (currentTime > nextHoverTime) {
 			if (!HoverOnTarget() && hover) {
 				hover = null;
@@ -626,7 +611,7 @@ public class UnitManager : MonoBehaviour
 			AddSelected(filter);
 		}
 
-		var time = Time.time;
+		var time = Time.unscaledTime;
 		if ((time - lastSelectTime < 0.5f) && lastSelectSquad == filter) {
 			var trans = filter.centerTransform;
 			if (camController.target != trans) {
@@ -872,7 +857,7 @@ public class UnitManager : MonoBehaviour
 
 	#region Movement
 
-	private class StaticMovement : Movement 
+	private class StaticMovement : IMovement 
 	{
 		private Line line;
 		private Line head;
@@ -954,17 +939,18 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 	
-	private class DynamicMovement : Movement
+	private class DynamicMovement : IMovement
 	{
 		private Line line;
 		private Line head;
 		private Squad squad;
 
 		private List<GameObject> targets;
-		private Dictionary<GameObject, Squad> cache;
 		private ObjectPool objectPool;
 		private SquadTable squadTable;
 		private float nextUpdateTime;
+		
+		private readonly Dictionary<GameObject, Squad> cache = new Dictionary<GameObject, Squad>();
 
 		private static readonly Quaternion Left = Quaternion.Euler(0, -150, 0);
 		private static readonly Quaternion Right = Quaternion.Euler(0, 150, 0);
@@ -975,7 +961,6 @@ public class UnitManager : MonoBehaviour
 			line = new Line(movementLine);
 			head = new Line(arrowLine);
 			targets = new List<GameObject>();
-			cache = new Dictionary<GameObject, Squad>();
 			objectPool = Manager.objectPool;
 			squadTable = Manager.squadTable;
 		}
@@ -1107,7 +1092,7 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 	
-	private interface Movement
+	private interface IMovement
 	{
 		void Append(Target target);
 		void Reset(Target target);

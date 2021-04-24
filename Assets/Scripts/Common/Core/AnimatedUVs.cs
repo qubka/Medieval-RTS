@@ -3,9 +3,9 @@
 public class AnimatedUVs : MonoBehaviour 
 {
 	public float scrollSpeed = 0.5F;
-	public Material material;
+	private Material material;
 	
-	private void Start()
+	private void Awake()
 	{
 		material = GetComponent<Renderer>().material;
 	}

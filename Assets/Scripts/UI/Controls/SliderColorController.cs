@@ -7,7 +7,7 @@ public class SliderColorController : MonoBehaviour
     private Slider slider;
     private Image rect;
 
-    private void Start()
+    private void Awake()
     {
         slider = GetComponent<Slider>();
         rect = slider.fillRect.GetComponent<Image>();

@@ -2399,8 +2399,9 @@ GameObject:
   - component: {fileID: -6448099394923172388}
   - component: {fileID: -861921931028272734}
   - component: {fileID: 6032472430098388763}
-  - component: {fileID: 1763495881967791622}
   - component: {fileID: 4240463010196712849}
+  - component: {fileID: 1763495881967791622}
+  - component: {fileID: 8896360265400794668}
   - component: {fileID: 1820556275897528625}
   m_Layer: 15
   m_Name: viking_army_1
@@ -2540,24 +2541,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
---- !u!114 &1763495881967791622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5766795129214813177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4343d4e9108b1714f979bb226e4cbdea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  team: 0
-  amount: {fileID: 0}
-  child: {fileID: 0}
-  worldTransform: {fileID: 0}
-  idle: {fileID: 7400006, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
-  walk: {fileID: 7400048, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
 --- !u!114 &4240463010196712849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2565,7 +2548,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5766795129214813177}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
   m_Name: 
@@ -2605,6 +2588,41 @@ MonoBehaviour:
       Version: 1.6.8
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
+--- !u!114 &1763495881967791622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5766795129214813177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4343d4e9108b1714f979bb226e4cbdea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  team: 0
+  troops: []
+  armyBar: {fileID: 3980142311170377322, guid: 59b146d46d876ef4a9b7566720666b90, type: 3}
+  agent: {fileID: 0}
+  worldTransform: {fileID: 0}
+  barTransform: {fileID: 0}
+  canvasHeight: 0
+  barScale: {x: 1, y: 1, z: 1}
+--- !u!114 &8896360265400794668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5766795129214813177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f3c1fee3d464ab1a8a470a8a214ad00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  army: {fileID: 1763495881967791622}
+  idle: {fileID: 7400006, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
+  walk: {fileID: 7400048, guid: bbc63157ab4790c43928f489ee9bd9d8, type: 3}
 --- !u!114 &1820556275897528625
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class ScrollController : MonoBehaviour
     [SerializeField] private float step = 0.1f;
     private Scrollbar scrollbar;
 
-    private void Start()
+    private void Awake()
     {
         scrollbar = GetComponent<Scrollbar>();
     }

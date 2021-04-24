@@ -5,8 +5,9 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     public List<Pool> pools;
-    private Dictionary<int, Queue<GameObject>> poolTable;
     private Transform worldTransform;
+    
+    private readonly Dictionary<int, Queue<GameObject>> poolTable = new Dictionary<int, Queue<GameObject>>();
     
     [Serializable]
     public struct Pool
@@ -18,7 +19,6 @@ public class ObjectPool : MonoBehaviour
     private void Awake()
     {
         worldTransform = transform;
-        poolTable = new Dictionary<int, Queue<GameObject>>();
 
         foreach (var pool in pools) {
             var objectPool = new Queue<GameObject>();

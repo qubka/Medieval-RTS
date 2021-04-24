@@ -11,7 +11,7 @@ public class Manager : MonoBehaviour
 	
 	[Header("Refs")]
 	public GPUICrowdManager crowdManager;
-	public RectTransform squadFrames;
+	public RectTransform holderFrames;
 	public RectTransform unitLayout;
 	public RectTransform unitCard;
 	public Camera main;
@@ -23,6 +23,7 @@ public class Manager : MonoBehaviour
 
 	[Header("Layers")]
 	public LayerMask ground = -1;
+	public LayerMask army = -1;
 	public LayerMask unit = -1;
 	public LayerMask obstacle = -1;
 	public LayerMask building = -1;
@@ -33,6 +34,7 @@ public class Manager : MonoBehaviour
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	public static int Ground;
+	public static int Army;
 	public static int Unit;
 	public static int Obstacle;
 	//public static int Building;
@@ -114,9 +116,10 @@ public class Manager : MonoBehaviour
 	public static Transform camTransform;
 	public static CamController camController;
 	public static AudioSource[] cameraSources;
-	public static RectTransform squadCanvas;
+	public static RectTransform holderCanvas;
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
+	public static SortList sortList;
 	public static SquadTable squadTable;
 	public static ObstacleTable obstacleTable;
 	public static ArmyTable armyTable;
@@ -150,7 +153,7 @@ public class Manager : MonoBehaviour
 		camTransform = main.transform;
 		camController = main.GetComponent<CamController>();
 		cameraSources = main.GetComponents<AudioSource>();
-		squadCanvas = squadFrames;
+		holderCanvas = holderFrames;
 		layoutCanvas = unitLayout;
 		cardCanvas = unitCard;
 		
@@ -159,6 +162,7 @@ public class Manager : MonoBehaviour
 
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
+		sortList = GetComponent<SortList>();
 		squadTable = GetComponent<SquadTable>();
 		obstacleTable = GetComponent<ObstacleTable>();
 		armyTable = GetComponent<ArmyTable>();
@@ -171,6 +175,7 @@ public class Manager : MonoBehaviour
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
 		Ground = ground.value;
+		Army = army.value;
 		Unit = unit.value;
 		Obstacle = obstacle.value;
 		Squad = squad.value;		

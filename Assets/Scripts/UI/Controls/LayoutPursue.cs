@@ -7,7 +7,7 @@ public class LayoutPursue : MonoBehaviour
     private Transform rectTransform;
     private bool move;
 
-    private void Start()
+    private void Awake()
     {
         rectTransform = transform as RectTransform;
     }

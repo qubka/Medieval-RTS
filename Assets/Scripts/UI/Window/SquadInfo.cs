@@ -20,17 +20,20 @@ public class SquadInfo : MonoBehaviour
 
     private UnitManager manager;
     private RectTransform rectTransform;
-    private Dictionary<MoraleAttribute, GameObject> attributes;
     private Vector3 shift;
     
-    private void Start()
+    private readonly Dictionary<MoraleAttribute, GameObject> attributes = new Dictionary<MoraleAttribute, GameObject>();
+
+    private void Awake()
     {
         rectTransform = transform as RectTransform;
         Resize();
         rectTransform.position = Input.mousePosition + shift;
+    }
 
+    private void Start()
+    {
         manager = Manager.unitManager;
-        attributes = new Dictionary<MoraleAttribute, GameObject>(Manager.moraleAttributes.Count);
         foreach (var attribute in Manager.moraleAttributes.OrderByDescending(a => a.bonus)) {
             var obj = Instantiate(attributeLayout, attributeCanvas);
             obj.GetComponent<AttributeLayout>().SetAttribute(attribute);

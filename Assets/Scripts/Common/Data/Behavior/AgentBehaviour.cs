@@ -7,7 +7,7 @@ public abstract class AgentBehaviour : MonoBehaviour
     protected Transform worldTransform;
     protected Transform targetTransform;
     
-    protected virtual void Start() 
+    protected virtual void Awake() 
     {
         agent = GetComponent<Agent>();
         worldTransform = transform;

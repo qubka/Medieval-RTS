@@ -1,13 +1,15 @@
 ﻿
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public abstract class ListBehaviour<T> : MonoBehaviour, IEnumerable where T : MonoBehaviour
+public abstract class ListBehaviour<T> : MonoBehaviour, IEnumerable
 {
-    [ReadOnly] public List<T> list = new List<T>();
+    [ReadOnly] public readonly List<T> list = new List<T>();
     public T this[GameObject o] => list[o.GetInstanceID()];
-    
+
     public int Count => list.Count;
     
     public void Add(T obj)

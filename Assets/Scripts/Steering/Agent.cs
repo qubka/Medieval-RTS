@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Agent : MonoBehaviour
@@ -11,12 +12,16 @@ public class Agent : MonoBehaviour
 
     private Transform worldTransform;
     private Terrain terrain;
-    
-    private void Start() 
+
+    private void Awake()
     {
         velocity = float2.zero;
         steering = new Steering();
         worldTransform = transform;
+    }
+
+    private void Start() 
+    {
         terrain = Manager.terrain;
     }
 

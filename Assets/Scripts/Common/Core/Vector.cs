@@ -243,11 +243,11 @@ public static class Vector // MathExtension ?
 		return (clockWise <= counterClockWise);
 	}
 	
-	public static Vector3 GetRandomNavMeshPositionNearLocation(Vector3 origin, float range, int areaMask)
+	public static Vector3 GetRandomNavMeshPositionNearLocation(Vector3 origin, float range)
 	{
 		for (var i = 0; i < 32; i++) {
 			var randomPoint = origin + Random.insideUnitSphere * range;
-			if (NavMesh.SamplePosition(randomPoint, out var hit, range, areaMask)) {
+			if (NavMesh.SamplePosition(randomPoint, out var hit, range, NavMesh.AllAreas)) {
 				return hit.position;
 			}
 		}

@@ -8,7 +8,7 @@ public class BinarySliderController : MonoBehaviour
     [SerializeField] private string[] values;
     [SerializeField] private Color[] titleColors;
 
-    private void Start()
+    private void Awake()
     {
         if (values.Length != 2 || titleColors.Length != 2 || valueTitle == null || slider == null) {
             gameObject.SetActive(false);

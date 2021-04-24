@@ -6,7 +6,7 @@ public class SliderValueController : MonoBehaviour
     [SerializeField] private Text textComponent;
     private Slider slider;
     
-    private void Start()
+    private void Awake()
     {
         slider = GetComponent<Slider>();
     }

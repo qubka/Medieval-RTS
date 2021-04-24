@@ -7,7 +7,7 @@ public class SliderStepController : MonoBehaviour
     [SerializeField] private Slider sliderComponent;
     public string[] values;
 
-    private void Start()
+    private void Awake()
     {
         if (textComponent == null || sliderComponent == null || values.Length == 0) {
             gameObject.SetActive(false);

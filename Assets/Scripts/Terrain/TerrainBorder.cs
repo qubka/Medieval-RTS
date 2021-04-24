@@ -9,7 +9,7 @@ public class TerrainBorder : MonoBehaviour
 	public GameObject borderPrefab;
 	private Line line;
 	
-	private void Start()
+	private void Awake()
 	{
 		if (borderPrefab) {
 			DrawBorder();

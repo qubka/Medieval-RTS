@@ -9,16 +9,16 @@ public class Line
 {
     private GameObject obj;
     private LineRenderer line;
-    private List<Vector3> points;
     private Terrain terrain;
     private bool active;
     private bool destroy;
+    
+    private List<Vector3> points = new List<Vector3>(128);
     
     public Line(GameObject lineObject)
     {
         obj = Object.Instantiate(lineObject);
         line = obj.GetComponent<LineRenderer>();
-        points = new List<Vector3>(128);
         terrain = Manager.terrain;
         active = true;
         

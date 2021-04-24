@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 
-public abstract class TableBehaviour<T> : MonoBehaviour, IEnumerable where T : MonoBehaviour
+public abstract class TableBehaviour<T> : MonoBehaviour, IEnumerable
 {
-    [ReadOnly] public Dictionary<int, T> table = new Dictionary<int, T>();
+    [ReadOnly] public readonly Dictionary<int, T> table = new Dictionary<int, T>();
     public T this[GameObject o] {
         get {
             table.TryGetValue(o.GetInstanceID(), out var output);

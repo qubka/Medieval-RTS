@@ -11,7 +11,7 @@ public class StatsRadarChart : MonoBehaviour
     private Stats stats;
     private Mesh mesh;
 
-    private void Start()
+    private void Awake()
     {
         var size = (transform as RectTransform).sizeDelta;
         radarChartSize = math.min(size.x, size.y) / 2f - 5f;

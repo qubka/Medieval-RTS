@@ -24,12 +24,8 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     private bool enable = true;
     private bool rotate = true;
 
-    private void Start()
+    private void Awake()
     {
-        border = Manager.border;
-        objectPool = Manager.objectPool;
-        cam = Manager.minimapCamera;
-        camController = Manager.camController;
         mapTransform = GetComponent<RawImage>().rectTransform;
         rectTransform = transform as RectTransform;
         iconTransform = icon.transform as RectTransform;
@@ -38,9 +34,17 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
         iconMaterial.SetFloat(Manager.GrayscaleAmount, enable ? 0f : 1f);
     }
 
+    private void Start()
+    {
+        border = Manager.border;
+        objectPool = Manager.objectPool;
+        cam = Manager.minimapCamera;
+        camController = Manager.camController;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        var time = Time.time;
+        var time = Time.unscaledTime;
         if ((time - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, eventData.position) <= 1f) {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(mapTransform, eventData.position, null, out var localPoint);
             var rect = mapTransform.rect;
