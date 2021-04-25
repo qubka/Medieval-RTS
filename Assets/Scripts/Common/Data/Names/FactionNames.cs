@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class FactionNames : ScriptableObject
 {
-    public List<string> names;
+    public string[] names;
 
-    public string RandomName => names[Random.Range(0, names.Count)];
+    public string RandomName => names[Random.Range(0, names.Length)];
 }

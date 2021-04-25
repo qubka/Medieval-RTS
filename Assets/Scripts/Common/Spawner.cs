@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
-    public List<GameObject> bandits;
+    public GameObject army;
     public Vector3 center;
     public float radius;
     
@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
     {
         for (var i = 0; i < count; i++) {
             var pos = Vector.GetRandomNavMeshPositionNearLocation(center, radius);
-            Instantiate(bandits[Random.Range(0, bandits.Count)], pos, Quaternion.Euler(0f, Random.Range(0, 360f), 0f));
+            Instantiate(army, pos, Quaternion.Euler(0f, Random.Range(0, 360f), 0f));
         }
     }
     

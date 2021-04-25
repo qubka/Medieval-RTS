@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c1c28556e6c4e7484cd742926bba4c1, type: 3}
+  m_Name: Marauders
+  m_EditorClassIdentifier: 
+  label: Marauders
+  color: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
+  leader: {fileID: 0}
+  characters: []
+  locations: []
+  allies: []
+  enemies:
+  - {fileID: 11400000, guid: 55a0536e475f8b041b133d93e5edbe7f, type: 2}
+  - {fileID: 11400000, guid: e24aecdf6cf60954e936d336d4fff73a, type: 2}
+  - {fileID: 11400000, guid: a18470ed885b71f4580bdeb15cb21ced, type: 2}
+  - {fileID: 11400000, guid: dd5d481744ecab042a146f090c72fbcc, type: 2}
+  defaultDisposition: 0
+  troops:
+  - size: 48
+    data: {fileID: 11400000, guid: 41daba74c8104c146b7f27a923f8c944, type: 2}
+    primaryPrefabs:
+    - {fileID: 2075701848563991333, guid: 8fe8c9ff2d9cd84419b4297ac00959d5, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 552d93e60766cbb459a7db840a4a6efe, type: 2}
+    primaryPrefabs:
+    - {fileID: 4182769153587292612, guid: 5589071451044404d84dee7e13b9552c, type: 3}
+    secondaryPrefabs: []
+  models:
+  - primary: {fileID: 5766795129214813177, guid: 87e5caeaf3ba80840a6b8a70a4fba917, type: 3}
+    secondary: {fileID: 0}
+  - primary: {fileID: 7930468983683290256, guid: 4c9e2dba63dfbc242a56360e3982878d, type: 3}
+    secondary: {fileID: 0}

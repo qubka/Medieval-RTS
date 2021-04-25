@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6172ba5f685e48d990e9bdd814215abc, type: 3}
+  m_Name: Player Party
+  m_EditorClassIdentifier: 
+  leader: {fileID: 11400000, guid: f2026a488e08c0a4fb73cd910199af41, type: 2}
+  morale: 100
+  speed: 10
+  troops:
+  - size: 48
+    data: {fileID: 11400000, guid: 803b133cc9e97e24dbdf936f671edc81, type: 2}
+    primaryPrefabs:
+    - {fileID: 2158775885702491532, guid: 9f57597355085344090cca8ee32a90d1, type: 3}
+    - {fileID: 1800649172099937068, guid: 87507cca8ec9a43488a5fcff829aac8b, type: 3}
+    secondaryPrefabs:
+    - {fileID: 168575388818583983, guid: 083f586ed63a6c74aa2fb67bb4465af7, type: 3}
+  followingParty: {fileID: 0}
+  followingLocation: {fileID: 0}
+  behavior: {fileID: 0}
+  skin: 0

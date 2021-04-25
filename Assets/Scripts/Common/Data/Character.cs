@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -17,12 +18,13 @@ public class Character : ScriptableObject
 
     [Header("Game")] 
     public bool isNoble;
+    public bool isPlayer;
     //public bool isCompanion;
-    //public List<string> locationsOwned;
+    public List<Location> locationsOwned;
 
     [Header("Data")] 
     public Faction faction;
-    public Army army;
+    //public Party party;
     public Image portrait;
     public Banner banner;
 

@@ -16,7 +16,7 @@ public class RangeWeapon : ScriptableObject
     [Header("Animation")]
     public float close;
     public float distant;
-    public List<Range> ranges;
+    public Range[] ranges;
     
     [HideInInspector] public int id;
 

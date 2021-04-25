@@ -1,43 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public static class RandomExtention
 {
-    public static AnimationData GetRandom(this List<AnimationData> list, int index = 0)
+    public static AnimationData GetRandom(this AnimationData[] array, int index = 0)
     {
-        return list.Count == 1 ? list[0] : list[Random.Range(index, list.Count)];
+        return array.Length == 1 ? array[0] : array[Random.Range(index, array.Length)];
     }
     
-    public static AnimationData GetRandom(this List<AnimationData> list, AnimationData prev)
+    public static AnimationData GetRandom(this AnimationData[] array, AnimationData prev)
     {
-        return list.Count == 1 ? list[0] : list[RandomExcept(0, list.Count, list.IndexOf(prev))];
+        return array.Length == 1 ? array[0] : array[RandomExcept(0, array.Length, Array.IndexOf(array, prev))];
     }
     
-    public static AnimationClip GetRandom(this List<AnimationClip> list, int index = 0)
+    public static AnimationClip GetRandom(this AnimationClip[] array, int index = 0)
     {
-        return list.Count == 1 ? list[0] : list[Random.Range(index, list.Count)];
+        return array.Length == 1 ? array[0] : array[Random.Range(index, array.Length)];
     }
     
-    public static AnimationClip GetRandom(this List<AnimationClip> list, AnimationClip prev)
+    public static AnimationClip GetRandom(this AnimationClip[] array, AnimationClip prev)
     {
-        return list.Count == 1 ? list[0] : list[RandomExcept(0, list.Count, list.IndexOf(prev))];
+        return array.Length == 1 ? array[0] : array[RandomExcept(0, array.Length, Array.IndexOf(array, prev))];
     }
     
-    public static AudioClip GetByProportion(this List<AudioClip> list, int current, int max)
+    public static AudioClip GetByProportion(this AudioClip[] array, int current, int max)
     {
-        return list[(int) math.floor((float) (list.Count - 1) * current / max)];
+        return array[(int) math.floor((float) (array.Length - 1) * current / max)];
     }
     
-    public static AudioClip GetRandom(this List<AudioClip> list)
+    public static AudioClip GetRandom(this AudioClip[] array)
     {
-        return list.Count == 1 ? list[0] : list[Random.Range(0, list.Count)];
+        return array.Length == 1 ? array[0] : array[Random.Range(0, array.Length)];
     }
     
-    public static AudioClip GetRandom(this List<AudioClip> list, AudioClip prev)
+    public static AudioClip GetRandom(this AudioClip[] array, AudioClip prev)
     {
-        return list.Count == 1 ? list[0] : list[RandomExcept(0, list.Count, list.IndexOf(prev))];
+        return array.Length == 1 ? array[0] : array[RandomExcept(0, array.Length, Array.IndexOf(array, prev))];
     }
     
     private static int RandomExcept(int min, int max, int except)

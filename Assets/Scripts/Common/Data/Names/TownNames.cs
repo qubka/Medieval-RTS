@@ -7,9 +7,9 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class TownNames : ScriptableObject
 {
-    [SerializeField] private List<string> prefix;
-    [SerializeField] private List<string> anyfix;
+    [SerializeField] private string[] prefix;
+    [SerializeField] private string[] anyfix;
 
-    public string RandomPrefix => prefix[Random.Range(0, prefix.Count)];
-    public string RandomAnyfix => anyfix[Random.Range(0, anyfix.Count)];
+    public string RandomPrefix => prefix[Random.Range(0, prefix.Length)];
+    public string RandomAnyfix => anyfix[Random.Range(0, anyfix.Length)];
 }

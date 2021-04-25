@@ -7,11 +7,11 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class CharacterNames : ScriptableObject
 {
-    public List<string> titles;
-    public List<string> names;
+    public string[] titles;
+    public string[] names;
     public Gender gender;
     
     //public string this[int index] => names[index];
     //public int Count => names.Count;
-    public string RandomName => names[Random.Range(0, names.Count)];
+    public string RandomName => names[Random.Range(0, names.Length)];
 }

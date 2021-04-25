@@ -376,7 +376,7 @@ public class Unit : MonoBehaviour
     {
         var other = collision.collider.gameObject;
         
-        var unit = other.GetComponent<Unit>();
+        var unit = unitTable[other];
         if (unit) {
             var trans = unit.worldTransform;
             if (!collisions.Contains(trans)) {
@@ -385,7 +385,7 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        var obstacle = other.GetComponent<Obstacle>();
+        var obstacle = obstacleTable[other];
         if (obstacle) {
 	        if (!obstacles.Contains(obstacle)) {
 		        obstacles.Add(obstacle);
@@ -397,13 +397,13 @@ public class Unit : MonoBehaviour
     {
         var other = collision.collider.gameObject;
         
-        var unit = other.GetComponent<Unit>();
+        var unit = unitTable[other];
         if (unit) {
             collisions.Remove(unit.worldTransform);
             return;
         }
         
-        var obstacle = other.GetComponent<Obstacle>();
+        var obstacle = obstacleTable[other];
         if (obstacle) {
             obstacles.Remove(obstacle);
         }
@@ -901,7 +901,7 @@ public class Unit : MonoBehaviour
 		var isIdle = animations.IsIdle(clip, isCombat, isRange, isInjure);
 					
 		if (currentTime > nextAnimTime) {
-			if (isIdle && !isRange && animations.rage.Count > 0 && Random.Range(0, 10) == 0) {
+			if (isIdle && !isRange && animations.rage.Length > 0 && Random.Range(0, 10) == 0) {
 				ChangeState(UnitFSM.Wait);
 				var anim = animations.rage.GetRandom();
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
@@ -995,7 +995,7 @@ public class Unit : MonoBehaviour
 
 			if (currentTime > nextAnimTime) {
 				speed += Random.Range(0.05f, 0.1f);
-				var anim = animations.forwardWalk[animations.forwardWalk.Count > 1 ? 1 : 0];
+				var anim = animations.forwardWalk[animations.forwardWalk.Length > 1 ? 1 : 0];
 				var duration = anim.Length / speed;
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
@@ -1061,7 +1061,7 @@ public class Unit : MonoBehaviour
 
 			if (currentTime > nextAnimTime) {
 				speed += Random.Range(0.05f, 0.1f);
-				var anim = animations.forwardWalk[animations.forwardWalk.Count > 1 ? 2 : 0];
+				var anim = animations.forwardWalk[animations.forwardWalk.Length > 1 ? 2 : 0];
 				var duration = anim.Length / speed;
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
@@ -1126,7 +1126,7 @@ public class Unit : MonoBehaviour
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Wait);
 			var anim = animations.rangeEnd.GetRandom();
-			if (animations.rangeStart.Count == 0) {
+			if (animations.rangeStart.Length == 0) {
 				crowd.StartAnimation(animations.rangeHold[range].clip);
 				PlayAnimation(anim, squad.data.fireRate - nextModeTime, 1f, 0.5f);
 			} else {
@@ -1145,7 +1145,7 @@ public class Unit : MonoBehaviour
 			if (range == 0 && squad.seeEnemy) {
 				range++;
 			}
-			if (animations.rangeStart.Count == 0) {
+			if (animations.rangeStart.Length == 0) {
 				ChangeState(UnitFSM.RangeHold);
 				var anim = animations.rangeHold[range];
 				crowd.StartAnimation(animations.rangeEnd.GetRandom().clip);

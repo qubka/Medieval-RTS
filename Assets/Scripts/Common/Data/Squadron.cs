@@ -20,7 +20,7 @@ public class Squadron : ScriptableObject
     public Animations animations;
 
     [Header("Squad")]
-    public int squadSize;
+    //public int squadSize;
     public float squadWalkSpeed;
     public float squadRunSpeed;
     public float squadAccel;

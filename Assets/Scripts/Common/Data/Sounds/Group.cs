@@ -6,14 +6,14 @@ using UnityEngine;
 [Serializable]
 public class Group : ScriptableObject
 {
-    public List<AudioClip> runSounds;
-    public List<AudioClip> walkSounds;
-    public List<AudioClip> chargeSounds;
-    public List<AudioClip> closeFightSounds;
-    public List<AudioClip> distantFightSounds;
-    public List<AudioClip> selectSounds;
-    public List<AudioClip> celebrationSounds;
-    public List<AudioClip> battleCrySounds;
-    public List<AudioClip> goSounds;
-    public List<AudioClip> stopSounds;
+    public AudioClip[] runSounds;
+    public AudioClip[] walkSounds;
+    public AudioClip[] chargeSounds;
+    public AudioClip[] closeFightSounds;
+    public AudioClip[] distantFightSounds;
+    public AudioClip[] selectSounds;
+    public AudioClip[] celebrationSounds;
+    public AudioClip[] battleCrySounds;
+    public AudioClip[] goSounds;
+    public AudioClip[] stopSounds;
 }

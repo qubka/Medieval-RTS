@@ -7,48 +7,48 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Animations : ScriptableObject
 {
-    public List<AnimationData> idleNormal;
-    public List<AnimationData> idleCombat;
-    public List<AnimationData> idleRange;
-    public List<AnimationData> idleInjured;
-    public List<AnimationData> attackNormal;
-    public List<AnimationData> attackStep;
-    public List<AnimationData> attackCharge;
-    public List<AnimationData> rangeStart;
-    public List<AnimationData> rangeHold;
-    public List<AnimationData> rangeRelease;
-    public List<AnimationData> rangeEnd;
-    public List<AnimationData> reload;
-    public List<AnimationData> equip;
-    public List<AnimationData> kick;
-    public List<AnimationData> rage;
-    public List<AnimationData> turn;
-    public List<AnimationData> charge;
-    public List<AnimationData> forwardWalk;
-    public List<AnimationData> forwardRun;
-    public List<AnimationData> backwardWalk;
-    public List<AnimationData> backwardRun;
-    public List<AnimationData> blockLeftUp;
-    public List<AnimationData> blockLeftDown;
-    public List<AnimationData> blockRightUp;
-    public List<AnimationData> blockRightDown;
-    public List<AnimationData> blockShieldUp;
-    public List<AnimationData> blockShieldDown;
-    public List<AnimationData> counterLeft;
-    public List<AnimationData> counterRight;
-    public List<AnimationData> counterShield;
-    public List<AnimationData> knockdownNormal;
-    public List<AnimationData> knockdownCombat;
-    public List<AnimationData> knockdownRange;
-    public List<AnimationData> deathNormal;
-    public List<AnimationData> deathCombat;
-    public List<AnimationData> deathRange;
-    public List<AnimationData> hitNormal;
-    public List<AnimationData> hitCombat;
-    public List<AnimationData> hitRange;
-    public List<AnimationData> hitBack;
-    public List<AnimationData> injuredWalk;
-    public List<AnimationData> injuredRun;
+    public AnimationData[] idleNormal;
+    public AnimationData[] idleCombat;
+    public AnimationData[] idleRange;
+    public AnimationData[] idleInjured;
+    public AnimationData[] attackNormal;
+    public AnimationData[] attackStep;
+    public AnimationData[] attackCharge;
+    public AnimationData[] rangeStart;
+    public AnimationData[] rangeHold;
+    public AnimationData[] rangeRelease;
+    public AnimationData[] rangeEnd;
+    public AnimationData[] reload;
+    public AnimationData[] equip;
+    public AnimationData[] kick;
+    public AnimationData[] rage;
+    public AnimationData[] turn;
+    public AnimationData[] charge;
+    public AnimationData[] forwardWalk;
+    public AnimationData[] forwardRun;
+    public AnimationData[] backwardWalk;
+    public AnimationData[] backwardRun;
+    public AnimationData[] blockLeftUp;
+    public AnimationData[] blockLeftDown;
+    public AnimationData[] blockRightUp;
+    public AnimationData[] blockRightDown;
+    public AnimationData[] blockShieldUp;
+    public AnimationData[] blockShieldDown;
+    public AnimationData[] counterLeft;
+    public AnimationData[] counterRight;
+    public AnimationData[] counterShield;
+    public AnimationData[] knockdownNormal;
+    public AnimationData[] knockdownCombat;
+    public AnimationData[] knockdownRange;
+    public AnimationData[] deathNormal;
+    public AnimationData[] deathCombat;
+    public AnimationData[] deathRange;
+    public AnimationData[] hitNormal;
+    public AnimationData[] hitCombat;
+    public AnimationData[] hitRange;
+    public AnimationData[] hitBack;
+    public AnimationData[] injuredWalk;
+    public AnimationData[] injuredRun;
     public bool hasMultiNormalKnockdown;
     public bool hasMultiCombatKnockdown;
     public bool hasMultiRangeKnockdown;
@@ -65,7 +65,7 @@ public class Animations : ScriptableObject
     public Vector3 deathPosition;
     public Vector3 deathRotation;
 
-    public List<AnimationData> GetCounterAnimation(AnimSide side, bool hasShield, bool isCounter)
+    public AnimationData[] GetCounterAnimation(AnimSide side, bool hasShield, bool isCounter)
     {
         switch (side) {
             case AnimSide.RightUp:
@@ -81,31 +81,31 @@ public class Animations : ScriptableObject
         }
     }
 
-    public List<AnimationData> GetAttackAnimation(MeleeWeapon weapon, float distance)
+    public AnimationData[] GetAttackAnimation(MeleeWeapon weapon, float distance)
     {
         if (hasDistant && distance > weapon.distant) {
             return attackCharge;
         }
 
-        if (kick.Count > 0 && Random.Range(0, 10) == 0 && distance < weapon.kick) {
+        if (kick.Length > 0 && Random.Range(0, 10) == 0 && distance < weapon.kick) {
             return kick;
         }
         
-        return distance > weapon.normal && attackStep.Count > 0 ? attackStep : attackNormal;
+        return distance > weapon.normal && attackStep.Length > 0 ? attackStep : attackNormal;
     }
 
-    public List<AnimationData> GetIdleAnimation(bool isCombat, bool isRange, bool isInjure)
+    public AnimationData[] GetIdleAnimation(bool isCombat, bool isRange, bool isInjure)
     {
         if (isCombat) {
-            if (isRange && idleRange.Count > 0) {
+            if (isRange && idleRange.Length > 0) {
                 return idleRange;
             }
             
-            if (idleCombat.Count > 0) {
+            if (idleCombat.Length > 0) {
                 return idleCombat;
             }
         } else {
-            if (isInjure && idleInjured.Count > 0) {
+            if (isInjure && idleInjured.Length > 0) {
                 return idleInjured;
             }
         }
@@ -116,11 +116,11 @@ public class Animations : ScriptableObject
     public AnimationData GetKnockdownAnimation(bool isCombat, bool isRange)
     {
         if (isCombat) {
-            if (isRange && knockdownRange.Count > 0) {
+            if (isRange && knockdownRange.Length > 0) {
                 return hasMultiRangeKnockdown ? knockdownRange.GetRandom(1) : knockdownRange.GetRandom();
             }
             
-            if (knockdownCombat.Count > 0) {
+            if (knockdownCombat.Length > 0) {
                 return hasMultiCombatKnockdown ? knockdownCombat.GetRandom(1) : knockdownCombat.GetRandom();
             }
         }
@@ -131,11 +131,11 @@ public class Animations : ScriptableObject
     public AnimationData GetHitAnimation(bool isCombat, bool isRange)
     {
         if (isCombat) {
-            if (isRange && hitRange.Count > 0) {
+            if (isRange && hitRange.Length > 0) {
                 return hitRange.GetRandom();
             }
             
-            if (hitCombat.Count > 0) {
+            if (hitCombat.Length > 0) {
                 return hitCombat.GetRandom();
             }
         }
@@ -146,11 +146,11 @@ public class Animations : ScriptableObject
     public AnimationData GetDeathAnimation(bool isCombat, bool isRange)
     {
         if (isCombat) {
-            if (isRange && deathRange.Count > 0) {
+            if (isRange && deathRange.Length > 0) {
                 return deathRange.GetRandom();
             }
             
-            if (deathCombat.Count > 0) {
+            if (deathCombat.Length > 0) {
                 return deathCombat.GetRandom();
             }
         }
@@ -163,18 +163,18 @@ public class Animations : ScriptableObject
         if (isCombat) {
             var list = (isForward ? isRunning ? forwardRun : forwardWalk : isRunning ? backwardRun : backwardWalk);
             
-            if (isRange && list.Count > 2) {
+            if (isRange && list.Length > 2) {
                 return list[2];
             }
         
-            if (list.Count > 1) {
+            if (list.Length > 1) {
                 return list[1];
             }
             
             return list[0];
         }
 
-        return (isForward ? isRunning ? isInjure && injuredRun.Count > 0 ? injuredRun : forwardRun : isInjure && injuredWalk.Count > 0 ? injuredWalk : forwardWalk : isRunning ? backwardRun : backwardWalk)[0];
+        return (isForward ? isRunning ? isInjure && injuredRun.Length > 0 ? injuredRun : forwardRun : isInjure && injuredWalk.Length > 0 ? injuredWalk : forwardWalk : isRunning ? backwardRun : backwardWalk)[0];
     }
 
     public AnimationData GetTurnAnimation(Quaternion current, Quaternion desired)
@@ -198,15 +198,15 @@ public class Animations : ScriptableObject
     public bool IsIdle(AnimationClip current, bool isCombat, bool isRange, bool isInjure)
     {
         if (isCombat) {
-            if (isRange && deathRange.Count > 0) {
+            if (isRange && deathRange.Length > 0) {
                 return idleRange[0].clip == current;
             }
             
-            if (deathCombat.Count > 0) {
+            if (deathCombat.Length > 0) {
                 return idleCombat[0].clip == current;
             }
         } else {
-            if (isInjure && idleInjured.Count > 0) {
+            if (isInjure && idleInjured.Length > 0) {
                 return idleInjured[0].clip == current;
             }
         }
@@ -216,7 +216,7 @@ public class Animations : ScriptableObject
 
     public bool IsTurn(AnimationClip current)
     {
-        return turn.Count > 0 && (turn[0].clip == current || turn[1].clip == current);
+        return turn.Length > 0 && (turn[0].clip == current || turn[1].clip == current);
     }
 }
 
@@ -230,11 +230,11 @@ public class AnimationData
     public AnimSide side2;
     public Sounds sound1;
     public Sounds sound2;
-    [SerializeField] private List<AnimationClip> childList;
+    [SerializeField] private AnimationClip[] childList;
     
     public float Length => clip.length;
     public float FrameRate => clip ? clip.frameRate : 30f;
-    public bool HasChild => childList.Count > 0;
+    public bool HasChild => childList.Length > 0;
     public AnimationClip Child => childList.GetRandom();
 }
 

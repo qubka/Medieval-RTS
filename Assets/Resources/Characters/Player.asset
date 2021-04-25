@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d3cabf375148e0a6c52668215ac6c5, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: 
+  surname: Player
+  title: 
+  gender: 0
+  age: 23
+  renown: 0
+  honor: 0
+  isNoble: 1
+  isPlayer: 1
+  locationsOwned: []
+  faction: {fileID: 11400000, guid: 55a0536e475f8b041b133d93e5edbe7f, type: 2}
+  portrait: {fileID: 0}
+  banner: {fileID: 11400000, guid: a71c8039803bd7342a43eae7e964ea27, type: 2}

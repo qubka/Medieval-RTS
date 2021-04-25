@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6172ba5f685e48d990e9bdd814215abc, type: 3}
+  m_Name: Bandit Party
+  m_EditorClassIdentifier: 
+  leader: {fileID: 11400000, guid: dc2b9a63edef1cb42b03bc67de0e55b6, type: 2}
+  morale: 100
+  speed: 10
+  troops:
+  - size: 48
+    data: {fileID: 11400000, guid: 552d93e60766cbb459a7db840a4a6efe, type: 2}
+    primaryPrefabs:
+    - {fileID: 4182769153587292612, guid: 5589071451044404d84dee7e13b9552c, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 41daba74c8104c146b7f27a923f8c944, type: 2}
+    primaryPrefabs:
+    - {fileID: 2075701848563991333, guid: 8fe8c9ff2d9cd84419b4297ac00959d5, type: 3}
+    secondaryPrefabs: []
+  followingParty: {fileID: 0}
+  followingLocation: {fileID: 0}
+  behavior: {fileID: 11400000, guid: c94dd5680947fc841bb3b0182da14bee, type: 2}
+  skin: 0

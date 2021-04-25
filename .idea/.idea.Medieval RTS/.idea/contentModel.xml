@@ -157,6 +157,7 @@
                   <e p="Army" t="Include">
                     <e p="ChaseEnemy.cs" t="Include" />
                     <e p="IsEnemyNearby.cs" t="Include" />
+                    <e p="IsPowerfulThenEnemy.cs" t="Include" />
                     <e p="RunFromEnemy.cs" t="Include" />
                   </e>
                   <e p="AudioSource" t="Include">
@@ -1285,6 +1286,7 @@
           <e p="AutoNameAnimations.cs" t="Include" />
           <e p="CharacterEditor.cs" t="Include" />
           <e p="DeletePlayerPrefs.cs" t="Include" />
+          <e p="PartyEditor.cs" t="Include" />
           <e p="PortraitEditor.cs" t="Include" />
           <e p="ReadOnlyDrawer.cs" t="Include" />
           <e p="SpawnerEditor.cs" t="Include" />
@@ -1311,7 +1313,6 @@
           <e p="Characters" t="Include">
             <e p="Army.cs" t="Include" />
             <e p="Obstacle.cs" t="Include" />
-            <e p="Party.cs" t="Include" />
             <e p="Projectile.cs" t="Include" />
             <e p="Squad.cs" t="Include" />
             <e p="Town.cs" t="Include" />
@@ -1319,8 +1320,9 @@
           </e>
           <e p="Common" t="Include">
             <e p="Core" t="Include">
+              <e p="AnimatedCrowd.cs" t="Include" />
               <e p="AnimatedUVs.cs" t="Include" />
-              <e p="Attachment.cs" t="Include" />
+              <e p="BlockRotation.cs" t="Include" />
               <e p="Circle.cs" t="Include" />
               <e p="Direction.cs" t="Include" />
               <e p="ImageExtention.cs" t="Include" />
@@ -1346,12 +1348,15 @@
               <e p="Character.cs" t="Include" />
               <e p="Faction.cs" t="Include" />
               <e p="Gender.cs" t="Include" />
+              <e p="Location.cs" t="Include" />
+              <e p="Model.cs" t="Include" />
               <e p="MoraleAttribute.cs" t="Include" />
               <e p="Names" t="Include">
                 <e p="CharacterNames.cs" t="Include" />
                 <e p="FactionNames.cs" t="Include" />
                 <e p="TownNames.cs" t="Include" />
               </e>
+              <e p="Party.cs" t="Include" />
               <e p="Portrait.cs" t="Include" />
               <e p="ReadOnlyAttribute.cs" t="Include" />
               <e p="Sounds" t="Include">
@@ -1361,6 +1366,7 @@
               </e>
               <e p="Squadron.cs" t="Include" />
               <e p="Team.cs" t="Include" />
+              <e p="Troop.cs" t="Include" />
               <e p="Weapons" t="Include">
                 <e p="MeleeWeapon.cs" t="Include" />
                 <e p="RangeWeapon.cs" t="Include" />

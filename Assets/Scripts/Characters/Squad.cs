@@ -18,10 +18,10 @@ public class Squad : MonoBehaviour, ISortable
 {
     [Header("Main Information")]
     public Squadron data;
+    public int squadSize;
     public List<GameObject> primaryPrefabs;
     public List<GameObject> secondaryPrefabs;
     public Team team;
-    public int squadSize;
     public FormationShape formationShape;
     [Space(10f)]
     [ReadOnly] public SquadFSM state;
@@ -48,8 +48,6 @@ public class Squad : MonoBehaviour, ISortable
     [ReadOnly] public bool seeEnemy;
     [ReadOnly] public bool touchEnemies;
     [HideInInspector] public UnitSize unitSize;
-    [HideInInspector] public SoundManager soundManager;
-    [HideInInspector] public ObjectPool objectPool;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform camTransform;
     [HideInInspector] public Transform barTransform;
@@ -105,13 +103,15 @@ public class Squad : MonoBehaviour, ISortable
     private Camera cam;
     private CamController camController;
     private TerrainBorder border;
-    private GPUICrowdManager modelManager;
-    private RectTransform holderCanvas;
     private SortList sortList;
+    private UnitTable unitTable;
     private SquadTable squadTable;
     private ObstacleTable obstacleTable;
     private UnitManager unitManager;
-    private UnitTable unitTable;
+    private SoundManager soundManager;
+    private ObjectPool objectPool;
+    private GPUICrowdManager modelManager;
+    private RectTransform holderCanvas;
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
@@ -397,7 +397,7 @@ public class Squad : MonoBehaviour, ISortable
         
         // Register the instantiated GOs to the Crowd Manager
         GPUInstancerAPI.RegisterPrefabInstanceList(modelManager, instances);
-        //GPUInstancerAPI.InitializeGPUInstancer(crowdManager);
+        GPUInstancerAPI.InitializeGPUInstancer(modelManager);
         
         // Enabling the Crowd Manager back; this will re-initialize it with the new settings for the prototypes
         modelManager.enabled = true;
@@ -853,7 +853,7 @@ public class Squad : MonoBehaviour, ISortable
 
     #region Sounds
     
-    public void PlaySound(List<AudioClip> clips)
+    public void PlaySound(AudioClip[] clips)
     {
         if (!mainAudio.isPlaying) {
             mainAudio.clip = clips.GetRandom();
@@ -862,16 +862,21 @@ public class Squad : MonoBehaviour, ISortable
         }
     }
 
-    private IEnumerator PlaySoundDelay(List<AudioClip> clips)
+    private IEnumerator PlaySoundDelay(AudioClip[] clips)
     {
         yield return new WaitForSeconds(mainAudio.clip.length + 0.1f);
         PlaySound(clips);
     }
     
-    public void DelaySound(List<AudioClip> clips)
+    public void DelaySound(AudioClip[] clips)
     {
         if (soundRoutine != null) StopCoroutine(soundRoutine);
         soundRoutine = StartCoroutine(PlaySoundDelay(clips));
+    }
+
+    public void RequestPlaySound()
+    {
+        soundManager.Re
     }
 
     #endregion

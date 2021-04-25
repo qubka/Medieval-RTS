@@ -24,14 +24,14 @@ public class Projectile : MonoBehaviour
     private Vector3 support; // object representing point Q1
     private Vector3 lastOrigin; // object representing point P0
     private Vector3 lastTarget; // object representing point P2
-    private bool randomShot; //
+    private bool randomShot;
     private int id;
     
     private void Awake()
     {
-        if (!flying) flying = transform;
-        if (!source) source = GetComponent<AudioSource>();
-        if (id == 0) id = projectile.GetHashCode();
+        flying = transform;
+        source = GetComponent<AudioSource>();
+        id = projectile.GetHashCode();
     }
 
     private void OnEnable()
@@ -137,10 +137,10 @@ public class Projectile : MonoBehaviour
         lastTarget = desired;
     }
 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Gizmos.DrawSphere(support, 0.5f);
-    }*/
+    }
 
     private void Disable(bool trigger)
     {

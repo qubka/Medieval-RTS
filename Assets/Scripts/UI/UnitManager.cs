@@ -251,7 +251,7 @@ public class UnitManager : MonoBehaviour
 				}
 
 				if (onPlace.OnHold(groundHit.point, pointerUI, 20f * selectedUnits.Count)) {
-					selectedUnits.Sort((a, b) => Vector.DistanceSq(onPlace.startPos, a.centroid).CompareTo(Vector.DistanceSq(onPlace.startPos, b.centroid)));
+					selectedUnits.Sort((a, b) => Vector.DistanceSq(onPlace.startPos, a.GetPosition()).CompareTo(Vector.DistanceSq(onPlace.startPos, b.GetPosition())));
 					foreach (var squad in selectedUnits) {
 						placedFormations.Add(new Formation(squad, directionLine));
 					}
@@ -289,7 +289,7 @@ public class UnitManager : MonoBehaviour
 					clickAudio.clip = attackSound;
 					clickAudio.Play();
 					
-					var pos = pointerUI ? hover.centroid : groundHit.point;
+					var pos = pointerUI ? hover.GetPosition() : groundHit.point;
 					pos.y += 0.5f;
 					Instantiate(attackParticle, pos, Quaternion.identity);
 					
@@ -874,7 +874,7 @@ public class UnitManager : MonoBehaviour
 			head = new Line(arrowLine);
 			
 			if (points.Count > 0) {
-				line.AddLine(squad.centroid, points[0]);
+				line.AddLine(squad.GetPosition(), points[0]);
 				for (var i = 1; i < points.Count; i++) {
 					line.Add(points[i]);
 				}
@@ -1008,13 +1008,13 @@ public class UnitManager : MonoBehaviour
 					var toSmooth = true;
 					
 					if (squad.state == SquadFSM.Attack) {
-						var start = squad.centroid;
+						var start = squad.GetPosition();
 						line.AddPoint(start);
 						
 						var target = targets[0];
 						
 						if (target) {
-							var end = cache.ContainsKey(target) ? cache[target].centroid : target.transform.position;
+							var end = cache.ContainsKey(target) ? cache[target].GetPosition() : target.transform.position;
 							if (squad.isRange) {
 								line.AddCurve(start, end, 20f);
 								toSmooth = false;
@@ -1030,7 +1030,7 @@ public class UnitManager : MonoBehaviour
 						
 						foreach (var target in targets) {
 							if (target && target.activeInHierarchy) {
-								var end = cache.ContainsKey(target) ? cache[target].centroid : target.transform.position;
+								var end = cache.ContainsKey(target) ? cache[target].GetPosition() : target.transform.position;
 								line.AddPoint(end);
 							} else {
 								toRemove = target;

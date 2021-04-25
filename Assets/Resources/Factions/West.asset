@@ -15,5 +15,69 @@ MonoBehaviour:
   label: West Kingdom
   color: {r: 0.70980394, g: 0.3019608, b: 0.25882354, a: 1}
   leader: {fileID: 0}
-  maleNames: {fileID: 11400000, guid: d52c63366018c4c4fb74ca162d7975f1, type: 2}
-  femaleNames: {fileID: 0}
+  characters: []
+  locations: []
+  allies: []
+  enemies:
+  - {fileID: 11400000, guid: 6960650d042d6824c9fcc4a13030e858, type: 2}
+  defaultDisposition: 0
+  troops:
+  - size: 48
+    data: {fileID: 11400000, guid: 735e1f1177b5cdc4ab991cba274b6bdb, type: 2}
+    primaryPrefabs:
+    - {fileID: 7036796042573408500, guid: 3cf3e11fa26a07b4685cd8720c67ba38, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 552d93e60766cbb459a7db840a4a6efe, type: 2}
+    primaryPrefabs:
+    - {fileID: 1667624588356406612, guid: 1d7ece476ce0a844aa50380f4e41727f, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 824bf5ca99334214f9838b12bd32d65e, type: 2}
+    primaryPrefabs:
+    - {fileID: 5236464071991721899, guid: 60a3dcb24a12c0440a671beef7a3c6b0, type: 3}
+    secondaryPrefabs:
+    - {fileID: 8894137774791049865, guid: 5c5f265b6cdf88946b4629815058d313, type: 3}
+  - size: 48
+    data: {fileID: 11400000, guid: 41daba74c8104c146b7f27a923f8c944, type: 2}
+    primaryPrefabs:
+    - {fileID: 5487969912765510784, guid: e6ecf5fc225bc204ebad0962bd4c9a44, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: d70968b7483b9ad4087d48a552944439, type: 2}
+    primaryPrefabs:
+    - {fileID: 7109006263754706440, guid: 4a65c28bcbb20a1408eabc1ad98302f1, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 63c975656fc40ad4d915313a11a5f62c, type: 2}
+    primaryPrefabs:
+    - {fileID: 5764434067160794577, guid: c8f257d15db6fb1409bfe0d91faa962d, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 36d8f4a0b5eddf1448294292b02eb467, type: 2}
+    primaryPrefabs:
+    - {fileID: 2232474722342672883, guid: 60a8ee592287b1b4da37c1495c884f0a, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 951dddef9f0aaf0468c0734964c35e93, type: 2}
+    primaryPrefabs:
+    - {fileID: 1707774394779395989, guid: d6efb4c567a8e234f88d089e49654e85, type: 3}
+    secondaryPrefabs: []
+  - size: 48
+    data: {fileID: 11400000, guid: 03227a1ccfdc1514094d5dc1649b18ea, type: 2}
+    primaryPrefabs:
+    - {fileID: 5425409016431994112, guid: 8ae20c378c062b5429bf7c7e0320545d, type: 3}
+    secondaryPrefabs:
+    - {fileID: 4490058710842453304, guid: 83f091ac3581fc6439db53b989820dd4, type: 3}
+  - size: 48
+    data: {fileID: 11400000, guid: 803b133cc9e97e24dbdf936f671edc81, type: 2}
+    primaryPrefabs:
+    - {fileID: 2158775885702491532, guid: 9f57597355085344090cca8ee32a90d1, type: 3}
+    - {fileID: 1800649172099937068, guid: 87507cca8ec9a43488a5fcff829aac8b, type: 3}
+    secondaryPrefabs:
+    - {fileID: 3751940035529494755, guid: a4e8a57613571b84b965f24ede4aa060, type: 3}
+  models:
+  - primary: {fileID: 867521972099932765, guid: e5c0daf29faf1b346a0ebfe19d598f7f, type: 3}
+    secondary: {fileID: 3751940035529494755, guid: 6c3e4e1004abd42468e4c4711cb9e6ac, type: 3}
+  - primary: {fileID: 867521972099932765, guid: a6bd15fbd1d3f45428c838d315d84cbc, type: 3}
+    secondary: {fileID: 3751940035529494755, guid: 6c3e4e1004abd42468e4c4711cb9e6ac, type: 3}
