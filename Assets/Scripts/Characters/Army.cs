@@ -4,11 +4,12 @@ using System.Linq;
 using BehaviorDesigner.Runtime;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Army : MonoBehaviour, ISortable
+public class Army : SavableObject, ISortable
 {
     [Header("Main Information")]
     public Party data;
@@ -31,8 +32,6 @@ public class Army : MonoBehaviour, ISortable
     private Camera cam;
     //private CamController camController;
     private GPUICrowdManager modelManager;
-    private SortList sortList;
-    private ArmyTable armyTable;
     private RectTransform holderCanvas;
     private List<GPUInstancerPrefab> instances;
 
@@ -46,7 +45,12 @@ public class Army : MonoBehaviour, ISortable
         armyBar = Instantiate(armyBar);
         barTransform = armyBar.transform;
         worldTransform = transform;
+    }
 
+    protected override void Start()
+    {
+        base.Start();
+        
         var banner = data.leader.banner;
         if (banner) {
             Instantiate(banner.clearArmy, worldTransform).AddComponent<BlockRotation>().worldTransform.localPosition = bannerPosition;
@@ -56,22 +60,17 @@ public class Army : MonoBehaviour, ISortable
             gameObject.AddComponent<ArmyManager>();
         } else {
             var tree = gameObject.AddComponent<BehaviorTree>();
-            tree.ExternalBehavior = data.behavior;
+            tree.ExternalBehavior = data.leader.faction.behavior;
         }
-    }
-
-    private void Start()
-    {
+        
         // Get information from manager
         cam = Manager.mainCamera;
         modelManager = Manager.modelManager;
         holderCanvas = Manager.holderCanvas;
-        sortList = Manager.sortList;
-        armyTable = Manager.armyTable;
-        
+
         // Add a army to the tables
-        armyTable.Add(gameObject, this);
-        sortList.Add(this);
+        ArmyTable.Instance.Add(gameObject, this);
+        SortList.Instance.Add(this);
 
         // Parent a bar to the screen
         barText = barTransform.GetComponentInChildren<Text>();
@@ -115,8 +114,21 @@ public class Army : MonoBehaviour, ISortable
             barTransform.localPosition = canvasPos;
             armyBar.SetActive(true);
         }
+        
+        // TODO: Remove
+        barText.text = troopCount.ToString();
     }
     
+    public override string Save()
+    {
+        return JsonUtility.ToJson(data);
+    }
+
+    public override void Load(string[] values)
+    {
+
+    }
+
     private GPUICrowdPrefab CreateCrowd(GameObject prefab)
     {
         var obj = Instantiate(prefab, worldTransform);
@@ -142,13 +154,13 @@ public class Army : MonoBehaviour, ISortable
 
     #endregion
 
-    private void OnTriggerStay(Collision collision)
+    private void OnTriggerStay(Collider other)
     {
-        var other = collision.collider.gameObject;
-        
-        var army = other.GetComponent<Army>();
-        if (army) {
-            Debug.Log(army.name);
-        }
+        Debug.Log(other.name);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        Debug.Log(other.gameObject.name);
     }
 }

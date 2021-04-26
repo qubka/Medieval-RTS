@@ -9,7 +9,7 @@ public class MoraleAttribute : ScriptableObject
 {
     public int bonus;
     
-    [HideInInspector] public int id;
+    [NonSerialized] public int id;
     
     private void OnEnable()
     {

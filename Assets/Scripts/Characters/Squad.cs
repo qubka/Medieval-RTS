@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using Unity.Collections;
@@ -10,7 +9,6 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.UI;
-using Wintellect.PowerCollections;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
 
@@ -100,16 +98,13 @@ public class Squad : MonoBehaviour, ISortable
 
     #region Local
 
+    private TableObject<Unit> unitTable;
+    private TableObject<Squad> squadTable;
+    private TableObject<Obstacle> obstacleTable;
+    
     private Camera cam;
     private CamController camController;
     private TerrainBorder border;
-    private SortList sortList;
-    private UnitTable unitTable;
-    private SquadTable squadTable;
-    private ObstacleTable obstacleTable;
-    private UnitManager unitManager;
-    private SoundManager soundManager;
-    private ObjectPool objectPool;
     private GPUICrowdManager modelManager;
     private RectTransform holderCanvas;
     private EntityManager entityManager;
@@ -262,19 +257,15 @@ public class Squad : MonoBehaviour, ISortable
     private void Start()
     {
         // Get information from manager
+        unitTable = UnitTable.Instance;
+        obstacleTable = ObstacleTable.Instance;
+        squadTable = SquadTable.Instance;
         modelManager = Manager.modelManager;
-        unitTable = Manager.unitTable;
         cam = Manager.mainCamera;
         camController = Manager.camController;
-        objectPool = Manager.objectPool;
         holderCanvas = Manager.holderCanvas;
-        unitManager = Manager.unitManager;
-        soundManager = Manager.soundManager;
         camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
-        sortList = Manager.sortList;
-        squadTable = Manager.squadTable;
-        obstacleTable = Manager.obstacleTable;
         border = Manager.border;
         var terrain = Manager.terrain;
         
@@ -419,7 +410,7 @@ public class Squad : MonoBehaviour, ISortable
         
         // Add a squad to the tables
         squadTable.Add(gameObject, this);
-        sortList.Add(this);
+        SortList.Instance.Add(this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
@@ -522,7 +513,7 @@ public class Squad : MonoBehaviour, ISortable
             var listener = camTransform.position;
             
             // Play group footstep sound
-            var isFarAway = soundManager.playRange < Vector.DistanceSq(listener, centroid);
+            var isFarAway = SoundManager.Instance.playRange < Vector.DistanceSq(listener, centroid);
             var isPlaying = fightAudio.isPlaying;
             if (isPlaying && isFarAway != isFarSound) {
                 isPlaying = false;
@@ -739,10 +730,10 @@ public class Squad : MonoBehaviour, ISortable
         
         var count = units.Count;
         if (count == 0) {
-            sortList.Remove(this);
             squadTable.Remove(gameObject);
             entityManager.DestroyEntity(squadEntity);
-            unitManager.RemoveSquad(this);
+            SortList.Instance.Remove(this);
+            UnitManager.Instance.RemoveSquad(this);
             DestroyImmediate(squadBar);
             DestroyImmediate(unitCard);
             DestroyImmediate(unitLayout);
@@ -872,11 +863,6 @@ public class Squad : MonoBehaviour, ISortable
     {
         if (soundRoutine != null) StopCoroutine(soundRoutine);
         soundRoutine = StartCoroutine(PlaySoundDelay(clips));
-    }
-
-    public void RequestPlaySound()
-    {
-        soundManager.Re
     }
 
     #endregion
@@ -1038,7 +1024,7 @@ public class Squad : MonoBehaviour, ISortable
             }
             if (isEscape) {
                 ChangeSelectState(false);
-                unitManager.RemoveSquad(this);
+                UnitManager.Instance.RemoveSquad(this);
                 PlaySound(data.commanderSounds.saveYourLives);
                 isForward = true;
                 isRunning = true;
@@ -1350,12 +1336,12 @@ public class Squad : MonoBehaviour, ISortable
             if (!crossBorder.HasValue) {
                 crossBorder = centroid;
                 ChangeSelectState(false);
-                unitManager.RemoveSquad(this);
+                UnitManager.Instance.RemoveSquad(this);
             } else if (Vector.DistanceSq(crossBorder.Value, centroid) > removeRange) {
                 foreach (var unit in units) {
                     unit.OnRemove();
                 }
-                sortList.Remove(this);
+                SortList.Instance.Remove(this);
                 entityManager.DestroyEntity(squadEntity);
                 DestroyImmediate(squadBar);
                 DestroyImmediate(unitCard);
@@ -1437,7 +1423,7 @@ public class Squad : MonoBehaviour, ISortable
     public void NextTarget()
     {
         // Remove prev target
-        if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
+        if (target && target.CompareTag("Way")) ObjectPool.Instance.ReturnToPool(Manager.Way, target);
         
         // Store current
         var t = targets.Dequeue();

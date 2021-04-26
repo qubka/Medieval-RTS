@@ -57,8 +57,8 @@ public class Squadron : ScriptableObject
     public int morale;
     public bool chargeProtection;
     
-    [HideInInspector] public Stats stats;
-    [HideInInspector] public int totalStats;
+    [NonSerialized] public Stats stats;
+    [NonSerialized] public int totalStats;
 
     private void OnEnable()
     {

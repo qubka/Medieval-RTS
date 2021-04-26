@@ -20,12 +20,12 @@ public class Character : ScriptableObject
     public bool isNoble;
     public bool isPlayer;
     //public bool isCompanion;
-    public List<Location> locationsOwned;
+    //public List<Location> locationsOwned;
 
     [Header("Data")] 
     public Faction faction;
     //public Party party;
-    public Image portrait;
+    //public Image portrait;
     public Banner banner;
 
 #if UNITY_EDITOR    

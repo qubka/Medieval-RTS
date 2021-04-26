@@ -24,7 +24,7 @@ public class ControlBar : MonoBehaviour
     
     private void Start()
     {
-        manager = Manager.unitManager;
+        manager = UnitManager.Instance;
         StartCoroutine(Tick());
     }
 

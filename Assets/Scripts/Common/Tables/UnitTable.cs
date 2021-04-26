@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitTable : TableBehaviour<Unit>
+public class UnitTable : TableObject<Unit>
 {
 }

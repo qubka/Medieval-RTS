@@ -11,18 +11,12 @@ public class Agent : MonoBehaviour
     public float maxAccel = 30f;
 
     private Transform worldTransform;
-    private Terrain terrain;
 
     private void Awake()
     {
         velocity = float2.zero;
         steering = new Steering();
         worldTransform = transform;
-    }
-
-    private void Start() 
-    {
-        terrain = Manager.terrain;
     }
 
     public void SetSteering(Steering data, float weight) 
@@ -38,7 +32,7 @@ public class Agent : MonoBehaviour
         var pos = worldTransform.position;
         pos.x += displacement.x;
         pos.z += displacement.y;
-        pos.y = terrain.SampleHeight(pos); // align to the ground
+        pos.y = Manager.terrain.SampleHeight(pos); // align to the ground
         worldTransform.position = pos;
     }
 

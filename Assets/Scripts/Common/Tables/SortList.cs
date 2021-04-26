@@ -1,3 +1,3 @@
-﻿public class SortList : ListBehaviour<ISortable>
+﻿public class SortList : ListObject<ISortable>
 {
 }

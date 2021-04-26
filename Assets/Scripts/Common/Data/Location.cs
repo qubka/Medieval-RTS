@@ -8,8 +8,9 @@ public class Location : ScriptableObject
 {
     public string title;
     public bool isCapital;
-    //public Vector3 position;
-    //public Vector3 rotation;
+    public Faction faction;
+    public Vector3 position;
+    public Vector3 rotation;
     public Character ruler;
     public LocationType type;
     public List<Troop> garrison;

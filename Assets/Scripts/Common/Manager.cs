@@ -5,7 +5,7 @@
  using UnityEngine;
  
 [RequireComponent(typeof(Manager))]
-public class Manager : MonoBehaviour
+public class Manager : SingletonObject<Manager>
 {
 	#region Refs
 	
@@ -119,15 +119,6 @@ public class Manager : MonoBehaviour
 	public static RectTransform holderCanvas;
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
-	public static SortList sortList;
-	public static SquadTable squadTable;
-	public static ObstacleTable obstacleTable;
-	public static ArmyTable armyTable;
-	public static TownTable townTable;
-	public static UnitTable unitTable;
-	public static UnitManager unitManager;
-	public static SoundManager soundManager;
-	public static ObjectPool objectPool;
 	public static GPUICrowdManager modelManager;
 	
 	public static List<MoraleAttribute> moraleAttributes;
@@ -143,8 +134,10 @@ public class Manager : MonoBehaviour
 	
 	#endregion
 
-	protected void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
+		
 		terrain = Terrain.activeTerrain;
 		border = terrain.GetComponent<TerrainBorder>();
 		modelManager = crowdManager;
@@ -159,18 +152,6 @@ public class Manager : MonoBehaviour
 		
 		var size = terrain.terrainData.size;
 		TerrainDistance = math.max(size.x, size.z) * 2f;
-
-		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		
-		sortList = GetComponent<SortList>();
-		squadTable = GetComponent<SquadTable>();
-		obstacleTable = GetComponent<ObstacleTable>();
-		armyTable = GetComponent<ArmyTable>();
-		townTable = GetComponent<TownTable>();
-		unitTable = GetComponent<UnitTable>();
-		unitManager = GetComponent<UnitManager>();
-		soundManager = GetComponent<SoundManager>();
-		objectPool = GetComponent<ObjectPool>();
 
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		

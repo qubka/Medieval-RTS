@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Manager))]
-public class UnitManager : MonoBehaviour 
+public class UnitManager : SingletonObject<UnitManager>
 {
 	[Header("Main")]
 	public GUIStyle rectangleStyle;
@@ -63,9 +63,6 @@ public class UnitManager : MonoBehaviour
 	private TerrainBorder border;
 	private Camera cam;
 	private CamController camController;
-	private UnitTable unitTable;
-	private SquadTable squadTable;
-	private ObjectPool objectPool;
 	private Line drawedLine;
 	private AudioSource clickAudio;
 	private Squad lastSelectSquad;
@@ -90,9 +87,6 @@ public class UnitManager : MonoBehaviour
 	private void Start()
 	{
 		eventSystem = EventSystem.current;
-		unitTable = Manager.unitTable;
-		squadTable = Manager.squadTable;
-		objectPool = Manager.objectPool;
 		border = Manager.border;
 		cam = Manager.mainCamera;
 		camController = Manager.camController;
@@ -139,7 +133,7 @@ public class UnitManager : MonoBehaviour
 			var currentTime = Time.unscaledTime;
 			if ((currentTime - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, groundHit.point) <= 1f) {
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Squad) == 0) {
-					camController.SetTarget(objectPool.SpawnFromPool(Manager.Way, groundHit.point).transform);
+					camController.SetTarget(ObjectPool.Instance.SpawnFromPool(Manager.Way, groundHit.point).transform);
 					//clickAudio.clip = targetSound;
 					//clickAudio.Play();
 					onSelect.locked = true;
@@ -169,7 +163,7 @@ public class UnitManager : MonoBehaviour
 				
 				// Try to use sphere to find nearby units
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) { //if we found units in radius, choose the first one
-					var squad = unitTable[colliders[0].gameObject].squad;
+					var squad = UnitTable.Instance[colliders[0].gameObject].squad;
 					if (Input.GetKey(inclusiveKey)) { //inclusive select
 						AddSelected(squad, true);
 					} else { //exclusive selected
@@ -301,7 +295,7 @@ public class UnitManager : MonoBehaviour
 					var count = selectedUnits.Count;
 					if (count == 1) {
 						var squad = selectedUnits[0];
-						AddToDynamicGroup(squad, objectPool.SpawnFromPool(Manager.Way, dest));
+						AddToDynamicGroup(squad, ObjectPool.Instance.SpawnFromPool(Manager.Way, dest));
 					} else {
 						var position = Vector3.zero;
 						foreach (var squad in selectedUnits) {
@@ -309,9 +303,11 @@ public class UnitManager : MonoBehaviour
 						}
 						position /= count;
 						
+						var pool = ObjectPool.Instance;
+						
 						var shift = dest - position;
 						foreach (var squad in selectedUnits) {
-							AddToDynamicGroup(squad, objectPool.SpawnFromPool(Manager.Way, squad.worldTransform.position + shift));
+							AddToDynamicGroup(squad, pool.SpawnFromPool(Manager.Way, squad.worldTransform.position + shift));
 						}
 					}
 					
@@ -323,10 +319,12 @@ public class UnitManager : MonoBehaviour
 			} else {
 				onPlace.enabled = false;
 				
+				var pool = ObjectPool.Instance;
+				
 				var playSound = false;
 				foreach (var formation in placedFormations) {
 					if (formation.active) {
-						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool(Manager.Way, formation.centroid), formation.targetOrientation, formation.phalanxLength);
+						AddToDynamicGroup(formation.squad, pool.SpawnFromPool(Manager.Way, formation.centroid), formation.targetOrientation, formation.phalanxLength);
 						playSound = true;
 					}
 				}
@@ -393,10 +391,12 @@ public class UnitManager : MonoBehaviour
 			if (onShift.enabled) {
 				onShift.enabled = false;
 
+				var pool = ObjectPool.Instance;
+				
 				var playSound = false;
 				foreach (var formation in placedFormations) {
 					if (formation.active) {
-						AddToDynamicGroup(formation.squad, objectPool.SpawnFromPool(Manager.Way, formation.centroid), formation.targetOrientation);
+						AddToDynamicGroup(formation.squad, pool.SpawnFromPool(Manager.Way, formation.centroid), formation.targetOrientation);
 						playSound = true;
 					}
 				}
@@ -544,7 +544,7 @@ public class UnitManager : MonoBehaviour
 
 	private void OnTriggerEnter(Collider collider)
 	{
-		AddSelected(unitTable[collider.gameObject].squad);
+		AddSelected(UnitTable.Instance[collider.gameObject].squad);
 	}
 
 	private void OnGUI()
@@ -674,9 +674,8 @@ public class UnitManager : MonoBehaviour
 		public bool active;
 		
 		private Line line;
-		private Terrain terrain;
 		private TerrainBorder border;
-		private ObjectPool objectPool;
+		private ObjectPool pool;
 
 		private const float DefaultAngle = 45f;
 
@@ -685,15 +684,13 @@ public class UnitManager : MonoBehaviour
 			squad = squads;
 			line = new Line(directionLine);
 			
-			terrain = Manager.terrain;
 			border = Manager.border;
-			objectPool = Manager.objectPool;
-
+			pool = ObjectPool.Instance;
+			
 			selectors = new List<GameObject>(squad.unitCount);
 			for (var i = 0; i < squad.unitCount; i++) {
-				selectors.Add(objectPool.SpawnFromPool(Manager.Selector));
+				selectors.Add(pool.SpawnFromPool(Manager.Selector));
 			}
-
 			active = true;
 		}
 
@@ -725,7 +722,7 @@ public class UnitManager : MonoBehaviour
 				if (count > i) {
 					selector.transform.SetPositionAndRotation(positions[i], rot);
 				} else {
-					objectPool.ReturnToPool(Manager.Selector, selector);
+					pool.ReturnToPool(Manager.Selector, selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -773,6 +770,8 @@ public class UnitManager : MonoBehaviour
 			var angle = squad.worldTransform.eulerAngles.y;
 			var rot = Quaternion.Euler(0f, DefaultAngle + angle, 0f);
 			
+			var terrain = Manager.terrain;
+			
 			// Remove selectors if no more units available
 			var count = squad.positions.Count;
 			for (var i = selectors.Count - 1; i > -1; i--) {
@@ -786,7 +785,7 @@ public class UnitManager : MonoBehaviour
 					pos.y = terrain.SampleHeight(pos) + 0.5f;
 					selector.transform.SetPositionAndRotation(pos, rot);
 				} else {
-					objectPool.ReturnToPool(Manager.Selector, selector);
+					pool.ReturnToPool(Manager.Selector, selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -811,7 +810,7 @@ public class UnitManager : MonoBehaviour
 				if (count > i) {
 					selector.SetActive(state);
 				} else {
-					objectPool.ReturnToPool(Manager.Selector, selector);
+					pool.ReturnToPool(Manager.Selector, selector);
 					selectors.RemoveAt(i);
 				}
 			}
@@ -829,15 +828,15 @@ public class UnitManager : MonoBehaviour
 					var selector = selectors[i];
 					if (count > i) {
 						var trans = selector.transform;
-						objectPool.SpawnFromPool(Manager.Pointer, trans.position, trans.rotation);
+						pool.SpawnFromPool(Manager.Pointer, trans.position, trans.rotation);
 					}
-					objectPool.ReturnToPool(Manager.Selector, selector);
+					pool.ReturnToPool(Manager.Selector, selector);
 				}
 			} else {
 				line.Destroy();
 				
 				foreach (var selector in selectors) {
-					objectPool.ReturnToPool(Manager.Selector, selector);
+					pool.ReturnToPool(Manager.Selector, selector);
 				}
 			}
 		}
@@ -893,14 +892,14 @@ public class UnitManager : MonoBehaviour
 			//line.Smooth(0.15f);
 			line.Render();
 
+			var pool = ObjectPool.Instance;
+			
 			var output = new List<Vector3>();
 			LineUtility.Simplify(points, 10f, output);
 			if (output.Count > 0) {
-				var objectPool = Manager.objectPool;
-				
-				squad.SetDestination(false, new Target(objectPool.SpawnFromPool(Manager.Way, output[0])));
+				squad.SetDestination(false, new Target(pool.SpawnFromPool(Manager.Way, output[0])));
 				for (var i = 1; i < output.Count; i++) {
-					squad.SetDestination(true, new Target(objectPool.SpawnFromPool(Manager.Way, output[i])));
+					squad.SetDestination(true, new Target(pool.SpawnFromPool(Manager.Way, output[i])));
 				}
 			}
 		}
@@ -946,8 +945,6 @@ public class UnitManager : MonoBehaviour
 		private Squad squad;
 
 		private List<GameObject> targets;
-		private ObjectPool objectPool;
-		private SquadTable squadTable;
 		private float nextUpdateTime;
 		
 		private readonly Dictionary<GameObject, Squad> cache = new Dictionary<GameObject, Squad>();
@@ -961,8 +958,6 @@ public class UnitManager : MonoBehaviour
 			line = new Line(movementLine);
 			head = new Line(arrowLine);
 			targets = new List<GameObject>();
-			objectPool = Manager.objectPool;
-			squadTable = Manager.squadTable;
 		}
 
 		public void SetActive(bool value)
@@ -990,7 +985,7 @@ public class UnitManager : MonoBehaviour
 		private void AddTarget(GameObject target)
 		{
 			targets.Add(target);
-			var enemy = squadTable[target];
+			var enemy = SquadTable.Instance[target];
 			if (enemy) {
 				cache.Add(target, enemy);
 			}
@@ -1084,8 +1079,9 @@ public class UnitManager : MonoBehaviour
 		
 		private void ClearAll()
 		{
+			var pool = ObjectPool.Instance;
 			foreach (var target in targets) {
-				if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target);
+				if (target && target.CompareTag("Way")) pool.ReturnToPool(Manager.Way, target);
 			}
 			targets.Clear();
 			cache.Clear();
@@ -1154,13 +1150,13 @@ public class UnitManager : MonoBehaviour
 			return false;
 
 		if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Unit) != 0) {
-			hover = unitTable[colliders[0].gameObject].squad;
+			hover = UnitTable.Instance[colliders[0].gameObject].squad;
 			squadInfo.OnUpdate();
 			return true;
 		} 
 		
 		if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Squad)) {
-			hover = squadTable[hit.transform.gameObject];
+			hover = SquadTable.Instance[hit.transform.gameObject];
 			squadInfo.OnUpdate();
 			return true;
 		}

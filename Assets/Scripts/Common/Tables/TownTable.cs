@@ -1,4 +1,4 @@
-﻿public class TownTable : TableBehaviour<Town>
+﻿public class TownTable : TableObject<Town>
 {
         
 }

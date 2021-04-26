@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool : SingletonObject<ObjectPool>
 {
     public List<Pool> pools;
     private Transform worldTransform;
@@ -10,14 +10,16 @@ public class ObjectPool : MonoBehaviour
     private readonly Dictionary<int, Queue<GameObject>> poolTable = new Dictionary<int, Queue<GameObject>>();
     
     [Serializable]
-    public struct Pool
+    public class Pool
     {
         public GameObject prefab;
         public int size;
     }
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         worldTransform = transform;
 
         foreach (var pool in pools) {

@@ -15,7 +15,6 @@ public class SquadDescription : MonoBehaviour
     [SerializeField] private float offset = 232.5f;
     
     private RectTransform rectTransform;
-    private RectTransform layoutTransform;
     private UnitManager manager;
     private float initial;
     private bool enable;
@@ -29,8 +28,7 @@ public class SquadDescription : MonoBehaviour
 
     private void Start()
     {
-        manager = Manager.unitManager;
-        layoutTransform = Manager.layoutCanvas;
+        manager = UnitManager.Instance;
         StartCoroutine(Tick());
     }
 
@@ -55,7 +53,7 @@ public class SquadDescription : MonoBehaviour
             count.text = $"{squad.unitCount} ({squad.squadSize})";
             killed.text = squad.killed.ToString();
 
-            Shift(layoutTransform.childCount >= layoutTrigger);
+            Shift(Manager.layoutCanvas.childCount >= layoutTrigger);
         } else {
             Toggle(false);
         }

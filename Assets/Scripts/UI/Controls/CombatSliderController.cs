@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class CombatSliderController : MonoBehaviour
 {
     private Slider slider;
-    private SquadTable squadTable;
 
     private void Awake()
     {
@@ -16,17 +15,16 @@ public class CombatSliderController : MonoBehaviour
 
     private void Start()
     {
-        squadTable = Manager.squadTable;
         StartCoroutine(ChangeSlider());
-
     }
+    
     private IEnumerator ChangeSlider()
     {
         while (true) {
             var allies = 0;
             var enemies = 0;
             
-            foreach (var squad in squadTable) {
+            foreach (var squad in SquadTable.Instance) {
                 if (squad.state == SquadFSM.Retreat)
                     continue;
                 

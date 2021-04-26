@@ -4,12 +4,6 @@ using UnityEngine.EventSystems;
 public class SquadBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     public Squad squad;
-    private UnitManager manager;
-
-    private void Start()
-    {
-        manager = Manager.unitManager;
-    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {

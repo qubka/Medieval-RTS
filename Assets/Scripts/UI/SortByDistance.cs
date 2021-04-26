@@ -9,7 +9,6 @@ public class SortByDistance : MonoBehaviour
 {
     private Transform worldTransform;
     private Transform camTransform;
-    private SortList sortList;
 
     private void Awake()
     {
@@ -19,16 +18,16 @@ public class SortByDistance : MonoBehaviour
     private void Start()
     {
         camTransform = Manager.camTransform;
-        sortList = Manager.sortList;
-        StartCoroutine(SortList());
+        StartCoroutine(SortingList());
     }
 
-    private IEnumerator SortList()
+    private IEnumerator SortingList()
     {
         while (true) {
             var pos = camTransform.position;
-            var i = sortList.Count - 1;
-            foreach (var sortable in sortList.list.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
+            var list = SortList.Instance.list;
+            var i = list.Count - 1;
+            foreach (var sortable in list.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
                 sortable.GetTransform().SetSiblingIndex(i);
                 i--;
             }

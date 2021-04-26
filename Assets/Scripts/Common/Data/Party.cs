@@ -10,12 +10,11 @@ public class Party : ScriptableObject
     public Character leader;
     public float morale;
     public float speed;
-    //public Vector3 position;
-    //public Vector3 rotation;
+    public Vector3 position;
+    public Quaternion rotation;
     public List<Troop> troops;
-    public Party followingParty;
-    public Location followingLocation;
-    public ExternalBehaviorTree behavior;
+    //public Party followingParty;
+    //public Location followingLocation;
     //public PartyFSM state;
     public int skin;
 }

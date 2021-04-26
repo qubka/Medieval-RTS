@@ -10,7 +10,6 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     [SerializeField] private GameObject icon;
     
     private TerrainBorder border;
-    private ObjectPool objectPool;
     private Camera cam;
     private CamController camController;
     private RectTransform iconTransform;
@@ -37,7 +36,6 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     private void Start()
     {
         border = Manager.border;
-        objectPool = Manager.objectPool;
         cam = Manager.minimapCamera;
         camController = Manager.camController;
     }
@@ -60,7 +58,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
             if (border.IsOutsideBorder(hit))
                 return;
 
-            camController.SetTarget(objectPool.SpawnFromPool(Manager.Way, hit).transform);
+            camController.SetTarget(ObjectPool.Instance.SpawnFromPool(Manager.Way, hit).transform);
         }
 
         lastClickTime = time;

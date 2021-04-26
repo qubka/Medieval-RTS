@@ -24,7 +24,6 @@ public class CamController : MonoBehaviour
 	private Transform worldTrasnform;
 	private Transform camTransform;
 	private TerrainBorder border;
-	private ObjectPool objectPool;
 	
 	#endregion
 
@@ -203,7 +202,6 @@ public class CamController : MonoBehaviour
 	private void Start()
 	{
 		border = Manager.border;
-		objectPool = Manager.objectPool;
 	}
 
 	private void LateUpdate()
@@ -421,7 +419,7 @@ public class CamController : MonoBehaviour
 	/// <param name="trans">Any object transform to follow</param>
 	public void SetTarget(Transform trans)
 	{
-		if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target.gameObject);
+		if (target && target.CompareTag("Way")) ObjectPool.Instance.ReturnToPool(Manager.Way, target.gameObject);
 		target = trans;
 	}
 
@@ -430,7 +428,7 @@ public class CamController : MonoBehaviour
 	/// </summary>
 	public void ResetTarget()
 	{
-		if (target && target.CompareTag("Way")) objectPool.ReturnToPool(Manager.Way, target.gameObject);
+		if (target && target.CompareTag("Way")) ObjectPool.Instance.ReturnToPool(Manager.Way, target.gameObject);
 		target = null;
 	}
 

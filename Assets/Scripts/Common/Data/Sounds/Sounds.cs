@@ -12,7 +12,7 @@ public class Sounds : ScriptableObject
 
     public AudioClip Clip => sounds.GetRandom();
     
-    [HideInInspector] public int id;
+    [NonSerialized] public int id;
     
     private void OnEnable()
     {

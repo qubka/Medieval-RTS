@@ -554,6 +554,8 @@
                     <e p="GetRealtimeSinceStartup.cs" t="Include" />
                     <e p="GetTime.cs" t="Include" />
                     <e p="GetTimeScale.cs" t="Include" />
+                    <e p="NotDelayed.cs" t="Include" />
+                    <e p="SetDelayTime.cs" t="Include" />
                     <e p="SetTimeScale.cs" t="Include" />
                   </e>
                   <e p="Timeline" t="Include">
@@ -1286,6 +1288,7 @@
           <e p="AutoNameAnimations.cs" t="Include" />
           <e p="CharacterEditor.cs" t="Include" />
           <e p="DeletePlayerPrefs.cs" t="Include" />
+          <e p="GameEditor.cs" t="Include" />
           <e p="PartyEditor.cs" t="Include" />
           <e p="PortraitEditor.cs" t="Include" />
           <e p="ReadOnlyDrawer.cs" t="Include" />
@@ -1339,12 +1342,6 @@
             <e p="Data" t="Include">
               <e p="Animations.cs" t="Include" />
               <e p="Banner.cs" t="Include" />
-              <e p="Behavior" t="Include">
-                <e p="AgentBehaviour.cs" t="Include" />
-                <e p="ListBehaviour.cs" t="Include" />
-                <e p="SingletonBehaviour.cs" t="Include" />
-                <e p="TableBehaviour.cs" t="Include" />
-              </e>
               <e p="Character.cs" t="Include" />
               <e p="Faction.cs" t="Include" />
               <e p="Gender.cs" t="Include" />
@@ -1374,11 +1371,13 @@
             </e>
             <e p="Game.cs" t="Include" />
             <e p="Manager.cs" t="Include" />
-            <e p="Save" t="Include">
-              <e p="Compound.cs" t="Include" />
-              <e p="SaveLoad.cs" t="Include" />
-              <e p="Serializable.cs" t="Include" />
+            <e p="Objects" t="Include">
+              <e p="ListObject.cs" t="Include" />
+              <e p="SavableObject.cs" t="Include" />
+              <e p="SingletonObject.cs" t="Include" />
+              <e p="TableObject.cs" t="Include" />
             </e>
+            <e p="SaveGameManager.cs" t="Include" />
             <e p="SoundManager.cs" t="Include" />
             <e p="Spawner.cs" t="Include" />
             <e p="Tables" t="Include">
@@ -1395,6 +1394,7 @@
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
+            <e p="AgentBehaviour.cs" t="Include" />
             <e p="Flee.cs" t="Include" />
             <e p="Seek.cs" t="Include" />
             <e p="Steering.cs" t="Include" />

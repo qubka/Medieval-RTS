@@ -73,7 +73,7 @@ public class Projectile : MonoBehaviour
             // If new position is touch another unit use it as new target
             var size = Physics.OverlapSphereNonAlloc(lastTarget, 0.5f, colliders, Manager.Unit);
             if (size > 0) {
-                target = Manager.unitTable[colliders[0].gameObject];
+                target = UnitTable.Instance[colliders[0].gameObject];
                 lastTarget = target.GetCenter();
                 randomShot = false;
             }
@@ -146,8 +146,8 @@ public class Projectile : MonoBehaviour
     {
         enabled = false;
         if (trigger && target && !randomShot) {
-            Manager.soundManager.RequestPlaySound(lastTarget, hitTarget);
-            Manager.objectPool.ReturnToPool(id, gameObject);
+            SoundManager.Instance.RequestPlaySound(lastTarget, hitTarget);
+            ObjectPool.Instance.ReturnToPool(id, gameObject);
             
             if (origin) {
                 var damage = target.RangeDamage(origin);
@@ -156,7 +156,7 @@ public class Projectile : MonoBehaviour
                 }
             }
         } else {
-            Manager.soundManager.RequestPlaySound(lastTarget, hitGround);
+            SoundManager.Instance.RequestPlaySound(lastTarget, hitGround);
             StartCoroutine(DelayRemove());
         }
         source.enabled = false;
@@ -165,6 +165,6 @@ public class Projectile : MonoBehaviour
     private IEnumerator DelayRemove()
     {
         yield return new WaitForSeconds(Random.Range(3f, 5f));
-        Manager.objectPool.ReturnToPool(id, gameObject);
+        ObjectPool.Instance.ReturnToPool(id, gameObject);
     }
 }

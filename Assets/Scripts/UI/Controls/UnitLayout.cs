@@ -23,7 +23,7 @@ public class UnitLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
 
 	private void Start()
 	{
-		manager = Manager.unitManager;
+		manager = UnitManager.Instance;
 	}
 
 	public void OnPointerDown(PointerEventData eventData)

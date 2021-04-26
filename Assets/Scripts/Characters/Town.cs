@@ -14,7 +14,7 @@ public class Town : MonoBehaviour
     private void Start()
     {
         shadow.color = faction.color;
-        Manager.townTable.Add(gameObject, this);
+        TownTable.Instance.Add(gameObject, this);
     }
 
 #if UNITY_EDITOR    

@@ -1,3 +1,3 @@
-﻿public class SquadTable : TableBehaviour<Squad>
+﻿public class SquadTable : TableObject<Squad>
 {
 }

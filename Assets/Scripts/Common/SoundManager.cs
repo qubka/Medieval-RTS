@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : SingletonObject<SoundManager>
 {
     [Header(("Normal"))]
     public int maxSounds = 50;
@@ -28,8 +28,10 @@ public class SoundManager : MonoBehaviour
     private readonly List<AudioSource> sources = new List<AudioSource>();
     private readonly List<AudioSource> available = new List<AudioSource>();
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         playRange *= playRange;
         soundRange *= soundRange;
         sources.Capacity = maxSounds;

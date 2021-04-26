@@ -1,8 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using GPUInstancer.CrowdAnimations;
- using TriangleNet;
- using Unity.Entities;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -376,7 +375,7 @@ public class Unit : MonoBehaviour
     {
         var other = collision.collider.gameObject;
         
-        var unit = unitTable[other];
+        var unit = UnitTable.Instance[other];
         if (unit) {
             var trans = unit.worldTransform;
             if (!collisions.Contains(trans)) {
@@ -385,7 +384,7 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        var obstacle = obstacleTable[other];
+        var obstacle = ObstacleTable.Instance[other];
         if (obstacle) {
 	        if (!obstacles.Contains(obstacle)) {
 		        obstacles.Add(obstacle);
@@ -397,13 +396,13 @@ public class Unit : MonoBehaviour
     {
         var other = collision.collider.gameObject;
         
-        var unit = unitTable[other];
+        var unit = UnitTable.Instance[other];
         if (unit) {
             collisions.Remove(unit.worldTransform);
             return;
         }
         
-        var obstacle = obstacleTable[other];
+        var obstacle = ObstacleTable.Instance[other];
         if (obstacle) {
             obstacles.Remove(obstacle);
         }
@@ -464,10 +463,10 @@ public class Unit : MonoBehaviour
 	    nextAnimTime = currentTime + duration;
 
 	    var hasChild = anim.HasChild;
-	    if (sound && anim.sound1) squad.soundManager.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
+	    if (sound && anim.sound1) SoundManager.Instance.RequestPlaySound(worldTransform.position, !hasChild && anim.sound2 && Random.Range(0, 2) == 0 ? anim.sound2 : anim.sound1);
 	    if (hasChild) {
 		    subCrowd.StartAnimation(anim.Child, -1f, 1f, 0.5f);
-		    if (sound && anim.sound2) squad.soundManager.RequestPlaySound(attachTransform.position, anim.sound2);
+		    if (sound && anim.sound2) SoundManager.Instance.RequestPlaySound(attachTransform.position, anim.sound2);
 	    }
     }
 
@@ -550,7 +549,7 @@ public class Unit : MonoBehaviour
 		        } else {
 			        target.OnDamage(this, type, nextDamage);
 		        }
-		        squad.soundManager.RequestPlaySound(current, currentAnim.sound2);
+		        SoundManager.Instance.RequestPlaySound(current, currentAnim.sound2);
             }
 	        nextDamageTime = Max;
         } else if (currentTime > nextDamage2Time) {
@@ -562,7 +561,7 @@ public class Unit : MonoBehaviour
 	            } else {
 		            target.OnDamage(this, type, nextDamage);
 	            }
-                squad.soundManager.RequestPlaySound(current, currentAnim.sound2);
+	            SoundManager.Instance.RequestPlaySound(current, currentAnim.sound2);
             }
             nextDamage2Time = Max;
         }
@@ -1085,7 +1084,7 @@ public class Unit : MonoBehaviour
 		RotateTowards((target.worldTransform.position - worldTransform.position).ToEuler());
 		
 		if (currentTime > nextModeTime) {
-			squad.soundManager.RequestPlaySound(worldTransform.position, currentAnim.sound2);
+			SoundManager.Instance.RequestPlaySound(worldTransform.position, currentAnim.sound2);
 			nextModeTime = Max;
 		}
 		
@@ -1108,7 +1107,7 @@ public class Unit : MonoBehaviour
 			PlayAnimation(anim, anim.Length);
 
 			var data = squad.data.rangeWeapon.ranges[range];
-			var arrow = squad.objectPool.SpawnFromPool(squad.data.rangeWeapon.id).GetComponent<Projectile>();
+			var arrow = ObjectPool.Instance.SpawnFromPool(squad.data.rangeWeapon.id).GetComponent<Projectile>();
 			arrow.origin = this;
 			arrow.target = target;
 			arrow.heightFactor = data.height;

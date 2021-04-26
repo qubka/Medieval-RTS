@@ -1,3 +1,3 @@
-﻿public class ObstacleTable : TableBehaviour<Obstacle>
+﻿public class ObstacleTable : TableObject<Obstacle>
 {
 }

@@ -2,13 +2,12 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ArmyManager : MonoBehaviour
+public class ArmyManager : SingletonObject<ArmyManager>
 {
     private Collider[] colliders = new Collider[1];
     private EventSystem eventSystem;
     private TerrainBorder border;
     private Camera cam;
-    private ArmyTable armyTable;
     private Army army;
     private Army hover;
     private float nextHoverTime;
@@ -16,20 +15,20 @@ public class ArmyManager : MonoBehaviour
     private RaycastHit groundHit;
     private bool groundCast;
     private bool paused;
-    //private bool pointerUI;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         army = GetComponent<Army>();
     }
 
     private void Start()
     {
         // Get information from manager
-        eventSystem = EventSystem.current;
+        //eventSystem = EventSystem.current;
         cam = Manager.mainCamera;
         border = Manager.border;
-        armyTable = Manager.armyTable;
     }
     
     private void Update()
@@ -66,7 +65,7 @@ public class ArmyManager : MonoBehaviour
     private bool HoverOnTarget()
     {
         if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Army) != 0) {
-            hover = armyTable[colliders[0].gameObject];
+            hover = ArmyTable.Instance[colliders[0].gameObject];
             //armyInfo.OnUpdate();
             return true;
         } 

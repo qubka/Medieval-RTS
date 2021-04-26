@@ -14,6 +14,6 @@ public class ParticleCallback : MonoBehaviour
     
     public void OnParticleSystemStopped()
     {
-        Manager.objectPool.ReturnToPool(poolHash, gameObject); 
+        ObjectPool.Instance.ReturnToPool(poolHash, gameObject); 
     }
 }

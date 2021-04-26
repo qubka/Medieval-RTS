@@ -22,6 +22,6 @@ public class Obstacle : MonoBehaviour
         entityManager.SetComponentData(entity, new Translation { Value = position });
         
         // Add component to the list
-        Manager.obstacleTable.Add(gameObject, this);
+        ObstacleTable.Instance.Add(gameObject, this);
     }
 }

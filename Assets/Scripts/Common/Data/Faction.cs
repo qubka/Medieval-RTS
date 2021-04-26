@@ -1,9 +1,12 @@
 ﻿﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+ using BehaviorDesigner.Runtime;
+ using UnityEditor;
+ using UnityEngine;
  
 [CreateAssetMenu(menuName = "Medieval/Faction Config", order = 0)]
 [Serializable]
+[InitializeOnLoad]
 public class Faction : ScriptableObject
 {
     [Header("General")]
@@ -11,17 +14,20 @@ public class Faction : ScriptableObject
     public Color color;
     public Character leader;
     public List<Character> characters;
+    public List<Party> parties;
 
     [Header("Relationship")]
     public List<Location> locations;
     public List<Faction> allies;
     public List<Faction> enemies;
     public float defaultDisposition;
-    public Dictionary<Faction, float> cache = new Dictionary<Faction, float>();
-    
+    [NonSerialized]
+    private Dictionary<Faction, float> cache = new Dictionary<Faction, float>();
+
     [Header("Other")]
     public Troop[] troops;
     public Model[] models;
+    public ExternalBehaviorTree behavior;
 
     public float RelationshipWith(Faction other)
     {
@@ -46,15 +52,18 @@ public class Faction : ScriptableObject
         }
         
         cache.Add(other, output);
-
         return output;
     }
     
+    [NonSerialized] public int id;
+
+    private void OnEnable()
+    {
+        id = name.GetHashCode(); 
+    }
     
-
-    //public List<string> relationships;
-    //
-    //public List<Squadron> factionTroops;
-
-    //[ReadOnly] public List<Character> charaters;
+    public override int GetHashCode()
+    {
+        return id;
+    }
 }

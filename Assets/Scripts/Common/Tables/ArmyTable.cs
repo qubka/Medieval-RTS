@@ -1,3 +1,3 @@
-﻿public class ArmyTable : TableBehaviour<Army>
+﻿public class ArmyTable : TableObject<Army>
 {
 }

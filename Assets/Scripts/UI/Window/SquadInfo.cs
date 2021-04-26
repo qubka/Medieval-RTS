@@ -33,7 +33,7 @@ public class SquadInfo : MonoBehaviour
 
     private void Start()
     {
-        manager = Manager.unitManager;
+        manager = UnitManager.Instance;
         foreach (var attribute in Manager.moraleAttributes.OrderByDescending(a => a.bonus)) {
             var obj = Instantiate(attributeLayout, attributeCanvas);
             obj.GetComponent<AttributeLayout>().SetAttribute(attribute);

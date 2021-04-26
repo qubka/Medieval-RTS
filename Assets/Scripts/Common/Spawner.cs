@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Spawner : MonoBehaviour
+public class Spawner : SingletonObject<Spawner>
 {
     public GameObject army;
     public Vector3 center;
