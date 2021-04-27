@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviorDesigner.Runtime;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Army : SavableObject, ISortable
+public class Army : MonoBehaviour, ISortable
 {
     [Header("Main Information")]
     public Party data;
@@ -47,10 +45,8 @@ public class Army : SavableObject, ISortable
         worldTransform = transform;
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-        
         var banner = data.leader.banner;
         if (banner) {
             Instantiate(banner.clearArmy, worldTransform).AddComponent<BlockRotation>().worldTransform.localPosition = bannerPosition;
@@ -101,32 +97,25 @@ public class Army : SavableObject, ISortable
 
     public void Update()
     {
+        var pos = worldTransform.position;
+        data.position = pos;
+        data.rotation = worldTransform.rotation;
+        
         // Calculate position for the ui bar
-        var center = worldTransform.position;
-        center.y += canvasHeight;
-        center = cam.WorldToScreenPoint(center);
+        pos.y += canvasHeight;
+        pos = cam.WorldToScreenPoint(pos);
         
         // If the army is behind the camera, or too far away from the player, make sure to hide the health bar completely
-        if (center.z < 0f) {
+        if (pos.z < 0f) {
             armyBar.SetActive(false);
         } else {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, center, null, out var canvasPos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
             barTransform.localPosition = canvasPos;
             armyBar.SetActive(true);
         }
         
         // TODO: Remove
         barText.text = troopCount.ToString();
-    }
-    
-    public override string Save()
-    {
-        return JsonUtility.ToJson(data);
-    }
-
-    public override void Load(string[] values)
-    {
-
     }
 
     private GPUICrowdPrefab CreateCrowd(GameObject prefab)

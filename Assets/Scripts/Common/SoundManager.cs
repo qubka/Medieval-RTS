@@ -64,7 +64,6 @@ public class SoundManager : SingletonObject<SoundManager>
         var listener = camTransform.position;
         
         if (Vector.DistanceSq(listener, position) <= playRange) {
-            var type = sounds.id;
             //if (sounds.sounds.Count == 0) Debug.Log(sounds.name);
             
             // Check current sounds
@@ -72,7 +71,7 @@ public class SoundManager : SingletonObject<SoundManager>
                 // If we already have sound nearby
                 if (Vector.DistanceSq(pair.Key, position) < soundRange) {
                     // If that sound is the same type, then skip
-                    if (type == pair.Value.id) {
+                    if (sounds == pair.Value) {
                         return;
                     }
                 }

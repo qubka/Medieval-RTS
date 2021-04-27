@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &582296534856959921
+--- !u!1 &2606083169810939128
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,53 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1998203752611260225}
-  - component: {fileID: 8276111331577961485}
-  - component: {fileID: 823930577463544701}
-  - component: {fileID: 759446268739639155}
-  - component: {fileID: 6928481858589823248}
-  m_Layer: 15
+  - component: {fileID: 2606083169810939125}
+  - component: {fileID: 2606083169810939124}
+  - component: {fileID: 2606083169810939131}
+  - component: {fileID: 2606083169810939130}
+  - component: {fileID: 2606083169810939129}
+  m_Layer: 0
   m_Name: Army
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1998203752611260225
+--- !u!4 &2606083169810939125
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582296534856959921}
+  m_GameObject: {fileID: 2606083169810939128}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 18.4, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &8276111331577961485
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582296534856959921}
-  m_Material: {fileID: 13400000, guid: e52fb17f9b1e7fd48b8955f1391d3688, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!54 &823930577463544701
+--- !u!54 &2606083169810939124
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582296534856959921}
+  m_GameObject: {fileID: 2606083169810939128}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -64,13 +50,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!195 &759446268739639155
+--- !u!136 &2606083169810939131
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2606083169810939128}
+  m_Material: {fileID: 13400000, guid: e52fb17f9b1e7fd48b8955f1391d3688, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!195 &2606083169810939130
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582296534856959921}
+  m_GameObject: {fileID: 2606083169810939128}
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
@@ -86,23 +86,23 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
---- !u!114 &6928481858589823248
+--- !u!114 &2606083169810939129
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582296534856959921}
+  m_GameObject: {fileID: 2606083169810939128}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4343d4e9108b1714f979bb226e4cbdea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
+  data: {fileID: 11400000, guid: fe2604be23fcb4a47b6deb7fb47a3de3, type: 2}
   armyBar: {fileID: 3980142311170377322, guid: 59b146d46d876ef4a9b7566720666b90, type: 3}
   agent: {fileID: 0}
   worldTransform: {fileID: 0}
   barTransform: {fileID: 0}
   canvasHeight: 0
   barScale: {x: 1, y: 1, z: 1}
-  bannerPosition: {x: 0, y: 1.5, z: -0.5}
+  bannerPosition: {x: 0, y: 2, z: 0}

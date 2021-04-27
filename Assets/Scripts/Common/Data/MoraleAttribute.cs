@@ -8,16 +8,4 @@ using UnityEngine;
 public class MoraleAttribute : ScriptableObject
 {
     public int bonus;
-    
-    [NonSerialized] public int id;
-    
-    private void OnEnable()
-    {
-        id = name.GetHashCode(); 
-    }
-
-    public override int GetHashCode()
-    {
-        return id;
-    }
 }

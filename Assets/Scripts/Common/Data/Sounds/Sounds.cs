@@ -11,11 +11,4 @@ public class Sounds : ScriptableObject
     [SerializeField] private AudioClip[] sounds;
 
     public AudioClip Clip => sounds.GetRandom();
-    
-    [NonSerialized] public int id;
-    
-    private void OnEnable()
-    {
-        id = name.GetHashCode(); 
-    }
 }

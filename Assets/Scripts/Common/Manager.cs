@@ -7,9 +7,8 @@
 [RequireComponent(typeof(Manager))]
 public class Manager : SingletonObject<Manager>
 {
-	#region Refs
-	
-	[Header("Refs")]
+	[Header("Scene Refs")] 
+	public Global globalInfo;
 	public GPUICrowdManager crowdManager;
 	public RectTransform holderFrames;
 	public RectTransform unitLayout;
@@ -17,66 +16,13 @@ public class Manager : SingletonObject<Manager>
 	public Camera main;
 	public Camera minimap;
 
-	#endregion
-	
-	#region Layers
-
-	[Header("Layers")]
-	public LayerMask ground = -1;
-	public LayerMask army = -1;
-	public LayerMask unit = -1;
-	public LayerMask obstacle = -1;
-	public LayerMask building = -1;
-	public LayerMask squad = -1;
-	public LayerMask manager = -1;
-	public LayerMask water = -1;
-	
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
 	public static int Ground;
 	public static int Army;
 	public static int Unit;
 	public static int Obstacle;
-	//public static int Building;
+	public static int Building;
 	public static int Squad;
-	//public static int Manager;
 	public static int Water;
-	
-	#endregion
-	
-	#region Morale
-	
-	[Header("Attributes")] 
-	public MoraleAttribute chargedInFlank;
-	public MoraleAttribute chargedInRear;
-	public MoraleAttribute disordered;
-	public MoraleAttribute exhausted;
-	public MoraleAttribute flanksProtected;
-	public MoraleAttribute flanksThreatened;
-	public MoraleAttribute foodVariety;
-	public MoraleAttribute generalAround;
-	public MoraleAttribute generalWound;
-	public MoraleAttribute losingAttack;
-	public MoraleAttribute losingBattle;
-	public MoraleAttribute lowGround;
-	public MoraleAttribute marauding;
-	public MoraleAttribute noEnemies;
-	public MoraleAttribute noRetreatOption;
-	public MoraleAttribute outnumberEnemy;
-	public MoraleAttribute outnumbered;
-	public MoraleAttribute rain;
-	public MoraleAttribute routingEnemies;
-	public MoraleAttribute routingFriends;
-	public MoraleAttribute starvation;
-	public MoraleAttribute totallyExhausted;
-	public MoraleAttribute underFire;
-	public MoraleAttribute unity;
-	public MoraleAttribute uphillPosition;
-	public MoraleAttribute veryTired;
-	public MoraleAttribute winningBattle;
-	public MoraleAttribute withoutAmmo;
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	public static MoraleAttribute ChargedInFlank;
 	public static MoraleAttribute ChargedInRear;
@@ -106,9 +52,8 @@ public class Manager : SingletonObject<Manager>
 	public static MoraleAttribute VeryTired;
 	public static MoraleAttribute WinningBattle;
 	public static MoraleAttribute WithoutAmmo;
-	
-	#endregion
-	
+
+	public static Global global;
 	public static Terrain terrain;
 	public static TerrainBorder border;
 	public static Camera mainCamera;
@@ -120,8 +65,12 @@ public class Manager : SingletonObject<Manager>
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
 	public static GPUICrowdManager modelManager;
-	
+
 	public static List<MoraleAttribute> moraleAttributes;
+	public static List<Faction> defaultFactions;
+	public static List<Character> defaultCharacters;
+	public static List<Location> defaultLocations;
+	public static List<Party> defaultParties;
 
 	#region Other
 	
@@ -149,79 +98,85 @@ public class Manager : SingletonObject<Manager>
 		holderCanvas = holderFrames;
 		layoutCanvas = unitLayout;
 		cardCanvas = unitCard;
+		global = globalInfo;
 		
 		var size = terrain.terrainData.size;
 		TerrainDistance = math.max(size.x, size.z) * 2f;
 
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
-		Ground = ground.value;
-		Army = army.value;
-		Unit = unit.value;
-		Obstacle = obstacle.value;
-		Squad = squad.value;		
-		Water = water.value;
+		Ground = global.ground.value;
+		Army = global.army.value;
+		Unit = global.unit.value;
+		Obstacle = global.obstacle.value;
+		Building = global.building.value;
+		Squad = global.squad.value;		
+		Water = global.water.value;
 		
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
-		ChargedInFlank = chargedInFlank;
-		ChargedInRear = chargedInRear;
-		Disordered = disordered;
-		Exhausted = exhausted;
-		FlanksProtected = flanksProtected;
-		FlanksThreatened = flanksThreatened;
-		FoodVariety = foodVariety;
-		GeneralAround = generalAround;
-		GeneralWound = generalWound;
-		LosingAttack = losingAttack;
-		LosingBattle = losingBattle;
-		LowGround = lowGround;
-		Marauding = marauding;
-		NoEnemies = noEnemies;
-		NoRetreatOption = noRetreatOption;
-		OutnumberEnemy = outnumberEnemy;
-		Outnumbered = outnumbered;
-		Rain = rain;
-		RoutingEnemies = routingEnemies;
-		RoutingFriends = routingFriends;
-		Starvation = starvation;
-		TotallyExhausted = totallyExhausted;
-		UnderFire = underFire;
-		Unity = unity;
-		UphillPosition = uphillPosition;
-		VeryTired = veryTired;
-		WinningBattle = winningBattle;
-		WithoutAmmo = withoutAmmo;
+		ChargedInFlank = global.chargedInFlank;
+		ChargedInRear = global.chargedInRear;
+		Disordered = global.disordered;
+		Exhausted = global.exhausted;
+		FlanksProtected = global.flanksProtected;
+		FlanksThreatened = global.flanksThreatened;
+		FoodVariety = global.foodVariety;
+		GeneralAround = global.generalAround;
+		GeneralWound = global.generalWound;
+		LosingAttack = global.losingAttack;
+		LosingBattle = global.losingBattle;
+		LowGround = global.lowGround;
+		Marauding = global.marauding;
+		NoEnemies = global.noEnemies;
+		NoRetreatOption = global.noRetreatOption;
+		OutnumberEnemy = global.outnumberEnemy;
+		Outnumbered = global.outnumbered;
+		Rain = global.rain;
+		RoutingEnemies = global.routingEnemies;
+		RoutingFriends = global.routingFriends;
+		Starvation = global.starvation;
+		TotallyExhausted = global.totallyExhausted;
+		UnderFire = global.underFire;
+		Unity = global.unity;
+		UphillPosition = global.uphillPosition;
+		VeryTired = global.veryTired;
+		WinningBattle = global.winningBattle;
+		WithoutAmmo = global.withoutAmmo;
 
 		moraleAttributes = new List<MoraleAttribute>(32) {
-			chargedInFlank,
-			chargedInRear,
-			disordered,
-			exhausted,
-			flanksProtected,
-			flanksThreatened,
-			foodVariety,
-			generalAround,
-			generalWound,
-			losingAttack,
-			losingBattle,
-			lowGround,
-			marauding,
-			noEnemies,
-			noRetreatOption,
-			outnumberEnemy,
-			outnumbered,
-			rain,
-			routingEnemies,
-			routingFriends,
-			starvation,
-			totallyExhausted,
-			underFire,
-			unity,
-			uphillPosition,
-			veryTired,
-			winningBattle,
-			withoutAmmo
+			global.chargedInFlank,
+			global.chargedInRear,
+			global.disordered,
+			global.exhausted,
+			global.flanksProtected,
+			global.flanksThreatened,
+			global.foodVariety,
+			global.generalAround,
+			global.generalWound,
+			global.losingAttack,
+			global.losingBattle,
+			global.lowGround,
+			global.marauding,
+			global.noEnemies,
+			global.noRetreatOption,
+			global.outnumberEnemy,
+			global.outnumbered,
+			global.rain,
+			global.routingEnemies,
+			global.routingFriends,
+			global.starvation,
+			global.totallyExhausted,
+			global.underFire,
+			global.unity,
+			global.uphillPosition,
+			global.veryTired,
+			global.winningBattle,
+			global.withoutAmmo
 		};
+		defaultFactions = Resources.LoadAll<Faction>("Factions/").ToList();
+		defaultCharacters = Resources.LoadAll<Character>("Character/").ToList();
+		defaultLocations = Resources.LoadAll<Location>("Location/").ToList();
+		defaultParties = Resources.LoadAll<Party>("Parties/").ToList();
 	}
 }

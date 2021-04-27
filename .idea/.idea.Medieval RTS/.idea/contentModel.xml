@@ -5,6 +5,7 @@
     <e p="C:\Users\playf\.Rider2019.3\system\resharper-host\Local\Transient\ReSharperHost\v193\SolutionCaches\_Medieval RTS.1352171155.00" t="ExcludeRecursive" />
     <e p="C:\Users\playf\Medieval RTS" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Anims" t="Include">
@@ -1292,14 +1293,27 @@
           <e p="PartyEditor.cs" t="Include" />
           <e p="PortraitEditor.cs" t="Include" />
           <e p="ReadOnlyDrawer.cs" t="Include" />
-          <e p="SpawnerEditor.cs" t="Include" />
+          <e p="ScriptableObjectEditor.cs" t="Include" />
           <e p="TownEditor.cs" t="Include" />
         </e>
         <e p="Libs" t="Include">
           <e p="License.txt" t="Include" />
         </e>
+        <e p="Plugins" t="Include">
+          <e p="UnityJSON" t="Include">
+            <e p="Attributes.cs" t="Include" />
+            <e p="Deserializer.cs" t="Include" />
+            <e p="Enums.cs" t="Include" />
+            <e p="Instantiater.cs" t="Include" />
+            <e p="Interfaces.cs" t="Include" />
+            <e p="JSON.cs" t="Include" />
+            <e p="Serializer.cs" t="Include" />
+            <e p="SimpleJSON.cs" t="Include" />
+            <e p="Util.cs" t="Include" />
+          </e>
+        </e>
         <e p="Scenes" t="Include">
-          <e p="Campain" t="Include">
+          <e p="Campaign" t="Include">
             <e p="MicroSplatData" t="Include">
               <e p="MicroSplat.shader" t="Include" />
               <e p="MicroSplat_Base.shader" t="Include" />
@@ -1344,7 +1358,9 @@
               <e p="Banner.cs" t="Include" />
               <e p="Character.cs" t="Include" />
               <e p="Faction.cs" t="Include" />
+              <e p="Game.cs" t="Include" />
               <e p="Gender.cs" t="Include" />
+              <e p="Global.cs" t="Include" />
               <e p="Location.cs" t="Include" />
               <e p="Model.cs" t="Include" />
               <e p="MoraleAttribute.cs" t="Include" />
@@ -1369,22 +1385,20 @@
                 <e p="RangeWeapon.cs" t="Include" />
               </e>
             </e>
-            <e p="Game.cs" t="Include" />
             <e p="Manager.cs" t="Include" />
             <e p="Objects" t="Include">
-              <e p="ListObject.cs" t="Include" />
-              <e p="SavableObject.cs" t="Include" />
-              <e p="SingletonObject.cs" t="Include" />
-              <e p="TableObject.cs" t="Include" />
-            </e>
-            <e p="SaveGameManager.cs" t="Include" />
-            <e p="SoundManager.cs" t="Include" />
-            <e p="Spawner.cs" t="Include" />
-            <e p="Tables" t="Include">
-              <e p="ArmyTable.cs" t="Include" />
               <e p="Interface" t="Include">
                 <e p="ISortable.cs" t="Include" />
               </e>
+              <e p="ListObject.cs" t="Include" />
+              <e p="SerializableObject.cs" t="Include" />
+              <e p="SingletonObject.cs" t="Include" />
+              <e p="TableObject.cs" t="Include" />
+            </e>
+            <e p="SaveLoadManager.cs" t="Include" />
+            <e p="SoundManager.cs" t="Include" />
+            <e p="Tables" t="Include">
+              <e p="ArmyTable.cs" t="Include" />
               <e p="ObstacleTable.cs" t="Include" />
               <e p="SortList.cs" t="Include" />
               <e p="SquadTable.cs" t="Include" />

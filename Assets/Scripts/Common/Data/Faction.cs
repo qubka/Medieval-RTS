@@ -1,33 +1,42 @@
 ﻿﻿using System;
 using System.Collections.Generic;
+ using System.Linq;
  using BehaviorDesigner.Runtime;
- using UnityEditor;
- using UnityEngine;
- 
+using UnityEditor;
+using UnityEngine;
+using UnityJSON;
+
 [CreateAssetMenu(menuName = "Medieval/Faction Config", order = 0)]
 [Serializable]
 [InitializeOnLoad]
-public class Faction : ScriptableObject
+public class Faction : SerializableObject
 {
     [Header("General")]
     public string label;
     public Color color;
+    [JSONNode(NodeOptions.DontSerialize)] 
     public Character leader;
-    public List<Character> characters;
-    public List<Party> parties;
 
     [Header("Relationship")]
-    public List<Location> locations;
     public List<Faction> allies;
     public List<Faction> enemies;
     public float defaultDisposition;
-    [NonSerialized]
     private Dictionary<Faction, float> cache = new Dictionary<Faction, float>();
 
-    [Header("Other")]
+    [Header("Initial")]
+    [JSONNode(NodeOptions.DontSerialize)] 
     public Troop[] troops;
+    [JSONNode(NodeOptions.DontSerialize)] 
     public Model[] models;
+    [JSONNode(NodeOptions.DontSerialize)] 
     public ExternalBehaviorTree behavior;
+    
+    [JSONNode]
+    private string[] alliedFactions;
+    [JSONNode] 
+    private string[] enemyFactions;
+    [JSONNode] 
+    private string leaderName;
 
     public float RelationshipWith(Faction other)
     {
@@ -55,15 +64,29 @@ public class Faction : ScriptableObject
         return output;
     }
     
-    [NonSerialized] public int id;
-
-    private void OnEnable()
+    public void OnEnable()
     {
-        id = name.GetHashCode(); 
+        hash = label.GetHashCode();
     }
-    
-    public override int GetHashCode()
+
+    public override void OnSerialization()
     {
-        return id;
+        leaderName = leader.surname;
+        alliedFactions = new string[allies.Count];
+        for (var i = 0; i < allies.Count; i++) {
+            alliedFactions[i] = allies[i].label;
+        }
+        enemyFactions = new string[enemies.Count];
+        for (var i = 0; i < enemies.Count; i++) {
+            enemyFactions[i] = enemies[i].label;
+        }
+    }
+
+    public override void OnDeserialization()
+    {
+        var faction = Manager.defaultFactions.Find(f => f & this);
+        troops = faction.troops;
+        models = faction.models;
+        behavior = faction.behavior;
     }
 }

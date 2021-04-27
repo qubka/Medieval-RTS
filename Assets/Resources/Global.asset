@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ba05f497f9441f4bbf37553447bfe1a, type: 3}
+  m_Name: Global
+  m_EditorClassIdentifier: 
+  armyPrefab: {fileID: 2606083169810939128, guid: c717bb9ec6d037c4b92aa3bc48d8f219, type: 3}
+  squadPrefab: {fileID: 1294250876125567414, guid: cdc02113d5df6864e9f6da1f44547de6, type: 3}
+  ground:
+    serializedVersion: 2
+    m_Bits: 512
+  army:
+    serializedVersion: 2
+    m_Bits: 32768
+  unit:
+    serializedVersion: 2
+    m_Bits: 1024
+  obstacle:
+    serializedVersion: 2
+    m_Bits: 8192
+  building:
+    serializedVersion: 2
+    m_Bits: 16384
+  squad:
+    serializedVersion: 2
+    m_Bits: 2048
+  water:
+    serializedVersion: 2
+    m_Bits: 16
+  chargedInFlank: {fileID: 11400000, guid: b747aabd31694cd4d947e0af6c5a5ce1, type: 2}
+  chargedInRear: {fileID: 11400000, guid: 4380776118228d14db6e70d6b62c89e0, type: 2}
+  disordered: {fileID: 11400000, guid: e750abc0eaaa7e844bcb888897577f3c, type: 2}
+  exhausted: {fileID: 11400000, guid: f257f51931d590d46872cd058b2c3afa, type: 2}
+  flanksProtected: {fileID: 11400000, guid: 07b8394e5e75d4f41a459e38e06bd46b, type: 2}
+  flanksThreatened: {fileID: 11400000, guid: eb4cdcf079b7ef940be69016f520f1c2, type: 2}
+  foodVariety: {fileID: 11400000, guid: 46d83313677131c45aafea5d4b9182b1, type: 2}
+  generalAround: {fileID: 11400000, guid: 1354a29ec4b78ec4497cecfbe3e64534, type: 2}
+  generalWound: {fileID: 11400000, guid: bdfee707e53923243a8c25ca102c2483, type: 2}
+  losingAttack: {fileID: 11400000, guid: 35e7beb53bc42c641a4b200e0ff3531f, type: 2}
+  losingBattle: {fileID: 11400000, guid: 1d5cfc56f0f1f994698d1b82caad3c5f, type: 2}
+  lowGround: {fileID: 11400000, guid: 430f1202803fa144fa222463722cc1f7, type: 2}
+  marauding: {fileID: 11400000, guid: 0ca4380b6ea8d3e4691aa71b81dcd868, type: 2}
+  noEnemies: {fileID: 11400000, guid: e3eb5a2afd8f3b8478c3df3bc3e8146b, type: 2}
+  noRetreatOption: {fileID: 11400000, guid: 1cb7695e7e5eccd4f86d68f5ec4c0722, type: 2}
+  outnumberEnemy: {fileID: 11400000, guid: 48ddf73b78fd3044fadd37662539ccea, type: 2}
+  outnumbered: {fileID: 11400000, guid: 6deb007e72faca241ad5ad69e9c55e69, type: 2}
+  rain: {fileID: 11400000, guid: 1b94032d7da69474d9abd3755387d795, type: 2}
+  routingEnemies: {fileID: 11400000, guid: 28795f60da78f1742ad25419ca5013fd, type: 2}
+  routingFriends: {fileID: 11400000, guid: 9a37ff2dd2d84914c9c389d34d7c82a4, type: 2}
+  starvation: {fileID: 11400000, guid: 67215703321aabb42be8b55d106c9605, type: 2}
+  totallyExhausted: {fileID: 11400000, guid: e5187285312c0394da6e776bfac9f465, type: 2}
+  underFire: {fileID: 11400000, guid: 982b64d3b17736e4084e07f4d701b60e, type: 2}
+  unity: {fileID: 11400000, guid: 13a81a7aa1d8dea4c9f09c4ebda803ba, type: 2}
+  uphillPosition: {fileID: 11400000, guid: 08f8baeb8b177f04b95b690e2aa9aba6, type: 2}
+  veryTired: {fileID: 11400000, guid: 534b915921902ca4cbc35dfd7c84a31e, type: 2}
+  winningBattle: {fileID: 11400000, guid: 499ecf55d7af3384f865db12d7d43117, type: 2}
+  withoutAmmo: {fileID: 11400000, guid: 6f9121f012a12e24892acf8d9ee1a0b3, type: 2}

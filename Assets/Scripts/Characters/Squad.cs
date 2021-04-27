@@ -442,20 +442,20 @@ public class Squad : MonoBehaviour, ISortable
         centroid /= units.Count;
 
         // Place objects to the local centroid
-        var center = worldTransform.InverseTransformPoint(centroid);
-        collision.center = center;
-        centerTransform.localPosition = center;
+        var pos = worldTransform.InverseTransformPoint(centroid);
+        collision.center = pos;
+        centerTransform.localPosition = pos;
 
         // Calculate position for the ui bar
-        center = centroid;
-        center.y += canvasHeight;
-        center = cam.WorldToScreenPoint(center);
+        pos = centroid;
+        pos.y += canvasHeight;
+        pos = cam.WorldToScreenPoint(pos);
         
         // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
-        if (center.z < 0f) {
+        if (pos.z < 0f) {
             squadBar.SetActive(false);
         } else {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, center, null, out var canvasPos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
             barTransform.localPosition = canvasPos;
             squadBar.SetActive(true);
         }

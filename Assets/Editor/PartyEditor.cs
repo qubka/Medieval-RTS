@@ -1,5 +1,4 @@
-﻿using BehaviorDesigner.Runtime;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(Party))]
