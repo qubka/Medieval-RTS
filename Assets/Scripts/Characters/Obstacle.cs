@@ -11,7 +11,7 @@ public class Obstacle : MonoBehaviour
     {
         // Find entity manager
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        
+
         // Set up achetype
         var obstacle = entityManager.CreateArchetype(typeof(Translation));
 

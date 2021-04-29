@@ -15,35 +15,47 @@ public class Party : SerializableObject
     public float speed;
     public Vector3 position;
     public Quaternion rotation;
+    [JSONNode(NodeOptions.DontSerialize)] 
     public List<Troop> troops;
     //public Party followingParty;
     //public Location followingLocation;
-    //public PartyFSM state;
+    public PartyFSM state;
     public int skin;
     
-    [JSONNode] 
-    private string leaderName;
-    
-    public void OnEnable()
-    {
-        hash = leader.surname.GetHashCode();
-    }
+    [JSONNode] private int leaderId;
+    [JSONNode] private List<Pack<int, int>> troopsData;
 
     public override void OnSerialization()
     {
-        leaderName = leader.surname;
+        leaderId = leader ? leader.id : -1;
+        troopsData = new List<Pack<int, int>>(troops.Count);
+        foreach (var troop in troops) {
+            troopsData.Add(new Pack<int, int>(Array.IndexOf(leader.faction.troops, troop), troop.size));
+        }
     }
 
     public override void OnDeserialization()
     {
         var game = SaveLoadManager.Instance.current;
-        leader = game.characters.Find(c => c.surname.Equals(leaderName));
+        if (leaderId != -1) {
+            leader = game.characters.Find(c => c.id == leaderId);
+        }
+        troops.Capacity = troopsData.Count;
+        foreach (var pack in troopsData) {
+            var troop = leader.faction.troops[pack.item1];
+            troop.size = pack.item2;
+            troops.Add(troop);
+        }
+        troopsData.Clear();
     }
 }
 
 [Serializable]
+[JSONEnum(format = JSONEnumMemberFormating.Lowercased)]
 public enum PartyFSM
 {
     Holding,
-    Travel
+    Traveling,
+    Chasing,
+    Escaping
 }

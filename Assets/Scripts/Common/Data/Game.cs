@@ -5,12 +5,18 @@ using UnityJSON;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class Game : ScriptableObject
+public class Game : ScriptableObject, IDeserializationListener
 {
     public List<Faction> factions = new List<Faction>();
     public List<Character> characters = new List<Character>();
     public List<Party> parties = new List<Party>();
     public List<Location> locations = new List<Location>();
+    public List<House> houses = new List<House>();
+    
+    private void OnEnable()
+    {
+        name = DateTime.Now.ToString("MM_dd_yyyy_h_mm_tt");
+    }
 
     public void Load()
     {
@@ -37,50 +43,55 @@ public class Game : ScriptableObject
         foreach (var location in l) {
             locations.Add(Instantiate(location));
         }
+        
+        var h = Manager.defaultHouses;
+        houses.Capacity = h.Count;
+        foreach (var house in h) {
+            houses.Add(Instantiate(house));
+        }
 
-        // Adjast data to the copies of scriptable objects instead of real ones
+        // Adjust data to the copies of scriptable objects instead of real ones
 
         foreach (var faction in factions) {
-            if (faction.leader) faction.leader = characters.Find(c => c & faction.leader);
+            if (faction.leader) faction.leader = characters.Find(c => c.id == faction.leader.id);
             for (var i = 0; i < faction.allies.Count; i++) {
-                faction.allies[i] = factions.Find(f => f & faction.allies[i]);
+                faction.allies[i] = factions.Find(f => f.id == faction.allies[i].id);
             }
             for (var i = 0; i < faction.enemies.Count; i++) {
-                faction.enemies[i] = factions.Find(f => f & faction.enemies[i]);
+                faction.enemies[i] = factions.Find(f => f.id == faction.enemies[i].id);
             }
         }
 
         foreach (var character in characters) {
-            if (character.faction) character.faction = factions.Find(f => f & character.faction);
-            //if (character.party) character.party = parties.Find(p => p.leader & character.party.leader);
+            if (character.faction) character.faction = factions.Find(f => f.id == character.faction.id);
+            //if (character.party) character.party = parties.Find(p => p.leader.id == character.party.leader);
             for (var i = 0; i < character.locationsOwned.Count; i++) {
-                character.locationsOwned[i] = locations.Find(f => f & character.locationsOwned[i]);
+                character.locationsOwned[i] = locations.Find(f => f.id == character.locationsOwned[i].id);
             }
         }
 
         foreach (var party in parties) {
-            if (party.leader) party.leader = characters.Find(c => c & party.leader);
-            //Object.Instantiate(Manager.global.armyPrefab, party.position, party.rotation).GetComponent<Army>().data = party;
+            if (party.leader) party.leader = characters.Find(c => c.id == party.leader.id);
         }
 
         foreach (var location in locations) {
-            if (location.faction) location.faction = factions.Find(f => f & location.faction);
-            if (location.ruler) location.ruler = characters.Find(c => c & location.ruler);
+            if (location.faction) location.faction = factions.Find(f => f.id == location.faction.id);
+            if (location.ruler) location.ruler = characters.Find(c => c.id == location.ruler.id);
         }
     }
 
-    public void Load(string json)
+    public void OnDeserializationWillBegin(Deserializer deserializer)
     {
-        throw new NotImplementedException();
     }
 
-    public string Save()
+    public void OnDeserializationSucceeded(Deserializer deserializer)
     {
-        //var database = new string[3];
-        // database[0] = ToJSONString(factions);
-        //database[1] = ToJSONString(characters);
-        //database[2] = ToJSONString(parties);
-        //database[0] = ToJSONString(locations);
-        return characters.ToJSONString();
+        foreach (var party in parties) {
+            Instantiate(Manager.global.armyPrefab, party.position, party.rotation).GetComponent<Army>().data = party;
+        }
+    }
+
+    public void OnDeserializationFailed(Deserializer deserializer)
+    {
     }
 }

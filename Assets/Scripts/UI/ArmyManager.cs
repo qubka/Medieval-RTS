@@ -4,10 +4,12 @@ using UnityEngine.EventSystems;
 
 public class ArmyManager : SingletonObject<ArmyManager>
 {
-    private Collider[] colliders = new Collider[1];
+#pragma warning disable 108,114
+    private Camera camera;
+#pragma warning restore 108,114
     private EventSystem eventSystem;
+    private CamController camController;
     private TerrainBorder border;
-    private Camera cam;
     private Army army;
     private Army hover;
     private float nextHoverTime;
@@ -15,6 +17,8 @@ public class ArmyManager : SingletonObject<ArmyManager>
     private RaycastHit groundHit;
     private bool groundCast;
     private bool paused;
+    
+    private Collider[] colliders = new Collider[1];
 
     protected override void Awake()
     {
@@ -27,19 +31,24 @@ public class ArmyManager : SingletonObject<ArmyManager>
     {
         // Get information from manager
         //eventSystem = EventSystem.current;
-        cam = Manager.mainCamera;
+        camera = Manager.mainCamera;
+        camController = Manager.camController;
         border = Manager.border;
+        
+        // Set the camera target to follow
+        camController.SetTarget(army.worldTransform);
     }
     
     private void Update()
     {
-        groundRay = cam.ScreenPointToRay(Input.mousePosition);
+        groundRay = camera.ScreenPointToRay(Input.mousePosition);
         groundCast = Physics.Raycast(groundRay, out groundHit, Manager.TerrainDistance, Manager.Ground);
         //pointerUI = eventSystem.IsPointerOverGameObject();
 
         if (groundCast && !border.IsOutsideBorder(groundHit.point)) {
             if (Input.GetMouseButtonDown(1)) {
                 army.agent.SetDestination(groundHit.point);
+                camController.SetTarget(army.worldTransform);
             } else {
                 OnHover();
             }

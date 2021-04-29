@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityJSON;
 
@@ -8,6 +6,8 @@ using UnityJSON;
 [Serializable]
 public class Location : SerializableObject
 {
+    [Header("General")]
+    public int id;
     public string label;
     public bool isCapital;
     [JSONNode(NodeOptions.DontSerialize)] 
@@ -20,27 +20,24 @@ public class Location : SerializableObject
     //public List<Troop> garrison;
     //public List<Party> armies;
     
-    [JSONNode] 
-    private string factionName;
-    [JSONNode] 
-    private string rulerName;
+    [JSONNode] private int factionId;
+    [JSONNode] private int rulerId;
 
-    public void OnEnable()
-    {
-        hash = label.GetHashCode();
-    }
-    
     public override void OnSerialization()
     {
-        factionName = faction.label;
-        rulerName = ruler.surname;
+        factionId = faction ? faction.id : -1;
+        rulerId = ruler ? ruler.id : -1;
     }
 
     public override void OnDeserialization()
     {
         var game = SaveLoadManager.Instance.current;
-        faction = game.factions.Find(f => f.label.Equals(factionName));
-        ruler = game.characters.Find(c => c.surname.Equals(rulerName));
+        if (factionId != -1) {
+            faction = game.factions.Find(f => f.id == factionId);
+        }
+        if (rulerId != -1) {
+            ruler = game.characters.Find(c => c.id == rulerId);
+        }
     }
 }
 

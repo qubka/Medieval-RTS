@@ -9,9 +9,11 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private GameObject icon;
     
-    private TerrainBorder border;
-    private Camera cam;
+#pragma warning disable 108,114
+    private Camera camera;
+#pragma warning restore 108,114
     private CamController camController;
+    private TerrainBorder border;
     private RectTransform iconTransform;
     private RectTransform rectTransform;
     private RectTransform mapTransform;
@@ -36,7 +38,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     private void Start()
     {
         border = Manager.border;
-        cam = Manager.minimapCamera;
+        camera = Manager.minimapCamera;
         camController = Manager.camController;
     }
 
@@ -50,7 +52,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
             localPoint.x = localPoint.x / rect.width + pivot.x;
             localPoint.y = localPoint.y / rect.height + pivot.y;
 
-            var ray = cam.ViewportPointToRay(localPoint);
+            var ray = camera.ViewportPointToRay(localPoint);
             var plane = new Plane(Vector3.up, Vector3.zero);
             plane.Raycast(ray, out var distance);
             var hit = ray.GetPoint(distance);

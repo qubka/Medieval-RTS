@@ -11,7 +11,8 @@ using Random = UnityEngine.Random;
 [InitializeOnLoad]
 public class Character : SerializableObject
 {
-    [Header("Primary")] 
+    [Header("Primary")]
+    public int id;
     public string surname;
     public string title;
     public Gender gender;
@@ -19,8 +20,7 @@ public class Character : SerializableObject
     public int renown;
     public int honor;
 
-    [Header("Game")] 
-    public bool isNoble;
+    [Header("Game")]
     public bool isPlayer;
     //public bool isCompanion;
     [JSONNode(NodeOptions.DontSerialize)] 
@@ -31,22 +31,21 @@ public class Character : SerializableObject
     public Faction faction;
     //public string portrait;
     [JSONNode(NodeOptions.DontSerialize)]
-    public Banner banner;
+    public House house;
 
-    [JSONNode] 
-    private string factionName;
-    [JSONNode] 
-    private string[] locationsNames;
-    [JSONNode] 
-    private string bannerName;
-    
+    /* For serialization */
+    [JSONNode] private int factionId;
+    [JSONNode] private int houseId;
+    [JSONNode] private int[] locationsIds;
+
 #if UNITY_EDITOR    
     public void GenerateName(CharacterNames names)
     {
+        id = Resources.LoadAll<Character>("Characters/").Length;
         var instance = GetInstanceID();
         var newName = names.RandomName;
         var assetPath = AssetDatabase.GetAssetPath(instance);
-        AssetDatabase.RenameAsset(assetPath, newName + instance);
+        AssetDatabase.RenameAsset(assetPath, newName + "_" + id);
         name = newName;
         surname = newName;
         age = Random.Range(17, 50);
@@ -54,32 +53,32 @@ public class Character : SerializableObject
         honor = Random.Range(-100, 100);
     }
 #endif
-    
-    public void OnEnable()
-    {
-        hash = surname.GetHashCode();
-    }
 
     public override void OnSerialization()
     {
-        factionName = faction.label;
-        locationsNames = new string[locationsOwned.Count];
+        factionId = faction ? faction.id : -1;
+        houseId = house ? house.id : -1;
+        locationsIds = new int[locationsOwned.Count];
         for (var i = 0; i < locationsOwned.Count; i++) {
-            locationsNames[i] = locationsOwned[i].label;
+            locationsIds[i] = locationsOwned[i].id;
         }
-        bannerName = banner ? Path.GetFileName(AssetDatabase.GetAssetPath(banner)) : "";
     }
 
     public override void OnDeserialization()
     {
         var game = SaveLoadManager.Instance.current;
-        faction = game.factions.Find(f => f.label == factionName);
-        locationsOwned.Capacity = locationsNames.Length;
-        foreach (var locationName in locationsNames) {
-            locationsOwned.Add(game.locations.Find(l => l.name == locationName));
+        if (factionId != -1) {
+            faction = game.factions.Find(f => f.id == factionId);
         }
-        if (bannerName.Length > 0) {
-            banner = AssetDatabase.LoadAssetAtPath<Banner>("Assets/Resources/Banners/" + bannerName);
+        if (houseId != -1) {
+            house = game.houses.Find(h => h.id == houseId);
+        }
+        locationsOwned.Capacity = locationsIds.Length;
+        foreach (var locationId in locationsIds) {
+            locationsOwned.Add(game.locations.Find(l => l.id == locationId));
+        }
+        if (locationsIds.Length > 0) {
+            locationsIds = new int[0];
         }
     }
 }   

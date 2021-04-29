@@ -102,7 +102,10 @@ public class Squad : MonoBehaviour, ISortable
     private TableObject<Squad> squadTable;
     private TableObject<Obstacle> obstacleTable;
     
-    private Camera cam;
+#pragma warning disable 108,114
+    private BoxCollider collider;
+    private Camera camera;
+#pragma warning restore 108,114
     private CamController camController;
     private TerrainBorder border;
     private GPUICrowdManager modelManager;
@@ -122,7 +125,6 @@ public class Squad : MonoBehaviour, ISortable
     private AudioSource runAudio;
     private AudioSource chargeAudio;
     private AudioSource selectAudio;
-    private BoxCollider collision;
     private Circle circle;
     private Seek seek;
     private Flee flee;
@@ -188,7 +190,6 @@ public class Squad : MonoBehaviour, ISortable
     private Coroutine waitRoutine;
     private Coroutine rangeRoutine;
     private Coroutine meleeRoutine;
-    private Coroutine removeCoroutine;
     
     #endregion
     
@@ -200,7 +201,7 @@ public class Squad : MonoBehaviour, ISortable
     {
         // Set up the squad components 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        collision = GetComponent<BoxCollider>();
+        collider = GetComponent<BoxCollider>();
         anchorTransform = new GameObject("Target Anchor").transform;
         barTransform = squadBar.transform;
         layoutTransform = unitLayout.transform;
@@ -261,7 +262,7 @@ public class Squad : MonoBehaviour, ISortable
         obstacleTable = ObstacleTable.Instance;
         squadTable = SquadTable.Instance;
         modelManager = Manager.modelManager;
-        cam = Manager.mainCamera;
+        camera = Manager.mainCamera;
         camController = Manager.camController;
         holderCanvas = Manager.holderCanvas;
         camTransform = Manager.camTransform;
@@ -443,13 +444,13 @@ public class Squad : MonoBehaviour, ISortable
 
         // Place objects to the local centroid
         var pos = worldTransform.InverseTransformPoint(centroid);
-        collision.center = pos;
+        collider.center = pos;
         centerTransform.localPosition = pos;
 
         // Calculate position for the ui bar
         pos = centroid;
         pos.y += canvasHeight;
-        pos = cam.WorldToScreenPoint(pos);
+        pos = camera.WorldToScreenPoint(pos);
         
         // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
         if (pos.z < 0f) {
@@ -607,7 +608,7 @@ public class Squad : MonoBehaviour, ISortable
         }
 
         touchEnemies = false;
-        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size / 2f, colliders, worldTransform.rotation, Manager.Squad);
+        var size = Physics.OverlapBoxNonAlloc(centroid, collider.size / 2f, colliders, worldTransform.rotation, Manager.Squad);
         for (var i = 0; i < size; i++) {
             var squad = squadTable[colliders[i].gameObject];
             if (squad != this && !squad.isUnreachable) {
@@ -621,7 +622,7 @@ public class Squad : MonoBehaviour, ISortable
 
     private void ObstaclesDetector()
     { 
-        var size = Physics.OverlapBoxNonAlloc(centroid, collision.size / 2f, colliders, worldTransform.rotation, Manager.Obstacle);
+        var size = Physics.OverlapBoxNonAlloc(centroid, collider.size / 2f, colliders, worldTransform.rotation, Manager.Obstacle);
         if (size <= 0 || state == SquadFSM.Idle) {
             if (obstacles.Count > 0) {
                 foreach (var unit in units) {
@@ -715,7 +716,7 @@ public class Squad : MonoBehaviour, ISortable
         var y = boundCollision.y;
         var z = phalanxHeight * boundCollision.z;
         var size = new Vector3(x, y, z);
-        collision.size = size;
+        collider.size = size;
         var scale = math.max(x, z);
         particleShape.scale = new Vector3(scale, 1f, scale / 2f);
     }

@@ -61,10 +61,12 @@ public class UnitManager : SingletonObject<UnitManager>
 	private Collider[] colliders = new Collider[1];
 	private EventSystem eventSystem;
 	private TerrainBorder border;
-	private Camera cam;
+#pragma warning disable 108,114
+	private AudioSource audio;
+	private Camera camera;
+#pragma warning restore 108,114	
 	private CamController camController;
 	private Line drawedLine;
-	private AudioSource clickAudio;
 	private Squad lastSelectSquad;
 	private float lastSelectTime;
 	private float lastClickTime;
@@ -88,15 +90,15 @@ public class UnitManager : SingletonObject<UnitManager>
 	{
 		eventSystem = EventSystem.current;
 		border = Manager.border;
-		cam = Manager.mainCamera;
+		camera = Manager.mainCamera;
 		camController = Manager.camController;
-		clickAudio = Manager.cameraSources[0];
+		audio = Manager.cameraSources[0];
 		SetCursor(basicCursor);
 	}
 
 	private void Update()
 	{
-		groundRay = cam.ScreenPointToRay(Input.mousePosition);
+		groundRay = camera.ScreenPointToRay(Input.mousePosition);
 		groundCast = Physics.Raycast(groundRay, out groundHit, Manager.TerrainDistance, Manager.Ground);
 		pointerUI = eventSystem.IsPointerOverGameObject();
 		
@@ -188,17 +190,17 @@ public class UnitManager : SingletonObject<UnitManager>
 				
 				for (var i = 0; i < corners.Length; i++) {
 					var corner = corners[i];
-					var ray = cam.ScreenPointToRay(corner); //cast out to world space
+					var ray = camera.ScreenPointToRay(corner); //cast out to world space
 					if (Physics.Raycast(ray, out var hit, Manager.TerrainDistance, Manager.Ground)) {
 						vertices[i] = transform.InverseTransformPoint(hit.point);
-						Debug.DrawLine(cam.ScreenToWorldPoint(corner), hit.point, Color.red, 5.0f);
+						Debug.DrawLine(camera.ScreenToWorldPoint(corner), hit.point, Color.red, 5.0f);
 					} else {
 						return;
 					}
 				}
 				
-				clickAudio.clip = selectSound;
-				clickAudio.Play();
+				audio.clip = selectSound;
+				audio.Play();
 				
 				// Generate box from 4 vertices
 				var selectionMesh = Vector.GenerateSelectionMesh(vertices);
@@ -280,8 +282,8 @@ public class UnitManager : SingletonObject<UnitManager>
 						AddToDynamicGroup(squad, obj);
 					}
 					
-					clickAudio.clip = attackSound;
-					clickAudio.Play();
+					audio.clip = attackSound;
+					audio.Play();
 					
 					var pos = pointerUI ? hover.GetPosition() : groundHit.point;
 					pos.y += 0.5f;
@@ -311,8 +313,8 @@ public class UnitManager : SingletonObject<UnitManager>
 						}
 					}
 					
-					clickAudio.clip = moveSound;
-					clickAudio.Play();
+					audio.clip = moveSound;
+					audio.Play();
 					
 					Instantiate(moveParticle, dest, Quaternion.identity);
 				}
@@ -330,8 +332,8 @@ public class UnitManager : SingletonObject<UnitManager>
 				}
 				
 				if (playSound) {
-					clickAudio.clip = placeSound;
-					clickAudio.Play();
+					audio.clip = placeSound;
+					audio.Play();
 				}
 
 				RemoveFormations(true);
@@ -401,8 +403,8 @@ public class UnitManager : SingletonObject<UnitManager>
 					}
 				}
 				if (playSound) {
-					clickAudio.clip = placeSound;
-					clickAudio.Play();
+					audio.clip = placeSound;
+					audio.Play();
 				}
 
 				RemoveFormations(true);
@@ -464,8 +466,8 @@ public class UnitManager : SingletonObject<UnitManager>
 				var squad = selectedUnits[0];
 				AddToStaticGroup(squad, drawedLine.Points);
 
-				clickAudio.clip = placeSound;
-				clickAudio.Play();
+				audio.clip = placeSound;
+				audio.Play();
 				
 				drawedLine.Destroy();
 			}
@@ -616,8 +618,8 @@ public class UnitManager : SingletonObject<UnitManager>
 			var trans = filter.centerTransform;
 			if (camController.target != trans) {
 				camController.SetTarget(trans);
-				clickAudio.clip = targetSound;
-				clickAudio.Play();
+				audio.clip = targetSound;
+				audio.Play();
 			}
 		}
 		

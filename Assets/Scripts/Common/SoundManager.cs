@@ -18,11 +18,13 @@ public class SoundManager : SingletonObject<SoundManager>
     public AudioClip ambientSound;
     public AnimationCurve ambientCurve;
     
+#pragma warning disable 108,114
+    private AudioSource audio;
+#pragma warning restore 108,114
     //private Transform worldTransform;
     private Transform camTransform;
     private CamController camController;
-    private AudioSource ambient;
-    
+
     private readonly Dictionary<Vector3, Sounds> clipTable = new Dictionary<Vector3, Sounds>(1000);
     //private readonly Dictionary<AudioSource, Vector3> playTable = new Dictionary<AudioSource, Vector3>();
     private readonly List<AudioSource> sources = new List<AudioSource>();
@@ -40,10 +42,10 @@ public class SoundManager : SingletonObject<SoundManager>
 
     private void Start()
     {
-        ambient = Manager.cameraSources[2];
-        ambient.loop = true;
-        ambient.clip = ambientSound;
-        ambient.Play();
+        audio = Manager.cameraSources[2];
+        audio.loop = true;
+        audio.clip = ambientSound;
+        audio.Play();
         
         camTransform = Manager.camTransform;
         camController = Manager.camController;
@@ -98,7 +100,7 @@ public class SoundManager : SingletonObject<SoundManager>
 
     public void LateUpdate()
     {
-        ambient.volume = ambientCurve.Evaluate(MathExtention.Clamp01(camController.DistToGround));
+        audio.volume = ambientCurve.Evaluate(MathExtention.Clamp01(camController.DistToGround));
         
         foreach (var source in sources) {
             if (!source.isPlaying) {

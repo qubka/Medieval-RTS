@@ -3,8 +3,6 @@ using UnityJSON;
 
 public abstract class SerializableObject : ScriptableObject, ISerializationListener
 {
-    protected int hash { set; get; }
-    
     public void OnSerializationWillBegin(Serializer serializer)
     {
         OnSerialization();
@@ -21,9 +19,4 @@ public abstract class SerializableObject : ScriptableObject, ISerializationListe
     public abstract void OnSerialization();
 
     public abstract void OnDeserialization();
-    
-    public static bool operator &(SerializableObject x, SerializableObject y)
-    {
-        return x.hash == y.hash;
-    }
 }

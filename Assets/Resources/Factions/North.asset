@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c1c28556e6c4e7484cd742926bba4c1, type: 3}
   m_Name: North
   m_EditorClassIdentifier: 
+  id: 1
   label: North Kingdom
-  color: {r: 0.28627452, g: 0.28627452, b: 0.6039216, a: 1}
+  color:
+    serializedVersion: 2
+    rgba: 4287383372
   leader: {fileID: 0}
-  characters: []
-  parties: []
-  locations: []
   allies: []
   enemies:
   - {fileID: 11400000, guid: 6960650d042d6824c9fcc4a13030e858, type: 2}

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityJSON;
 
 [Serializable]
 public class Troop
 {
-    [Header("General")]
+    [Header("General")] 
     public int size;
     public Squadron data;
-    
-    [Header("Models")]
+
+    [Header("Models")] 
     public GameObject[] primaryPrefabs;
     public GameObject[] secondaryPrefabs;
 }

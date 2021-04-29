@@ -372,7 +372,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2232474722342672883}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: e52fb17f9b1e7fd48b8955f1391d3688, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -401,7 +401,6 @@ MonoBehaviour:
     sound1: {fileID: 0}
     sound2: {fileID: 0}
     childList: []
-    playOnChild: 0
   prevAnim:
     clip: {fileID: 0}
     frame1: 0
@@ -411,7 +410,6 @@ MonoBehaviour:
     sound1: {fileID: 0}
     sound2: {fileID: 0}
     childList: []
-    playOnChild: 0
   nextAnimTime: 0
   nextTargetTime: 0
   nextModeTime: 0
@@ -432,7 +430,6 @@ MonoBehaviour:
     sound1: {fileID: 0}
     sound2: {fileID: 0}
     childList: []
-    playOnChild: 0
   nextBlock2:
     clip: {fileID: 0}
     frame1: 0
@@ -442,7 +439,6 @@ MonoBehaviour:
     sound1: {fileID: 0}
     sound2: {fileID: 0}
     childList: []
-    playOnChild: 0
   isRunning: 0
   isRange: 0
   health: 0
@@ -450,17 +446,18 @@ MonoBehaviour:
   range: 0
   skin: 0
   squad: {fileID: 0}
+  target: {fileID: 0}
+  collisions: []
+  obstacles: []
   attachment: {fileID: 0}
   selector: {fileID: 0}
   selectorTransform: {fileID: 0}
   attachTransform: {fileID: 0}
   worldTransform: {fileID: 0}
-  collisions: []
-  obstacles: []
-  target: {fileID: 0}
   crowd: {fileID: 0}
   subCrowd: {fileID: 0}
   body: {fileID: 0}
+  capsule: {fileID: 0}
   arrivalWeight: 0
   arrivalRadius: 1
   seekingTarget: {fileID: 0}

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6172ba5f685e48d990e9bdd814215abc, type: 3}
   m_Name: Bandit Party
   m_EditorClassIdentifier: 
-  leader: {fileID: 11400000, guid: dc2b9a63edef1cb42b03bc67de0e55b6, type: 2}
+  leader: {fileID: 11400000, guid: 7b6623383b8106242940d49d02af92af, type: 2}
   morale: 100
   speed: 10
-  position: {x: 0, y: 17, z: -25.81}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
+  position: {x: 12.944763, y: 12.577951, z: 48.513916}
+  rotation: {x: -0.0000776632, y: 0.4450095, z: 0.00015628741, w: 0.89552593}
   troops:
   - size: 48
     data: {fileID: 11400000, guid: 552d93e60766cbb459a7db840a4a6efe, type: 2}
@@ -28,4 +28,5 @@ MonoBehaviour:
     primaryPrefabs:
     - {fileID: 2075701848563991333, guid: 8fe8c9ff2d9cd84419b4297ac00959d5, type: 3}
     secondaryPrefabs: []
+  state: 0
   skin: 0

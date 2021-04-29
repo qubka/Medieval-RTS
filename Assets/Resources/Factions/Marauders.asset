@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c1c28556e6c4e7484cd742926bba4c1, type: 3}
   m_Name: Marauders
   m_EditorClassIdentifier: 
+  id: 4
   label: Marauders
-  color: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
+  color:
+    serializedVersion: 2
+    rgba: 4286414205
   leader: {fileID: 0}
-  characters:
-  - {fileID: 11400000, guid: dc2b9a63edef1cb42b03bc67de0e55b6, type: 2}
-  parties: []
-  locations: []
   allies: []
   enemies:
   - {fileID: 11400000, guid: 55a0536e475f8b041b133d93e5edbe7f, type: 2}

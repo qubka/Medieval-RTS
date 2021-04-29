@@ -51,8 +51,11 @@ public class Unit : MonoBehaviour
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public GPUICrowdPrefab crowd;
     [HideInInspector] public GPUICrowdPrefab subCrowd;
-    [HideInInspector] public Rigidbody body;
-    [HideInInspector] public CapsuleCollider capsule;
+#pragma warning disable 108,114
+    [HideInInspector] public Rigidbody rigidbody;
+    [HideInInspector] public CapsuleCollider collider;
+    private Animations animation => squad.data.animations;
+#pragma warning restore 108,114
     [Space]
     
     // Steering cache valuers
@@ -66,8 +69,6 @@ public class Unit : MonoBehaviour
     public bool hasSpeed => math.lengthsq(boid.velocity) > 0f;
     public bool isCombat => target || squad.touchEnemies || currentTime < lastDamageTime + 10f;
     public bool isInjure => health <= squad.data.manHealth / 2f;
-	
-    private Animations animations => squad.data.animations;
 
     public Vector3 GetAim()
     {
@@ -96,8 +97,8 @@ public class Unit : MonoBehaviour
 		nextBlockTime = Max;
 		nextBlock2Time = Max;
 		lastDamageTime = Min;
-		body = GetComponent<Rigidbody>();
-        capsule = GetComponent<CapsuleCollider>();
+		rigidbody = GetComponent<Rigidbody>();
+        collider = GetComponent<CapsuleCollider>();
         ChangeState(UnitFSM.Idle);
     }
 
@@ -479,7 +480,7 @@ public class Unit : MonoBehaviour
 		    nextDamage = MeleeDamage(type);
 		    nextDamageTime = currentTime + frame / currentAnim.FrameRate;
 		    if (nextDamage < 0) {
-				var anims = target.animations;
+				var anims = target.animation;
 			    var anim = anims.GetCounterAnimation(currentAnim.side1, anims.hasShield, nextDamage == -2);
 			    if (anim != null) {
 				    nextBlock = anim.GetRandom();
@@ -504,7 +505,7 @@ public class Unit : MonoBehaviour
 	        nextDamage2 = MeleeDamage(type);
 	        nextDamage2Time = currentTime + currentAnim.frame2 / currentAnim.FrameRate;
 	        if (nextDamage2 < 0) {
-		        var anims = target.animations;
+		        var anims = target.animation;
 		        var anim = anims.GetCounterAnimation(currentAnim.side1, anims.hasShield, nextDamage2 == -2);
 		        if (anim != null) {
 			        nextBlock2 = anim.GetRandom();
@@ -544,7 +545,7 @@ public class Unit : MonoBehaviour
 	        var current = worldTransform.position;
 	        var desired = target.worldTransform.position;
 	        if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
-		        if (animations.hasMount && type == DamageType.Charge) {
+		        if (animation.hasMount && type == DamageType.Charge) {
 			        squad.CreateDamage(this, desired, type, nextDamage);
 		        } else {
 			        target.OnDamage(this, type, nextDamage);
@@ -556,7 +557,7 @@ public class Unit : MonoBehaviour
 	        var current = worldTransform.position;
 	        var desired = target.worldTransform.position;
 	        if (Vector.Distance(desired, current) <= squad.data.meleeDistance) {
-	            if (animations.hasMount && type == DamageType.Charge) {
+	            if (animation.hasMount && type == DamageType.Charge) {
 		            squad.CreateDamage(this, desired, type, nextDamage);
 	            } else {
 		            target.OnDamage(this, type, nextDamage);
@@ -579,7 +580,7 @@ public class Unit : MonoBehaviour
 		    attack += attacker.chargeBonus;
 	    }
 
-	    attack += target.animations.hasMount ? attacker.meleeWeapon.attackAgainstCavalry : attacker.meleeWeapon.attackAgainstInfantry;
+	    attack += target.animation.hasMount ? attacker.meleeWeapon.attackAgainstCavalry : attacker.meleeWeapon.attackAgainstInfantry;
 	    
 	    var defense = math.max(0, victim.armor - attacker.meleeWeapon.armorPiercingDamage);
 
@@ -668,7 +669,7 @@ public class Unit : MonoBehaviour
             case DamageType.Charge:
                 switch (state) {
 	                case UnitFSM.Hit:
-		                if (inflictor.animations.canKnock && animations.canKnockdown) {
+		                if (inflictor.animation.canKnock && animation.canKnockdown) {
 			                KnockdownStart();
 			                rotate = true;
 		                }
@@ -678,7 +679,7 @@ public class Unit : MonoBehaviour
 	                    if (knock) damage = 0;
                         break;
                     default:
-	                    if (inflictor.animations.canKnock && animations.canKnockdown) {
+	                    if (inflictor.animation.canKnock && animation.canKnockdown) {
 		                    KnockdownStart();
 	                    } else {
 		                    HitStart();
@@ -702,10 +703,10 @@ public class Unit : MonoBehaviour
 		    }
 	    }
 
-	    if (!animations.hasMount) {
+	    if (!animation.hasMount) {
 		    if (knock) {
-			    var force = inflictor.animations.knockForce;
-			    body.AddForce(inflictor.worldTransform.forward * Random.Range(force.x, force.y));
+			    var force = inflictor.animation.knockForce;
+			    rigidbody.AddForce(inflictor.worldTransform.forward * Random.Range(force.x, force.y));
 		    }
 		    
 		    if (rotate) {
@@ -859,7 +860,7 @@ public class Unit : MonoBehaviour
 				if (!squad.isMoving) {
 					if (!TurnStart(direction, UnitFSM.RangeTurn)) {
 						ChangeState(UnitFSM.RangeReload);
-						var anim = animations.reload.GetRandom();
+						var anim = animation.reload.GetRandom();
 						PlayAnimation(anim, anim.Length);
 					}
 				} else {
@@ -897,19 +898,19 @@ public class Unit : MonoBehaviour
 	private void IdleStart(Vector3 direction)
 	{
 		var clip = crowd.crowdAnimator.currentAnimationClipData[0].animationClip;
-		var isIdle = animations.IsIdle(clip, isCombat, isRange, isInjure);
+		var isIdle = animation.IsIdle(clip, isCombat, isRange, isInjure);
 					
 		if (currentTime > nextAnimTime) {
-			if (isIdle && !isRange && animations.rage.Length > 0 && Random.Range(0, 10) == 0) {
+			if (isIdle && !isRange && animation.rage.Length > 0 && Random.Range(0, 10) == 0) {
 				ChangeState(UnitFSM.Wait);
-				var anim = animations.rage.GetRandom();
+				var anim = animation.rage.GetRandom();
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			} else {
-				var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure).GetRandom();
+				var anim = animation.GetIdleAnimation(isCombat, isRange, isInjure).GetRandom();
 				PlayAnimation(anim, anim.Length, 1f, 0.5f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
 			}
 		} else {
-			if (isIdle || animations.IsTurn(clip)) {
+			if (isIdle || animation.IsTurn(clip)) {
 				RotateTowards(direction.ToEuler());
 			}
 		}
@@ -947,14 +948,14 @@ public class Unit : MonoBehaviour
 
 			if (currentTime > nextAnimTime) {
 				speed += Random.Range(0.05f, 0.1f);
-				var anim = animations.charge[0];
+				var anim = animation.charge[0];
 				PlayAnimation(anim, anim.Length / speed, speed, currentAnim != anim ? 0.5f : 0f);
 			}
 		} else {
 			var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
 			if (distance <= squad.data.meleeDistance) {
 				ChangeState(UnitFSM.Strike);
-				var anim = animations.attackCharge.GetRandom();
+				var anim = animation.attackCharge.GetRandom();
 				if (anim.clip) {
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				} else {
@@ -994,7 +995,7 @@ public class Unit : MonoBehaviour
 
 			if (currentTime > nextAnimTime) {
 				speed += Random.Range(0.05f, 0.1f);
-				var anim = animations.forwardWalk[animations.forwardWalk.Length > 1 ? 1 : 0];
+				var anim = animation.forwardWalk[animation.forwardWalk.Length > 1 ? 1 : 0];
 				var duration = anim.Length / speed;
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
@@ -1025,8 +1026,8 @@ public class Unit : MonoBehaviour
 				default: {
 					ChangeState(UnitFSM.Melee);
 					var distance = Vector.Distance(target.worldTransform.position, worldTransform.position);
-					var anim = animations.GetAttackAnimation(squad.data.meleeWeapon, distance).GetRandom(prevAnim);
-					PlayAnimation(anim, anim.Length, 1f, 0f, -1, true, animations.hasMount);
+					var anim = animation.GetAttackAnimation(squad.data.meleeWeapon, distance).GetRandom(prevAnim);
+					PlayAnimation(anim, anim.Length, 1f, 0f, -1, true, animation.hasMount);
 					prevAnim = currentAnim;
 					PrepareDamage(DamageType.Normal);
 					break;
@@ -1041,7 +1042,7 @@ public class Unit : MonoBehaviour
 
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Wait);
-			var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
+			var anim = animation.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 			PlayAnimation(anim, Random.Range(1f, math.min(3f, anim.Length)), 1f, 0f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
 		}
 	}
@@ -1060,7 +1061,7 @@ public class Unit : MonoBehaviour
 
 			if (currentTime > nextAnimTime) {
 				speed += Random.Range(0.05f, 0.1f);
-				var anim = animations.forwardWalk[animations.forwardWalk.Length > 1 ? 2 : 0];
+				var anim = animation.forwardWalk[animation.forwardWalk.Length > 1 ? 2 : 0];
 				var duration = anim.Length / speed;
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
@@ -1074,7 +1075,7 @@ public class Unit : MonoBehaviour
 	{
 		if (!RotateTowards((target.worldTransform.position - worldTransform.position).ToEuler())) {
 			ChangeState(UnitFSM.RangeReload);
-			var anim = animations.reload.GetRandom();
+			var anim = animation.reload.GetRandom();
 			PlayAnimation(anim, anim.Length);
 		}
 	}
@@ -1090,7 +1091,7 @@ public class Unit : MonoBehaviour
 		
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.RangeHold);
-			var anim = animations.rangeHold[range];
+			var anim = animation.rangeHold[range];
 			PlayAnimation(anim, anim.Length);
 			nextModeTime = Random.Range(0.5f, squad.data.fireRate - 0.5f);
 			nextAnimTime = currentTime + nextModeTime;
@@ -1103,7 +1104,7 @@ public class Unit : MonoBehaviour
 		
 		if (squad.canShoot || squad.isMoving) {
 			ChangeState(UnitFSM.RangeRelease);
-			var anim = animations.rangeRelease[range];
+			var anim = animation.rangeRelease[range];
 			PlayAnimation(anim, anim.Length);
 
 			var data = squad.data.rangeWeapon.ranges[range];
@@ -1124,9 +1125,9 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(UnitFSM.Wait);
-			var anim = animations.rangeEnd.GetRandom();
-			if (animations.rangeStart.Length == 0) {
-				crowd.StartAnimation(animations.rangeHold[range].clip);
+			var anim = animation.rangeEnd.GetRandom();
+			if (animation.rangeStart.Length == 0) {
+				crowd.StartAnimation(animation.rangeHold[range].clip);
 				PlayAnimation(anim, squad.data.fireRate - nextModeTime, 1f, 0.5f);
 			} else {
 				PlayAnimation(anim, squad.data.fireRate - nextModeTime);
@@ -1140,20 +1141,20 @@ public class Unit : MonoBehaviour
 		RotateTowards(direction.ToEuler());
 		
 		if (currentTime > nextAnimTime) {
-			range = animations.GetRangeAnimation(squad.data.rangeWeapon, direction.Magnitude());
+			range = animation.GetRangeAnimation(squad.data.rangeWeapon, direction.Magnitude());
 			if (range == 0 && squad.seeEnemy) {
 				range++;
 			}
-			if (animations.rangeStart.Length == 0) {
+			if (animation.rangeStart.Length == 0) {
 				ChangeState(UnitFSM.RangeHold);
-				var anim = animations.rangeHold[range];
-				crowd.StartAnimation(animations.rangeEnd.GetRandom().clip);
+				var anim = animation.rangeHold[range];
+				crowd.StartAnimation(animation.rangeEnd.GetRandom().clip);
 				PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				nextModeTime = Random.Range(0.5f, squad.data.fireRate - 0.5f);
 				nextAnimTime = currentTime + nextModeTime;
 			} else {
 				ChangeState(UnitFSM.RangeStart);
-				var anim = animations.rangeStart[range];
+				var anim = animation.rangeStart[range];
 				PlayAnimation(anim, anim.Length);
 				nextModeTime = currentTime + currentAnim.frame2 / currentAnim.FrameRate;
 			}
@@ -1187,17 +1188,17 @@ public class Unit : MonoBehaviour
 			TransitionToIdle(0f);
 		} else {
 			var clip = crowd.crowdAnimator.currentAnimationClipData[0].animationClip;
-			var isIdle = animations.IsIdle(clip, isCombat, isRange, isInjure);
+			var isIdle = animation.IsIdle(clip, isCombat, isRange, isInjure);
 			if (currentTime > nextAnimTime) {
 				if (isIdle && !isInjure && Random.Range(0, 10) == 0) {
-					var anim = animations.idleNormal.GetRandom(1); // from 1 (0  should be default one)
+					var anim = animation.idleNormal.GetRandom(1); // from 1 (0  should be default one)
 					PlayAnimation(anim, anim.Length, 1f, 0.5f);
 				} else {
-					var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
+					var anim = animation.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 					PlayAnimation(anim, anim.Length, 1f, 0.5f, -1f, Random.Range(0, squad.unitCount * 10) == 0);
 				}
 			} else {
-				if (isIdle || animations.IsTurn(clip)) {
+				if (isIdle || animation.IsTurn(clip)) {
 					RotateTowards(squad.worldTransform.rotation);
 				}
 			}
@@ -1256,7 +1257,7 @@ public class Unit : MonoBehaviour
 
 			if (currentTime > nextAnimTime) {
 				speed += Random.Range(-0.05f, 0.05f);
-				var anim = animations.GetMoveAnimation(squad.isForward, squad.isRunning || isRunning, isCombat, isRange, isInjure);
+				var anim = animation.GetMoveAnimation(squad.isForward, squad.isRunning || isRunning, isCombat, isRange, isInjure);
 				var duration = anim.Length / speed;
 				PlayAnimation(anim, duration, speed, currentAnim != anim ? 0.5f : 0f);
 			}
@@ -1293,16 +1294,16 @@ public class Unit : MonoBehaviour
 	public void KnockdownStart()
 	{
 		ChangeState(UnitFSM.Knockdown);
-		var anim = animations.GetKnockdownAnimation(isCombat, isRange);
+		var anim = animation.GetKnockdownAnimation(isCombat, isRange);
 		PlayAnimation(anim, anim.Length);
 	}
 
 	private void Knockdown()
 	{
 		if (currentTime > nextAnimTime) {
-			if (animations.hasMultiNormalKnockdown || animations.hasMultiCombatKnockdown || animations.hasMultiRangeKnockdown) {
+			if (animation.hasMultiNormalKnockdown || animation.hasMultiCombatKnockdown || animation.hasMultiRangeKnockdown) {
 				ChangeState(UnitFSM.WakeUp);
-				var anim = (animations.hasMultiNormalKnockdown ? animations.knockdownNormal : animations.hasMultiCombatKnockdown ? animations.knockdownCombat : animations.knockdownRange)[0];
+				var anim = (animation.hasMultiNormalKnockdown ? animation.knockdownNormal : animation.hasMultiCombatKnockdown ? animation.knockdownCombat : animation.knockdownRange)[0];
 				PlayAnimation(anim, anim.Length);
 			} else {
 				ChangeState(target ? UnitFSM.Attack : UnitFSM.Idle);
@@ -1330,7 +1331,7 @@ public class Unit : MonoBehaviour
 	private void HitStart()
 	{
 		ChangeState(UnitFSM.Hit);
-		var anim = animations.GetHitAnimation(isCombat, isRange);
+		var anim = animation.GetHitAnimation(isCombat, isRange);
 		PlayAnimation(anim, anim.Length);
 	}
 
@@ -1345,10 +1346,10 @@ public class Unit : MonoBehaviour
 	private void DeathStart()
 	{
 		ChangeState(UnitFSM.Death);
-		var anim = animations.GetDeathAnimation(isCombat, isRange);
+		var anim = animation.GetDeathAnimation(isCombat, isRange);
 		PlayAnimation(anim, anim.Length);
-		Destroy(capsule);
-		Destroy(body);
+		Destroy(collider);
+		Destroy(rigidbody);
 		Destroy(boid);
 	}
 
@@ -1356,8 +1357,8 @@ public class Unit : MonoBehaviour
 	{
 		if (attachment) {
 			var delta = 150f * Time.deltaTime;
-			attachTransform.localPosition = Vector3.MoveTowards(attachTransform.localPosition, animations.deathPosition, delta);
-			attachTransform.localEulerAngles = Vector3.MoveTowards(attachTransform.localEulerAngles, animations.deathRotation, delta);
+			attachTransform.localPosition = Vector3.MoveTowards(attachTransform.localPosition, animation.deathPosition, delta);
+			attachTransform.localEulerAngles = Vector3.MoveTowards(attachTransform.localEulerAngles, animation.deathRotation, delta);
 		}
 		
 		if (currentTime > nextAnimTime) {
@@ -1377,7 +1378,7 @@ public class Unit : MonoBehaviour
 	{
 		if (currentTime > nextAnimTime) {
 			ChangeState(isRange ? UnitFSM.RangeToMelee : UnitFSM.MeleeToRange);
-			var anim = animations.equip[isRange ? 1 : 0];
+			var anim = animation.equip[isRange ? 1 : 0];
 			PlayAnimation(anim, anim.Length, 1f, 0.5f);
 			nextModeTime = currentTime + anim.frame1 / anim.FrameRate;
 		}
@@ -1417,7 +1418,7 @@ public class Unit : MonoBehaviour
 	{
 		if (squad.isRange) {
 			if (!isRange) {
-				var anim = animations.idleNormal[0];
+				var anim = animation.idleNormal[0];
 				if (currentAnim != anim) {
 					PlayAnimation(anim, 1f, 1f, 0.5f);
 				}
@@ -1426,7 +1427,7 @@ public class Unit : MonoBehaviour
 			}
 		} else {
 			if (isRange) {
-				var anim = animations.idleNormal[0];
+				var anim = animation.idleNormal[0];
 				if (currentAnim != anim) {
 					PlayAnimation(anim, 1f, 1f, 0.5f);
 				}
@@ -1440,7 +1441,7 @@ public class Unit : MonoBehaviour
 
 	private void TransitionToIdle(float transition)
 	{
-		var anim = animations.GetIdleAnimation(isCombat, isRange, isInjure)[0];
+		var anim = animation.GetIdleAnimation(isCombat, isRange, isInjure)[0];
 		if (currentAnim != anim) {
 			PlayAnimation(anim, 1f, 1f, transition, -1f, Random.Range(0, squad.unitCount * 10) == 0);
 		}
@@ -1451,11 +1452,11 @@ public class Unit : MonoBehaviour
 		var current = worldTransform.rotation;
 		var rotation = math.abs(Quaternion.Dot(current, desired));
 		if (rotation < 0.999999f) {
-			if (animations.hasTurn) {
+			if (animation.hasTurn) {
 				if (rotation > 0.99f)
 					return false;
 				
-				var anim = animations.GetTurnAnimation(current, desired);
+				var anim = animation.GetTurnAnimation(current, desired);
 				if (currentAnim != anim) {
 					PlayAnimation(anim, anim.Length, 1f, 0.1f);
 				}
@@ -1529,8 +1530,8 @@ public class Unit : MonoBehaviour
 	    unit.ammunition = ammunition;
 	    unit.range = range;
 	    unit.skin = skin;
-	    unit.body = body;
-	    unit.capsule = capsule;
+	    unit.rigidbody = body;
+	    unit.collider = capsule;
 	    unit.squad = squad;
 	    unit.collisions = collisions;
 	    unit.obstacles = obstacles;

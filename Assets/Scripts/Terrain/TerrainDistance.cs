@@ -7,6 +7,6 @@ public class TerrainDistance : MonoBehaviour
 
     private void Start () 
     {
-        GetComponent<Terrain>().detailObjectDistance = drawDistance;
+        Manager.terrain.detailObjectDistance = drawDistance;
     }
 }

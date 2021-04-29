@@ -12,15 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84565fc53cf94ec58e8ca6903d891b9a, type: 3}
   m_Name: Sample
   m_EditorClassIdentifier: 
+  id: 0
   label: Sample Town
   isCapital: 1
-  faction: {fileID: 0}
+  faction: {fileID: 11400000, guid: 6960650d042d6824c9fcc4a13030e858, type: 2}
   position: {x: 21, y: 4, z: 3}
   rotation: {x: 0.02706529, y: 0.034190763, z: 0.025238791, w: 0.99872994}
   ruler: {fileID: 11400000, guid: f2026a488e08c0a4fb73cd910199af41, type: 2}
   type: 0
-  garrison:
-  - size: 212
-    data: {fileID: 11400000, guid: 803b133cc9e97e24dbdf936f671edc81, type: 2}
-    primaryPrefabs: []
-    secondaryPrefabs: []

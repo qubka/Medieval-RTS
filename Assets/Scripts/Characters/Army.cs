@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviorDesigner.Runtime;
@@ -27,7 +28,10 @@ public class Army : MonoBehaviour, ISortable
     
     #region Local
     
-    private Camera cam;
+#pragma warning disable 108,114    
+    private Camera camera;
+    private Collider collider;
+#pragma warning restore 108,114
     //private CamController camController;
     private GPUICrowdManager modelManager;
     private RectTransform holderCanvas;
@@ -39,6 +43,8 @@ public class Army : MonoBehaviour, ISortable
     
     private void Awake()
     {
+        // Set up the squad components
+        collider = GetComponent<Collider>();
         agent = GetComponent<NavMeshAgent>();
         armyBar = Instantiate(armyBar);
         barTransform = armyBar.transform;
@@ -47,11 +53,19 @@ public class Army : MonoBehaviour, ISortable
 
     private void Start()
     {
-        var banner = data.leader.banner;
-        if (banner) {
-            Instantiate(banner.clearArmy, worldTransform).AddComponent<BlockRotation>().worldTransform.localPosition = bannerPosition;
+        // Get information from manager
+        camera = Manager.mainCamera;
+        //camController = Manager.camController;
+        modelManager = Manager.modelManager;
+        holderCanvas = Manager.holderCanvas;
+        
+        // Create bar if exist
+        var house = data.leader.house;
+        if (house) {
+            Instantiate(house.banner.clearArmy, worldTransform).AddComponent<BlockRotation>().worldTransform.localPosition = bannerPosition;
         }
 
+        // Attach scripts
         if (data.leader.isPlayer) {
             gameObject.AddComponent<ArmyManager>();
         } else {
@@ -59,18 +73,13 @@ public class Army : MonoBehaviour, ISortable
             tree.ExternalBehavior = data.leader.faction.behavior;
         }
         
-        // Get information from manager
-        cam = Manager.mainCamera;
-        modelManager = Manager.modelManager;
-        holderCanvas = Manager.holderCanvas;
-
         // Add a army to the tables
         ArmyTable.Instance.Add(gameObject, this);
         SortList.Instance.Add(this);
 
         // Parent a bar to the screen
         barText = barTransform.GetComponentInChildren<Text>();
-        barText.color = data.leader.isPlayer ? Color.green : data.leader.faction.color;
+        barText.color = data.leader.isPlayer ? Color.green : (Color) data.leader.faction.color;
         barText.text = troopCount.ToString();
         barTransform.SetParent(holderCanvas, false);
         barTransform.localScale = barScale;
@@ -103,7 +112,7 @@ public class Army : MonoBehaviour, ISortable
         
         // Calculate position for the ui bar
         pos.y += canvasHeight;
-        pos = cam.WorldToScreenPoint(pos);
+        pos = camera.WorldToScreenPoint(pos);
         
         // If the army is behind the camera, or too far away from the player, make sure to hide the health bar completely
         if (pos.z < 0f) {
@@ -143,13 +152,18 @@ public class Army : MonoBehaviour, ISortable
 
     #endregion
 
-    private void OnTriggerStay(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(other.name);
+        Physics.IgnoreCollision(collision.collider, collider, true);
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnCollisionStay(Collision collision)
     {
-        Debug.Log(other.gameObject.name);
+        Debug.Log(name + " collide with " + collision.collider.name);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Physics.IgnoreCollision(collision.collider, collider, false);
     }
 }

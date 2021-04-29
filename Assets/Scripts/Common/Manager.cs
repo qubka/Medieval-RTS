@@ -71,8 +71,7 @@ public class Manager : SingletonObject<Manager>
 	public static List<Character> defaultCharacters;
 	public static List<Location> defaultLocations;
 	public static List<Party> defaultParties;
-
-	#region Other
+	public static List<House> defaultHouses;
 	
 	public static float TerrainDistance;
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
@@ -80,8 +79,6 @@ public class Manager : SingletonObject<Manager>
 	public static readonly int Way = "Way".GetHashCode();
 	public static readonly int GrayscaleAmount = Shader.PropertyToID("_GrayscaleAmount");
 	public static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
-	
-	#endregion
 
 	protected override void Awake()
 	{
@@ -89,20 +86,21 @@ public class Manager : SingletonObject<Manager>
 		
 		terrain = Terrain.activeTerrain;
 		border = terrain.GetComponent<TerrainBorder>();
-		modelManager = crowdManager;
+		var size = terrain.terrainData.size;
+		TerrainDistance = math.max(size.x, size.z) * 2f;
+
 		mainCamera = main;
 		minimapCamera = minimap;
 		camTransform = main.transform;
 		camController = main.GetComponent<CamController>();
 		cameraSources = main.GetComponents<AudioSource>();
+		
+		modelManager = crowdManager;
 		holderCanvas = holderFrames;
 		layoutCanvas = unitLayout;
 		cardCanvas = unitCard;
 		global = globalInfo;
 		
-		var size = terrain.terrainData.size;
-		TerrainDistance = math.max(size.x, size.z) * 2f;
-
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
 		Ground = global.ground.value;
@@ -144,6 +142,8 @@ public class Manager : SingletonObject<Manager>
 		WinningBattle = global.winningBattle;
 		WithoutAmmo = global.withoutAmmo;
 
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
 		moraleAttributes = new List<MoraleAttribute>(32) {
 			global.chargedInFlank,
 			global.chargedInRear,
@@ -175,8 +175,9 @@ public class Manager : SingletonObject<Manager>
 			global.withoutAmmo
 		};
 		defaultFactions = Resources.LoadAll<Faction>("Factions/").ToList();
-		defaultCharacters = Resources.LoadAll<Character>("Character/").ToList();
-		defaultLocations = Resources.LoadAll<Location>("Location/").ToList();
+		defaultCharacters = Resources.LoadAll<Character>("Characters/").ToList();
+		defaultLocations = Resources.LoadAll<Location>("Locations/").ToList();
 		defaultParties = Resources.LoadAll<Party>("Parties/").ToList();
+		defaultHouses = Resources.LoadAll<House>("Houses/").ToList();
 	}
 }

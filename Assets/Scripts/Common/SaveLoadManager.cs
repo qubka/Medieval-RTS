@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityJSON;
 
 public class SaveLoadManager : SingletonObject<SaveLoadManager>
 {
     public Game current;
-    public string session = "new_game";
     public static string Path => Application.persistentDataPath + "/savedGames.dat";
 
-    public void New()
+    /*public void New()
     {
         current = ScriptableObject.CreateInstance<Game>();
         current.Load();
-        Debug.Log(current.Save());
-        //current.name = session + "_" + DateTime.Now.ToString("MM_dd_yyyy_h_mm_tt");
+        current.OnDeserializationSucceeded(null);
+        //Debug.Log(current.ToJSONString());
     }
     
     public void Save() {
@@ -49,5 +47,5 @@ public class SaveLoadManager : SingletonObject<SaveLoadManager>
             Load();
         if (GUI.Button(new Rect(0, 200, 125, 50), "New Game"))
             New();
-    }
+    }*/
 }
