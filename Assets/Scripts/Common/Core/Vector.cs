@@ -253,4 +253,19 @@ public static class Vector // MathExtension ?
 		}
 		return origin;
 	}
+	
+	// https://forum.unity.com/threads/camera-worldtoscreenpoint-bug.85311/ki
+	public static Vector2 WorldToScreenPointProjected(this Camera camera, Transform camTransform, Vector3 worldPos)
+	{
+		var camNormal = camTransform.forward;
+		var camPosition = camTransform.position;
+		var vectorFromCam = worldPos - camPosition;
+		var camNormDot = Dot(camNormal, vectorFromCam);
+		if (camNormDot <= 0f) {
+			// we are behind the camera forward facing plane, project the position in front of the plane
+			var proj = (camNormal * (camNormDot * 1.01f));
+			worldPos = camPosition + (vectorFromCam - proj);
+		}
+		return RectTransformUtility.WorldToScreenPoint(camera, worldPos);
+	}
 }

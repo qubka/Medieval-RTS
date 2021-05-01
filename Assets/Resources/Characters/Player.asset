@@ -12,16 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78d3cabf375148e0a6c52668215ac6c5, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
+  id: 0
   surname: Player
   title: 
   gender: 0
   age: 23
   renown: 0
   honor: 0
-  isNoble: 1
   isPlayer: 1
   locationsOwned: []
   faction: {fileID: 11400000, guid: 55a0536e475f8b041b133d93e5edbe7f, type: 2}
-  party: {fileID: 11400000, guid: fe2604be23fcb4a47b6deb7fb47a3de3, type: 2}
-  portrait: 
-  banner: {fileID: 11400000, guid: a71c8039803bd7342a43eae7e964ea27, type: 2}
+  house: {fileID: 11400000, guid: 65c54ec1774794e41838224c30958ef5, type: 2}

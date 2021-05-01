@@ -3,6 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityJSON;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/House (Family) Config", order = 0)]
 [Serializable]
@@ -28,6 +29,7 @@ public class House : SerializableObject
         AssetDatabase.RenameAsset(assetPath, newName + "_" + id);
         name = newName;
         label = newName;
+        banner = Resources.LoadAll<Banner>("Banners/")[id - 1];
     }
 #endif
     

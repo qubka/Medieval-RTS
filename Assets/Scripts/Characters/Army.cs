@@ -114,7 +114,7 @@ public class Army : MonoBehaviour, ISortable
         pos.y += canvasHeight;
         pos = camera.WorldToScreenPoint(pos);
         
-        // If the army is behind the camera, or too far away from the player, make sure to hide the health bar completely
+        // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
         if (pos.z < 0f) {
             armyBar.SetActive(false);
         } else {

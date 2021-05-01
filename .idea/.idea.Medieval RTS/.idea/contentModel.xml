@@ -1468,6 +1468,197 @@
               <e p="NavMeshSurface.cs" t="Include" />
             </e>
           </e>
+          <e p="Psd2UnityImporter-master" t="Include">
+            <e p="Editor" t="Include">
+              <e p="DisplayLayerData.cs" t="Include" />
+              <e p="FullSerializer" t="Include">
+                <e p="Aot" t="Include">
+                  <e p="fsAotCompilationManager.cs" t="Include" />
+                  <e p="fsAotVersionInfo.cs" t="Include" />
+                  <e p="fsIAotConverter.cs" t="Include" />
+                </e>
+                <e p="Converters" t="Include">
+                  <e p="fsArrayConverter.cs" t="Include" />
+                  <e p="fsDateConverter.cs" t="Include" />
+                  <e p="fsDictionaryConverter.cs" t="Include" />
+                  <e p="fsEnumConverter.cs" t="Include" />
+                  <e p="fsForwardConverter.cs" t="Include" />
+                  <e p="fsGuidConverter.cs" t="Include" />
+                  <e p="fsIEnumerableConverter.cs" t="Include" />
+                  <e p="fsKeyValuePairConverter.cs" t="Include" />
+                  <e p="fsNullableConverter.cs" t="Include" />
+                  <e p="fsPrimitiveConverter.cs" t="Include" />
+                  <e p="fsReflectedConverter.cs" t="Include" />
+                  <e p="fsTypeConverter.cs" t="Include" />
+                  <e p="fsWeakReferenceConverter.cs" t="Include" />
+                  <e p="Unity" t="Include">
+                    <e p="AnimationCurve_DirectConverter.cs" t="Include" />
+                    <e p="Bounds_DirectConverter.cs" t="Include" />
+                    <e p="Gradient_DirectConverter.cs" t="Include" />
+                    <e p="GUIStyle_DirectConverter.cs" t="Include" />
+                    <e p="GUIStyleState_DirectConverter.cs" t="Include" />
+                    <e p="Keyframe_DirectConverter.cs" t="Include" />
+                    <e p="LayerMask_DirectConverter.cs" t="Include" />
+                    <e p="Rect_DirectConverter.cs" t="Include" />
+                    <e p="RectOffset_DirectConverter.cs" t="Include" />
+                    <e p="UnityEvent_Converter.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="fsBaseConverter.cs" t="Include" />
+                <e p="fsConfig.cs" t="Include" />
+                <e p="fsContext.cs" t="Include" />
+                <e p="fsConverter.cs" t="Include" />
+                <e p="fsConverterRegistrar.cs" t="Include" />
+                <e p="fsData.cs" t="Include" />
+                <e p="fsDirectConverter.cs" t="Include" />
+                <e p="fsExceptions.cs" t="Include" />
+                <e p="fsIgnoreAttribute.cs" t="Include" />
+                <e p="fsISerializationCallbacks.cs" t="Include" />
+                <e p="fsJsonParser.cs" t="Include" />
+                <e p="fsJsonPrinter.cs" t="Include" />
+                <e p="fsMemberSerialization.cs" t="Include" />
+                <e p="fsObjectAttribute.cs" t="Include" />
+                <e p="fsObjectProcessor.cs" t="Include" />
+                <e p="fsPropertyAttribute.cs" t="Include" />
+                <e p="fsResult.cs" t="Include" />
+                <e p="fsSerializer.cs" t="Include" />
+                <e p="Internal" t="Include">
+                  <e p="fsCyclicReferenceManager.cs" t="Include" />
+                  <e p="fsOption.cs" t="Include" />
+                  <e p="fsPortableReflection.cs" t="Include" />
+                  <e p="fsTypeExtensions.cs" t="Include" />
+                  <e p="fsVersionedType.cs" t="Include" />
+                  <e p="fsVersionManager.cs" t="Include" />
+                </e>
+                <e p="Reflection" t="Include">
+                  <e p="fsMetaProperty.cs" t="Include" />
+                  <e p="fsMetaType.cs" t="Include" />
+                  <e p="fsReflectionUtility.cs" t="Include" />
+                  <e p="fsTypeCache.cs" t="Include" />
+                </e>
+              </e>
+              <e p="ImportUserData.cs" t="Include" />
+              <e p="PsdImporter.cs" t="Include" />
+              <e p="PsdImportWindow.cs" t="Include" />
+              <e p="PsdParser" t="Include">
+                <e p="AdditionalLayerInformation.cs" t="Include" />
+                <e p="BlendMode.cs" t="Include" />
+                <e p="Channel.cs" t="Include" />
+                <e p="ChannelType.cs" t="Include" />
+                <e p="ColorMode.cs" t="Include" />
+                <e p="ColorSpace.cs" t="Include" />
+                <e p="CompressionType.cs" t="Include" />
+                <e p="DescriptorStructure.cs" t="Include" />
+                <e p="EmbeddedLayer.cs" t="Include" />
+                <e p="Extensions.cs" t="Include" />
+                <e p="FileHeaderSection.cs" t="Include" />
+                <e p="IChannel.cs" t="Include" />
+                <e p="IImageSource.cs" t="Include" />
+                <e p="ILinkedLayer.cs" t="Include" />
+                <e p="InternalDocument.cs" t="Include" />
+                <e p="InvalidFormatException.cs" t="Include" />
+                <e p="IProperties.cs" t="Include" />
+                <e p="IPropertiesExtension.cs" t="Include" />
+                <e p="IPsdLayer.cs" t="Include" />
+                <e p="LayerandMaskInformationSection.cs" t="Include" />
+                <e p="LayerBlendingRanges.cs" t="Include" />
+                <e p="LayerExtraRecords.cs" t="Include" />
+                <e p="LayerFlags.cs" t="Include" />
+                <e p="LayerMask.cs" t="Include" />
+                <e p="LayerRecords.cs" t="Include" />
+                <e p="LazyProperties.cs" t="Include" />
+                <e p="LazyValueReader.cs" t="Include" />
+                <e p="LinkedLayer.cs" t="Include" />
+                <e p="PathResolver.cs" t="Include" />
+                <e p="Properties.cs" t="Include" />
+                <e p="PsdDocument.cs" t="Include" />
+                <e p="PsdLayer.cs" t="Include" />
+                <e p="PSDReader.cs" t="Include" />
+                <e p="PsdResolver.cs" t="Include" />
+                <e p="PsdUtility.cs" t="Include" />
+                <e p="RangeStream.cs" t="Include" />
+                <e p="Readers" t="Include">
+                  <e p="ColorModeDataSectionReader.cs" t="Include" />
+                  <e p="EmptyResourceReader.cs" t="Include" />
+                  <e p="FileHeaderSectionReader.cs" t="Include" />
+                  <e p="ImageDataSectionReader.cs" t="Include" />
+                  <e p="ImageResources" t="Include">
+                    <e p="Reader_GridAndGuides.cs" t="Include" />
+                    <e p="Reader_ResolutionInfo.cs" t="Include" />
+                    <e p="Reader_SlicesInfo.cs" t="Include" />
+                    <e p="Reader_VersionInfo.cs" t="Include" />
+                  </e>
+                  <e p="ImageResourcesSectionReader.cs" t="Include" />
+                  <e p="LayerAndMaskInformation" t="Include">
+                    <e p="ChannelsReader.cs" t="Include" />
+                    <e p="DocumentResourceReader.cs" t="Include" />
+                    <e p="EmbeddedLayerReader.cs" t="Include" />
+                    <e p="GlobalLayerMaskInfoReader.cs" t="Include" />
+                    <e p="LayerBlendingRangesReader.cs" t="Include" />
+                    <e p="LayerExtraRecordsReader.cs" t="Include" />
+                    <e p="LayerInfoReader.cs" t="Include" />
+                    <e p="LayerMaskReader.cs" t="Include" />
+                    <e p="LayerRecordsReader.cs" t="Include" />
+                    <e p="LayerResourceReader.cs" t="Include" />
+                    <e p="LinkedDocumentReader.cs" t="Include" />
+                    <e p="LinkedDocumnetFileHeaderReader.cs" t="Include" />
+                    <e p="LinkedLayerReader.cs" t="Include" />
+                  </e>
+                  <e p="LayerAndMaskInformationSectionReader.cs" t="Include" />
+                  <e p="LayerResources" t="Include">
+                    <e p="Reader_fxrp.cs" t="Include" />
+                    <e p="Reader_iOpa.cs" t="Include" />
+                    <e p="Reader_lfx2.cs" t="Include" />
+                    <e p="Reader_lnk2.cs" t="Include" />
+                    <e p="Reader_lnk3.cs" t="Include" />
+                    <e p="Reader_lnkD.cs" t="Include" />
+                    <e p="Reader_lnkE.cs" t="Include" />
+                    <e p="Reader_lnsr.cs" t="Include" />
+                    <e p="Reader_lrFX.cs" t="Include" />
+                    <e p="Reader_lsct.cs" t="Include" />
+                    <e p="Reader_luni.cs" t="Include" />
+                    <e p="Reader_lyid.cs" t="Include" />
+                    <e p="Reader_PlLd.cs" t="Include" />
+                    <e p="Reader_shmd.cs" t="Include" />
+                    <e p="Reader_SoLd.cs" t="Include" />
+                    <e p="Reader_SoLE.cs" t="Include" />
+                    <e p="Reader_TySh.cs" t="Include" />
+                  </e>
+                  <e p="ReaderCollector.cs" t="Include" />
+                  <e p="ResourceReaderBase.cs" t="Include" />
+                </e>
+                <e p="ResourceIDAttribute.cs" t="Include" />
+                <e p="SectionType.cs" t="Include" />
+                <e p="Structures" t="Include">
+                  <e p="BaseStructure.cs" t="Include" />
+                  <e p="StructureAlias.cs" t="Include" />
+                  <e p="StructureClass.cs" t="Include" />
+                  <e p="StructureEngineData.cs" t="Include" />
+                  <e p="StructureEnumerate.cs" t="Include" />
+                  <e p="StructureEnumerateReference.cs" t="Include" />
+                  <e p="StructureList.cs" t="Include" />
+                  <e p="StructureObjectArray.cs" t="Include" />
+                  <e p="StructureOffset.cs" t="Include" />
+                  <e p="StructureProperty.cs" t="Include" />
+                  <e p="StructureReader.cs" t="Include" />
+                  <e p="StructureReference.cs" t="Include" />
+                  <e p="StructureUnitFloat.cs" t="Include" />
+                  <e p="StructureUnknownOSType.cs" t="Include" />
+                </e>
+                <e p="UnitType.cs" t="Include" />
+                <e p="ValueReader.cs" t="Include" />
+              </e>
+              <e p="Reconstructor" t="Include">
+                <e p="IReconstructor.cs" t="Include" />
+                <e p="SpriteReconstructor.cs" t="Include" />
+                <e p="UnityGuiReconstructor.cs" t="Include" />
+              </e>
+              <e p="Utils" t="Include">
+                <e p="EditorCoroutineRunner.cs" t="Include" />
+                <e p="SpriteAlignUI.cs" t="Include" />
+              </e>
+            </e>
+          </e>
           <e p="Standard Assets" t="Include">
             <e p="Editor" t="Include">
               <e p="Water" t="Include">
@@ -1620,8 +1811,11 @@
           <e p="DeletePlayerPrefs.cs" t="Include" />
           <e p="GameEditor.cs" t="Include" />
           <e p="HouseEditor.cs" t="Include" />
+          <e p="MinToDrawer.cs" t="Include" />
           <e p="PartyEditor.cs" t="Include" />
           <e p="PortraitEditor.cs" t="Include" />
+          <e p="RandomizerEditor.cs" t="Include" />
+          <e p="RangeExDrawer.cs" t="Include" />
           <e p="ReadOnlyDrawer.cs" t="Include" />
           <e p="ScriptableObjectEditor.cs" t="Include" />
           <e p="TownEditor.cs" t="Include" />
@@ -1658,6 +1852,7 @@
               <e p="MathExtention.cs" t="Include" />
               <e p="Matrix.cs" t="Include" />
               <e p="ObjectPool.cs" t="Include" />
+              <e p="ObjectRandomizer.cs" t="Include" />
               <e p="ParticleCallback.cs" t="Include" />
               <e p="RandomExtention.cs" t="Include" />
               <e p="StringExtention.cs" t="Include" />
@@ -1685,7 +1880,11 @@
               <e p="pack.cs" t="Include" />
               <e p="Party.cs" t="Include" />
               <e p="Portrait.cs" t="Include" />
-              <e p="ReadOnlyAttribute.cs" t="Include" />
+              <e p="Properties" t="Include">
+                <e p="MinToAttribute.cs" t="Include" />
+                <e p="RangeExAttribute.cs" t="Include" />
+                <e p="ReadOnlyAttribute.cs" t="Include" />
+              </e>
               <e p="Sounds" t="Include">
                 <e p="Commander.cs" t="Include" />
                 <e p="Group.cs" t="Include" />
@@ -1803,6 +2002,8 @@
           <e p="Blur.shader" t="Include" />
           <e p="Default_OverlayNoZTest.shader" t="Include" />
           <e p="Fluid.shader" t="Include" />
+          <e p="SimpleMaskShader.shader" t="Include" />
+          <e p="SimpleMaskShader_GPUI.shader" t="Include" />
           <e p="SpriteGrayscale.shader" t="Include" />
           <e p="TerrainShader.shader" t="Include" />
           <e p="UnlitVertexColour_Alpha.shader" t="Include" />
