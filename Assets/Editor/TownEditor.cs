@@ -16,5 +16,10 @@ public class TownEditor : Editor
             ((Town) target).GenerateName(names[Random.Range(0, names.Length)]);
             EditorUtility.SetDirty(target);
         }
+        
+        if (GUILayout.Button("Generate Location")) {
+            ((Town) target).GenerateLocation();
+            EditorUtility.SetDirty(target);
+        }
     }
 }

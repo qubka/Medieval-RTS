@@ -1793,6 +1793,30 @@
               </e>
             </e>
           </e>
+          <e p="Unity-SerializableDictionary" t="Include">
+            <e p="Assets" t="Include">
+              <e p="Editor" t="Include">
+                <e p="DebugUtilsEditor.cs" t="Include" />
+              </e>
+              <e p="Scripts" t="Include">
+                <e p="DebugUtils.cs" t="Include" />
+              </e>
+              <e p="SerializableDictionary" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="SerializableDictionaryPropertyDrawer.cs" t="Include" />
+                </e>
+                <e p="Example" t="Include">
+                  <e p="SerializableDictionaryExample.cs" t="Include" />
+                  <e p="UserSerializableDictionaries.cs" t="Include" />
+                </e>
+                <e p="SerializableDictionary.cs" t="Include" />
+                <e p="SerializableHashSet.cs" t="Include" />
+              </e>
+            </e>
+            <e p="ProjectSettings" t="Include">
+              <e p="ProjectVersion.txt" t="Include" />
+            </e>
+          </e>
           <e p="UnityJSON" t="Include">
             <e p="Attributes.cs" t="Include" />
             <e p="Deserializer.cs" t="Include" />
@@ -1846,9 +1870,11 @@
               <e p="AnimatedUVs.cs" t="Include" />
               <e p="BlockRotation.cs" t="Include" />
               <e p="Circle.cs" t="Include" />
+              <e p="DateExtention.cs" t="Include" />
               <e p="Direction.cs" t="Include" />
               <e p="ImageExtention.cs" t="Include" />
               <e p="Line.cs" t="Include" />
+              <e p="ListExtention.cs" t="Include" />
               <e p="MathExtention.cs" t="Include" />
               <e p="Matrix.cs" t="Include" />
               <e p="ObjectPool.cs" t="Include" />
@@ -1861,15 +1887,9 @@
             </e>
             <e p="Data" t="Include">
               <e p="Animations.cs" t="Include" />
-              <e p="Banner.cs" t="Include" />
-              <e p="Character.cs" t="Include" />
-              <e p="Faction.cs" t="Include" />
-              <e p="Game.cs" t="Include" />
-              <e p="Gender.cs" t="Include" />
+              <e p="Building.cs" t="Include" />
               <e p="Global.cs" t="Include" />
-              <e p="House.cs" t="Include" />
-              <e p="Location.cs" t="Include" />
-              <e p="Model.cs" t="Include" />
+              <e p="LightPreset.cs" t="Include" />
               <e p="MoraleAttribute.cs" t="Include" />
               <e p="Names" t="Include">
                 <e p="CharacterNames.cs" t="Include" />
@@ -1877,13 +1897,28 @@
                 <e p="HouseNames.cs" t="Include" />
                 <e p="TownNames.cs" t="Include" />
               </e>
-              <e p="pack.cs" t="Include" />
-              <e p="Party.cs" t="Include" />
+              <e p="Other" t="Include">
+                <e p="Banner.cs" t="Include" />
+                <e p="Gender.cs" t="Include" />
+                <e p="Model.cs" t="Include" />
+                <e p="pack.cs" t="Include" />
+                <e p="Team.cs" t="Include" />
+                <e p="Troop.cs" t="Include" />
+              </e>
               <e p="Portrait.cs" t="Include" />
               <e p="Properties" t="Include">
                 <e p="MinToAttribute.cs" t="Include" />
                 <e p="RangeExAttribute.cs" t="Include" />
                 <e p="ReadOnlyAttribute.cs" t="Include" />
+              </e>
+              <e p="Resource.cs" t="Include" />
+              <e p="Serializable" t="Include">
+                <e p="Character.cs" t="Include" />
+                <e p="Faction.cs" t="Include" />
+                <e p="Game.cs" t="Include" />
+                <e p="House.cs" t="Include" />
+                <e p="Location.cs" t="Include" />
+                <e p="Party.cs" t="Include" />
               </e>
               <e p="Sounds" t="Include">
                 <e p="Commander.cs" t="Include" />
@@ -1891,13 +1926,12 @@
                 <e p="Sounds.cs" t="Include" />
               </e>
               <e p="Squadron.cs" t="Include" />
-              <e p="Team.cs" t="Include" />
-              <e p="Troop.cs" t="Include" />
               <e p="Weapons" t="Include">
                 <e p="MeleeWeapon.cs" t="Include" />
                 <e p="RangeWeapon.cs" t="Include" />
               </e>
             </e>
+            <e p="LightManager.cs" t="Include" />
             <e p="Manager.cs" t="Include" />
             <e p="Objects" t="Include">
               <e p="Interface" t="Include">
@@ -1919,6 +1953,7 @@
               <e p="TownTable.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
             </e>
+            <e p="TimeManager.cs" t="Include" />
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
@@ -1981,6 +2016,7 @@
             </e>
             <e p="Effects" t="Include">
               <e p="FadeEffect.cs" t="Include" />
+              <e p="RotateEffect.cs" t="Include" />
               <e p="Tween.cs" t="Include" />
             </e>
             <e p="Settings.cs" t="Include" />

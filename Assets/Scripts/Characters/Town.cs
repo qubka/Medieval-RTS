@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Town : MonoBehaviour
 {
-    [SerializeField] private Faction faction;
-    [SerializeField] private Character owner;
-    
+    public Location data;
+
     [Header("Children References")]
     [SerializeField] private GameObject townBar;
     private Text barText;
@@ -31,7 +32,7 @@ public class Town : MonoBehaviour
     private RectTransform holderCanvas;
 
     #endregion
-    
+
     private void Awake()
     {
         townBar = Instantiate(townBar);
@@ -46,15 +47,12 @@ public class Town : MonoBehaviour
         camera = Manager.mainCamera;
         camTransform = Manager.camTransform;
         holderCanvas = Manager.holderCanvas;
-        
-        //title.text = name;
-        //shadow.color = faction.color;
-        //TownTable.Instance.Add(gameObject, this);
+        TownTable.Instance.Add(gameObject, this);
         
         // Parent a bar to the screen
         barText = barTransform.GetComponentInChildren<Text>();
-        //barText.color = owner.faction.color;
-        barText.text = name; // TODO: Translation
+        barText.color = data.ruler.faction.color;
+        barText.text = data.name; // TODO: Translation
         barRect = barTransform.GetComponent<Image>().GetPixelAdjustedRect();
         barTransform.SetParent(holderCanvas, false);
         barTransform.localScale = barScale;
@@ -119,6 +117,15 @@ public class Town : MonoBehaviour
         
         name = prefix.FirstLetterCapital() + anyfix;
     }
+
+    public void GenerateLocation()
+    {
+        var loc = ScriptableObject.CreateInstance<Location>();
+        loc.id =  Resources.LoadAll<Location>("Locations/").Length;
+        loc.label = name;
+        AssetDatabase.CreateAsset(loc, "Assets/Resources/Locations/" + name + ".asset");
+        AssetDatabase.SaveAssets();
+    }
 #endif
 
     private void OnDrawGizmos()
@@ -126,6 +133,6 @@ public class Town : MonoBehaviour
         if (Application.isPlaying)
             return;
         
-        UnityEditor.Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") {fontSize = 30});
+        Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") { fontSize = 30 });
     }
 }

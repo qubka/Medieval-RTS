@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class TimeBar : MonoBehaviour
 {
+    public bool IsPaused { get; set; }
+    [SerializeField] private GameObject status;
     [SerializeField] private Material play;
     [SerializeField] private Material stop;
     [SerializeField] private Material fast;
@@ -44,5 +46,18 @@ public class TimeBar : MonoBehaviour
         stop.SetFloat(id, isStop ? 1f : 0f);
         fast.SetFloat(id, isFast ? 1f : 0f);
         rapid.SetFloat(id, isRapid ? 1f : 0f);
+        IsPaused = isStop;
+        status.SetActive(isStop);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if (IsPaused) {
+                Normal();
+            } else {
+                Stop();
+            }
+        }
     }
 }

@@ -53,11 +53,6 @@ public class ArmyManager : SingletonObject<ArmyManager>
                 OnHover();
             }
         }
-        
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            paused = !paused;
-            Time.timeScale = paused ? 0f : 1f;
-        }
     }
 
     private void OnHover()

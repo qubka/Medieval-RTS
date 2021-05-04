@@ -3,6 +3,7 @@ using UnityEngine;
 
 public static class MathExtention
 {
+    public const double TOLERANCE = 0.001;
     public static readonly float A90 = math.cos(math.radians(90f));
     public static readonly float A80 = math.cos(math.radians(80f));
     public static readonly float A70 = math.cos(math.radians(70f));
@@ -106,5 +107,15 @@ public static class MathExtention
     {
         if (value < 0f) return 0f;
         return value > 1f ? 1f : value;
+    }
+    
+    /**
+	 * Checks if a given resource amount is 0 with a tolerance (Balance.TOLERANCE)
+	 * @param res Resource to be checked
+	 * @return true if zero, false if not
+	 */
+    public static bool isZero(this float value)
+    {
+        return -TOLERANCE <= value && value <= TOLERANCE;
     }
 }

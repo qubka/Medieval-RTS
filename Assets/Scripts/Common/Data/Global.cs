@@ -8,7 +8,7 @@ public class Global : ScriptableObject
     [Header("Prefabs")] 
     public GameObject armyPrefab;
     public GameObject squadPrefab;
-    
+
     [Header("Layers")]
     public LayerMask ground = -1;
     public LayerMask army = -1;
