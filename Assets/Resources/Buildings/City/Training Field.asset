@@ -13,6 +13,18 @@ MonoBehaviour:
   m_Name: Training Field
   m_EditorClassIdentifier: 
   label: Train Field
+  description: A field for military drills that increase the experience of all recruited
+    units.
   icon: {fileID: 21300000, guid: 85f8e8d05e60d8546a5c0d59b1693032, type: 3}
   dependencies: []
+  cost:
+  - 5000
+  - 10000
+  - 20000
   type: 0
+  effects:
+  - effect: 11
+    bonus:
+    - 1
+    - 2
+    - 3

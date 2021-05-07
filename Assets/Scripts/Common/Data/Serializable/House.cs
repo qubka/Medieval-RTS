@@ -30,6 +30,8 @@ public class House : SerializableObject
     }
 #endif
     
+    #region Serialization
+    
     public override void OnSerialization()
     {
     }
@@ -39,4 +41,6 @@ public class House : SerializableObject
         var house = Manager.defaultHouses.Find(h => h.id == id);
         banner = house.banner;
     }
+    
+    #endregion
 }

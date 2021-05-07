@@ -69,9 +69,9 @@ public class Animations : ScriptableObject
     {
         switch (side) {
             case AnimSide.RightUp:
-                return isCounter ? hasShield ? counterShield : counterRight : hasShield && Random.Range(0, 2) == 0 ?  blockShieldUp : blockRightUp;
+                return isCounter ? hasShield ? counterShield : counterRight : hasShield && RandomExtention.NextBool ?  blockShieldUp : blockRightUp;
             case AnimSide.RightDown:
-                return isCounter ? counterRight : hasShield && Random.Range(0, 2) == 0 ? blockShieldDown : blockRightDown;
+                return isCounter ? counterRight : hasShield && RandomExtention.NextBool ? blockShieldDown : blockRightDown;
             case AnimSide.LeftUp:
                 return isCounter ? counterLeft : blockLeftUp;
             case AnimSide.LeftDown:

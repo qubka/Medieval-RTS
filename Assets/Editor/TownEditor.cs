@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 [CustomEditor(typeof(Town))]
 public class TownEditor : Editor
 {
+    private InfrastructureType infrastructureType;
+    
     public override void OnInspectorGUI() 
     {
         DrawDefaultInspector();
@@ -16,9 +18,11 @@ public class TownEditor : Editor
             ((Town) target).GenerateName(names[Random.Range(0, names.Length)]);
             EditorUtility.SetDirty(target);
         }
+
+        infrastructureType = (InfrastructureType) EditorGUILayout.EnumPopup(infrastructureType);
         
         if (GUILayout.Button("Generate Location")) {
-            ((Town) target).GenerateLocation();
+            ((Town) target).GenerateLocation(infrastructureType);
             EditorUtility.SetDirty(target);
         }
     }

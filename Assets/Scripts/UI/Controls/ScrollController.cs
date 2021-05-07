@@ -16,13 +16,13 @@ public class ScrollController : MonoBehaviour
 
     public void Increase()
     {
-        if (math.abs(scrollbar.value - 1f) < 0.05) return;
+        if (math.abs(scrollbar.value - 1f) < 0.05f) return;
         scrollbar.value += step;
     }
     
     public void Decrease()
     {
-        if (math.abs(scrollbar.value) < 0.05) return;
+        if (math.abs(scrollbar.value) < 0.05f) return;
         scrollbar.value -= step;
     }
 }

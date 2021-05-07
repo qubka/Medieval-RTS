@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class ArmyManager : SingletonObject<ArmyManager>
@@ -17,6 +18,7 @@ public class ArmyManager : SingletonObject<ArmyManager>
     private RaycastHit groundHit;
     private bool groundCast;
     private bool paused;
+    private bool moveToSettlement;
     
     private Collider[] colliders = new Collider[1];
 
@@ -47,11 +49,23 @@ public class ArmyManager : SingletonObject<ArmyManager>
 
         if (groundCast && !border.IsOutsideBorder(groundHit.point)) {
             if (Input.GetMouseButtonDown(1)) {
-                army.agent.SetDestination(groundHit.point);
+                if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building)) {
+                    army.agent.SetDestination(TownTable.Instance[hit.transform.gameObject].entrance.position);
+                    moveToSettlement = true;
+                } else {
+                    army.agent.SetDestination(groundHit.point);
+                    moveToSettlement = false;
+                }
                 camController.SetTarget(army.worldTransform);
             } else {
                 OnHover();
             }
+        }
+
+        //TODO: REWORK
+        if (moveToSettlement && army.agent.IsArrived()) {
+            Debug.Log("Arrived!");
+            moveToSettlement = false;
         }
     }
 

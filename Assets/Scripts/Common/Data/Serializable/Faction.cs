@@ -16,14 +16,12 @@ public class Faction : SerializableObject
     public Color32 color;
     [JSONNode(NodeOptions.DontSerialize)] 
     public Character leader;
-
+    
     [Header("Relationship")]
     [JSONNode(NodeOptions.DontSerialize)]
     public List<Faction> allies;
     [JSONNode(NodeOptions.DontSerialize)]
     public List<Faction> enemies;
-    public float defaultDisposition;
-    private Dictionary<Faction, float> cache = new Dictionary<Faction, float>();
 
     [Header("Initial")]
     [JSONNode(NodeOptions.DontSerialize)] 
@@ -33,36 +31,12 @@ public class Faction : SerializableObject
     [JSONNode(NodeOptions.DontSerialize)] 
     public ExternalBehaviorTree behavior;
     
+    #region Serialization
+    
     /* For serialization */
     [JSONNode] private int leaderId;
     [JSONNode] private int[] alliedFactions;
     [JSONNode] private int[] enemyFactions;
-    
-    public float RelationshipWith(Faction other)
-    {
-        if (cache.ContainsKey(other)) {
-            return cache[other];
-        }
-
-        var output = defaultDisposition;
-        
-        foreach (var faction in allies) {
-            if (faction == other) {
-                output = 1f;
-                break;
-            }
-        }
-        
-        foreach (var faction in enemies) {
-            if (faction == other) {
-                output = -1f;
-                break;
-            }
-        }
-        
-        cache.Add(other, output);
-        return output;
-    }
 
     public override void OnSerialization()
     {
@@ -102,4 +76,6 @@ public class Faction : SerializableObject
         models = faction.models;
         behavior = faction.behavior;
     }
+    
+    #endregion
 }

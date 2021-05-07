@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3023441970896297302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8926532121719329339}
+  - component: {fileID: 9038141753615601449}
+  - component: {fileID: 7721366558454173019}
+  - component: {fileID: 7537055382733953139}
+  m_Layer: 14
+  m_Name: Castle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &8926532121719329339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023441970896297302}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!33 &9038141753615601449
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023441970896297302}
+  m_Mesh: {fileID: 8104117749616084085, guid: 9159f7b70b25a394b8c434b9c39355d4, type: 3}
+--- !u!23 &7721366558454173019
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023441970896297302}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: ba9378872a8a1df4e8f6eda900f2d759, type: 2}
+  - {fileID: 2100000, guid: db98b83a38f106f4795936df675b2c6e, type: 2}
+  - {fileID: 2100000, guid: 656e9f2f085b11e46bcf3a99094eafcf, type: 2}
+  - {fileID: 2100000, guid: 44d3fa98f38c9cc4880752a603e01d60, type: 2}
+  - {fileID: 2100000, guid: 3dd2f99fcbe16d04c8dfd17a149271f3, type: 2}
+  - {fileID: 2100000, guid: bd242a24063d7e34295fe8038d846ad3, type: 2}
+  - {fileID: 2100000, guid: 986d2d1f5544748429bf88d34e24197b, type: 2}
+  - {fileID: 2100000, guid: a0a3fa0044652d440bcc0ebfd5cb93ef, type: 2}
+  - {fileID: 2100000, guid: f2e8e0bd7a96c6f41906085ab574cf65, type: 2}
+  - {fileID: 2100000, guid: 3d5e82f818c13654ba3556d01fbe1bf2, type: 2}
+  - {fileID: 2100000, guid: c20b148e5df6d6f4a8cf0eb474ec3ef3, type: 2}
+  - {fileID: 2100000, guid: b7be31891892ce6469d58c7d089bceea, type: 2}
+  - {fileID: 2100000, guid: 9e668039e104d5d43865c757b3d7c17a, type: 2}
+  - {fileID: 2100000, guid: e21f38e6459f32242a091ffb6eb8285c, type: 2}
+  - {fileID: 2100000, guid: 89524ff7c127a4a42913f1c44d0f82d8, type: 2}
+  - {fileID: 2100000, guid: c8c917ea2259f2745b615fe01c39307e, type: 2}
+  - {fileID: 2100000, guid: 5767a066f75ac09439f549c34fa92e14, type: 2}
+  - {fileID: 2100000, guid: 84c073db522f9b844a4a9de34d831d62, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7537055382733953139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023441970896297302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f13f42112a552354988a63573e49f5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabPrototype: {fileID: 11400000, guid: 92e3a7c8e0ee7604e9f2e18ff7a59a2e, type: 2}
+  gpuInstancerID: 0
+  state: 0

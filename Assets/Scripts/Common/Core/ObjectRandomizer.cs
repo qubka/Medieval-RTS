@@ -32,8 +32,8 @@ public class ObjectRandomizer : MonoBehaviour
         var count = 0;  // how many times have we tried to place a box
  
         while (count < maxTries && placedBoxes.Count < transforms.Length) {
-            var xPos = Random.Range(0, 2) == 0 ? Random.Range(positionRange.x, positionRange.y) : Random.Range(-positionRange.y, -positionRange.x);
-            var zPos = Random.Range(0, 2) == 0 ? Random.Range(positionRange.x, positionRange.y) : Random.Range(-positionRange.y, -positionRange.x);
+            var xPos = RandomExtention.NextBool ? Random.Range(positionRange.x, positionRange.y) : Random.Range(-positionRange.y, -positionRange.x);
+            var zPos = RandomExtention.NextBool ? Random.Range(positionRange.x, positionRange.y) : Random.Range(-positionRange.y, -positionRange.x);
  
             var isGood = true;
  

@@ -24,7 +24,7 @@ public class Character : SerializableObject
     public bool isPlayer;
     //public bool isCompanion;
     [JSONNode(NodeOptions.DontSerialize)] 
-    public List<Location> locationsOwned;
+    public List<Settlement> settlements;
 
     [Header("Data")] 
     [JSONNode(NodeOptions.DontSerialize)] 
@@ -36,7 +36,7 @@ public class Character : SerializableObject
     /* For serialization */
     [JSONNode] private int factionId;
     [JSONNode] private int houseId;
-    [JSONNode] private int[] locationsIds;
+    [JSONNode] private int[] settlementsIds;
 
 #if UNITY_EDITOR    
     public void GenerateName(CharacterNames names)
@@ -58,9 +58,9 @@ public class Character : SerializableObject
     {
         factionId = faction ? faction.id : -1;
         houseId = house ? house.id : -1;
-        locationsIds = new int[locationsOwned.Count];
-        for (var i = 0; i < locationsOwned.Count; i++) {
-            locationsIds[i] = locationsOwned[i].id;
+        settlementsIds = new int[settlements.Count];
+        for (var i = 0; i < settlements.Count; i++) {
+            settlementsIds[i] = settlements[i].id;
         }
     }
 
@@ -73,12 +73,12 @@ public class Character : SerializableObject
         if (houseId != -1) {
             house = game.houses.Find(h => h.id == houseId);
         }
-        locationsOwned.Capacity = locationsIds.Length;
-        foreach (var locationId in locationsIds) {
-            locationsOwned.Add(game.locations.Find(l => l.id == locationId));
+        settlements.Capacity = settlementsIds.Length;
+        foreach (var settlementId in settlementsIds) {
+            settlements.Add(game.settlements.Find(s => s.id == settlementId));
         }
-        if (locationsIds.Length > 0) {
-            locationsIds = new int[0];
+        if (settlementsIds.Length > 0) {
+            settlementsIds = new int[0];
         }
     }
 }   

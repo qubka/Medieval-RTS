@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84565fc53cf94ec58e8ca6903d891b9a, type: 3}
+  m_Name: Beachscar
+  m_EditorClassIdentifier: 
+  id: 0
+  label: Beachscar
+  isCapital: 0
+  isMarker: 0
+  prosperity: 982
+  population: 2503
+  loyalty: 83
+  food: 72
+  ruler: {fileID: 11400000, guid: f2026a488e08c0a4fb73cd910199af41, type: 2}
+  type: 0
+  neighbours:
+  - {fileID: 11400000, guid: 1e7c025dceabc6e4190f1494e827abdf, type: 2}
+  - {fileID: 11400000, guid: 897c26657b32f6e40ac360fda5299425, type: 2}
+  - {fileID: 11400000, guid: a7f3758e4d817f845944a73e11dbe76e, type: 2}
+  - {fileID: 11400000, guid: dbdba53c8d75599499c721ae923b95b8, type: 2}
+  resources:
+  - {fileID: 11400000, guid: 5839609a6e3f2e74799c10d45c89cc58, type: 2}
+  buildings:
+    m_keys:
+    - {fileID: 11400000, guid: eba9924412fabaa47b001518797d8c51, type: 2}
+    - {fileID: 11400000, guid: c02355c7c0c6bfd439ac4790967e0fc7, type: 2}
+    m_values: 0000000001000000

@@ -9,7 +9,7 @@ public class HideButton : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private Sprite activate;
     [SerializeField] private Sprite disabled;
-    [SerializeField] private List<Rect> rectangles;
+    [SerializeField] private Rect[] rectangles;
     [SerializeField] private bool enable;
     
     [Serializable]

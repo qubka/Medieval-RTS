@@ -1659,6 +1659,24 @@
               </e>
             </e>
           </e>
+          <e p="RainMaker" t="Include">
+            <e p="Demo" t="Include">
+              <e p="DemoScript.cs" t="Include" />
+              <e p="DemoScript2D.cs" t="Include" />
+              <e p="DemoScriptStartRainOnSpaceBar.cs" t="Include" />
+            </e>
+            <e p="Editor" t="Include">
+              <e p="RainMakerEditor.cs" t="Include" />
+            </e>
+            <e p="Prefab" t="Include">
+              <e p="BaseRainScript.cs" t="Include" />
+              <e p="RainCollision.cs" t="Include" />
+              <e p="RainScript.cs" t="Include" />
+              <e p="RainScript2D.cs" t="Include" />
+              <e p="RainShader.shader" t="Include" />
+            </e>
+            <e p="Readme.txt" t="Include" />
+          </e>
           <e p="Standard Assets" t="Include">
             <e p="Editor" t="Include">
               <e p="Water" t="Include">
@@ -1786,6 +1804,26 @@
               <e p="WaypointProgressTracker.cs" t="Include" />
             </e>
           </e>
+          <e p="Stars-skybox-shader" t="Include">
+            <e p="Assets" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="BloomParametersDrawer.cs" t="Include" />
+                  <e p="MinMaxDrawer.cs" t="Include" />
+                  <e p="NightSkyEditor.cs" t="Include" />
+                  <e p="NoiseCutParametersDrawer.cs" t="Include" />
+                  <e p="NoiseParametersDrawer.cs" t="Include" />
+                </e>
+                <e p="Includes" t="Include">
+                  <e p="Utils.cginc" t="Include" />
+                </e>
+                <e p="NightSky.shader" t="Include" />
+              </e>
+            </e>
+            <e p="ProjectSettings" t="Include">
+              <e p="ProjectVersion.txt" t="Include" />
+            </e>
+          </e>
           <e p="Terrain Tools" t="Include">
             <e p="0.1.0-preview" t="Include">
               <e p="Terrain Assets" t="Include">
@@ -1865,23 +1903,27 @@
             <e p="Unit.cs" t="Include" />
           </e>
           <e p="Common" t="Include">
+            <e p="CampaignTime.cs" t="Include" />
             <e p="Core" t="Include">
               <e p="AnimatedCrowd.cs" t="Include" />
               <e p="AnimatedUVs.cs" t="Include" />
               <e p="BlockRotation.cs" t="Include" />
               <e p="Circle.cs" t="Include" />
-              <e p="DateExtention.cs" t="Include" />
               <e p="Direction.cs" t="Include" />
-              <e p="ImageExtention.cs" t="Include" />
+              <e p="Extentions" t="Include">
+                <e p="AgentExtention.cs" t="Include" />
+                <e p="DateExtention.cs" t="Include" />
+                <e p="ImageExtention.cs" t="Include" />
+                <e p="ListExtention.cs" t="Include" />
+                <e p="MathExtention.cs" t="Include" />
+                <e p="RandomExtention.cs" t="Include" />
+                <e p="StringExtention.cs" t="Include" />
+              </e>
               <e p="Line.cs" t="Include" />
-              <e p="ListExtention.cs" t="Include" />
-              <e p="MathExtention.cs" t="Include" />
               <e p="Matrix.cs" t="Include" />
               <e p="ObjectPool.cs" t="Include" />
               <e p="ObjectRandomizer.cs" t="Include" />
               <e p="ParticleCallback.cs" t="Include" />
-              <e p="RandomExtention.cs" t="Include" />
-              <e p="StringExtention.cs" t="Include" />
               <e p="Target.cs" t="Include" />
               <e p="Vector.cs" t="Include" />
             </e>
@@ -1917,8 +1959,8 @@
                 <e p="Faction.cs" t="Include" />
                 <e p="Game.cs" t="Include" />
                 <e p="House.cs" t="Include" />
-                <e p="Location.cs" t="Include" />
                 <e p="Party.cs" t="Include" />
+                <e p="Settlement.cs" t="Include" />
               </e>
               <e p="Sounds" t="Include">
                 <e p="Commander.cs" t="Include" />
@@ -1931,6 +1973,8 @@
                 <e p="RangeWeapon.cs" t="Include" />
               </e>
             </e>
+            <e p="EconomyManager.cs" t="Include" />
+            <e p="FactionManager.cs" t="Include" />
             <e p="LightManager.cs" t="Include" />
             <e p="Manager.cs" t="Include" />
             <e p="Objects" t="Include">
@@ -1944,7 +1988,6 @@
             </e>
             <e p="SaveLoadManager.cs" t="Include" />
             <e p="SoundManager.cs" t="Include" />
-            <e p="Spawner.cs" t="Include" />
             <e p="Tables" t="Include">
               <e p="ArmyTable.cs" t="Include" />
               <e p="ObstacleTable.cs" t="Include" />
@@ -1953,7 +1996,6 @@
               <e p="TownTable.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
             </e>
-            <e p="TimeManager.cs" t="Include" />
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
@@ -1988,7 +2030,6 @@
             <e p="Controls" t="Include">
               <e p="BinarySliderController.cs" t="Include" />
               <e p="CombatSliderController.cs" t="Include" />
-              <e p="ControlBar.cs" t="Include" />
               <e p="EventTriggerInvoker.cs" t="Include" />
               <e p="ExitButtonController.cs" t="Include" />
               <e p="HideButton.cs" t="Include" />
@@ -2003,10 +2044,12 @@
               <e p="SquadBar.cs" t="Include" />
               <e p="TimeBar.cs" t="Include" />
               <e p="ToggleButton.cs" t="Include" />
+              <e p="TownTab.cs" t="Include" />
               <e p="Transform" t="Include">
                 <e p="LayoutExpander.cs" t="Include" />
                 <e p="TransformInRect.cs" t="Include" />
               </e>
+              <e p="UnitBar.cs" t="Include" />
               <e p="UnitLayout.cs" t="Include" />
             </e>
             <e p="Domain" t="Include">
@@ -2040,6 +2083,7 @@
           <e p="Fluid.shader" t="Include" />
           <e p="SimpleMaskShader.shader" t="Include" />
           <e p="SimpleMaskShader_GPUI.shader" t="Include" />
+          <e p="SkyboxBlended.shader" t="Include" />
           <e p="SpriteGrayscale.shader" t="Include" />
           <e p="TerrainShader.shader" t="Include" />
           <e p="UnlitVertexColour_Alpha.shader" t="Include" />

@@ -9,4 +9,10 @@ public class LightPreset : ScriptableObject
     public Gradient ambientColor;
     public Gradient directionColor;
     public Gradient fogColor;
+    public Gradient nightBlend;
+    
+    [Header("SkyBox")]
+    public Material sunny;
+    public Material night;
+    public Material rainy;
 }

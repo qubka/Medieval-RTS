@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using Unity.Collections;
@@ -522,10 +523,10 @@ public class Squad : MonoBehaviour, ISortable
 
             if (!isPlaying) {
                 if (isFarAway) {
-                    fightAudio.clip = (Random.Range(0, 2) == 0 ? data.groupSounds.distantFightSounds : data.groupSounds.battleCrySounds).GetRandom();
+                    fightAudio.clip = (RandomExtention.NextBool ? data.groupSounds.distantFightSounds : data.groupSounds.battleCrySounds).GetRandom();
                     isFarSound = true;
                 } else {
-                    fightAudio.clip = (Random.Range(0, 2) == 0 ? data.groupSounds.closeFightSounds : data.groupSounds.battleCrySounds).GetRandom();
+                    fightAudio.clip = (RandomExtention.NextBool ? data.groupSounds.closeFightSounds : data.groupSounds.battleCrySounds).GetRandom();
                     isFarSound = false;
                 }
                 fightAudio.pitch = Random.Range(0.995f, 1.005f);
@@ -693,7 +694,7 @@ public class Squad : MonoBehaviour, ISortable
 
         if (team == Team.Self) {
             if (select) {
-                PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.formTheOrder : data.commanderSounds.longLiveTheKing);
+                PlaySound(RandomExtention.NextBool ? data.commanderSounds.formTheOrder : data.commanderSounds.longLiveTheKing);
             
                 if (!selectAudio.isPlaying) {
                     selectAudio.clip = data.groupSounds.selectSounds.GetRandom();
@@ -793,7 +794,7 @@ public class Squad : MonoBehaviour, ISortable
             var unit = unitTable[colliders[i].gameObject];
             var squad = unit.squad;
             if (squad.team != team) {
-                if (squad.data.chargeProtection && unit.IsFacing(inflictor, Side.Forward, MathExtention.A60) && Random.Range(0, 2) == 0) {
+                if (squad.data.chargeProtection && unit.IsFacing(inflictor, Side.Forward, MathExtention.A60) && RandomExtention.NextBool) {
                     inflictor.OnDamage(unit, type, damage);
                     continue;
                 }
@@ -1250,7 +1251,7 @@ public class Squad : MonoBehaviour, ISortable
                 var direction = DirectionUtils.AngleToDirection(Vector.SignedAngle(worldTransform.forward, (enemy.centroid - centroid).Normalized(), Vector3.up));
                 switch (direction) {
                     case Direction.Forward:
-                        PlaySound(Random.Range(0, 2) == 0 ? data.commanderSounds.prepare : data.commanderSounds.braceYourselves);
+                        PlaySound(RandomExtention.NextBool ? data.commanderSounds.prepare : data.commanderSounds.braceYourselves);
                         break;
                     case Direction.ForwardLeft:
                     case Direction.Left:
@@ -1485,9 +1486,9 @@ public class Squad : MonoBehaviour, ISortable
                     break;
             }
         } else if (t.length.HasValue) {
-            PlaySound(Random.Range(0, 2) == 0 ? sounds.regroup : sounds.takeYourPosition);
+            PlaySound(RandomExtention.NextBool ? sounds.regroup : sounds.takeYourPosition);
         } else if (t.orientation.HasValue) {
-            PlaySound(Random.Range(0, 2) == 0 ? sounds.steady : sounds.standInLine);
+            PlaySound(RandomExtention.NextBool ? sounds.steady : sounds.standInLine);
         } else {
             switch (dir) {
                 case Direction.Forward:

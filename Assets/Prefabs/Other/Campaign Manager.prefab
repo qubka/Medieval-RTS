@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3611982833316405343}
   - component: {fileID: 3611982833306484457}
+  - component: {fileID: 2024981626}
   - component: {fileID: 3611982833316667067}
   - component: {fileID: 3611982833316667045}
   - component: {fileID: 3611982833316667044}
@@ -55,6 +56,21 @@ MonoBehaviour:
   unitCard: {fileID: 0}
   main: {fileID: 0}
   minimap: {fileID: 0}
+--- !u!114 &2024981626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3611982833316667047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef07066c2daf4aef8ac62716750afa69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeOfDay: 12.77
+  preset: {fileID: 11400000, guid: 98628e3ddfa4891479a7f3af5aaf7372, type: 2}
+  directionalLight: {fileID: 0}
 --- !u!114 &3611982833316667067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLabel: {fileID: 0}
-  clockSpin: {fileID: 0}
-  clockColor: {fileID: 0}
-  startingYear: 1120
+  timeBar: {fileID: 0}
+  startingYear: 1080
+  startingMonth: 1
+  startingDay: 1

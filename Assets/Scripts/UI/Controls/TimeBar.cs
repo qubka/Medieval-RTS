@@ -53,7 +53,7 @@ public class TimeBar : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (IsPaused) {
+            if (IsPaused || Time.timeScale > 1f) {
                 Normal();
             } else {
                 Stop();

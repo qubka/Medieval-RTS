@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: Workshops
   m_EditorClassIdentifier: 
   label: Workshops
+  description: The hard-working, beating heart of any town and nearby villages. Increases
+    production output.
   icon: {fileID: 21300000, guid: b9dc26d46da3cfa43a930dbd82a17179, type: 3}
+  level: 0
   dependencies: []
+  cost:
+  - 5000
+  - 10000
+  - 20000
   type: 0
+  effects:
+  - effect: 10
+    bonus:
+    - 20
+    - 40
+    - 60

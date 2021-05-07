@@ -6,20 +6,21 @@ using UnityJSON;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class Game : ScriptableObject, IDeserializationListener
+public class Game : SingletonObject<Game>, IDeserializationListener
 {
     public List<Faction> factions = new List<Faction>();
     public List<Character> characters = new List<Character>();
     public List<Party> parties = new List<Party>();
-    public List<Location> locations = new List<Location>();
+    public List<Settlement> settlements = new List<Settlement>();
     public List<House> houses = new List<House>();
     
-    private void OnEnable()
+    private void Start()
     {
-        name = DateTime.Now.ToString("MM_dd_yyyy_h_mm_tt");
+        NewGame();
+        OnDeserializationSucceeded(null);
     }
 
-    public void Load()
+    public void NewGame()
     {
         var f = Manager.defaultFactions;
         factions.Capacity = f.Count;
@@ -39,10 +40,10 @@ public class Game : ScriptableObject, IDeserializationListener
             parties.Add(Instantiate(party));
         }
         
-        var l = Manager.defaultLocations;
-        locations.Capacity = l.Count;
-        foreach (var location in l) {
-            locations.Add(Instantiate(location));
+        var s = Manager.defaultSettlements;
+        settlements.Capacity = s.Count;
+        foreach (var settlement in s) {
+            settlements.Add(Instantiate(settlement));
         }
         
         var h = Manager.defaultHouses;
@@ -66,8 +67,8 @@ public class Game : ScriptableObject, IDeserializationListener
         foreach (var character in characters) {
             if (character.faction) character.faction = factions.Find(f => f.id == character.faction.id);
             //if (character.party) character.party = parties.Find(p => p.leader.id == character.party.leader);
-            for (var i = 0; i < character.locationsOwned.Count; i++) {
-                character.locationsOwned[i] = locations.Find(f => f.id == character.locationsOwned[i].id);
+            for (var i = 0; i < character.settlements.Count; i++) {
+                character.settlements[i] = settlements.Find(s => s.id == character.settlements[i].id);
             }
         }
 
@@ -75,8 +76,8 @@ public class Game : ScriptableObject, IDeserializationListener
             if (party.leader) party.leader = characters.Find(c => c.id == party.leader.id);
         }
 
-        foreach (var location in locations) {
-            if (location.ruler) location.ruler = characters.Find(c => c.id == location.ruler.id);
+        foreach (var settlement in settlements) {
+            if (settlement.ruler) settlement.ruler = characters.Find(c => c.id == settlement.ruler.id);
         }
     }
 
@@ -90,8 +91,8 @@ public class Game : ScriptableObject, IDeserializationListener
             Instantiate(Manager.global.armyPrefab, party.position, party.rotation).GetComponent<Army>().data = party;
         }
 
-        foreach (var location in locations) {
-            TownTable.Instance.Values.First(t => t.data.id == location.id).data = location;
+        foreach (var settlement in settlements) {
+            TownTable.Instance.Values.First(t => t.data.id == settlement.id).data = settlement;
         }
     }
 

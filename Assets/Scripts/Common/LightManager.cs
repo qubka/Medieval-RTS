@@ -9,7 +9,7 @@ public class LightManager : SingletonObject<LightManager>
 
    private void Update()
    {
-      if (Application.isEditor) {
+      if (!Application.isPlaying) {
          UpdateLighting(timeOfDay / 24f);
       }
    }

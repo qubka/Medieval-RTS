@@ -13,6 +13,18 @@ MonoBehaviour:
   m_Name: Walls
   m_EditorClassIdentifier: 
   label: Walls
+  description: Better fortifications and higher walls around town, also increases
+    the max garrison limit since it provides more space for the resident troops.
   icon: {fileID: 21300000, guid: c5ec082f9b26c6c46a084187a9bfd2af, type: 3}
   dependencies: []
+  cost:
+  - 5000
+  - 10000
+  - 20000
   type: 0
+  effects:
+  - effect: 5
+    bonus:
+    - 4
+    - 6
+    - 8

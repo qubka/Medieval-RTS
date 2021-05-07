@@ -22,6 +22,8 @@ public class Party : SerializableObject
     public PartyFSM state;
     public int skin;
     
+    #region Serialization
+    
     [JSONNode] private int leaderId;
     [JSONNode] private Pack<int, int>[] troopsData;
 
@@ -47,8 +49,12 @@ public class Party : SerializableObject
             troop.size = pack.item2;
             troops.Add(troop);
         }
-        troopsData = null;
+        if (troopsData.Length > 0) {
+            troopsData = new Pack<int, int>[0];
+        }
     }
+    
+    #endregion
 }
 
 [Serializable]

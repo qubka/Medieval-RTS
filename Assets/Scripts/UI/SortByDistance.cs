@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class SortByDistance : MonoBehaviour
 {
     private Transform worldTransform;
     private Transform camTransform;
+    private List<ISortable> sortingList;
 
     private void Awake()
     {
@@ -18,6 +20,7 @@ public class SortByDistance : MonoBehaviour
     private void Start()
     {
         camTransform = Manager.camTransform;
+        sortingList = SortList.Instance.list;
         StartCoroutine(SortingList());
     }
 
@@ -25,9 +28,8 @@ public class SortByDistance : MonoBehaviour
     {
         while (true) {
             var pos = camTransform.position;
-            var list = SortList.Instance.list;
-            var i = list.Count - 1;
-            foreach (var sortable in list.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
+            var i = sortingList.Count - 1;
+            foreach (var sortable in sortingList.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
                 sortable.GetTransform().SetSiblingIndex(i);
                 i--;
             }

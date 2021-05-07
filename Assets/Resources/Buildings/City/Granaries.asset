@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: Granaries
   m_EditorClassIdentifier: 
   label: Granaries
+  description: Keeps stockpiles of food so that the settlement has more food supply.
+    Each level increases the local food supply.
   icon: {fileID: 21300000, guid: ad18d013407ed464499de9e47023ada4, type: 3}
+  level: 0
   dependencies: []
+  cost:
+  - 5000
+  - 10000
+  - 20000
   type: 0
+  effects:
+  - effect: 3
+    bonus:
+    - 250
+    - 500
+    - 1000

@@ -1,13 +1,16 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityJSON;
 
 public class SaveLoadManager : SingletonObject<SaveLoadManager>
 {
     public Game current;
-    public static string Path => Application.persistentDataPath + "/savedGames.dat";
+    private static string Path => Application.persistentDataPath + "/savedGames.dat";
+
+
+    private void Start()
+    {
+        current = gameObject.AddComponent<Game>();
+    }
 
     /*public void New()
     {

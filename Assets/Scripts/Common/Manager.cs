@@ -69,7 +69,7 @@ public class Manager : SingletonObject<Manager>
 	public static List<MoraleAttribute> moraleAttributes;
 	public static List<Faction> defaultFactions;
 	public static List<Character> defaultCharacters;
-	public static List<Location> defaultLocations;
+	public static List<Settlement> defaultSettlements;
 	public static List<Party> defaultParties;
 	public static List<House> defaultHouses;
 	
@@ -176,7 +176,7 @@ public class Manager : SingletonObject<Manager>
 		};
 		defaultFactions = Resources.LoadAll<Faction>("Factions/").ToList();
 		defaultCharacters = Resources.LoadAll<Character>("Characters/").ToList();
-		defaultLocations = Resources.LoadAll<Location>("Locations/").ToList();
+		defaultSettlements = Resources.LoadAll<Settlement>("Settlements/").ToList();
 		defaultParties = Resources.LoadAll<Party>("Parties/").ToList();
 		defaultHouses = Resources.LoadAll<House>("Houses/").ToList();
 	}
