@@ -2924,7 +2924,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c12e6bc32678489488684df1cfef0087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  army: {fileID: 0}
+  agent: {fileID: 0}
+  crowd: {fileID: 0}
   idle: {fileID: 7400010, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
   walk: {fileID: 7400026, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
 --- !u!114 &5682927069879070142
@@ -2939,7 +2940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383841de6da8ff64dbf29c40801408a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPrototype: {fileID: 11400000, guid: 4e232a4b3eea51046bae5b966ff923ff, type: 2}
+  prefabPrototype: {fileID: 11400000, guid: 616a570e88b2bae4dbc6b61c7749c101, type: 2}
   gpuInstancerID: 0
   state: 0
   animatorRef: {fileID: 0}

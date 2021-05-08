@@ -1659,6 +1659,18 @@
               </e>
             </e>
           </e>
+          <e p="QuickOutline" t="Include">
+            <e p="Readme.txt" t="Include" />
+            <e p="Resources" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="OutlineFill.shader" t="Include" />
+                <e p="OutlineMask.shader" t="Include" />
+              </e>
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="Outline.cs" t="Include" />
+            </e>
+          </e>
           <e p="RainMaker" t="Include">
             <e p="Demo" t="Include">
               <e p="DemoScript.cs" t="Include" />
