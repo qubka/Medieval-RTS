@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Army : MonoBehaviour, ISortable
+public class Army : MonoBehaviour, IGameObject
 {
     [Header("Main Information")]
     public Party data;
@@ -16,8 +16,8 @@ public class Army : MonoBehaviour, ISortable
     [Header("Children References")]
     public GameObject armyBar;
     private Text barText;
+    private GameObject armyBanner;
     [Space(10f)]
-    [HideInInspector] public NavMeshAgent agent;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform barTransform;
 
@@ -32,13 +32,19 @@ public class Army : MonoBehaviour, ISortable
     private Camera camera;
     private Collider collider;
 #pragma warning restore 108,114
-    //private CamController camController;
+    private NavMeshAgent agent;
     private GPUICrowdManager modelManager;
     private RectTransform holderCanvas;
     private List<GPUInstancerPrefab> instances;
+    private bool visible = true;
 
     public int troopCount => data.troops.Sum(t => t.size);
-    
+
+    public IGameObject Target {
+        get => data.followingObject;
+        set => data.followingObject = value;
+    }
+
     #endregion
     
     private void Awake()
@@ -62,7 +68,9 @@ public class Army : MonoBehaviour, ISortable
         // Create bar if exist
         var house = data.leader.house;
         if (house) {
-            Instantiate(house.banner.clearArmy, worldTransform).AddComponent<BlockRotation>().worldTransform.localPosition = bannerPosition;
+            var banner = Instantiate(house.banner.clearArmy, worldTransform);
+            banner.AddComponent<BlockRotation>().worldTransform.localPosition = bannerPosition;
+            armyBanner = banner;
         }
 
         // Attach scripts
@@ -75,7 +83,7 @@ public class Army : MonoBehaviour, ISortable
         
         // Add a army to the tables
         ArmyTable.Instance.Add(gameObject, this);
-        SortList.Instance.Add(this);
+        ObjectList.Instance.Add(this);
 
         // Parent a bar to the screen
         barText = barTransform.GetComponentInChildren<Text>();
@@ -106,64 +114,128 @@ public class Army : MonoBehaviour, ISortable
 
     public void Update()
     {
+        if (Target != null) {
+            if (!Target.IsVisible()) {
+                Target = null;
+            } else if (agent.IsArrived()) {
+
+                switch (Target.GetUI()) {
+                    case UI.Settlement:
+                        Debug.Log("Entered city!");
+                        SetVisibility(false);
+                        data.settlement = Target as Town;
+                        worldTransform.position = Target.GetPosition();
+                        break;
+                    case UI.Army:
+                        break;
+                }
+
+                Target = null;
+            } else {
+                // Update destination for player only
+                if (data.leader.isPlayer && Target.GetUI() == UI.Army) {
+                    agent.SetDestination(Target.GetPosition());
+                }
+            }
+        }
+        
         var pos = worldTransform.position;
         data.position = pos;
         data.rotation = worldTransform.rotation;
+
+        if (visible) {
+            // Calculate position for the ui bar
+            pos.y += canvasHeight;
+            pos = camera.WorldToScreenPoint(pos);
         
-        // Calculate position for the ui bar
-        pos.y += canvasHeight;
-        pos = camera.WorldToScreenPoint(pos);
+            // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
+            if (pos.z < 0f) {
+                armyBar.SetActive(false);
+            } else {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
+                barTransform.localPosition = canvasPos;
+                armyBar.SetActive(true);
+            }
         
-        // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
-        if (pos.z < 0f) {
-            armyBar.SetActive(false);
-        } else {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
-            barTransform.localPosition = canvasPos;
-            armyBar.SetActive(true);
+            // TODO: Remove
+            barText.text = troopCount.ToString();
         }
-        
-        // TODO: Remove
-        barText.text = troopCount.ToString();
     }
 
     private GPUICrowdPrefab CreateCrowd(GameObject prefab)
     {
         var obj = Instantiate(prefab, worldTransform);
         var crowd = obj.GetComponent<GPUICrowdPrefab>();
-
         var animator = obj.GetComponent<AnimatedCrowd>();
         animator.agent = agent;
         animator.crowd = crowd;
         return crowd;
     }
-    
-    #region Sorting
 
+    public void SetVisibility(bool value)
+    {
+        if (visible == value)
+            return;
+        
+        if (value) {
+            foreach (var prefab in instances) {
+                GPUInstancerAPI.AddPrefabInstance(modelManager, prefab);
+                prefab.gameObject.SetActive(true);
+            }
+        } else {
+            foreach (var prefab in instances) {
+                GPUInstancerAPI.RemovePrefabInstance(modelManager, prefab);
+                prefab.gameObject.SetActive(false);
+            }
+        }
+        armyBar.SetActive(value);
+        armyBanner.SetActive(value);
+        visible = value;
+    }
+
+    public void SetDestination(Vector3 position, IGameObject enemy = null)
+    {
+        if (data.settlement != -1 && data.settlement == enemy.GetID())
+            return;
+        
+        agent.SetDestination(position);
+        Target = enemy;
+        
+        if (settlement) {
+            Debug.Log("Leave city!");
+            SetVisibility(true);
+            var door = settlement.entrance;
+            worldTransform.SetPositionAndRotation(door.position, door.rotation);
+            settlement = null;
+        }
+    }
+
+    #region Base
+
+    public int GetID()
+    {
+        return data.leader.id;
+    }
+    
     public Vector3 GetPosition()
     {
         return worldTransform.position;
     }
 
-    public Transform GetTransform()
+    public Transform GetBar()
     {
         return barTransform;
     }
 
+    public UI GetUI()
+    {
+        return UI.Army;
+    }
+
+    public bool IsVisible()
+    {
+        return visible;
+    }
+
     #endregion
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Physics.IgnoreCollision(collision.collider, collider, true);
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        Debug.Log(name + " collide with " + collision.collider.name);
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        Physics.IgnoreCollision(collision.collider, collider, false);
-    }
 }

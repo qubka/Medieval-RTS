@@ -91,7 +91,7 @@ public class Unit : MonoBehaviour
 
     private void Awake()
     {
-		nextModeTime = Max;
+	    nextModeTime = Max;
 		nextDamageTime = Max;
 		nextDamage2Time = Max;
 		nextBlockTime = Max;

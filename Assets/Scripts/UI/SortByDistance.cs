@@ -10,7 +10,7 @@ public class SortByDistance : MonoBehaviour
 {
     private Transform worldTransform;
     private Transform camTransform;
-    private List<ISortable> sortingList;
+    private List<IGameObject> sortingList;
 
     private void Awake()
     {
@@ -20,7 +20,7 @@ public class SortByDistance : MonoBehaviour
     private void Start()
     {
         camTransform = Manager.camTransform;
-        sortingList = SortList.Instance.list;
+        sortingList = ObjectList.Instance.list;
         StartCoroutine(SortingList());
     }
 
@@ -29,8 +29,8 @@ public class SortByDistance : MonoBehaviour
         while (true) {
             var pos = camTransform.position;
             var i = sortingList.Count - 1;
-            foreach (var sortable in sortingList.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
-                sortable.GetTransform().SetSiblingIndex(i);
+            foreach (var o in sortingList.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
+                o.GetBar().SetSiblingIndex(i);
                 i--;
             }
             worldTransform.SetAsFirstSibling();

@@ -92,7 +92,7 @@ public class Game : SingletonObject<Game>, IDeserializationListener
         }
 
         foreach (var settlement in settlements) {
-            TownTable.Instance.Values.First(t => t.data.id == settlement.id).data = settlement;
+            TownTable.Instance.Values.First(t => t.GetID() == settlement.id).data = settlement;
         }
     }
 

@@ -13,7 +13,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
 
-public class Squad : MonoBehaviour, ISortable
+public class Squad : MonoBehaviour, IGameObject
 {
     [Header("Main Information")]
     public Squadron data;
@@ -412,7 +412,7 @@ public class Squad : MonoBehaviour, ISortable
         
         // Add a squad to the tables
         squadTable.Add(gameObject, this);
-        SortList.Instance.Add(this);
+        ObjectList.Instance.Add(this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
@@ -734,7 +734,7 @@ public class Squad : MonoBehaviour, ISortable
         if (count == 0) {
             squadTable.Remove(gameObject);
             entityManager.DestroyEntity(squadEntity);
-            SortList.Instance.Remove(this);
+            ObjectList.Instance.Remove(this);
             UnitManager.Instance.RemoveSquad(this);
             DestroyImmediate(squadBar);
             DestroyImmediate(unitCard);
@@ -1343,7 +1343,7 @@ public class Squad : MonoBehaviour, ISortable
                 foreach (var unit in units) {
                     unit.OnRemove();
                 }
-                SortList.Instance.Remove(this);
+                ObjectList.Instance.Remove(this);
                 entityManager.DestroyEntity(squadEntity);
                 DestroyImmediate(squadBar);
                 DestroyImmediate(unitCard);
@@ -1592,16 +1592,31 @@ public class Squad : MonoBehaviour, ISortable
 
     #endregion
 
-    #region Sorting
+    #region Base
 
+    public int GetID()
+    {
+        return GetInstanceID();
+    }
+    
     public Vector3 GetPosition()
     {
         return centroid;
     }
 
-    public Transform GetTransform()
+    public Transform GetBar()
     {
         return barTransform;
+    }
+
+    public UI GetUI()
+    {
+        return UI.None;
+    }
+
+    public bool IsVisible()
+    {
+        return true;
     }
 
     #endregion

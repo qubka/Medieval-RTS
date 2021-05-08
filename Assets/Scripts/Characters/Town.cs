@@ -7,35 +7,32 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class Town : MonoBehaviour
+public class Town : MonoBehaviour, IGameObject
 {
     public Settlement data;
 
     [Header("Children References")] 
-    public Transform entrance;
+    [SerializeField] private Transform entrance;
     [SerializeField] private Transform[] wallBanners;
     [SerializeField] private Transform[] townBanners;
     [SerializeField] private Transform[] armyBanners;
-    [Space]
-    [SerializeField] private GameObject townBar;
+    [Space] [SerializeField] private GameObject townBar;
     private Text barText;
     private Rect barRect;
-    [Space(10f)]
-    [HideInInspector] public Vector3 initialPosition;
-    [HideInInspector] public Transform worldTransform;
+    [Space(10f)] [HideInInspector] public Vector3 initialPosition;
+    //[HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform barTransform;
 
-    [Header("Misc")]
-    public float canvasHeight;
+    [Header("Misc")] public float canvasHeight;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
     public Vector3 bannerPosition = new Vector3(0f, 2f, 0f);
     [Range(1f, 2f)] public float populationGrowth = 0.005f;
     public Vector2Int maxProsperity = new Vector2Int(-1000, 10000);
     public Vector2Int maxLoyalty = new Vector2Int(-100, 100);
     public Vector2Int maxStock = new Vector2Int(-100, 700);
-    
+
     #region Local
-    
+
 #pragma warning disable 108,114
     private Camera camera;
     private BoxCollider collider;
@@ -67,8 +64,7 @@ public class Town : MonoBehaviour
         //collider = GetComponent<BoxCollider>();
         townBar = Instantiate(townBar);
         barTransform = townBar.transform;
-        worldTransform = transform;
-        initialPosition = worldTransform.position;
+        initialPosition = transform.position;
         initialPosition.y += canvasHeight;
     }
 
@@ -78,8 +74,11 @@ public class Town : MonoBehaviour
         camera = Manager.mainCamera;
         camTransform = Manager.camTransform;
         holderCanvas = Manager.holderCanvas;
-        TownTable.Instance.Add(gameObject, this);
         
+        // Add a town to the tables
+        TownTable.Instance.Add(gameObject, this);
+        ObjectList.Instance.Add(this);
+
         // Parent a bar to the screen
         barText = barTransform.GetComponentInChildren<Text>();
         barText.color = data.ruler.faction.color;
@@ -87,34 +86,36 @@ public class Town : MonoBehaviour
         barRect = barTransform.GetComponent<Image>().GetPixelAdjustedRect();
         barTransform.SetParent(holderCanvas, false);
         barTransform.localScale = barScale;
-        
+
         //
         Sync();
-        
+
         // Skip on village
         if (data.type == InfrastructureType.Village)
             return;
-        
+
         // Create banners
         var banner = data.ruler.house.banner;
         foreach (var trans in wallBanners) {
             Instantiate(banner.clearWall, trans);
         }
+
         foreach (var trans in townBanners) {
             Instantiate(banner.clearTown, trans);
         }
+
         foreach (var trans in armyBanners) {
             Instantiate(banner.clearArmy, trans);
         }
     }
-    
+
     public void Update()
     {
         // Only valid for market mode
         if (data.isMarker) {
             // Temporary variable to store the converted position from 3D world point to 2D screen point
             var pos = camera.WorldToScreenPointProjected(camTransform, initialPosition);
-            
+
             // Giving limits to the icon so it sticks on the screen
             // Below calculations witht the assumption that the icon anchor point is in the middle
             // Minimum X position: half of the icon width
@@ -144,7 +145,7 @@ public class Town : MonoBehaviour
         } else {
             // Calculate position for the ui bar
             var pos = camera.WorldToScreenPoint(initialPosition);
-            
+
             // If the town is behind the camera, or too far away from the player, make sure to hide the bar completely
             if (pos.z < 0f) {
                 townBar.SetActive(false);
@@ -220,15 +221,15 @@ public class Town : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR    
+#if UNITY_EDITOR
     public void GenerateName(TownNames names)
     {
         var prefix = names.RandomPrefix;
         var anyfix = names.RandomAnyfix;
-        while (string.Equals(prefix, anyfix, StringComparison.OrdinalIgnoreCase)){
+        while (string.Equals(prefix, anyfix, StringComparison.OrdinalIgnoreCase)) {
             anyfix = names.RandomAnyfix;
         }
-        
+
         name = prefix.FirstLetterCapital() + anyfix;
     }
 
@@ -236,7 +237,7 @@ public class Town : MonoBehaviour
     {
         var isVillage = infrastructure == InfrastructureType.Village;
         var loc = ScriptableObject.CreateInstance<Settlement>();
-        loc.id =  Resources.LoadAll<Settlement>("Settlements/").Length;
+        loc.id = Resources.LoadAll<Settlement>("Settlements/").Length;
         loc.label = name;
         loc.population = isVillage ? Random.Range(300, 600) : Random.Range(1000, 3000);
         loc.prosperity = isVillage ? Random.Range(30, 100) : Random.Range(800, 1000);
@@ -245,10 +246,12 @@ public class Town : MonoBehaviour
         loc.type = infrastructure;
         var resources = Resources.LoadAll<Resource>("Resources/");
         if (isVillage || RandomExtention.NextBool) {
-            loc.resources = new[] { resources[Random.Range(0, resources.Length)] } ;
+            loc.resources = new[] {resources[Random.Range(0, resources.Length)]};
         } else {
-            loc.resources = new[] { resources[Random.Range(0, resources.Length)], resources[Random.Range(0, resources.Length)] } ;
+            loc.resources = new[]
+                {resources[Random.Range(0, resources.Length)], resources[Random.Range(0, resources.Length)]};
         }
+
         var path = "Assets/Resources/Locations/" + name + ".asset";
         AssetDatabase.CreateAsset(loc, path);
         AssetDatabase.SaveAssets();
@@ -261,7 +264,7 @@ public class Town : MonoBehaviour
         if (Application.isPlaying) {
             Handles.Label(transform.position + Vector3.up * 5f, "Population: " + data.population + " | Prosperity: " + data.prosperity + " | Loyalty: " + data.loyalty + " | Food: " + data.food);
         } else {
-            Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") { fontSize = 30 });
+            Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") {fontSize = 30});
         }
     }
 
@@ -271,7 +274,7 @@ public class Town : MonoBehaviour
     {
 
     }
-    
+
     public void BeginNewQuarter()
     {
         data.population = (int) (data.population * (1f + populationGrowth + populationGrowthSpeed / 1000f));
@@ -281,4 +284,38 @@ public class Town : MonoBehaviour
     }
 
     #endregion
+
+    #region Base
+
+    public int GetID()
+    {
+        return data.id;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return initialPosition;
+    }
+
+    public Transform GetBar()
+    {
+        return barTransform;
+    }
+
+    public UI GetUI()
+    {
+        return UI.Settlement;
+    }
+
+    public bool IsVisible()
+    {
+        return true;
+    }
+    
+    #endregion
+
+    public Vector3 GetDoor()
+    {
+        return entrance.position;
+    }
 }

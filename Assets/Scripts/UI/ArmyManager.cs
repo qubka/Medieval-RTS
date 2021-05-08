@@ -17,22 +17,19 @@ public class ArmyManager : SingletonObject<ArmyManager>
     private Ray groundRay;
     private RaycastHit groundHit;
     private bool groundCast;
-    private bool paused;
-    private bool moveToSettlement;
-    
+
     private Collider[] colliders = new Collider[1];
 
     protected override void Awake()
     {
         base.Awake();
-        
         army = GetComponent<Army>();
     }
 
     private void Start()
     {
         // Get information from manager
-        //eventSystem = EventSystem.current;
+        eventSystem = EventSystem.current;
         camera = Manager.mainCamera;
         camController = Manager.camController;
         border = Manager.border;
@@ -43,29 +40,31 @@ public class ArmyManager : SingletonObject<ArmyManager>
     
     private void Update()
     {
+        if (eventSystem.IsPointerOverGameObject() && !army.IsVisible())
+            return;
+        
         groundRay = camera.ScreenPointToRay(Input.mousePosition);
         groundCast = Physics.Raycast(groundRay, out groundHit, Manager.TerrainDistance, Manager.Ground);
-        //pointerUI = eventSystem.IsPointerOverGameObject();
-
+        
         if (groundCast && !border.IsOutsideBorder(groundHit.point)) {
             if (Input.GetMouseButtonDown(1)) {
-                if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building)) {
-                    army.agent.SetDestination(TownTable.Instance[hit.transform.gameObject].entrance.position);
-                    moveToSettlement = true;
+                if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building | Manager.Army)) {
+                    var o = hit.transform.gameObject;
+                    var town = TownTable.Instance[o];
+                    if (town) {
+                        army.SetDestination(town.GetDoor(), town);
+                    } else {
+                        var enemy = ArmyTable.Instance[o];
+                        army.SetDestination(enemy.GetPosition(), enemy);
+                    }
                 } else {
-                    army.agent.SetDestination(groundHit.point);
-                    moveToSettlement = false;
+                    army.SetDestination(groundHit.point);
                 }
+
                 camController.SetTarget(army.worldTransform);
             } else {
                 OnHover();
             }
-        }
-
-        //TODO: REWORK
-        if (moveToSettlement && army.agent.IsArrived()) {
-            Debug.Log("Arrived!");
-            moveToSettlement = false;
         }
     }
 
