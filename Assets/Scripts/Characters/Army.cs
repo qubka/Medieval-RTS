@@ -14,6 +14,7 @@ public class Army : MonoBehaviour, IGameObject
     public Party data;
     
     [Header("Children References")]
+    //[Space(10f)]
     public GameObject armyBar;
     private Text barText;
     private GameObject armyBanner;
@@ -33,6 +34,7 @@ public class Army : MonoBehaviour, IGameObject
     private Collider collider;
 #pragma warning restore 108,114
     private NavMeshAgent agent;
+    private ArmyManager armyManager;
     private GPUICrowdManager modelManager;
     private RectTransform holderCanvas;
     private List<GPUInstancerPrefab> instances;
@@ -42,8 +44,10 @@ public class Army : MonoBehaviour, IGameObject
 
     public IGameObject Target {
         get => data.followingObject;
-        set => data.followingObject = value;
+        private set => data.followingObject = value;
     }
+
+    public bool IsPlayer => data.leader.isPlayer;
 
     #endregion
     
@@ -62,9 +66,9 @@ public class Army : MonoBehaviour, IGameObject
         // Get information from manager
         camera = Manager.mainCamera;
         //camController = Manager.camController;
-        modelManager = Manager.modelManager;
         holderCanvas = Manager.holderCanvas;
-        
+        modelManager = Manager.modelManager;
+
         // Create bar if exist
         var house = data.leader.house;
         if (house) {
@@ -74,8 +78,9 @@ public class Army : MonoBehaviour, IGameObject
         }
 
         // Attach scripts
-        if (data.leader.isPlayer) {
-            gameObject.AddComponent<ArmyManager>();
+        if (IsPlayer) {
+            armyManager = ArmyManager.Instance;
+            armyManager.Init(this);
         } else {
             var tree = gameObject.AddComponent<BehaviorTree>();
             tree.ExternalBehavior = data.leader.faction.behavior;
@@ -87,7 +92,7 @@ public class Army : MonoBehaviour, IGameObject
 
         // Parent a bar to the screen
         barText = barTransform.GetComponentInChildren<Text>();
-        barText.color = data.leader.isPlayer ? Color.green : (Color) data.leader.faction.color;
+        barText.color = IsPlayer ? Color.green : (Color) data.leader.faction.color;
         barText.text = troopCount.ToString();
         barTransform.SetParent(holderCanvas, false);
         barTransform.localScale = barScale;
@@ -110,6 +115,12 @@ public class Army : MonoBehaviour, IGameObject
         
         // Enabling the Crowd Manager back; this will re-initialize it with the new settings for the prototypes
         modelManager.enabled = true;
+        
+        // TODO: Finish save for town waiting
+        /*if (data.localTown) {
+            Debug.Log("Entered city!");
+            SetVisibility(false);
+        }*/
     }
 
     public void Update()
@@ -118,22 +129,18 @@ public class Army : MonoBehaviour, IGameObject
             if (!Target.IsVisible()) {
                 Target = null;
             } else if (agent.IsArrived()) {
-
                 switch (Target.GetUI()) {
                     case UI.Settlement:
-                        Debug.Log("Entered city!");
-                        SetVisibility(false);
-                        data.settlement = Target as Town;
+                        TownInteraction(true, Target as Town);
                         worldTransform.position = Target.GetPosition();
                         break;
                     case UI.Army:
                         break;
                 }
-
                 Target = null;
             } else {
                 // Update destination for player only
-                if (data.leader.isPlayer && Target.GetUI() == UI.Army) {
+                if (IsPlayer && Target.GetUI() == UI.Army) {
                     agent.SetDestination(Target.GetPosition());
                 }
             }
@@ -195,19 +202,29 @@ public class Army : MonoBehaviour, IGameObject
 
     public void SetDestination(Vector3 position, IGameObject enemy = null)
     {
-        if (data.settlement != -1 && data.settlement == enemy.GetID())
+        if (data.localTown && data.localTown == enemy)
             return;
         
         agent.SetDestination(position);
         Target = enemy;
         
-        if (settlement) {
-            Debug.Log("Leave city!");
-            SetVisibility(true);
-            var door = settlement.entrance;
+        if (data.localTown) {
+            var door = data.localTown.entrance;
+            TownInteraction(false);
             worldTransform.SetPositionAndRotation(door.position, door.rotation);
-            settlement = null;
         }
+    } 
+    
+    public void TownInteraction(bool enter, Town town = null)
+    {
+        Debug.Log(enter ? "Entered city!" : "Leave city!");
+        SetVisibility(!enter);
+        if (IsPlayer) {
+            var controller = armyManager.townController;
+            controller.Toggle(enter);
+            controller.OnUpdate();
+        }
+        data.localTown = town;
     }
 
     #region Base

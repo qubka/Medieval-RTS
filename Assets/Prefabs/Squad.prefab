@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 824bf5ca99334214f9838b12bd32d65e, type: 2}
+  squadSize: 50
   primaryPrefabs: []
   secondaryPrefabs: []
   team: 0
-  squadSize: 50
   formationShape: 0
   state: 0
   agent: {fileID: 0}
@@ -78,8 +78,6 @@ MonoBehaviour:
     height: 2
     center: 0
     radius: 1
-  soundManager: {fileID: 0}
-  objectPool: {fileID: 0}
   worldTransform: {fileID: 0}
   camTransform: {fileID: 0}
   barTransform: {fileID: 0}
@@ -5900,6 +5898,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnitCard
       objectReference: {fileID: 0}
+    - target: {fileID: 6812304544378349032, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: layoutTransform
+      value: 
+      objectReference: {fileID: 6464902127453613541}
     - target: {fileID: 9221162128324540227, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

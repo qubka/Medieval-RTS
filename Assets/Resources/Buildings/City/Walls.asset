@@ -17,14 +17,9 @@ MonoBehaviour:
     the max garrison limit since it provides more space for the resident troops.
   icon: {fileID: 21300000, guid: c5ec082f9b26c6c46a084187a9bfd2af, type: 3}
   dependencies: []
-  cost:
-  - 5000
-  - 10000
-  - 20000
+  buildingSpeed: 0.01
+  cost: 8813000010270000204e0000
   type: 0
   effects:
   - effect: 5
-    bonus:
-    - 4
-    - 6
-    - 8
+    bonus: 040000000600000008000000

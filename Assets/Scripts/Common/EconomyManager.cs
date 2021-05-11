@@ -8,10 +8,10 @@ public static class EconomyManager
         }
     }
     
-    public static void BeginNewQuarter()
+    public static void BeginNewWeek()
     {
         foreach (var town in TownTable.Instance) {
-            town.BeginNewQuarter();
+            town.BeginNewWeek();
         }
     }
     

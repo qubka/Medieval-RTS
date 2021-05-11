@@ -1659,18 +1659,6 @@
               </e>
             </e>
           </e>
-          <e p="QuickOutline" t="Include">
-            <e p="Readme.txt" t="Include" />
-            <e p="Resources" t="Include">
-              <e p="Shaders" t="Include">
-                <e p="OutlineFill.shader" t="Include" />
-                <e p="OutlineMask.shader" t="Include" />
-              </e>
-            </e>
-            <e p="Scripts" t="Include">
-              <e p="Outline.cs" t="Include" />
-            </e>
-          </e>
           <e p="RainMaker" t="Include">
             <e p="Demo" t="Include">
               <e p="DemoScript.cs" t="Include" />
@@ -1930,6 +1918,7 @@
                 <e p="MathExtention.cs" t="Include" />
                 <e p="RandomExtention.cs" t="Include" />
                 <e p="StringExtention.cs" t="Include" />
+                <e p="TextExtention.cs" t="Include" />
               </e>
               <e p="Line.cs" t="Include" />
               <e p="Matrix.cs" t="Include" />
@@ -2039,30 +2028,50 @@
               <e p="FacingBillboard.cs" t="Include" />
               <e p="Minimap.cs" t="Include" />
             </e>
-            <e p="Controls" t="Include">
-              <e p="BinarySliderController.cs" t="Include" />
+            <e p="Core" t="Include">
+              <e p="Bar" t="Include">
+                <e p="SquadBar.cs" t="Include" />
+                <e p="TimeBar.cs" t="Include" />
+                <e p="TownTab.cs" t="Include" />
+                <e p="UnitBar.cs" t="Include" />
+              </e>
+              <e p="BuildingInfo.cs" t="Include" />
               <e p="CombatSliderController.cs" t="Include" />
-              <e p="EventTriggerInvoker.cs" t="Include" />
-              <e p="ExitButtonController.cs" t="Include" />
+              <e p="DescriptionWindow.cs" t="Include" />
               <e p="HideButton.cs" t="Include" />
-              <e p="HighlightToggle.cs" t="Include" />
-              <e p="LayoutPursue.cs" t="Include" />
-              <e p="ResourceBarController.cs" t="Include" />
-              <e p="ScrollController.cs" t="Include" />
+              <e p="Layout" t="Include">
+                <e p="AttributeLayout.cs" t="Include" />
+                <e p="BuildingLayout.cs" t="Include" />
+                <e p="LayoutPursue.cs" t="Include" />
+                <e p="UnitLayout.cs" t="Include" />
+              </e>
+              <e p="Other" t="Include">
+                <e p="AnimatedWindowController.cs" t="Include" />
+                <e p="BinarySliderController.cs" t="Include" />
+                <e p="EventTriggerInvoker.cs" t="Include" />
+                <e p="ExitButtonController.cs" t="Include" />
+                <e p="HighlightToggle.cs" t="Include" />
+                <e p="NationPickController.cs" t="Include" />
+                <e p="PopupWindowController.cs" t="Include" />
+                <e p="ResourceBarController.cs" t="Include" />
+                <e p="ScrollController.cs" t="Include" />
+                <e p="SliderPercentController.cs" t="Include" />
+                <e p="SliderStepController.cs" t="Include" />
+                <e p="SliderValueController.cs" t="Include" />
+                <e p="WindowController.cs" t="Include" />
+              </e>
               <e p="SliderColorController.cs" t="Include" />
-              <e p="SliderPercentController.cs" t="Include" />
-              <e p="SliderStepController.cs" t="Include" />
-              <e p="SliderValueController.cs" t="Include" />
-              <e p="SquadBar.cs" t="Include" />
-              <e p="TimeBar.cs" t="Include" />
+              <e p="SquadDescription.cs" t="Include" />
+              <e p="SquadInfo.cs" t="Include" />
+              <e p="StatsRadarChart.cs" t="Include" />
               <e p="ToggleButton.cs" t="Include" />
-              <e p="TownTab.cs" t="Include" />
+              <e p="TownController.cs" t="Include" />
               <e p="Transform" t="Include">
                 <e p="LayoutExpander.cs" t="Include" />
+                <e p="ScaleGrid.cs" t="Include" />
                 <e p="TransformInRect.cs" t="Include" />
               </e>
-              <e p="UnitBar.cs" t="Include" />
-              <e p="UnitLayout.cs" t="Include" />
+              <e p="TweenToggle.cs" t="Include" />
             </e>
             <e p="Domain" t="Include">
               <e p="Nation.cs" t="Include" />
@@ -2077,16 +2086,6 @@
             <e p="Settings.cs" t="Include" />
             <e p="SortByDistance.cs" t="Include" />
             <e p="UnitManager.cs" t="Include" />
-            <e p="Window" t="Include">
-              <e p="AnimatedWindowController.cs" t="Include" />
-              <e p="AttributeLayout.cs" t="Include" />
-              <e p="NationPickController.cs" t="Include" />
-              <e p="PopupWindowController.cs" t="Include" />
-              <e p="SquadDescription.cs" t="Include" />
-              <e p="SquadInfo.cs" t="Include" />
-              <e p="StatsRadarChart.cs" t="Include" />
-              <e p="WindowController.cs" t="Include" />
-            </e>
           </e>
         </e>
         <e p="Shaders" t="Include">

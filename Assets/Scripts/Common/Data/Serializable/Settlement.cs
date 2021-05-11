@@ -20,6 +20,7 @@ public class Settlement : SerializableObject
     public int population;
     public int loyalty;
     public int food;
+    public Vector3 entrance;
     [JSONNode(NodeOptions.DontSerialize)] 
     public Character ruler;
     public InfrastructureType type;
@@ -35,15 +36,15 @@ public class Settlement : SerializableObject
     #region Serialization
 
     [JSONNode] private int rulerId;
-    [JSONNode] private Pair<string, int>[] buildingsAssets;
+    [JSONNode] private Pack<string, Pack<int, float>>[] buildingsAssets;
 
     public override void OnSerialization()
     {
         rulerId = ruler ? ruler.id : -1;
         var i = 0;
-        buildingsAssets = new Pair<string, int>[buildings.Count];
+        buildingsAssets = new Pack<string, Pack<int, float>>[buildings.Count];
         foreach (var pair in buildings) {
-            buildingsAssets[i] = new Pair<string, int>(Path.GetFileName(AssetDatabase.GetAssetPath(pair.Key)), pair.Value);
+            buildingsAssets[i] = new Pack<string, Pack<int, float>>(Path.GetFileName(AssetDatabase.GetAssetPath(pair.Key)), pair.Value);
             i++;
         }
     }
@@ -55,10 +56,10 @@ public class Settlement : SerializableObject
             ruler = game.characters.Find(c => c.id == rulerId);
         }
         foreach (var building in buildingsAssets) {
-            buildings.Add(AssetDatabase.LoadAssetAtPath<Building>("Assets/Resources/Buildings/" + type + "/" + building.First), building.Second);
+            buildings.Add(AssetDatabase.LoadAssetAtPath<Building>("Assets/Resources/Buildings/" + type + "/" + building.item1), building.item2);
         }
         if (buildingsAssets.Length > 0) {
-            buildingsAssets = new Pair<string, int>[0];
+            buildingsAssets = new Pack<string, Pack<int, float>>[0];
         }
         var settlement = Manager.defaultSettlements.Find(s => s.id == id);
         resources = settlement.resources;
@@ -66,6 +67,24 @@ public class Settlement : SerializableObject
     }
     
     #endregion
+    
+    public void Build(Building building)
+    {
+        if (buildings.TryGetValue(building, out var data)) {
+            if (data.item2 < 1f) {
+                data.item1--;
+                data.item2 = 1f;
+                if (data.item1 < 0) {
+                    buildings.Remove(building);
+                }
+            } else {
+                data.item1++;
+                data.item2 = Manager.Instance.isCheat ? 1f : 0f;
+            }
+        } else {
+            buildings.Add(building, new Pack<int, float>(0, Manager.Instance.isCheat ? 1f : 0f));
+        }
+    }
 }
 
 [Serializable]
@@ -78,6 +97,6 @@ public enum InfrastructureType
 }
 
 [Serializable]
-public class BuildingDictionary : SerializableDictionary<Building, int>
+public class BuildingDictionary : SerializableDictionary<Building, Pack<int, float>>
 {
 }

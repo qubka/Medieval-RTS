@@ -4,7 +4,6 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(Manager))]
 public class UnitManager : SingletonObject<UnitManager>
 {
 	[Header("Main")]

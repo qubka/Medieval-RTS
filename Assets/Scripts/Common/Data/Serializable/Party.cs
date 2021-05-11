@@ -21,8 +21,8 @@ public class Party : SerializableObject
     [JSONNode(NodeOptions.DontSerialize)] 
     public IGameObject followingObject;
     [JSONNode(NodeOptions.DontSerialize)] 
-    public Town settlement;
-    public PartyFSM state;
+    public Town localTown;
+    //public PartyFSM state;
     public int skin;
     
     #region Serialization
@@ -35,7 +35,7 @@ public class Party : SerializableObject
     public override void OnSerialization()
     {
         leaderId = leader ? leader.id : -1;
-        settlementId = settlement ? settlement.GetID() : -1;
+        settlementId = localTown ? localTown.GetID() : -1;
         troopsData = new Pack<int, int>[troops.Count];
         for (var i = 0; i < troops.Count; i++) {
             var troop = troops[i];
@@ -53,7 +53,7 @@ public class Party : SerializableObject
             leader = game.characters.Find(c => c.id == leaderId);
         }
         if (settlementId != -1) {
-            settlement = TownTable.Instance.Values.First(t => t.GetID() == settlementId);
+            localTown = TownTable.Instance.Values.First(t => t.GetID() == settlementId);
         }
         troops.Capacity = troopsData.Length;
         foreach (var pack in troopsData) {

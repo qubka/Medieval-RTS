@@ -36,7 +36,7 @@ public class CampaignTime : SingletonObject<CampaignTime> {
             timeDelta = 0f;
             dateTime = dateTime.AddDays(1);
             if (dateTime.DayOfWeek == DayOfWeek.Monday) {
-                EconomyManager.BeginNewQuarter();
+                EconomyManager.BeginNewWeek();
             }
             EconomyManager.BeginNewDay();
             daysFromStart++;

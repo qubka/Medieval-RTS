@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Den.Tools;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -12,14 +10,15 @@ public class Town : MonoBehaviour, IGameObject
     public Settlement data;
 
     [Header("Children References")] 
-    [SerializeField] private Transform entrance;
+    public Transform entrance;
     [SerializeField] private Transform[] wallBanners;
     [SerializeField] private Transform[] townBanners;
     [SerializeField] private Transform[] armyBanners;
     [Space] [SerializeField] private GameObject townBar;
     private Text barText;
     private Rect barRect;
-    [Space(10f)] [HideInInspector] public Vector3 initialPosition;
+    [Space(10f)] 
+    [HideInInspector] public Vector3 initialPosition;
     //[HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform barTransform;
 
@@ -30,7 +29,8 @@ public class Town : MonoBehaviour, IGameObject
     public Vector2Int maxProsperity = new Vector2Int(-1000, 10000);
     public Vector2Int maxLoyalty = new Vector2Int(-100, 100);
     public Vector2Int maxStock = new Vector2Int(-100, 700);
-
+    public float PopGrowth => populationGrowth + populationGrowthSpeed / 1000f;
+    
     #region Local
 
 #pragma warning disable 108,114
@@ -88,7 +88,7 @@ public class Town : MonoBehaviour, IGameObject
         barTransform.localScale = barScale;
 
         //
-        Sync();
+        CalculateTraits();
 
         // Skip on village
         if (data.type == InfrastructureType.Village)
@@ -157,7 +157,7 @@ public class Town : MonoBehaviour, IGameObject
         }
     }
 
-    public void Sync()
+    public void CalculateTraits()
     {
         //
         loyalty = 0; //
@@ -177,8 +177,11 @@ public class Town : MonoBehaviour, IGameObject
         foreach (var pair in data.buildings) {
             var building = pair.Key;
             var level = pair.Value;
+            if (level.item2 < 1f)
+                continue;
+            
             foreach (var effect in building.effects) {
-                var bonus = effect.bonus[level];
+                var bonus = effect.bonus[level.item1];
                 switch (effect.effect) {
                     case BuildingEffectType.Loyalty:
                         loyalty += bonus;
@@ -248,8 +251,7 @@ public class Town : MonoBehaviour, IGameObject
         if (isVillage || RandomExtention.NextBool) {
             loc.resources = new[] {resources[Random.Range(0, resources.Length)]};
         } else {
-            loc.resources = new[]
-                {resources[Random.Range(0, resources.Length)], resources[Random.Range(0, resources.Length)]};
+            loc.resources = new[] {resources[Random.Range(0, resources.Length)], resources[Random.Range(0, resources.Length)]};
         }
 
         var path = "Assets/Resources/Locations/" + name + ".asset";
@@ -272,14 +274,24 @@ public class Town : MonoBehaviour, IGameObject
 
     public void BeginNewDay()
     {
-
+        foreach (var pair in data.buildings) {
+            var data = pair.Value;
+            if (data.item2 < 1f) {
+                data.item2 += pair.Key.buildingSpeed;
+                if (data.item2 > 1f) {
+                    data.item2 = 1f;
+                }
+            }
+        }
+        
+        CalculateTraits();
     }
 
-    public void BeginNewQuarter()
+    public void BeginNewWeek()
     {
-        data.population = (int) (data.population * (1f + populationGrowth + populationGrowthSpeed / 1000f));
-        data.prosperity += math.clamp(data.prosperity + prosperity, maxProsperity.x, maxProsperity.y);
-        data.loyalty += math.clamp(data.loyalty + loyalty, maxLoyalty.x, maxLoyalty.y);
+        data.population = (int) (data.population * (1f + PopGrowth));
+        data.prosperity = math.clamp(data.prosperity + prosperity, maxProsperity.x, maxProsperity.y);
+        data.loyalty = math.clamp(data.loyalty + loyalty, maxLoyalty.x, maxLoyalty.y);
         data.food = math.clamp(data.food + foodProduction, maxStock.x, maxStock.y + foodStock);
     }
 
@@ -313,9 +325,4 @@ public class Town : MonoBehaviour, IGameObject
     }
     
     #endregion
-
-    public Vector3 GetDoor()
-    {
-        return entrance.position;
-    }
 }

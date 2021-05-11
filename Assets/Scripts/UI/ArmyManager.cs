@@ -5,6 +5,10 @@ using UnityEngine.EventSystems;
 
 public class ArmyManager : SingletonObject<ArmyManager>
 {
+    [Header("Main")]
+    public TownController townController;
+    public DescriptionWindow descriptionWindow;
+    
 #pragma warning disable 108,114
     private Camera camera;
 #pragma warning restore 108,114
@@ -20,24 +24,24 @@ public class ArmyManager : SingletonObject<ArmyManager>
 
     private Collider[] colliders = new Collider[1];
 
-    protected override void Awake()
-    {
-        base.Awake();
-        army = GetComponent<Army>();
-    }
+    public Party player => army.data;
 
+    public void Init(Army target)
+    {
+        army = target;
+        camController.SetTarget(army.worldTransform);
+        enabled = true;
+    }
+    
     private void Start()
     {
-        // Get information from manager
         eventSystem = EventSystem.current;
         camera = Manager.mainCamera;
         camController = Manager.camController;
         border = Manager.border;
-        
-        // Set the camera target to follow
-        camController.SetTarget(army.worldTransform);
+        enabled = false;
     }
-    
+
     private void Update()
     {
         if (eventSystem.IsPointerOverGameObject() && !army.IsVisible())
@@ -49,12 +53,12 @@ public class ArmyManager : SingletonObject<ArmyManager>
         if (groundCast && !border.IsOutsideBorder(groundHit.point)) {
             if (Input.GetMouseButtonDown(1)) {
                 if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building | Manager.Army)) {
-                    var o = hit.transform.gameObject;
-                    var town = TownTable.Instance[o];
+                    var obj = hit.transform.gameObject;
+                    var town = TownTable.Instance[obj];
                     if (town) {
-                        army.SetDestination(town.GetDoor(), town);
+                        army.SetDestination(town.entrance.position, town);
                     } else {
-                        var enemy = ArmyTable.Instance[o];
+                        var enemy = ArmyTable.Instance[obj];
                         army.SetDestination(enemy.GetPosition(), enemy);
                     }
                 } else {

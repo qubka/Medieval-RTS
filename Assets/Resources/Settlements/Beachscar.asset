@@ -20,6 +20,7 @@ MonoBehaviour:
   population: 2503
   loyalty: 83
   food: 72
+  entrance: {x: 0, y: 0, z: 0}
   ruler: {fileID: 11400000, guid: f2026a488e08c0a4fb73cd910199af41, type: 2}
   type: 0
   neighbours:
@@ -31,6 +32,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5839609a6e3f2e74799c10d45c89cc58, type: 2}
   buildings:
     m_keys:
-    - {fileID: 11400000, guid: eba9924412fabaa47b001518797d8c51, type: 2}
-    - {fileID: 11400000, guid: c02355c7c0c6bfd439ac4790967e0fc7, type: 2}
-    m_values: 0000000001000000
+    - {fileID: 11400000, guid: 2c9afbdad38942b4ba471d3b1370f83a, type: 2}
+    m_values:
+    - item1: 0
+      item2: 1

@@ -24,19 +24,18 @@ public class SoundManager : SingletonObject<SoundManager>
     //private Transform worldTransform;
     private Transform camTransform;
     private CamController camController;
-
+    private AudioSource[] sources;
+    private readonly List<AudioSource> available = new List<AudioSource>();
     private readonly Dictionary<Vector3, Sounds> clipTable = new Dictionary<Vector3, Sounds>(1000);
     //private readonly Dictionary<AudioSource, Vector3> playTable = new Dictionary<AudioSource, Vector3>();
-    private readonly List<AudioSource> sources = new List<AudioSource>();
-    private readonly List<AudioSource> available = new List<AudioSource>();
-    
+
     protected override void Awake()
     {
         base.Awake();
         
         playRange *= playRange;
         soundRange *= soundRange;
-        sources.Capacity = maxSounds;
+        sources = new AudioSource[maxSounds];
         available.Capacity = maxSounds;
     }
 
@@ -57,7 +56,7 @@ public class SoundManager : SingletonObject<SoundManager>
             source.volume = defaultVolume;
             source.loop = false;
             source.playOnAwake = false;
-            sources.Add(source);
+            sources[i] = source;
         }
     }
 

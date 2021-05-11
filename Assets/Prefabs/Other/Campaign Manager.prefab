@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3611982833316667044}
   - component: {fileID: 3611982833316667066}
   - component: {fileID: 3685309824277759594}
+  - component: {fileID: 3266205435106549779}
   m_Layer: 12
   m_Name: Campaign Manager
   m_TagString: Untagged
@@ -134,6 +135,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeLabel: {fileID: 0}
   timeBar: {fileID: 0}
+  hoursInDay: 24
   startingYear: 1080
   startingMonth: 1
   startingDay: 1
+--- !u!114 &3266205435106549779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3611982833316667047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab887d4f8824d7b8892e8a342190b4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

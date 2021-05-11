@@ -1,5 +1,7 @@
-﻿using UnityJSON;
+﻿using System;
+using UnityJSON;
 
+[Serializable]
 [JSONObject(ObjectOptions.TupleFormat)]
 public class Pack<T1, T2>
 {

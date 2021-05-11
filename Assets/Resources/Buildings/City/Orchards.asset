@@ -16,16 +16,10 @@ MonoBehaviour:
   description: Fruit trees and vegetable gardens outside the walls provide food as
     long as there is no siege.
   icon: {fileID: 21300000, guid: a47dcee6e7d61e04ea44a7e41514072d, type: 3}
-  level: 0
   dependencies: []
-  cost:
-  - 5000
-  - 10000
-  - 20000
+  buildingSpeed: 0.01
+  cost: 8813000010270000204e0000
   type: 0
   effects:
   - effect: 4
-    bonus:
-    - 10
-    - 20
-    - 30
+    bonus: 0a000000140000001e000000

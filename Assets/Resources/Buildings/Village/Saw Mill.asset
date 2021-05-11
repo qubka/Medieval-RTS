@@ -17,19 +17,11 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 023b2f390bcc998478381ae385735b9b, type: 3}
   dependencies:
   - {fileID: 11400000, guid: 385aa35df9c944d4cb75aa1f10b189ee, type: 2}
-  cost:
-  - 1000
-  - 2500
-  - 5000
+  buildingSpeed: 0.02
+  cost: e8030000c409000088130000
   type: 2
   effects:
   - effect: 1
-    bonus:
-    - 5
-    - 7
-    - 10
+    bonus: 05000000070000000a000000
   - effect: 2
-    bonus:
-    - 1
-    - 2
-    - 3
+    bonus: 010000000200000003000000

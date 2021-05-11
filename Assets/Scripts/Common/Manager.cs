@@ -3,11 +3,11 @@
  using GPUInstancer.CrowdAnimations;
  using Unity.Mathematics;
  using UnityEngine;
- 
-[RequireComponent(typeof(Manager))]
+
 public class Manager : SingletonObject<Manager>
 {
 	[Header("Scene Refs")] 
+	public bool isCheat;
 	public Global globalInfo;
 	public GPUICrowdManager crowdManager;
 	public RectTransform holderFrames;
@@ -24,6 +24,19 @@ public class Manager : SingletonObject<Manager>
 	public static int Squad;
 	public static int Water;
 
+	public static Global global;
+	public static Terrain terrain;
+	public static TerrainBorder border;
+	public static Camera mainCamera;
+	public static Camera minimapCamera;
+	public static Transform camTransform;
+	public static CamController camController;
+	public static AudioSource[] cameraSources;
+	public static RectTransform holderCanvas;
+	public static RectTransform layoutCanvas;
+	public static RectTransform cardCanvas;
+	public static GPUICrowdManager modelManager;
+	
 	public static MoraleAttribute ChargedInFlank;
 	public static MoraleAttribute ChargedInRear;
 	public static MoraleAttribute Disordered;
@@ -52,26 +65,14 @@ public class Manager : SingletonObject<Manager>
 	public static MoraleAttribute VeryTired;
 	public static MoraleAttribute WinningBattle;
 	public static MoraleAttribute WithoutAmmo;
-
-	public static Global global;
-	public static Terrain terrain;
-	public static TerrainBorder border;
-	public static Camera mainCamera;
-	public static Camera minimapCamera;
-	public static Transform camTransform;
-	public static CamController camController;
-	public static AudioSource[] cameraSources;
-	public static RectTransform holderCanvas;
-	public static RectTransform layoutCanvas;
-	public static RectTransform cardCanvas;
-	public static GPUICrowdManager modelManager;
-
+	
 	public static List<MoraleAttribute> moraleAttributes;
 	public static List<Faction> defaultFactions;
 	public static List<Character> defaultCharacters;
 	public static List<Settlement> defaultSettlements;
 	public static List<Party> defaultParties;
 	public static List<House> defaultHouses;
+	public static List<Building> defaultBuildings;
 	
 	public static float TerrainDistance;
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
@@ -179,5 +180,6 @@ public class Manager : SingletonObject<Manager>
 		defaultSettlements = Resources.LoadAll<Settlement>("Settlements/").ToList();
 		defaultParties = Resources.LoadAll<Party>("Parties/").ToList();
 		defaultHouses = Resources.LoadAll<House>("Houses/").ToList();
+		defaultBuildings = Resources.LoadAll<Building>("Buildings/").ToList();
 	}
 }
