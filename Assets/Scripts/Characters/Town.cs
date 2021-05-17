@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TMPro;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -14,13 +19,10 @@ public class Town : MonoBehaviour, IGameObject
     [SerializeField] private Transform[] wallBanners;
     [SerializeField] private Transform[] townBanners;
     [SerializeField] private Transform[] armyBanners;
-    [Space] [SerializeField] private GameObject townBar;
-    private Text barText;
-    private Rect barRect;
-    [Space(10f)] 
+    [HideInInspector] public TownIcon townIcon;
     [HideInInspector] public Vector3 initialPosition;
-    //[HideInInspector] public Transform worldTransform;
-    [HideInInspector] public Transform barTransform;
+    //[HideInInspector] public Transform iconTransform;
+    [HideInInspector] public Transform iconTransform;
 
     [Header("Misc")] public float canvasHeight;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
@@ -35,11 +37,12 @@ public class Town : MonoBehaviour, IGameObject
 
 #pragma warning disable 108,114
     private Camera camera;
-    private BoxCollider collider;
 #pragma warning restore 108,114
+    private CamController camController;
     private Transform camTransform;
-    private RectTransform holderCanvas;
-
+    private float nextHoverTime;
+    private bool isVillage;
+    
     #endregion
 
     #region Economy
@@ -59,34 +62,27 @@ public class Town : MonoBehaviour, IGameObject
 
     #endregion
 
-    private void Awake()
-    {
-        //collider = GetComponent<BoxCollider>();
-        townBar = Instantiate(townBar);
-        barTransform = townBar.transform;
-        initialPosition = transform.position;
-        initialPosition.y += canvasHeight;
-    }
-
     private void Start()
     {
         // Get information from manager
         camera = Manager.mainCamera;
+        camController = Manager.camController;
         camTransform = Manager.camTransform;
-        holderCanvas = Manager.holderCanvas;
+        townIcon = Instantiate(Manager.global.townIcon).GetComponent<TownIcon>();
+        iconTransform = townIcon.transform;
+        initialPosition = transform.position;
+        initialPosition.y += canvasHeight;
+        
+        // Parent a bar to the screen
+        townIcon.SetSettlement(data);
+        iconTransform.SetParent(Manager.holderCanvas, false);
+        iconTransform.localScale = barScale;
+        isVillage = data.type == InfrastructureType.Village;
         
         // Add a town to the tables
         TownTable.Instance.Add(gameObject, this);
         ObjectList.Instance.Add(this);
-
-        // Parent a bar to the screen
-        barText = barTransform.GetComponentInChildren<Text>();
-        barText.color = data.ruler.faction.color;
-        barText.text = data.name; // TODO: Translation
-        barRect = barTransform.GetComponent<Image>().GetPixelAdjustedRect();
-        barTransform.SetParent(holderCanvas, false);
-        barTransform.localScale = barScale;
-
+        
         //
         CalculateTraits();
 
@@ -108,23 +104,24 @@ public class Town : MonoBehaviour, IGameObject
             Instantiate(banner.clearArmy, trans);
         }
     }
-
+    
     public void Update()
     {
         // Only valid for market mode
         if (data.isMarker) {
             // Temporary variable to store the converted position from 3D world point to 2D screen point
             var pos = camera.WorldToScreenPointProjected(camTransform, initialPosition);
-
+            var rect = townIcon.Rect;
+            
             // Giving limits to the icon so it sticks on the screen
             // Below calculations witht the assumption that the icon anchor point is in the middle
             // Minimum X position: half of the icon width
-            var minX = barRect.width / 2f;
+            var minX = rect.width / 2f;
             // Maximum X position: screen width - half of the icon width
             var maxX = Screen.width - minX;
 
             // Minimum Y position: half of the height
-            var minY = barRect.height / 2f;
+            var minY = rect.height / 2f;
             // Maximum Y position: screen height - half of the icon height
             var maxY = Screen.height - minY;
 
@@ -138,21 +135,33 @@ public class Town : MonoBehaviour, IGameObject
             pos.x = math.clamp(pos.x, minX, maxX);
             pos.y = math.clamp(pos.y, minY, maxY);
 
-            //
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
-            barTransform.localPosition = canvasPos;
-            townBar.SetActive(true);
+            // Move object to position
+            iconTransform.position = pos;
+            townIcon.SetActive(true);
+
+            // Icon UI mode
+            if (isVillage) {
+                townIcon.Enable();
+            }
         } else {
             // Calculate position for the ui bar
             var pos = camera.WorldToScreenPoint(initialPosition);
 
             // If the town is behind the camera, or too far away from the player, make sure to hide the bar completely
             if (pos.z < 0f) {
-                townBar.SetActive(false);
+                townIcon.SetActive(false);
             } else {
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
-                barTransform.localPosition = canvasPos;
-                townBar.SetActive(true);
+                iconTransform.position = pos;
+                townIcon.SetActive(true);
+            }
+
+            // Icon UI mode
+            if (isVillage) {
+                if (camController.zoomPos > 0.75f) {
+                    townIcon.Disable();
+                } else {
+                    townIcon.Enable();
+                }
             }
         }
     }
@@ -281,6 +290,7 @@ public class Town : MonoBehaviour, IGameObject
                 if (data.item2 > 1f) {
                     data.item2 = 1f;
                 }
+                break;
             }
         }
         
@@ -309,9 +319,9 @@ public class Town : MonoBehaviour, IGameObject
         return initialPosition;
     }
 
-    public Transform GetBar()
+    public Transform GetIcon()
     {
-        return barTransform;
+        return iconTransform;
     }
 
     public UI GetUI()
@@ -325,4 +335,148 @@ public class Town : MonoBehaviour, IGameObject
     }
     
     #endregion
+
+    private void OnMouseOver()
+    {
+        if (Manager.IsPointerOnUI) {
+            Manager.tooltipPopup.HideInfo();
+            return;
+        }
+        
+        var currentTime = Time.unscaledTime;
+        if (currentTime > nextHoverTime) {
+            var color = data.ruler.faction.color.ToHexString();
+            var builder = new StringBuilder();
+            var totalCount = 0;
+
+            #region Label
+
+            builder
+                .Append("<size=18>")
+                .Append("<color=#")
+                .Append(color)
+                .Append('>')
+                .Append('(')
+                .Append(data.ruler.faction.label)
+                .Append(')')
+                .Append("</size>")
+                .Append("</color>")
+                .AppendLine();
+
+            #endregion
+
+            if (data.parties.Count > 0) {
+                builder
+                    .AppendLine()
+                    .Append("<size=15>")
+                    .Append("<color=#ffffffff>")
+                    .Append("ARMIES:")
+                    .Append("</size>")
+                    .Append("</color>")
+                    .AppendLine()
+                    .Append("<color=#00ffffff>");
+
+                foreach (var party in data.parties) {
+                    var troopCount = party.troopCount;
+                    totalCount += troopCount;
+
+                    builder
+                        .Append(party.leader.title)
+                        .Append(' ')
+                        .Append(party.leader.surname);
+
+                    if (troopCount > 0) {
+                        builder
+                            .Append("'s Party ")
+                            .Append('(')
+                            .Append(troopCount)
+                            .Append(')')
+                            .AppendLine();
+                    } else {
+                        builder.AppendLine();
+                    }
+                }
+            }
+
+            if (data.garrison.Count > 0 || data.parties.Count > 0) {
+                builder
+                    .AppendLine()
+                    .Append("<size=15>")
+                    .Append("<color=#ffffffff>")
+                    .Append("TROOPS:")
+                    .Append("</size>")
+                    .Append("</color>")
+                    .AppendLine()
+                    .Append("<color=#00ffffff>");
+
+                var dict = new Dictionary<Squadron, int>(data.parties.Count + data.garrison.Count);
+
+                foreach (var party in data.parties) {
+                    foreach (var troop in party.troops) {
+                        var data = troop.data;
+                        if (dict.ContainsKey(data)) {
+                            dict[data] += troop.size;
+                        } else {
+                            dict.Add(data, troop.size);
+                        }
+                    }
+                }
+
+                foreach (var troop in data.garrison) {
+                    var troopCount = troop.size;
+                    totalCount += troopCount;
+
+                    var data = troop.data;
+                    if (dict.ContainsKey(data)) {
+                        dict[data] += troop.size;
+                    } else {
+                        dict.Add(data, troop.size);
+                    }
+                }
+
+                foreach (var pair in dict) {
+                    builder
+                        .Append(pair.Key.name)
+                        .Append(' ')
+                        .Append('(')
+                        .Append(pair.Value)
+                        .Append(')')
+                        .AppendLine();
+                }
+
+                builder.Append("</color>").AppendLine();
+            }
+
+            var description = builder.ToString();
+
+            builder.Clear();
+
+            builder
+                .Append("<color=#")
+                .Append(color)
+                .Append('>')
+                .Append(data.label);
+
+            if (totalCount > 0) {
+                builder
+                    .Append(' ')
+                    .Append('(')
+                    .Append(totalCount)
+                    .Append(')');
+            }
+
+            builder.Append("</color>");
+
+            var caption = builder.ToString();
+
+            Manager.tooltipPopup.DisplayInfo(caption, description, TextAlignmentOptions.Center);
+            
+            nextHoverTime = currentTime + 0.1f;
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        Manager.tooltipPopup.HideInfo();
+    }
 }

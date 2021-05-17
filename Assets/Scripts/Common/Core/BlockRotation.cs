@@ -2,8 +2,8 @@
 
 public class BlockRotation : MonoBehaviour
 {
-    public Transform worldTransform;
-    public Transform parentTransform;
+    [HideInInspector] public Transform worldTransform;
+    [HideInInspector] public Transform parentTransform;
     
     private void Awake()
     {

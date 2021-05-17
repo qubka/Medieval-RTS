@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdd971cc99489cb8cbaca1e2b3abe9, type: 3}
   m_Name: Spearmen
   m_EditorClassIdentifier: 
+  recruitCost: 150
+  maxCount: 48
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
   selectorPosition: {x: 0, y: 0.25, z: 0}
   attachPosition: {x: 0, y: 0, z: 0}
@@ -24,7 +26,6 @@ MonoBehaviour:
   unitAccel: 5
   unitRotation: 240
   animations: {fileID: 11400000, guid: cfedb4a06d7fc74459410dc6c1ffb299, type: 2}
-  squadSize: 85
   squadWalkSpeed: 1.25
   squadRunSpeed: 3.25
   squadAccel: 5
@@ -35,8 +36,9 @@ MonoBehaviour:
   rangeDistance: 0
   groupSounds: {fileID: 11400000, guid: 62b857e1d5aa9014cb3a25baf4563ebe, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
-  canvasIcon: {fileID: 21300000, guid: ad71639bcb1ae3a46baf8cfe319e3b47, type: 3}
-  layoutIcon: {fileID: 21300000, guid: 8ee09b3cc0ac38943a5c7152074e84da, type: 3}
+  classIcon: {fileID: 21300000, guid: ad71639bcb1ae3a46baf8cfe319e3b47, type: 3}
+  bigIcon: {fileID: 21300000, guid: 980f13f97e35aa246b981e416c699a01, type: 3}
+  smallIcon: {fileID: 21300000, guid: 8bc1afdf31aee6340ae5c747dfdd6d93, type: 3}
   meleeAttack: 28
   meleeWeapon: {fileID: 11400000, guid: 7e0036085b3634c45b06ee1b41c0e249, type: 2}
   chargeBonus: 30
@@ -51,3 +53,4 @@ MonoBehaviour:
   bonusHitPoints: 20
   mountHealth: 0
   morale: 30
+  chargeProtection: 0

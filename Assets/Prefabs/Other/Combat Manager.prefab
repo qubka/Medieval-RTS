@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 3421342263865875661}
   - component: {fileID: 6200472781240704220}
   m_Layer: 12
-  m_Name: Manager
+  m_Name: Combat Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,11 +50,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963738b1cb50887478c799f88002b2c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCheat: 0
   globalInfo: {fileID: 11400000, guid: f490bc8b869cd2d4ca3c03b24af54ca3, type: 2}
   crowdManager: {fileID: 0}
   holderFrames: {fileID: 0}
-  unitLayout: {fileID: 0}
-  unitCard: {fileID: 0}
+  layoutGroup: {fileID: 0}
+  cardGroup: {fileID: 0}
   main: {fileID: 0}
   minimap: {fileID: 0}
 --- !u!114 &2966289934880963638

@@ -13,6 +13,13 @@ public class TownEditor : Editor
         
         GUILayout.Space(10f);
         
+        if (GUILayout.Button("Add Random Troop")) {
+            var town = ((Town) target);
+            var troops = town.data.ruler.faction.troops;
+            town.data.garrison.Add(troops[Random.Range(0, troops.Length)]);
+            EditorUtility.SetDirty(target);
+        }
+        
         if (GUILayout.Button("Generate Name")) {
             var names = Resources.LoadAll<TownNames>("Names/");
             ((Town) target).GenerateName(names[Random.Range(0, names.Length)]);

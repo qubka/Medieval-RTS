@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdd971cc99489cb8cbaca1e2b3abe9, type: 3}
   m_Name: Long Swordmen
   m_EditorClassIdentifier: 
+  recruitCost: 250
+  maxCount: 48
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
   selectorPosition: {x: 0, y: 0.25, z: 0}
   attachPosition: {x: 0, y: 0, z: 0}
@@ -24,7 +26,6 @@ MonoBehaviour:
   unitAccel: 5
   unitRotation: 240
   animations: {fileID: 11400000, guid: 129ef8c843767614a8b3871909009cb8, type: 2}
-  squadSize: 85
   squadWalkSpeed: 1.25
   squadRunSpeed: 3
   squadAccel: 5
@@ -35,8 +36,9 @@ MonoBehaviour:
   rangeDistance: 0
   groupSounds: {fileID: 11400000, guid: d49620bb46745d94c8ebc828d3ee333a, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
-  canvasIcon: {fileID: 21300000, guid: 140b38d89b0838e4b9aadcada3f7e958, type: 3}
-  layoutIcon: {fileID: 21300000, guid: 50674ac49a47f5641b16e7e716e8532f, type: 3}
+  classIcon: {fileID: 21300000, guid: 140b38d89b0838e4b9aadcada3f7e958, type: 3}
+  bigIcon: {fileID: 21300000, guid: 50674ac49a47f5641b16e7e716e8532f, type: 3}
+  smallIcon: {fileID: 21300000, guid: cbdccf1b50ac09a4ea8c4b7421be3df3, type: 3}
   meleeAttack: 40
   meleeWeapon: {fileID: 11400000, guid: 2e2f433fdd341684b83c12b6c8cc4c13, type: 2}
   chargeBonus: 35
@@ -51,3 +53,4 @@ MonoBehaviour:
   bonusHitPoints: 5
   mountHealth: 0
   morale: 45
+  chargeProtection: 0

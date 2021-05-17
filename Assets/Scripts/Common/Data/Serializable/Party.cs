@@ -25,6 +25,8 @@ public class Party : SerializableObject
     //public PartyFSM state;
     public int skin;
     
+    public int troopCount => troops.Sum(t => t.size);
+    
     #region Serialization
     
     [JSONNode] private int leaderId;

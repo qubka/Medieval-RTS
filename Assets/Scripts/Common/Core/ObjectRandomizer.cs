@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Den.Tools;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ObjectRandomizer : MonoBehaviour
 {
     public Transform[] transforms;
@@ -72,6 +74,16 @@ public class ObjectRandomizer : MonoBehaviour
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             t.localScale = Vector3.one;
+        }
+    }
+
+    public void Align()
+    {
+        var terrain = Terrain.activeTerrain;
+        foreach (var t in transforms) {
+            var pos = transform.TransformPoint(t.localPosition);
+            pos.y = terrain.SampleHeight(pos);
+            t.localPosition = transform.InverseTransformPoint(pos);
         }
     }
 #endif    

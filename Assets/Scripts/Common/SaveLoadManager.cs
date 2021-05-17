@@ -5,8 +5,7 @@ public class SaveLoadManager : SingletonObject<SaveLoadManager>
 {
     public Game current;
     private static string Path => Application.persistentDataPath + "/savedGames.dat";
-
-
+    
     private void Start()
     {
         current = gameObject.AddComponent<Game>();

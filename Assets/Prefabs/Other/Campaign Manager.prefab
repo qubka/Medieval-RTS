@@ -50,13 +50,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963738b1cb50887478c799f88002b2c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCheat: 0
   globalInfo: {fileID: 11400000, guid: f490bc8b869cd2d4ca3c03b24af54ca3, type: 2}
   crowdManager: {fileID: 0}
   holderFrames: {fileID: 0}
-  unitLayout: {fileID: 0}
-  unitCard: {fileID: 0}
+  layoutGroup: {fileID: 0}
+  cardGroup: {fileID: 0}
   main: {fileID: 0}
   minimap: {fileID: 0}
+  tooltip: {fileID: 0}
+  chart: {fileID: 0}
 --- !u!114 &2024981626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,12 +136,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78aa04bae78e426996c80000406a2112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLabel: {fileID: 0}
+  timeMesh: {fileID: 0}
   timeBar: {fileID: 0}
+  timeScale: 0.5
   hoursInDay: 24
   startingYear: 1080
   startingMonth: 1
   startingDay: 1
+  startingHour: 7
 --- !u!114 &3266205435106549779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,3 +156,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab887d4f8824d7b8892e8a342190b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  townController: {fileID: 0}
+  layout: {fileID: 8591804096878496596, guid: c6e1dbeba8e35d646978bd0718ac921a, type: 3}
+  card: {fileID: 6012286516238468129, guid: 7124bf488fc5528489b87d6b0b182660, type: 3}
+  amount: {fileID: 0}
+  maxTroops: 10
+  selectedTroops: []
+  troopLayout: {fileID: 0}

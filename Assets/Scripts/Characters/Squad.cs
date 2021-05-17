@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
+using TMPro;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
@@ -49,7 +51,7 @@ public class Squad : MonoBehaviour, IGameObject
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform camTransform;
-    [HideInInspector] public Transform barTransform;
+    [HideInInspector] public Transform iconTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
     [HideInInspector] public Transform targetTransform;
@@ -63,22 +65,23 @@ public class Squad : MonoBehaviour, IGameObject
     public Image mapMarker;
     public Image mapBorder;
     [Space(5f)]
-    public GameObject squadBar;
-    public Image barSelect;
-    public Image barInner;
-    public Image barFill;
-    public Image barIcon;
-    public Slider barHealth;
+    public GameObject squadIcon;
+    public Image iconSelect;
+    public Image iconInner;
+    public Image iconFill;
+    public Image iconClass;
+    public Slider iconHealth;
     [Space(5f)]
-    public GameObject unitCard;
+    public GameObject squadCard;
     public Slider cardHealth;
     public Slider cardAmmo;
     public Image cardIcon;
     public GameObject cardIndicator;
     public Image cardFlash;
     public Image cardSelect;
-    public Text cardNumber;
-    public GameObject unitLayout;
+    public TextMeshProUGUI cardNumber;
+    public Image cardClass;
+    public GameObject squadLayout;
     [Space(5f)]
     public ParticleSystem particle;
     public GameObject radiusCircle;
@@ -99,6 +102,8 @@ public class Squad : MonoBehaviour, IGameObject
 
     #region Local
 
+    private SquadManager manager;
+    private ListObject<IGameObject> objectList;
     private TableObject<Unit> unitTable;
     private TableObject<Squad> squadTable;
     private TableObject<Obstacle> obstacleTable;
@@ -110,7 +115,6 @@ public class Squad : MonoBehaviour, IGameObject
     private CamController camController;
     private TerrainBorder border;
     private GPUICrowdManager modelManager;
-    private RectTransform holderCanvas;
     private EntityManager entityManager;
     private Entity squadEntity;
     private ShapeModule particleShape;
@@ -204,9 +208,9 @@ public class Squad : MonoBehaviour, IGameObject
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         collider = GetComponent<BoxCollider>();
         anchorTransform = new GameObject("Target Anchor").transform;
-        barTransform = squadBar.transform;
-        layoutTransform = unitLayout.transform;
-        cardTransform = unitCard.transform;
+        iconTransform = squadIcon.transform;
+        layoutTransform = squadLayout.transform;
+        cardTransform = squadCard.transform;
         worldTransform = transform;
         particleShape = particle.shape;
         isRange = hasRange;
@@ -233,16 +237,17 @@ public class Squad : MonoBehaviour, IGameObject
         Stamina = initialStamina;
         Morale = initialMorale;
         unitSize = data.unitSize;
-        phalanxLength = Math.Max(unitSize.width, squadSize / 2f * unitSize.width);
+        phalanxLength = math.max(unitSize.width, squadSize / 2f * unitSize.width);
 
         // Set up the UI components
         var color = team.GetColor();
-        barFill.color = color;
+        iconFill.color = color;
         mapMarker.color = color;
-        barIcon.sprite = data.canvasIcon;
-        cardIcon.sprite = data.layoutIcon;
-        barHealth.maxValue = squadSize;
-        barHealth.value = squadSize;
+        iconClass.sprite = data.classIcon;
+        cardClass.sprite = data.classIcon;
+        cardIcon.sprite = data.bigIcon;
+        iconHealth.maxValue = squadSize;
+        iconHealth.value = squadSize;
         cardHealth.maxValue = squadSize;
         cardHealth.value = squadSize;
         cardNumber.text = squadSize.ToString();
@@ -259,13 +264,14 @@ public class Squad : MonoBehaviour, IGameObject
     private void Start()
     {
         // Get information from manager
+        manager = SquadManager.Instance;
+        objectList = ObjectList.Instance;
         unitTable = UnitTable.Instance;
         obstacleTable = ObstacleTable.Instance;
         squadTable = SquadTable.Instance;
         modelManager = Manager.modelManager;
         camera = Manager.mainCamera;
         camController = Manager.camController;
-        holderCanvas = Manager.holderCanvas;
         camTransform = Manager.camTransform;
         selectAudio = Manager.cameraSources[1];
         border = Manager.border;
@@ -399,12 +405,12 @@ public class Squad : MonoBehaviour, IGameObject
         UpdateCollision();
         
         // Parent a bar to the screen
-        barTransform.SetParent(holderCanvas, false);
-        barTransform.localScale = barScale;
+        iconTransform.SetParent(Manager.holderCanvas, false);
+        iconTransform.localScale = barScale;
 
         // Parent unit to the screen
         if (team == Team.Self) {
-            unitCard.SetActive(false);
+            squadCard.SetActive(false);
             cardTransform.SetParent(Manager.cardCanvas, false);
             layoutTransform.SetParent(Manager.layoutCanvas, false);
             StartCoroutine(RepositionCard()); // fix for re-parenting
@@ -412,7 +418,7 @@ public class Squad : MonoBehaviour, IGameObject
         
         // Add a squad to the tables
         squadTable.Add(gameObject, this);
-        ObjectList.Instance.Add(this);
+        objectList.Add(this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
@@ -424,7 +430,7 @@ public class Squad : MonoBehaviour, IGameObject
     private IEnumerator RepositionCard()
     {
         yield return new WaitForEndOfFrame();
-        unitCard.SetActive(true);
+        squadCard.SetActive(true);
         cardTransform.position = layoutTransform.position;
     }
     
@@ -455,11 +461,10 @@ public class Squad : MonoBehaviour, IGameObject
         
         // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
         if (pos.z < 0f) {
-            squadBar.SetActive(false);
+            squadIcon.SetActive(false);
         } else {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
-            barTransform.localPosition = canvasPos;
-            squadBar.SetActive(true);
+            iconTransform.position = pos;
+            squadIcon.SetActive(true);
         }
 
         // Disable circle radius if we not in range anymore
@@ -681,13 +686,13 @@ public class Squad : MonoBehaviour, IGameObject
         
         if (value) {
             cardSelectRoutine = StartCoroutine(cardSelect.Fade(0f, 0.15f));
-            barSelectRoutine = StartCoroutine(barSelect.Fade(0f, 0.15f));
-            barInnerRoutine = StartCoroutine(barInner.Fade(0f, 0.15f));
+            barSelectRoutine = StartCoroutine(iconSelect.Fade(0f, 0.15f));
+            barInnerRoutine = StartCoroutine(iconInner.Fade(0f, 0.15f));
             mapBorder.color = Color.yellow;
         } else {
             cardSelectRoutine = StartCoroutine(cardSelect.Fade(1f, 0.15f));
-            barSelectRoutine = StartCoroutine(barSelect.Fade(1f, 0.15f));
-            barInnerRoutine = StartCoroutine(barInner.Fade(1f, 0.15f));
+            barSelectRoutine = StartCoroutine(iconSelect.Fade(1f, 0.15f));
+            barInnerRoutine = StartCoroutine(iconInner.Fade(1f, 0.15f));
             mapBorder.color = Color.black;
         }
         select = !select;
@@ -734,18 +739,18 @@ public class Squad : MonoBehaviour, IGameObject
         if (count == 0) {
             squadTable.Remove(gameObject);
             entityManager.DestroyEntity(squadEntity);
-            ObjectList.Instance.Remove(this);
-            UnitManager.Instance.RemoveSquad(this);
-            DestroyImmediate(squadBar);
-            DestroyImmediate(unitCard);
-            DestroyImmediate(unitLayout);
+            objectList.Remove(this);
+            manager.RemoveSquad(this);
+            DestroyImmediate(squadIcon);
+            DestroyImmediate(squadCard);
+            DestroyImmediate(squadLayout);
             DestroyImmediate(gameObject);
         } else {
             if (state != SquadFSM.Attack) {
                 UpdateFormation(phalanxLength);
             }
             
-            barHealth.value = count;
+            iconHealth.value = count;
             cardHealth.value = count;
             cardAmmo.value -= unit.ammunition;
             cardNumber.text = count.ToString();
@@ -1026,7 +1031,7 @@ public class Squad : MonoBehaviour, IGameObject
             }
             if (isEscape) {
                 ChangeSelectState(false);
-                UnitManager.Instance.RemoveSquad(this);
+                manager.RemoveSquad(this);
                 PlaySound(data.commanderSounds.saveYourLives);
                 isForward = true;
                 isRunning = true;
@@ -1338,16 +1343,16 @@ public class Squad : MonoBehaviour, IGameObject
             if (!crossBorder.HasValue) {
                 crossBorder = centroid;
                 ChangeSelectState(false);
-                UnitManager.Instance.RemoveSquad(this);
+                manager.RemoveSquad(this);
             } else if (Vector.DistanceSq(crossBorder.Value, centroid) > removeRange) {
                 foreach (var unit in units) {
                     unit.OnRemove();
                 }
-                ObjectList.Instance.Remove(this);
+                objectList.Remove(this);
                 entityManager.DestroyEntity(squadEntity);
-                DestroyImmediate(squadBar);
-                DestroyImmediate(unitCard);
-                DestroyImmediate(unitLayout);
+                DestroyImmediate(squadIcon);
+                DestroyImmediate(squadCard);
+                DestroyImmediate(squadLayout);
                 gameObject.SetActive(false);
             }
         }
@@ -1604,9 +1609,9 @@ public class Squad : MonoBehaviour, IGameObject
         return centroid;
     }
 
-    public Transform GetBar()
+    public Transform GetIcon()
     {
-        return barTransform;
+        return iconTransform;
     }
 
     public UI GetUI()
@@ -1617,6 +1622,29 @@ public class Squad : MonoBehaviour, IGameObject
     public bool IsVisible()
     {
         return true;
+    }
+
+    #endregion
+
+    #region Hover
+
+    public void OnMouseOver()
+    {
+        if (manager.IsActive) {
+            manager.hover = null;
+        } else {
+            if (manager.hover == null) {
+                manager.squadInfo.OnUpdate();
+            }
+            manager.hover = this;
+        }
+    }
+
+    public void OnMouseExit()
+    {
+        if (manager.hover == this) {
+            manager.hover = null;
+        }
     }
 
     #endregion

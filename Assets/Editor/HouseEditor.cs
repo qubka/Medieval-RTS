@@ -10,7 +10,7 @@ public class HouseEditor : Editor
         
         GUILayout.Space(10f);
         
-        if (GUILayout.Button("Generate random name")) {
+        if (GUILayout.Button("Generate Random Name")) {
             var names = Resources.LoadAll<HouseNames>("Names/");
             ((House) target).GenerateName(names[Random.Range(0, names.Length)]);
             EditorUtility.SetDirty(target);

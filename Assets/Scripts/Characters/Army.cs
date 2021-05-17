@@ -4,6 +4,7 @@ using System.Linq;
 using BehaviorDesigner.Runtime;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -15,12 +16,15 @@ public class Army : MonoBehaviour, IGameObject
     
     [Header("Children References")]
     //[Space(10f)]
-    public GameObject armyBar;
-    private Text barText;
+    public GameObject armyIcon;
+    private TextMeshProUGUI iconText;
     private GameObject armyBanner;
+    //[Space(10f)]
+    //public GameObject troopLayout;
+    //public GameObject troopCard;
     [Space(10f)]
     [HideInInspector] public Transform worldTransform;
-    [HideInInspector] public Transform barTransform;
+    [HideInInspector] public Transform iconTransform;
 
     [Header("Misc")]
     public float canvasHeight;
@@ -36,11 +40,8 @@ public class Army : MonoBehaviour, IGameObject
     private NavMeshAgent agent;
     private ArmyManager armyManager;
     private GPUICrowdManager modelManager;
-    private RectTransform holderCanvas;
     private List<GPUInstancerPrefab> instances;
     private bool visible = true;
-
-    public int troopCount => data.troops.Sum(t => t.size);
 
     public IGameObject Target {
         get => data.followingObject;
@@ -56,8 +57,8 @@ public class Army : MonoBehaviour, IGameObject
         // Set up the squad components
         collider = GetComponent<Collider>();
         agent = GetComponent<NavMeshAgent>();
-        armyBar = Instantiate(armyBar);
-        barTransform = armyBar.transform;
+        armyIcon = Instantiate(armyIcon);
+        iconTransform = armyIcon.transform;
         worldTransform = transform;
     }
 
@@ -66,7 +67,6 @@ public class Army : MonoBehaviour, IGameObject
         // Get information from manager
         camera = Manager.mainCamera;
         //camController = Manager.camController;
-        holderCanvas = Manager.holderCanvas;
         modelManager = Manager.modelManager;
 
         // Create bar if exist
@@ -80,7 +80,7 @@ public class Army : MonoBehaviour, IGameObject
         // Attach scripts
         if (IsPlayer) {
             armyManager = ArmyManager.Instance;
-            armyManager.Init(this);
+            armyManager.SetPlayer(this);
         } else {
             var tree = gameObject.AddComponent<BehaviorTree>();
             tree.ExternalBehavior = data.leader.faction.behavior;
@@ -91,11 +91,11 @@ public class Army : MonoBehaviour, IGameObject
         ObjectList.Instance.Add(this);
 
         // Parent a bar to the screen
-        barText = barTransform.GetComponentInChildren<Text>();
-        barText.color = IsPlayer ? Color.green : (Color) data.leader.faction.color;
-        barText.text = troopCount.ToString();
-        barTransform.SetParent(holderCanvas, false);
-        barTransform.localScale = barScale;
+        iconText = iconTransform.GetComponentInChildren<TextMeshProUGUI>();
+        iconText.color = IsPlayer ? Color.green : (Color) data.leader.faction.color;
+        iconText.text = data.troopCount.ToString();
+        iconTransform.SetParent(Manager.holderCanvas, false);
+        iconTransform.localScale = barScale;
         
         // Disabling the Crowd Manager here to change prototype settings
         // Enabling it after this will make it re-initialize with the new settings for the prototypes
@@ -131,7 +131,7 @@ public class Army : MonoBehaviour, IGameObject
             } else if (agent.IsArrived()) {
                 switch (Target.GetUI()) {
                     case UI.Settlement:
-                        TownInteraction(true, Target as Town);
+                        TownInteraction(Target as Town);
                         worldTransform.position = Target.GetPosition();
                         break;
                     case UI.Army:
@@ -157,15 +157,14 @@ public class Army : MonoBehaviour, IGameObject
         
             // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
             if (pos.z < 0f) {
-                armyBar.SetActive(false);
+                armyIcon.SetActive(false);
             } else {
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(holderCanvas, pos, null, out var canvasPos);
-                barTransform.localPosition = canvasPos;
-                armyBar.SetActive(true);
+                iconTransform.position = pos;
+                armyIcon.SetActive(true);
             }
         
             // TODO: Remove
-            barText.text = troopCount.ToString();
+            //barText.text = troopCount.ToString();
         }
     }
 
@@ -195,14 +194,14 @@ public class Army : MonoBehaviour, IGameObject
                 prefab.gameObject.SetActive(false);
             }
         }
-        armyBar.SetActive(value);
+        armyIcon.SetActive(value);
         armyBanner.SetActive(value);
         visible = value;
     }
 
     public void SetDestination(Vector3 position, IGameObject enemy = null)
     {
-        if (data.localTown && data.localTown == enemy)
+        if (data.localTown && ReferenceEquals(data.localTown, enemy))
             return;
         
         agent.SetDestination(position);
@@ -210,18 +209,24 @@ public class Army : MonoBehaviour, IGameObject
         
         if (data.localTown) {
             var door = data.localTown.entrance;
-            TownInteraction(false);
+            TownInteraction(null);
             worldTransform.SetPositionAndRotation(door.position, door.rotation);
         }
     } 
     
-    public void TownInteraction(bool enter, Town town = null)
+    public void TownInteraction(Town town)
     {
-        Debug.Log(enter ? "Entered city!" : "Leave city!");
-        SetVisibility(!enter);
+        if (town) {
+            Debug.Log("Entered city!");
+            town.data.parties.Add(data);
+        } else {
+            Debug.Log("Leave city!");
+            data.localTown.data.parties.Remove(data);
+        }
+        SetVisibility(!town);
         if (IsPlayer) {
             var controller = armyManager.townController;
-            controller.Toggle(enter);
+            controller.Toggle(town);
             controller.OnUpdate();
         }
         data.localTown = town;
@@ -239,9 +244,9 @@ public class Army : MonoBehaviour, IGameObject
         return worldTransform.position;
     }
 
-    public Transform GetBar()
+    public Transform GetIcon()
     {
-        return barTransform;
+        return iconTransform;
     }
 
     public UI GetUI()

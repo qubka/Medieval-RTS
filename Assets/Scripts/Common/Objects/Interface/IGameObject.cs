@@ -6,7 +6,7 @@ public interface IGameObject
 {
     int GetID();
     Vector3 GetPosition();
-    Transform GetBar();
+    Transform GetIcon();
     UI GetUI();
     bool IsVisible();
 }

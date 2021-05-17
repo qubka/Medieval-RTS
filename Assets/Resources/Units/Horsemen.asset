@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdd971cc99489cb8cbaca1e2b3abe9, type: 3}
   m_Name: Horsemen
   m_EditorClassIdentifier: 
+  recruitCost: 500
+  maxCount: 48
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
   selectorPosition: {x: 0, y: 0.25, z: 0}
   attachPosition: {x: 0, y: -0.25, z: 0}
@@ -24,7 +26,6 @@ MonoBehaviour:
   unitAccel: 5
   unitRotation: 240
   animations: {fileID: 11400000, guid: 477966f5ce21a9a469948d7359761bf5, type: 2}
-  squadSize: 85
   squadWalkSpeed: 2
   squadRunSpeed: 5
   squadAccel: 6
@@ -35,8 +36,9 @@ MonoBehaviour:
   rangeDistance: 0
   groupSounds: {fileID: 11400000, guid: 451a0e2558332734d97a83198f14abc0, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
-  canvasIcon: {fileID: 21300000, guid: 41269493b2287094dbe6d1364f4654c7, type: 3}
-  layoutIcon: {fileID: 21300000, guid: ba0f425d7b32f97448186453576af757, type: 3}
+  classIcon: {fileID: 21300000, guid: 41269493b2287094dbe6d1364f4654c7, type: 3}
+  bigIcon: {fileID: 21300000, guid: ba0f425d7b32f97448186453576af757, type: 3}
+  smallIcon: {fileID: 21300000, guid: 926b972d766f680408c99944f7c8a298, type: 3}
   meleeAttack: 45
   meleeWeapon: {fileID: 11400000, guid: 7e0036085b3634c45b06ee1b41c0e249, type: 2}
   chargeBonus: 55
@@ -51,3 +53,4 @@ MonoBehaviour:
   bonusHitPoints: 25
   mountHealth: 135
   morale: 50
+  chargeProtection: 0

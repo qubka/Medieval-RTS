@@ -16,7 +16,7 @@ GameObject:
   m_Layer: 15
   m_Name: Army
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2606083169810939128}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 18.4, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: fe2604be23fcb4a47b6deb7fb47a3de3, type: 2}
-  armyBar: {fileID: 3980142311170377322, guid: 59b146d46d876ef4a9b7566720666b90, type: 3}
+  armyIcon: {fileID: 3980142311170377322, guid: 59b146d46d876ef4a9b7566720666b90, type: 3}
   worldTransform: {fileID: 0}
-  barTransform: {fileID: 0}
+  iconTransform: {fileID: 0}
   canvasHeight: 0
   barScale: {x: 1, y: 1, z: 1}
   bannerPosition: {x: 0, y: 2, z: -0.1}

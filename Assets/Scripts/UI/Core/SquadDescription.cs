@@ -1,45 +1,36 @@
 using System;
 using System.Collections;
 using DigitalRuby.Tween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SquadDescription : TweenBehaviour
 {
-    [SerializeField] private Text caption;
-    [SerializeField] private Text count;
-    [SerializeField] private Text killed;
+    [SerializeField] private TextMeshProUGUI caption;
+    [SerializeField] private TextMeshProUGUI count;
+    [SerializeField] private TextMeshProUGUI killed;
     [SerializeField] private Image icon;
     [SerializeField] private StatsRadarChart chart;
     [SerializeField] private int layoutTrigger = 12;
-    [SerializeField] private float offset = 232.5f;
 
-    protected override float Offset => offset;
-    private UnitManager manager;
+    private SquadManager manager;
 
-    private void Start()
+    protected override void Start()
     {
-        manager = UnitManager.Instance;
-        StartCoroutine(Tick());
+        manager = SquadManager.Instance;
+        base.Start();
     }
 
-    private IEnumerator Tick()
-    {
-        while (true) {
-            OnUpdate();
-            yield return new WaitForSecondsRealtime(0.5f);
-        }
-    }
-
-    public void OnUpdate()
+    public override void OnUpdate()
     {
         if (manager.selectedCount == 1) {
             Toggle(true);
 
-            var squad = manager.selectedUnits[0];
+            var squad = manager.selectedSquads[0];
             var data = squad.data;
             chart.SetStats(data.stats);
-            icon.sprite = data.canvasIcon;
+            icon.sprite = data.classIcon;
             caption.text = data.name; //TODO: Translation
             count.text = $"{squad.unitCount} ({squad.squadSize})";
             killed.text = squad.killed.ToString();

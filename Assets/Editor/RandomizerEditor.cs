@@ -26,5 +26,9 @@ public class RandomizerEditor : Editor
             ((ObjectRandomizer) target).Reset();
             EditorUtility.SetDirty(target);
         }
+        if (GUILayout.Button("Align")) {
+            ((ObjectRandomizer) target).Align();
+            EditorUtility.SetDirty(target);
+        }
     }
 }

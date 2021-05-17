@@ -5,10 +5,9 @@ public abstract class SingletonObject<T> : MonoBehaviour where T : MonoBehaviour
 {
 	public static T Instance {
 		get {
-			/*if (instance == null) {
-				var obj = new GameObject(typeof(T).Name);
-				instance = obj.AddComponent<T>();
-			}*/
+			if (instance == null) {
+				Debug.LogError(typeof(T).Name + " wasn't created at runtime!");
+			}
 			return instance;
 		}
 	}
@@ -17,10 +16,7 @@ public abstract class SingletonObject<T> : MonoBehaviour where T : MonoBehaviour
 
 	protected virtual void Awake()
 	{
-		if (instance == null) {
-			instance = GetComponent<T>();
-		} else {
-			DestroyImmediate(this);
-		}
+		if(instance != null) DestroyImmediate(gameObject);
+		instance = GetComponent<T>();
 	}
 }

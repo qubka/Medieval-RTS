@@ -10,7 +10,7 @@ public class CharacterEditor : Editor
         
         GUILayout.Space(10f);
         
-        if (GUILayout.Button("Generate random name")) {
+        if (GUILayout.Button("Generate Random Name")) {
             var names = Resources.LoadAll<CharacterNames>("Names/");
             ((Character) target).GenerateName(names[Random.Range(0, names.Length)]);
             EditorUtility.SetDirty(target);

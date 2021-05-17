@@ -1,10 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AttributeLayout : MonoBehaviour
 {
-    [SerializeField] private Text title;
-    [SerializeField] private Text bonus;
+    [SerializeField] private TextMeshProUGUI title;
+    [SerializeField] private TextMeshProUGUI bonus;
     [SerializeField] private Image icon;
     [SerializeField] private RectTransform arrow;
 

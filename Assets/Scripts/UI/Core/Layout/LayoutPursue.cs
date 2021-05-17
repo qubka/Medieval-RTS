@@ -3,19 +3,19 @@ using UnityEngine;
 
 public class LayoutPursue : MonoBehaviour
 {
-    [SerializeField] private Transform layoutTransform;
-    private Transform rectTransform;
+    public Transform layoutTransform;
+    [HideInInspector] public Transform worldTransform;
     private bool move;
 
     private void Awake()
     {
-        rectTransform = transform as RectTransform;
+        worldTransform = transform;
     }
 
     private void Update()
     {
-        if (!move && rectTransform.position != layoutTransform.position) {
-            gameObject.Tween("CardMove_" + GetInstanceID(), rectTransform.position, layoutTransform.position, 0.5f, TweenScaleFunctions.CubicEaseInOut, CardMove, TweenDone);
+        if (!move && worldTransform.position != layoutTransform.position) {
+            gameObject.Tween("CardMove_" + GetInstanceID(), worldTransform.position, layoutTransform.position, 0.5f, TweenScaleFunctions.CubicEaseInOut, CardMove, TweenDone);
             move = true;
         }
     }
@@ -27,6 +27,6 @@ public class LayoutPursue : MonoBehaviour
 
     private void CardMove(ITween<Vector3> obj)
     {
-        rectTransform.position = obj.CurrentValue;
+        worldTransform.position = obj.CurrentValue;
     }
 }

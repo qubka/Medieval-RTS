@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ using Slider = UnityEngine.UI.Slider;
 public class BuildingLayout : MonoBehaviour
 {
     [SerializeField] private Image icon;
-    [SerializeField] private Text label;
+    [SerializeField] private TextMeshProUGUI label;
     [SerializeField] private Image level;
     [SerializeField] private Button button;
     [Space]
@@ -18,21 +19,15 @@ public class BuildingLayout : MonoBehaviour
     [Space]
     [SerializeField] private GameObject bar;
     [SerializeField] private GameObject disabled;
-    [SerializeField] private GameObject builded;
-    [SerializeField] private GameObject notBuilded;
+    [SerializeField] private GameObject build;
+    [SerializeField] private GameObject notBuild;
     [Space]
     [SerializeField] private Sprite[] levelIcons;
 
     [HideInInspector] public Settlement settlement;
     [HideInInspector] public Building building;
-    [HideInInspector] public ArmyManager manager;
 
-    private void Start()
-    {
-        manager = ArmyManager.Instance;
-    }
-
-    public void Init(Settlement settlement, Building building)
+    public void SetBuilding(Settlement settlement, Building building)
     {
         this.settlement = settlement;
         this.building = building;
@@ -43,7 +38,7 @@ public class BuildingLayout : MonoBehaviour
         button.interactable = true;
         disabled.SetActive(false);
         icon.sprite = building.icon;
-        label.text = building.label;
+        label.text = building.name;
         level.sprite = levelIcons[data.item1];
         if (data.item2 < 1f) {
             slider.value = data.item2;
@@ -52,8 +47,8 @@ public class BuildingLayout : MonoBehaviour
         } else {
             bar.SetActive(false);
         }
-        builded.SetActive(true);
-        notBuilded.SetActive(false);
+        build.SetActive(true);
+        notBuild.SetActive(false);
     }
 
     public void Disable()
@@ -61,7 +56,7 @@ public class BuildingLayout : MonoBehaviour
         button.interactable = true;
         
         icon.sprite = building.icon;
-        label.text = building.label;
+        label.text = building.name;
         
         if (building.dependencies.Length > 0) {
             foreach (var resource in building.dependencies) {
@@ -74,8 +69,8 @@ public class BuildingLayout : MonoBehaviour
         }
         
         bar.SetActive(false);
-        builded.SetActive(false);
-        notBuilded.SetActive(true);
+        build.SetActive(false);
+        notBuild.SetActive(true);
     }
 
     public void SetActive(bool value)
@@ -86,6 +81,6 @@ public class BuildingLayout : MonoBehaviour
     public void Pressed()
     {
         settlement.Build(building);
-        manager.townController.OnUpdate();
+        ArmyManager.Instance.townController.OnUpdate();
     }
 }

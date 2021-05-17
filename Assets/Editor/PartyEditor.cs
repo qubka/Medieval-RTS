@@ -10,7 +10,7 @@ public class PartyEditor : Editor
         
         GUILayout.Space(10f);
         
-        if (GUILayout.Button("Add random troop")) {
+        if (GUILayout.Button("Add Random Troop")) {
             var party = ((Party) target);
             var troops = party.leader.faction.troops;
             party.troops.Add(troops[Random.Range(0, troops.Length)]);

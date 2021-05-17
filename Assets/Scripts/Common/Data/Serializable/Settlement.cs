@@ -20,12 +20,13 @@ public class Settlement : SerializableObject
     public int population;
     public int loyalty;
     public int food;
-    public Vector3 entrance;
     [JSONNode(NodeOptions.DontSerialize)] 
     public Character ruler;
     public InfrastructureType type;
-    //public List<Troop> garrison;
-    //public List<Party> armies;
+    [JSONNode(NodeOptions.DontSerialize)] 
+    public List<Troop> garrison;
+    [JSONNode(NodeOptions.DontSerialize)] 
+    public List<Party> parties;
     [JSONNode(NodeOptions.DontSerialize)] 
     public Settlement[] neighbours;
     [JSONNode(NodeOptions.DontSerialize)] 
@@ -36,17 +37,29 @@ public class Settlement : SerializableObject
     #region Serialization
 
     [JSONNode] private int rulerId;
+    [JSONNode] private int[] partiesIds;
+    [JSONNode] private Pack<int, int>[] garrisonData;
     [JSONNode] private Pack<string, Pack<int, float>>[] buildingsAssets;
-
+    
     public override void OnSerialization()
     {
         rulerId = ruler ? ruler.id : -1;
-        var i = 0;
+        garrisonData = new Pack<int, int>[garrison.Count];
+        for (var i = 0; i < garrison.Count; i++) {
+            var troop = garrison[i];
+            garrisonData[i] = new Pack<int, int>(Array.IndexOf(ruler.faction.troops, troop), troop.size);
+        }
+        partiesIds = new int[parties.Count];
+        for (var i = 0; i < parties.Count; i++) {
+            partiesIds[i] = parties[i].leader.id;
+        }
+        var x = 0;
         buildingsAssets = new Pack<string, Pack<int, float>>[buildings.Count];
         foreach (var pair in buildings) {
-            buildingsAssets[i] = new Pack<string, Pack<int, float>>(Path.GetFileName(AssetDatabase.GetAssetPath(pair.Key)), pair.Value);
-            i++;
+            buildingsAssets[x] = new Pack<string, Pack<int, float>>(Path.GetFileName(AssetDatabase.GetAssetPath(pair.Key)), pair.Value);
+            x++;
         }
+        
     }
 
     public override void OnDeserialization()
@@ -54,6 +67,22 @@ public class Settlement : SerializableObject
         var game = SaveLoadManager.Instance.current;
         if (rulerId != -1) {
             ruler = game.characters.Find(c => c.id == rulerId);
+        }
+        garrison.Capacity = garrisonData.Length;
+        foreach (var pack in garrisonData) {
+            var troop = ruler.faction.troops[pack.item1];
+            troop.size = pack.item2;
+            garrison.Add(troop);
+        }
+        if (garrisonData.Length > 0) {
+            garrisonData = new Pack<int, int>[0];
+        }
+        parties.Capacity = partiesIds.Length;
+        foreach (var leaderId in partiesIds) {
+            parties.Add(game.parties.Find(p => p.leader.id == leaderId));
+        }
+        if (partiesIds.Length > 0) {
+            partiesIds = new int[0];
         }
         foreach (var building in buildingsAssets) {
             buildings.Add(AssetDatabase.LoadAssetAtPath<Building>("Assets/Resources/Buildings/" + type + "/" + building.item1), building.item2);

@@ -1471,6 +1471,20 @@ public class Unit : MonoBehaviour
 	}
 
 	#endregion
+	
+	#region Hover
+
+	private void OnMouseOver()
+	{
+		squad.OnMouseOver();
+	}
+
+	private void OnMouseExit()
+	{
+		squad.OnMouseExit();
+	}
+
+	#endregion
 
 	public Unit Clone(GameObject prefab)
     {

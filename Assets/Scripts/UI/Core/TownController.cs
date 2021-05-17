@@ -3,27 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalRuby.Tween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TownController : TweenBehaviour
 {
-    [SerializeField] private Text caption;
-    [SerializeField] private Text prosperity;
-    [SerializeField] private Text prosperityInc;
-    [SerializeField] private Text loyality;
-    [SerializeField] private Text loyalityInc;
-    [SerializeField] private Text population;
-    [SerializeField] private Text populationInc;
-    [SerializeField] private Text food;
-    [SerializeField] private Text foodInc;
+    [SerializeField] private TextMeshProUGUI caption;
+    [SerializeField] private TextMeshProUGUI prosperity;
+    [SerializeField] private TextMeshProUGUI prosperityInc;
+    [SerializeField] private TextMeshProUGUI loyality;
+    [SerializeField] private TextMeshProUGUI loyalityInc;
+    [SerializeField] private TextMeshProUGUI population;
+    [SerializeField] private TextMeshProUGUI populationInc;
+    [SerializeField] private TextMeshProUGUI food;
+    [SerializeField] private TextMeshProUGUI foodInc;
+    [Space]
+    [SerializeField] private GameObject tabs;
+    [Space]
     [SerializeField] private RectTransform buildingsCanvas;
     [SerializeField] private GameObject buildingLayout;
+    [Space]
+    [SerializeField] private RectTransform recruitsCanvas;
+    [SerializeField] private GameObject recruitsLayout;
 
     private Dictionary<int, Dictionary<Building, BuildingLayout>> buildings = new Dictionary<int, Dictionary<Building, BuildingLayout>>();
     private ArmyManager manager;
+    private bool recruitsInit;
     
-    private void Start()
+    protected override void Start()
     {
         manager = ArmyManager.Instance;
         foreach (InfrastructureType type in Enum.GetValues(typeof(InfrastructureType))) {
@@ -40,22 +48,22 @@ public class TownController : TweenBehaviour
                 buildings.Add((int) type, layouts);
             }
         }
-        StartCoroutine(Tick());
+        base.Start();
     }
 
-    private IEnumerator Tick()
+    public override void OnUpdate()
     {
-        while (true) {
-            OnUpdate();
-            yield return new WaitForSecondsRealtime(0.5f);
-        }
-    }
-
-    public void OnUpdate()
-    {
-        if (manager.enabled) {
+        if (manager.isActive) {
             var town = manager.player.localTown;
             if (town) {
+                if (!recruitsInit) {
+                    var faction = manager.player.leader.faction;
+                    foreach (var troop in faction.troops) {
+                        Instantiate(recruitsLayout, recruitsCanvas).GetComponent<RecruitLayout>().SetTroop(faction, troop);
+                    }
+                    recruitsInit = true;
+                }
+                
                 var settlement = town.data;
                 
                 caption.text = settlement.label;
@@ -81,7 +89,7 @@ public class TownController : TweenBehaviour
                     var building = pair.Key;
                     var layout = pair.Value;
                     
-                    layout.Init(settlement, building);
+                    layout.SetBuilding(settlement, building);
                     if (builded.Contains(building)) {
                         layout.Enable(builded[building]);
                     } else {
@@ -90,5 +98,11 @@ public class TownController : TweenBehaviour
                 }
             }
         }
+    }
+
+    public override void Toggle(bool value)
+    {
+        base.Toggle(value);
+        tabs.SetActive(value);
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 [Serializable]
 public class Building : ScriptableObject
 {
-	public string label;
 	public string description;
 	public Sprite icon;
 	public Resource[] dependencies;

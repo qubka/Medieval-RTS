@@ -9,6 +9,10 @@ using UnityEngine;
 [InitializeOnLoad]
 public class Squadron : ScriptableObject
 {
+    [Header("Army")] public int id;
+    public int recruitCost;
+    public int maxCount;
+
     [Header("Unit")]
     public GameObject selectorPrefab;
     public Vector3 selectorPosition;
@@ -20,7 +24,6 @@ public class Squadron : ScriptableObject
     public Animations animations;
 
     [Header("Squad")]
-    //public int squadSize;
     public float squadWalkSpeed;
     public float squadRunSpeed;
     public float squadAccel;
@@ -31,8 +34,9 @@ public class Squadron : ScriptableObject
     public float rangeDistance;
     public Group groupSounds;
     public Commander commanderSounds;
-    public Sprite canvasIcon;
-    public Sprite layoutIcon;
+    public Sprite classIcon;
+    public Sprite bigIcon;
+    public Sprite smallIcon;
 
     [Space(10f)]
     

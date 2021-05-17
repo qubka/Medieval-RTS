@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 14
   m_Name: City_2
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
@@ -54,10 +54,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  townBar: {fileID: 4448039031682656356, guid: 52c8e7ee7a301034cb5d179274f524df, type: 3}
+  entrance: {fileID: 0}
+  wallBanners: []
+  townBanners: []
+  armyBanners: []
+  townIcon: {fileID: 4448039031682656356, guid: 52c8e7ee7a301034cb5d179274f524df, type: 3}
   initialPosition: {x: 0, y: 0, z: 0}
-  barTransform: {fileID: 0}
-  canvasHeight: 0
+  iconTransform: {fileID: 0}
+  canvasHeight: 10
   barScale: {x: 1, y: 1, z: 1}
   bannerPosition: {x: 0, y: 2, z: 0}
   populationGrowth: 0.005
@@ -792,6 +796,10 @@ PrefabInstance:
     - target: {fileID: 2508512294093319017, guid: 06bb5c7208a2ec8408b244ec98cfffad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2998225309319410131, guid: 06bb5c7208a2ec8408b244ec98cfffad, type: 3}
+      propertyPath: m_Icon
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2998225309319410131, guid: 06bb5c7208a2ec8408b244ec98cfffad, type: 3}
       propertyPath: m_Name

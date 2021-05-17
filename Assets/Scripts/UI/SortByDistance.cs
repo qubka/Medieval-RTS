@@ -30,7 +30,7 @@ public class SortByDistance : MonoBehaviour
             var pos = camTransform.position;
             var i = sortingList.Count - 1;
             foreach (var o in sortingList.OrderBy(s => Vector.DistanceSq(s.GetPosition(), pos))) {
-                o.GetBar().SetSiblingIndex(i);
+                o.GetIcon().SetSiblingIndex(i);
                 i--;
             }
             worldTransform.SetAsFirstSibling();

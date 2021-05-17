@@ -1,28 +1,82 @@
+using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class SquadBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class SquadBar : BarBehavior
 {
-    public Squad squad;
-
-    public void OnPointerEnter(PointerEventData eventData)
+    [SerializeField] private ControlButton run;
+    [SerializeField] private ControlButton stop;
+    [SerializeField] private ControlButton hold;
+    [SerializeField] private ControlButton range;
+    [SerializeField] private ControlButton flee;
+    private SquadManager manager;
+    private bool enable;
+    
+    protected override void Start()
     {
-
+        manager = SquadManager.Instance;
+        base.Start();
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public override void OnUpdate()
     {
+        var count = manager.selectedCount;
+        if (count > 0) {
+            Toggle(true);
 
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (squad.team == Team.Self) {
-            /*if (Input.GetKey(inclusiveKey)) { //inclusive select
-			    AddSelected(squad, true);
-		    } else { //exclusive selected
-			    DeselectAllExcept(squad);
-		    }*/
+            if (count == 1) {
+                var squad = manager.selectedSquads[0];
+                run.target.SetActive(squad.isRunning);
+                hold.target.SetActive(squad.isHolding);
+                flee.target.SetActive(squad.isFlee);
+                SetInteractable(range, squad.hasRange, squad.isRange);
+            } else {
+                var selected = manager.selectedSquads;
+                run.target.SetActive(selected.Any(squad => squad.isRunning));
+                hold.target.SetActive(selected.Any(squad => squad.isHolding));
+                flee.target.SetActive(selected.Any(squad => squad.isFlee));
+                SetInteractable(range, selected.Any(squad => squad.hasRange), selected.Any(squad => squad.isRange));
+            }
+        } else {
+            Toggle(false);
         }
+    }
+
+    protected void Toggle(bool value)
+    {
+        if (enable == value)
+            return;
+        
+        enable = value;
+        SetInteractable(run, value);
+        SetInteractable(stop, value);
+        SetInteractable(hold, value);
+        SetInteractable(range, value);
+        SetInteractable(flee, value);
+    }
+    
+    public void Run()
+    {
+        manager.selectedSquads.Run();
+    }
+
+    public void Stop()
+    {
+        manager.selectedSquads.Stop();
+    }
+
+    public void Hold()
+    {
+        manager.selectedSquads.Hold();
+    }
+
+    public void Range()
+    {
+        manager.selectedSquads.Range();
+    }
+
+    public void Flee()
+    {
+        manager.selectedSquads.Flee();
     }
 }

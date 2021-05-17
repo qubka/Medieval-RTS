@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdd971cc99489cb8cbaca1e2b3abe9, type: 3}
   m_Name: Halberdmen
   m_EditorClassIdentifier: 
+  recruitCost: 300
+  maxCount: 48
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
   selectorPosition: {x: 0, y: 0.25, z: 0}
   attachPosition: {x: 0, y: 0, z: 0}
@@ -24,7 +26,6 @@ MonoBehaviour:
   unitAccel: 5
   unitRotation: 200
   animations: {fileID: 11400000, guid: eb4a6bdd77b9d6840845fe492266a9da, type: 2}
-  squadSize: 85
   squadWalkSpeed: 1.25
   squadRunSpeed: 3
   squadAccel: 5
@@ -35,8 +36,9 @@ MonoBehaviour:
   rangeDistance: 0
   groupSounds: {fileID: 11400000, guid: 6fb3cba5f73364943a938738abf9d499, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
-  canvasIcon: {fileID: 21300000, guid: 85abe04a85369804aa6c860c7dba9deb, type: 3}
-  layoutIcon: {fileID: 21300000, guid: 71df82d45b288a14fb5a4778e787e02d, type: 3}
+  classIcon: {fileID: 21300000, guid: 85abe04a85369804aa6c860c7dba9deb, type: 3}
+  bigIcon: {fileID: 21300000, guid: 71df82d45b288a14fb5a4778e787e02d, type: 3}
+  smallIcon: {fileID: 21300000, guid: 6283a8d990f65f241b79f60d01392305, type: 3}
   meleeAttack: 24
   meleeWeapon: {fileID: 11400000, guid: f5a9100434fa0ac4ba22a7f06c744e93, type: 2}
   chargeBonus: 24
@@ -52,4 +54,3 @@ MonoBehaviour:
   mountHealth: 0
   morale: 35
   chargeProtection: 1
-  totalStats: 184

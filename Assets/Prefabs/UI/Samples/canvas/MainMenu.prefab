@@ -66,7 +66,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4488be6468ef6934a979ed2c4022efc1, type: 3}
+    m_Font: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
     m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 1
@@ -675,6 +675,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7750661948953726028, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
     - target: {fileID: 7750661948953726029, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -683,7 +687,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3313414744035702764, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
 --- !u!224 &6321736474557580239 stripped
 RectTransform:
@@ -793,7 +798,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Creators
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7750661948953726028, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
+    m_RemovedComponents:
+    - {fileID: 3313414744035702764, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
 --- !u!224 &4338286053305487512 stripped
 RectTransform:
@@ -809,11 +819,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7750661948436646901, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7750661948436646901, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7750661948436646901, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -825,11 +835,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7750661948436646901, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenWindow
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7750661948436646901, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7750661948436646902, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
       propertyPath: m_Pivot.x
@@ -923,7 +933,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Load Game
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7750661948953726028, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
+    m_RemovedComponents:
+    - {fileID: 3313414744035702764, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
 --- !u!224 &4338286052956248596 stripped
 RectTransform:
@@ -1053,7 +1068,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Exit
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7750661948953726028, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
+    m_RemovedComponents:
+    - {fileID: 3313414744035702764, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
 --- !u!224 &4338286053026144540 stripped
 RectTransform:
@@ -1195,7 +1215,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Settings
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7750661948953726028, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
+    m_RemovedComponents:
+    - {fileID: 3313414744035702764, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
 --- !u!224 &4338286053755923116 stripped
 RectTransform:
@@ -1305,7 +1330,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: History
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7750661948953726028, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 4dd2d484ef68cb14e8ae36fe40ec729d, type: 3}
+    m_RemovedComponents:
+    - {fileID: 3313414744035702764, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd20e6b7f112174e8243a21e7f053cb, type: 3}
 --- !u!224 &4338286053899375970 stripped
 RectTransform:

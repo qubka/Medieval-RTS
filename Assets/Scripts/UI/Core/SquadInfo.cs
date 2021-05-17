@@ -2,37 +2,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SquadInfo : MonoBehaviour
+public class SquadInfo : Tooltip
 {
-    [SerializeField] private Text caption;
-    [SerializeField] private Text status;
-    [SerializeField] private Text count;
-    [SerializeField] private Image icon;
+    [SerializeField] private TextMeshProUGUI caption;
+    [SerializeField] private TextMeshProUGUI status;
+    [SerializeField] private TextMeshProUGUI count;
+    [SerializeField] private Image type;
     [SerializeField] private Slider morale;
     [Space]
     [SerializeField] private RectTransform attributeCanvas;
     [SerializeField] private GameObject attributeLayout;
-    [SerializeField] private Text attributeField;
-
-    private UnitManager manager;
-    private RectTransform rectTransform;
-    private Vector3 shift;
+    [SerializeField] private TextMeshProUGUI attributeField;
+    [Space] 
+    [SerializeField] private Image countBackground;
+    [SerializeField] private Image typeBackground;
+    [SerializeField] private Image barBackground;
+    [Space] 
+    [SerializeField] private Sprite enemyIcon;
+    [SerializeField] private Sprite friendlyIcon;
+    [SerializeField] private Sprite enemyBar;
+    [SerializeField] private Sprite friendlyBar;
     
+    private SquadManager manager;
     private readonly Dictionary<MoraleAttribute, GameObject> attributes = new Dictionary<MoraleAttribute, GameObject>();
-
-    private void Awake()
-    {
-        rectTransform = transform as RectTransform;
-        Resize();
-        rectTransform.position = Input.mousePosition + shift;
-    }
 
     private void Start()
     {
-        manager = UnitManager.Instance;
+        manager = SquadManager.Instance;
         foreach (var attribute in Manager.moraleAttributes.OrderByDescending(a => a.bonus)) {
             var obj = Instantiate(attributeLayout, attributeCanvas);
             obj.GetComponent<AttributeLayout>().SetAttribute(attribute);
@@ -69,9 +69,19 @@ public class SquadInfo : MonoBehaviour
                     status.text = "Retreating";
                     break;
             }
+
+            if (squad.team == Team.Enemy) {
+                countBackground.sprite = enemyIcon;
+                typeBackground.sprite = enemyIcon;
+                barBackground.sprite = enemyBar;
+            } else {
+                countBackground.sprite = friendlyIcon;
+                typeBackground.sprite = friendlyIcon;
+                barBackground.sprite = friendlyBar;
+            }
             
             var data = squad.data;
-            icon.sprite = data.canvasIcon;
+            type.sprite = data.classIcon;
             caption.text = data.name; //TODO: Translation
             count.text = squad.unitCount.ToString();
             morale.value = squad.morale;
@@ -90,27 +100,9 @@ public class SquadInfo : MonoBehaviour
 
             attributeField.SetInteger(bonus);
 
-            rectTransform.localScale = Vector3.one;
+            SetActive(true);
         } else {
-            rectTransform.localScale = Vector3.zero;
+            SetActive(false);
         }
-    }
-
-    private void OnRectTransformDimensionsChange()
-    {
-        if (rectTransform) {
-            Resize();
-        }
-    }
-
-    private void Resize()
-    {
-        var size = rectTransform.sizeDelta;
-        shift = new Vector3(size.x / 2f, -size.y / 2f, 0f);
-    }
-
-    private void Update()
-    {
-        rectTransform.position = Input.mousePosition + shift;
     }
 }

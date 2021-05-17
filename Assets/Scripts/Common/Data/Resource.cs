@@ -8,7 +8,5 @@ using UnityEngine.UI;
 [Serializable]
 public class Resource : ScriptableObject
 {
-    public int id;
-    public string label;
     public Sprite icon;
 }

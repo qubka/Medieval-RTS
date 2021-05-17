@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public static class ListExtensions {
+public static class ListExtensions 
+{
     /// <summary>
     /// Shuffles the element order of the specified list.
     /// </summary>
-    public static void Shuffle<T>(this IList<T> ts) {
+    public static void Shuffle<T>(this IList<T> ts) 
+    {
         var count = ts.Count;
         var last = count - 1;
         for (var i = 0; i < last; ++i) {
@@ -14,5 +16,12 @@ public static class ListExtensions {
             ts[i] = ts[r];
             ts[r] = tmp;
         }
+    }
+    
+    public static void Swap<T>(this IList<T> list, int a, int b)
+    {
+        var tmp = list[a];
+        list[a] = list[b];
+        list[b] = tmp;
     }
 }

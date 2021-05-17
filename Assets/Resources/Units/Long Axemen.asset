@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdd971cc99489cb8cbaca1e2b3abe9, type: 3}
   m_Name: Long Axemen
   m_EditorClassIdentifier: 
+  recruitCost: 300
+  maxCount: 48
   selectorPrefab: {fileID: 5208872090620506462, guid: 5c26801b136439d48a614544b5389121, type: 3}
   selectorPosition: {x: 0, y: 0.25, z: 0}
   attachPosition: {x: 0, y: 0, z: 0}
@@ -24,7 +26,6 @@ MonoBehaviour:
   unitAccel: 5
   unitRotation: 240
   animations: {fileID: 11400000, guid: 04ae6552abe13e3458a968d6c09dd860, type: 2}
-  squadSize: 85
   squadWalkSpeed: 1.25
   squadRunSpeed: 3
   squadAccel: 5
@@ -35,8 +36,9 @@ MonoBehaviour:
   rangeDistance: 0
   groupSounds: {fileID: 11400000, guid: 272dccb57417696418343f3c7eeebed5, type: 2}
   commanderSounds: {fileID: 11400000, guid: 80f05e1672fc3614faf346b4bdf2e3ac, type: 2}
-  canvasIcon: {fileID: 21300000, guid: c2aa1803bf445624aa94f46b57207c7f, type: 3}
-  layoutIcon: {fileID: 21300000, guid: ffcdea875ba058b48a8f10c54da46d49, type: 3}
+  classIcon: {fileID: 21300000, guid: c2aa1803bf445624aa94f46b57207c7f, type: 3}
+  bigIcon: {fileID: 21300000, guid: ffcdea875ba058b48a8f10c54da46d49, type: 3}
+  smallIcon: {fileID: 21300000, guid: a036c0baddb9e6c4ca327ab3d5526d41, type: 3}
   meleeAttack: 48
   meleeWeapon: {fileID: 11400000, guid: 8ced994b27c77634ca6b34de99f56e86, type: 2}
   chargeBonus: 57
@@ -51,3 +53,4 @@ MonoBehaviour:
   bonusHitPoints: 10
   mountHealth: 0
   morale: 50
+  chargeProtection: 0

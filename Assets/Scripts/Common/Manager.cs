@@ -3,18 +3,21 @@
  using GPUInstancer.CrowdAnimations;
  using Unity.Mathematics;
  using UnityEngine;
+ using UnityEngine.EventSystems;
 
-public class Manager : SingletonObject<Manager>
+ public class Manager : SingletonObject<Manager>
 {
-	[Header("Scene Refs")] 
+	[Header("Refs")] 
 	public bool isCheat;
 	public Global globalInfo;
 	public GPUICrowdManager crowdManager;
 	public RectTransform holderFrames;
-	public RectTransform unitLayout;
-	public RectTransform unitCard;
+	public RectTransform layoutGroup;
+	public RectTransform cardGroup;
 	public Camera main;
 	public Camera minimap;
+	public TooltipPopup tooltip;
+	public ChartPopup chart;
 
 	public static int Ground;
 	public static int Army;
@@ -36,6 +39,9 @@ public class Manager : SingletonObject<Manager>
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
 	public static GPUICrowdManager modelManager;
+	public static TooltipPopup tooltipPopup;
+	public static ChartPopup chartPopup;
+	public static EventSystem eventSystem;
 	
 	public static MoraleAttribute ChargedInFlank;
 	public static MoraleAttribute ChargedInRear;
@@ -85,6 +91,7 @@ public class Manager : SingletonObject<Manager>
 	{
 		base.Awake();
 		
+		eventSystem = EventSystem.current;
 		terrain = Terrain.activeTerrain;
 		border = terrain.GetComponent<TerrainBorder>();
 		var size = terrain.terrainData.size;
@@ -95,11 +102,13 @@ public class Manager : SingletonObject<Manager>
 		camTransform = main.transform;
 		camController = main.GetComponent<CamController>();
 		cameraSources = main.GetComponents<AudioSource>();
-		
+
+		tooltipPopup = tooltip;
+		chartPopup = chart;
 		modelManager = crowdManager;
 		holderCanvas = holderFrames;
-		layoutCanvas = unitLayout;
-		cardCanvas = unitCard;
+		layoutCanvas = layoutGroup;
+		cardCanvas = cardGroup;
 		global = globalInfo;
 		
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -182,4 +191,6 @@ public class Manager : SingletonObject<Manager>
 		defaultHouses = Resources.LoadAll<House>("Houses/").ToList();
 		defaultBuildings = Resources.LoadAll<Building>("Buildings/").ToList();
 	}
+
+	public static bool IsPointerOnUI => eventSystem.IsPointerOverGameObject();
 }
