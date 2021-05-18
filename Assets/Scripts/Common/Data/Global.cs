@@ -1,4 +1,5 @@
 ﻿using System;
+using BehaviorDesigner.Runtime;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Medieval/Global Config", order = 0)]
@@ -26,6 +27,7 @@ public class Global : ScriptableObject
     public GameObject drawLine;
     public GameObject moveParticle;
     public GameObject attackParticle;
+    public GameObject deployParticle;
 
     [Header("Sounds")]
     public AudioClip moveSound;
@@ -90,4 +92,9 @@ public class Global : ScriptableObject
 
     [Header("Other")]
     public GUIStyle rectangleStyle;
+
+    [Header("Peasants")] 
+    public Troop[] troops;
+    public Model[] models;
+    public ExternalBehavior behavior;
 }

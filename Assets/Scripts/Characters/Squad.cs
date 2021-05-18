@@ -103,7 +103,7 @@ public class Squad : MonoBehaviour, IGameObject
     #region Local
 
     private SquadManager manager;
-    private ListObject<IGameObject> objectList;
+    private TableObject<IGameObject> objectTable;
     private TableObject<Unit> unitTable;
     private TableObject<Squad> squadTable;
     private TableObject<Obstacle> obstacleTable;
@@ -265,7 +265,7 @@ public class Squad : MonoBehaviour, IGameObject
     {
         // Get information from manager
         manager = SquadManager.Instance;
-        objectList = ObjectList.Instance;
+        objectTable = ObjectTable.Instance;
         unitTable = UnitTable.Instance;
         obstacleTable = ObstacleTable.Instance;
         squadTable = SquadTable.Instance;
@@ -418,7 +418,7 @@ public class Squad : MonoBehaviour, IGameObject
         
         // Add a squad to the tables
         squadTable.Add(gameObject, this);
-        objectList.Add(this);
+        objectTable.Add(gameObject, this);
 
         // Switch to default state
         ChangeState(SquadFSM.Idle);
@@ -738,8 +738,8 @@ public class Squad : MonoBehaviour, IGameObject
         var count = units.Count;
         if (count == 0) {
             squadTable.Remove(gameObject);
+            objectTable.Remove(gameObject);
             entityManager.DestroyEntity(squadEntity);
-            objectList.Remove(this);
             manager.RemoveSquad(this);
             DestroyImmediate(squadIcon);
             DestroyImmediate(squadCard);
@@ -1348,7 +1348,7 @@ public class Squad : MonoBehaviour, IGameObject
                 foreach (var unit in units) {
                     unit.OnRemove();
                 }
-                objectList.Remove(this);
+                objectTable.Remove(gameObject);
                 entityManager.DestroyEntity(squadEntity);
                 DestroyImmediate(squadIcon);
                 DestroyImmediate(squadCard);

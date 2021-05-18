@@ -22,22 +22,26 @@ public class Party : SerializableObject
     public IGameObject followingObject;
     [JSONNode(NodeOptions.DontSerialize)] 
     public Town localTown;
+    [JSONNode(NodeOptions.DontSerialize)] 
+    public Town targetTown;
     //public PartyFSM state;
     public int skin;
     
     public int troopCount => troops.Sum(t => t.size);
-    
+
     #region Serialization
     
     [JSONNode] private int leaderId;
-    [JSONNode] private int settlementId;
+    [JSONNode] private int localTownId;
+    [JSONNode] private int targetTownId;
     [JSONNode] private Pack<int, int>[] troopsData;
     [JSONNode] private Pack<UI, int> followingData;
 
     public override void OnSerialization()
     {
         leaderId = leader ? leader.id : -1;
-        settlementId = localTown ? localTown.GetID() : -1;
+        localTownId = localTown ? localTown.GetID() : -1;
+        targetTownId = targetTown ? targetTown.GetID() : -1;
         troopsData = new Pack<int, int>[troops.Count];
         for (var i = 0; i < troops.Count; i++) {
             var troop = troops[i];
@@ -54,8 +58,11 @@ public class Party : SerializableObject
         if (leaderId != -1) {
             leader = game.characters.Find(c => c.id == leaderId);
         }
-        if (settlementId != -1) {
-            localTown = TownTable.Instance.Values.First(t => t.GetID() == settlementId);
+        if (localTownId != -1) {
+            localTown = TownTable.Instance.Values.First(t => t.GetID() == localTownId);
+        }
+        if (targetTownId != -1) {
+            targetTown = TownTable.Instance.Values.First(t => t.GetID() == targetTownId);
         }
         troops.Capacity = troopsData.Length;
         foreach (var pack in troopsData) {
@@ -67,7 +74,7 @@ public class Party : SerializableObject
             troopsData = new Pack<int, int>[0];
         }
         if (followingData != null) {
-            followingObject = ObjectList.Instance.list.Find(o => o.GetUI() == followingData.item1 && o.GetID() == followingData.item2);
+            followingObject = ObjectTable.Instance.Values.First(o => o.GetUI() == followingData.item1 && o.GetID() == followingData.item2);
             followingData = null;
         }
     }

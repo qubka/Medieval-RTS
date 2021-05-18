@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Den.Tools;
 using TMPro;
 using Unity.Mathematics;
 using UnityEditor;
@@ -81,7 +82,7 @@ public class Town : MonoBehaviour, IGameObject
         
         // Add a town to the tables
         TownTable.Instance.Add(gameObject, this);
-        ObjectList.Instance.Add(this);
+        ObjectTable.Instance.Add(gameObject, this);
         
         //
         CalculateTraits();
@@ -295,6 +296,38 @@ public class Town : MonoBehaviour, IGameObject
         }
         
         CalculateTraits();
+
+        if (isVillage) {
+            CreatePeasant();
+        }
+    }
+
+    private void CreatePeasant()
+    {
+        var party = ScriptableObject.CreateInstance<Party>();
+        var leader = ScriptableObject.CreateInstance<Character>();
+        leader.id = Game.Instance.characters.OrderByDescending(c => c.id).First().id++;
+        leader.faction = data.ruler.faction;
+        leader.name = "Peasant";
+        leader.type = CharacterType.Peasant;
+        party.leader = leader;
+        party.name = "Peasants";
+        party.skin = Random.Range(0, 2);
+
+        var count = Random.Range(1, 4);
+        if (party.troops == null) party.troops = new List<Troop>(count);
+        for (var i = 0; i < count; i++) {
+            var troops = Manager.global.troops;
+            party.troops.Add(troops[Random.Range(0, troops.Length)]);
+        }
+        
+        Game.Instance.parties.Add(party);
+        Game.Instance.characters.Add(leader);
+        
+        var army = Instantiate(Manager.global.armyPrefab, initialPosition, Quaternion.identity).GetComponent<Army>();
+        army.data = party;
+        army.SetBehavior(Manager.global.behavior);
+        army.data.targetTown = TownTable.Instance.Values.First(t => t.GetID() == data.neighbours[0].id);
     }
 
     public void BeginNewWeek()

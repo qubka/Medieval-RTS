@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6172ba5f685e48d990e9bdd814215abc, type: 3}
   m_Name: Player Party
   m_EditorClassIdentifier: 
-  leader: {fileID: 11400000, guid: f2026a488e08c0a4fb73cd910199af41, type: 2}
+  leader: {fileID: 11400000, guid: 7b6623383b8106242940d49d02af92af, type: 2}
   morale: 100
   speed: 10
   position: {x: 357.6, y: -0.5, z: 52.5}
@@ -25,21 +25,30 @@ MonoBehaviour:
     - {fileID: 1800649172099937068, guid: 87507cca8ec9a43488a5fcff829aac8b, type: 3}
     secondaryPrefabs:
     - {fileID: 168575388818583983, guid: 083f586ed63a6c74aa2fb67bb4465af7, type: 3}
+    card: {fileID: 0}
+    layout: {fileID: 0}
   - size: 32
     data: {fileID: 11400000, guid: 41daba74c8104c146b7f27a923f8c944, type: 2}
     primaryPrefabs:
     - {fileID: 4252377261552242389, guid: 395d7b2d8d32791458dc802f5da8220e, type: 3}
     secondaryPrefabs: []
+    card: {fileID: 0}
+    layout: {fileID: 0}
   - size: 32
     data: {fileID: 11400000, guid: 41daba74c8104c146b7f27a923f8c944, type: 2}
     primaryPrefabs:
     - {fileID: 4252377261552242389, guid: 395d7b2d8d32791458dc802f5da8220e, type: 3}
     secondaryPrefabs: []
+    card: {fileID: 0}
+    layout: {fileID: 0}
   - size: 48
     data: {fileID: 11400000, guid: 824bf5ca99334214f9838b12bd32d65e, type: 2}
     primaryPrefabs:
     - {fileID: 4266717674320496157, guid: ef26b85c14baa3c46acde4a02bfcc339, type: 3}
     secondaryPrefabs:
     - {fileID: 8172438492152702671, guid: aab27a29c9a93f246a27050eff815bb1, type: 3}
+    card: {fileID: 0}
+    layout: {fileID: 0}
   localTown: {fileID: 0}
+  targetTown: {fileID: 0}
   skin: 0

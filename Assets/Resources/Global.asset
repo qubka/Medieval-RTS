@@ -28,6 +28,7 @@ MonoBehaviour:
   drawLine: {fileID: 1980492109888674, guid: b3c307c3d3711e04fa12950fde3e9f4f, type: 3}
   moveParticle: {fileID: 1745249769378136, guid: 47e671a17084b8e46a19c3c17194c89d, type: 3}
   attackParticle: {fileID: 1710183954910706, guid: fb32aa8cb64e29a4caf2b8c03b9e10f0, type: 3}
+  deployParticle: {fileID: 1019233934548808, guid: 47f4ac8538ace8d469c63dcfc72b6ec4, type: 3}
   moveSound: {fileID: 8300000, guid: bbae85860e1880b4c8b056d33a4716eb, type: 3}
   attackSound: {fileID: 8300000, guid: b190a8a5f59499f4f9204e64b9a04da9, type: 3}
   placeSound: {fileID: 8300000, guid: 7e58c1718e011c847949792efd486a17, type: 3}
@@ -162,3 +163,24 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  troops:
+  - size: 24
+    data: {fileID: 11400000, guid: b7c680145aa6bb448966f94c9392620e, type: 2}
+    primaryPrefabs:
+    - {fileID: 4958327102507704916, guid: 820bbdd31960bad409e3a050886d0ae6, type: 3}
+    secondaryPrefabs: []
+    card: {fileID: 0}
+    layout: {fileID: 0}
+  - size: 24
+    data: {fileID: 11400000, guid: b142cdefa32ebd2449c38bff4f764dae, type: 2}
+    primaryPrefabs:
+    - {fileID: 8725890418558346398, guid: c8edb5da798eea549bfa9f1e36765f6c, type: 3}
+    secondaryPrefabs: []
+    card: {fileID: 0}
+    layout: {fileID: 0}
+  models:
+  - primary: {fileID: 8262615800228520621, guid: 4b25f1e4e6f1feb439f658903ab4f362, type: 3}
+    secondary: {fileID: 0}
+  - primary: {fileID: 0}
+    secondary: {fileID: 3246406506996199410, guid: 4a219cdcff2a4c74ab88bb10f6c078df, type: 3}
+  behavior: {fileID: 11400000, guid: 148f6c61840d4c349abba3c71d777d0d, type: 2}

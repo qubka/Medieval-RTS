@@ -64,18 +64,19 @@ public class ArmyManager : SingletonObject<ArmyManager>
         
         if (groundCast && !border.IsOutsideBorder(groundHit.point)) {
             if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building | Manager.Army)) {
-                var obj = hit.transform.gameObject;
-                var town = TownTable.Instance[obj];
-                if (town) {
-                    army.SetDestination(town.entrance.position, town);
+                var obj = ObjectTable.Instance[hit.transform.gameObject];
+                if (obj is Town town) {
+                    army.SetDestination(town.entrance.position, obj);
                 } else {
-                    var enemy = ArmyTable.Instance[obj];
-                    army.SetDestination(enemy.GetPosition(), enemy);
+                    army.SetDestination(obj.GetPosition(), obj);
                 }
             } else {
-                army.SetDestination(groundHit.point);
+                var dest = groundHit.point;
+                //dest.y += 0.5f;
+                army.SetDestination(dest);
+                //Instantiate(Manager.global.deployParticle, dest, Quaternion.identity);
             }
-
+            
             camController.SetTarget(army.worldTransform);
         }
     }

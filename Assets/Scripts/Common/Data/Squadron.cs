@@ -9,7 +9,7 @@ using UnityEngine;
 [InitializeOnLoad]
 public class Squadron : ScriptableObject
 {
-    [Header("Army")] public int id;
+    [Header("Army")]
     public int recruitCost;
     public int maxCount;
 

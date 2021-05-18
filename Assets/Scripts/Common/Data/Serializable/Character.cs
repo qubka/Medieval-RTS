@@ -21,7 +21,7 @@ public class Character : SerializableObject
     public int honor;
 
     [Header("Game")]
-    public bool isPlayer;
+    public CharacterType type;
     //public bool isCompanion;
     [JSONNode(NodeOptions.DontSerialize)] 
     public List<Settlement> settlements;
@@ -81,4 +81,14 @@ public class Character : SerializableObject
             settlementsIds = new int[0];
         }
     }
-}   
+}
+
+[Serializable]
+[JSONEnum(format = JSONEnumMemberFormating.Lowercased)]
+public enum CharacterType
+{
+    Player,
+    Noble,
+    Bandit,
+    Peasant,
+}

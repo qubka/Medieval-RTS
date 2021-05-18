@@ -28,8 +28,6 @@ public class Faction : SerializableObject
     public Troop[] troops;
     [JSONNode(NodeOptions.DontSerialize)] 
     public Model[] models;
-    [JSONNode(NodeOptions.DontSerialize)] 
-    public ExternalBehaviorTree behavior;
     
     #region Serialization
     
@@ -74,7 +72,6 @@ public class Faction : SerializableObject
         var faction = Manager.defaultFactions.Find(f => f.id == id);
         troops = faction.troops;
         models = faction.models;
-        behavior = faction.behavior;
     }
     
     #endregion

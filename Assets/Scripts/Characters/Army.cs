@@ -7,6 +7,7 @@ using GPUInstancer.CrowdAnimations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Army : MonoBehaviour, IGameObject
@@ -19,9 +20,6 @@ public class Army : MonoBehaviour, IGameObject
     public GameObject armyIcon;
     private TextMeshProUGUI iconText;
     private GameObject armyBanner;
-    //[Space(10f)]
-    //public GameObject troopLayout;
-    //public GameObject troopCard;
     [Space(10f)]
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform iconTransform;
@@ -48,7 +46,8 @@ public class Army : MonoBehaviour, IGameObject
         private set => data.followingObject = value;
     }
 
-    public bool IsPlayer => data.leader.isPlayer;
+    public bool IsPlayer => data.leader.type == CharacterType.Player;
+    public bool IsPeasant => data.leader.type == CharacterType.Peasant;
 
     #endregion
     
@@ -81,14 +80,11 @@ public class Army : MonoBehaviour, IGameObject
         if (IsPlayer) {
             armyManager = ArmyManager.Instance;
             armyManager.SetPlayer(this);
-        } else {
-            var tree = gameObject.AddComponent<BehaviorTree>();
-            tree.ExternalBehavior = data.leader.faction.behavior;
         }
         
         // Add a army to the tables
         ArmyTable.Instance.Add(gameObject, this);
-        ObjectList.Instance.Add(this);
+        ObjectTable.Instance.Add(gameObject, this);
 
         // Parent a bar to the screen
         iconText = iconTransform.GetComponentInChildren<TextMeshProUGUI>();
@@ -105,7 +101,7 @@ public class Army : MonoBehaviour, IGameObject
         instances = new List<GPUInstancerPrefab>(2);
         
         // Initialize the crowds
-        var faction = data.leader.faction.models[data.skin];
+        var faction = IsPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
         if (faction.primary) instances.Add(CreateCrowd(faction.primary));
         if (faction.secondary) instances.Add(CreateCrowd(faction.secondary));
         
@@ -194,8 +190,12 @@ public class Army : MonoBehaviour, IGameObject
                 prefab.gameObject.SetActive(false);
             }
         }
+        
         armyIcon.SetActive(value);
-        armyBanner.SetActive(value);
+        if (armyBanner) {
+            armyBanner.SetActive(value);
+        }
+        
         visible = value;
     }
 
@@ -230,6 +230,12 @@ public class Army : MonoBehaviour, IGameObject
             controller.OnUpdate();
         }
         data.localTown = town;
+    }
+
+    public void SetBehavior(ExternalBehavior behavior)
+    {
+        var tree = gameObject.AddComponent<BehaviorTree>();
+        tree.ExternalBehavior = behavior;
     }
 
     #region Base

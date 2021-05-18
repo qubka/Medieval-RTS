@@ -1,0 +1,957 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72a0f955e64c4b6e971e55f90417cc3b, type: 3}
+  m_Name: Axe
+  m_EditorClassIdentifier: 
+  idleNormal:
+  - clip: {fileID: 7400002, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 10
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+    childList: []
+  - clip: {fileID: 7400004, guid: b52825ddb24a82a47a0938b30bf593f5, type: 3}
+    frame1: 120
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+    childList: []
+  idleCombat:
+  - clip: {fileID: 7400002, guid: 971c05bc2782d6a4ab995452aa8af824, type: 3}
+    frame1: 82
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 2e53b02d3c3c2a745bbdaf74c3e4b546, type: 2}
+    sound2: {fileID: 11400000, guid: 72a704cc8c5405246ac49952e61f3a94, type: 2}
+    childList: []
+  idleRange: []
+  idleInjured:
+  - clip: {fileID: 8993902097722301239, guid: 8c35b1ff0fd364a4a877db92d50725e2, type: 3}
+    frame1: 32
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 8993902097722301239, guid: f85aafa58441a0f40b3b2aed3534b25e, type: 3}
+    frame1: 110
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 8993902097722301239, guid: 129ee3bbc10d0a34283b503d957a88d6, type: 3}
+    frame1: 50
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 8993902097722301239, guid: f9612ba9608c5fb4fb44ed02114f8b58, type: 3}
+    frame1: 16
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ae7a3541dd9e7c2469f2001cc733f5ff, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  attackNormal:
+  - clip: {fileID: 7400072, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 32
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400048, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 15
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400038, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 16
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400046, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 17
+    frame2: 0
+    side1: 2
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400050, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 16
+    frame2: 0
+    side1: 2
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400064, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 45
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400066, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 45
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400040, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 20
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400054, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400062, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 32
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400058, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 33
+    frame2: 0
+    side1: 4
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400044, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 21
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400056, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 25
+    frame2: 0
+    side1: 2
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400060, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 24
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400042, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 19
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400052, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 24
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  attackStep:
+  - clip: {fileID: 7400090, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 60
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400088, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 27
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: 21af906a9bc0b8a4ebebb1d70298c6e2, type: 2}
+    childList: []
+  - clip: {fileID: 7400096, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 50
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400026, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 18
+    frame2: 0
+    side1: 4
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400084, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 24
+    frame2: 0
+    side1: 4
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400082, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 23
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400030, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400004, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 29
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400012, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 35
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400078, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400028, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 33
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400012, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400034, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400010, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 0
+    side1: 4
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400076, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 31
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400080, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 17
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400094, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 35
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400000, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 45
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400002, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 44
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400008, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 41
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400036, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 42
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400006, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 45
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400074, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 45
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400024, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 55
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400074, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 45
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400092, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 38
+    frame2: 70
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: 21af906a9bc0b8a4ebebb1d70298c6e2, type: 2}
+    childList: []
+  - clip: {fileID: 7400016, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 35
+    frame2: 74
+    side1: 3
+    side2: 1
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400018, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 33
+    frame2: 74
+    side1: 4
+    side2: 1
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400020, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 86
+    side1: 3
+    side2: 3
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400068, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 20
+    frame2: 44
+    side1: 2
+    side2: 3
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400070, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 34
+    frame2: 72
+    side1: 4
+    side2: 4
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  attackCharge:
+  - clip: {fileID: 7400100, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 36
+    frame2: 0
+    side1: 3
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  - clip: {fileID: 7400098, guid: a9e228972999b0d46a21e30edf97d812, type: 3}
+    frame1: 33
+    frame2: 0
+    side1: 1
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: d4734baca02b8d74091bd6beddc23eef, type: 2}
+    childList: []
+  rangeStart: []
+  rangeHold: []
+  rangeRelease: []
+  rangeEnd: []
+  reload: []
+  equip: []
+  kick:
+  - clip: {fileID: 7400040, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 19
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 7009589e37d5d46478f397010908a7df, type: 2}
+    sound2: {fileID: 11400000, guid: 21af906a9bc0b8a4ebebb1d70298c6e2, type: 2}
+    childList: []
+  rage:
+  - clip: {fileID: 7400000, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 26
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: aa68941cbfcf2074aa0f6d57d8adc8c6, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400006, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 35
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 4cba2c8e72ceb704eb5cb22e820a4676, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400022, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 47
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400004, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 24
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 4cba2c8e72ceb704eb5cb22e820a4676, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400002, guid: 63caa43b07a53a44e998f2ca18685177, type: 3}
+    frame1: 31
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 4cba2c8e72ceb704eb5cb22e820a4676, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  turn: []
+  charge:
+  - clip: {fileID: 7400056, guid: 971c05bc2782d6a4ab995452aa8af824, type: 3}
+    frame1: 14
+    frame2: 31
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  forwardWalk:
+  - clip: {fileID: 7400012, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 8
+    frame2: 23
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400018, guid: 971c05bc2782d6a4ab995452aa8af824, type: 3}
+    frame1: 17
+    frame2: 48
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  forwardRun:
+  - clip: {fileID: 7400036, guid: 6844dcb6a866ab34fa96c67e39eab693, type: 3}
+    frame1: 7
+    frame2: 18
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400056, guid: 971c05bc2782d6a4ab995452aa8af824, type: 3}
+    frame1: 14
+    frame2: 31
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  backwardWalk:
+  - clip: {fileID: 7400010, guid: 72bc559d4b44eb14bb687cefb4d1c638, type: 3}
+    frame1: 7
+    frame2: 23
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400038, guid: 971c05bc2782d6a4ab995452aa8af824, type: 3}
+    frame1: 14
+    frame2: 40
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  backwardRun:
+  - clip: {fileID: 7400050, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 7
+    frame2: 20
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400058, guid: 971c05bc2782d6a4ab995452aa8af824, type: 3}
+    frame1: 10
+    frame2: 27
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  blockLeftUp:
+  - clip: {fileID: 7400010, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 12
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  blockLeftDown:
+  - clip: {fileID: 7400012, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 9
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400004, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 11
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  blockRightUp:
+  - clip: {fileID: 7400008, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 9
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400006, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 9
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  blockRightDown:
+  - clip: {fileID: 7400014, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 20
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  - clip: {fileID: 7400002, guid: 5b0b3a1e98b4d6a49b1f360b4b3f5576, type: 3}
+    frame1: 8
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 6a2b384b69b8f684baf74c555d98193d, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+    playOnChild: 0
+  blockShieldUp: []
+  blockShieldDown: []
+  counterLeft: []
+  counterRight: []
+  counterShield: []
+  knockdownNormal:
+  - clip: {fileID: 7400100, guid: 87e6bba8b3ae86e4da9c84f6d832e37d, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 0}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400032, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400036, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400034, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  knockdownCombat:
+  - clip: {fileID: 7400036, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400040, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400038, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: ac9feb017b77677418554c14f87249c9, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  knockdownRange: []
+  deathNormal:
+  - clip: {fileID: 7400038, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400040, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400032, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400036, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400034, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  deathCombat:
+  - clip: {fileID: 7400034, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400032, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400030, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  - clip: {fileID: 7400028, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9cfd0946cdd6f043968e8e3e511f61c, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  deathRange: []
+  hitNormal:
+  - clip: {fileID: 7400028, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400030, guid: 0cf6cd90fa783f74d9a28a42e2071737, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  hitCombat:
+  - clip: {fileID: 7400022, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400000, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400006, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400008, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400004, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400002, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400010, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400018, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400016, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400020, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400012, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  - clip: {fileID: 7400014, guid: 94f81eab0bbfd674aac93322449c54e4, type: 3}
+    frame1: 0
+    frame2: 0
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: b9c78b0fcb662c946a58a0dab58fb043, type: 2}
+    sound2: {fileID: 11400000, guid: 15e31a5ddde24c34ca8111411e70762a, type: 2}
+    childList: []
+  hitRange: []
+  hitBack: []
+  injuredWalk:
+  - clip: {fileID: 8993902097722301239, guid: 7f5d3e607f385c240930dd4d185fee68, type: 3}
+    frame1: 2
+    frame2: 22
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  injuredRun:
+  - clip: {fileID: 8993902097722301239, guid: 0e3cceef3f6696a4abe786806aedf1af, type: 3}
+    frame1: 2
+    frame2: 10
+    side1: 0
+    side2: 0
+    sound1: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    sound2: {fileID: 0}
+    childList: []
+  hasMultiNormalKnockdown: 1
+  hasMultiCombatKnockdown: 0
+  hasMultiRangeKnockdown: 0
+  hasMount: 0
+  hasDistant: 0
+  hasTurn: 0
+  canKnock: 0
+  canBlock: 1
+  canCounter: 0
+  canKnockdown: 1
+  hasShield: 0
+  knockForce: {x: 0, y: 0}
+  deathPosition: {x: 0, y: 0, z: 0}
+  deathRotation: {x: 0, y: 0, z: 0}
