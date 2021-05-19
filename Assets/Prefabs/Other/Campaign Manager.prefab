@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3611982833316405343}
   - component: {fileID: 3611982833306484457}
+  - component: {fileID: 6169367791295493446}
   - component: {fileID: 2024981626}
   - component: {fileID: 3611982833316667067}
   - component: {fileID: 3611982833316667045}
@@ -58,8 +59,118 @@ MonoBehaviour:
   cardGroup: {fileID: 0}
   main: {fileID: 0}
   minimap: {fileID: 0}
-  tooltip: {fileID: 0}
+  fix: {fileID: 0}
+  dynamic: {fileID: 0}
   chart: {fileID: 0}
+--- !u!114 &6169367791295493446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3611982833316667047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11161128b513461da14eadef7c883841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSounds: 50
+  dopplerLevel: 0
+  spatialBlend: 1
+  defaultVolume: 1
+  playRange: 150
+  soundRange: 10
+  ambients:
+  - audio: {fileID: 0}
+    sound: {fileID: 8300000, guid: 4d832b7ac27666a40a2520add70291ff, type: 3}
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    time: 0
+  - audio: {fileID: 0}
+    sound: {fileID: 8300000, guid: 48727f8f40a7e0d4a96a6faed180136b, type: 3}
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.10141505
+        outSlope: 0.10141505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0000188
+        value: 0.10141696
+        inSlope: 0.10141505
+        outSlope: 0.10141505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    time: 1
+  - audio: {fileID: 0}
+    sound: {fileID: 8300000, guid: 32b94ad8765a6304fbe70add446cfe29, type: 3}
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.10141505
+        outSlope: 0.10141505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0000188
+        value: 0.10141696
+        inSlope: 0.10141505
+        outSlope: 0.10141505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    time: 2
+  - audio: {fileID: 0}
+    sound: {fileID: 8300000, guid: 5e06c6528bea4b94eabffd08f9b1ac89, type: 3}
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.10141505
+        outSlope: 0.10141505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0000188
+        value: 0.10141696
+        inSlope: 0.10141505
+        outSlope: 0.10141505
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    time: 3
 --- !u!114 &2024981626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,7 +249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeMesh: {fileID: 0}
   timeBar: {fileID: 0}
-  timeScale: 0.5
+  timeScale: 0.25
   hoursInDay: 24
   startingYear: 1080
   startingMonth: 1
@@ -157,8 +268,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   townController: {fileID: 0}
-  layout: {fileID: 8591804096878496596, guid: c6e1dbeba8e35d646978bd0718ac921a, type: 3}
-  card: {fileID: 6012286516238468129, guid: 7124bf488fc5528489b87d6b0b182660, type: 3}
   amount: {fileID: 0}
   maxTroops: 10
   selectedTroops: []

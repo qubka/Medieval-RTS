@@ -27,11 +27,11 @@ public class BuildingInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             .AppendLine()
             .Append(layout.building.description);
         
-        Manager.tooltipPopup.DisplayInfo(layout.building.name, builder.ToString());
+        Manager.fixedPopup.DisplayInfo(layout.building.name, builder.ToString());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Manager.tooltipPopup.HideInfo();
+        Manager.fixedPopup.HideInfo();
     }
 }

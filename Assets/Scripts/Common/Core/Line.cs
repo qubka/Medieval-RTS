@@ -10,30 +10,27 @@ public class Line
     private GameObject obj;
     private LineRenderer line;
     private Terrain terrain;
-    private bool active;
-    private bool destroy;
-    
-    private List<Vector3> points = new List<Vector3>(128);
-    
+
     public Line(GameObject lineObject)
     {
         obj = Object.Instantiate(lineObject);
         line = obj.GetComponent<LineRenderer>();
         terrain = Manager.terrain;
-        active = true;
+        isActive = true;
         
         if (!line.useWorldSpace) {
             throw new ArgumentOutOfRangeException("LineRenderer should be in world space mode!");
         }
     }
 
-    public int Count => points.Count;
-    public Vector3 First => points[0];
-    public Vector3 Second => points[1];
-    public Vector3 Last => points[points.Count - 1];
-    public Vector3 PreLast => points[points.Count - 2];
-    public bool IsActive => active;
-    public List<Vector3> Points => points;
+    public int Count => Points.Count;
+    public Vector3 First => Points[0];
+    public Vector3 Second => Points[1];
+    public Vector3 Last => Points[Points.Count - 1];
+    public Vector3 PreLast => Points[Points.Count - 2];
+    public bool isActive { get; private set; }
+    public bool isDestroyed { get; private set; }
+    public List<Vector3> Points { get; private set; } = new List<Vector3>(128);
 
     public void AddPoint(Vector3 pos)
     {
@@ -67,18 +64,18 @@ public class Line
 
     public void Add(Vector3 pos)
     {
-        points.Add(pos);
+        Points.Add(pos);
     }
 
     public bool Contains(Vector3 pos)
     {
-        return points.Contains(pos);
+        return Points.Contains(pos);
     }
 
     public void Render()
     {
-        line.positionCount = points.Count;
-        line.SetPositions(points.ToArray());
+        line.positionCount = Points.Count;
+        line.SetPositions(Points.ToArray());
     }
 
     public void Simplify(float tolerance = 0.5f)
@@ -88,36 +85,36 @@ public class Line
     
     public void Destroy()
     {
-        if (destroy)
+        if (isDestroyed)
             return;
         
         Object.Destroy(obj);
-        active = false;
+        isActive = false;
     }
     
     public void SetActive(bool value)
     {
-        if (active == value)
+        if (isActive == value)
             return;
 
         obj.SetActive(value);
-        active = value;
+        isActive = value;
     }
 
     public void RemoveAt(int index)
     {
-        points.RemoveAt(index);
+        Points.RemoveAt(index);
     }
     
     public void Clear()
     {
-        points.Clear();
+        Points.Clear();
     }
     
     public IEnumerator FadeLineRenderer(float fadeSpeed)
     {
-        destroy = true;
-        active = false;
+        isDestroyed = true;
+        isActive = false;
         
         var gradient = new Gradient();
         var currentTime = 0f;
@@ -144,15 +141,15 @@ public class Line
         var curveZ = new AnimationCurve();
 
         // Create keyframe sets
-        var keysX = new Keyframe[points.Count];
-        var keysY = new Keyframe[points.Count];
-        var keysZ = new Keyframe[points.Count];
+        var keysX = new Keyframe[Points.Count];
+        var keysY = new Keyframe[Points.Count];
+        var keysZ = new Keyframe[Points.Count];
 
         // Set keyframes
-        for (var i = 0; i < points.Count; i++) {
-            keysX[i] = new Keyframe(i, points[i].x);
-            keysY[i] = new Keyframe(i, points[i].y);
-            keysZ[i] = new Keyframe(i, points[i].z);
+        for (var i = 0; i < Points.Count; i++) {
+            keysX[i] = new Keyframe(i, Points[i].x);
+            keysY[i] = new Keyframe(i, Points[i].y);
+            keysZ[i] = new Keyframe(i, Points[i].z);
         }
 
         // Apply keyframes to curves
@@ -161,24 +158,24 @@ public class Line
         curveZ.keys = keysZ;
 
         // Smooth curve tangents
-        for (var i = 0; i < points.Count; i++) {
+        for (var i = 0; i < Points.Count; i++) {
             curveX.SmoothTangents(i, 0);
             curveY.SmoothTangents(i, 0);
             curveZ.SmoothTangents(i, 0);
         }
 
         // List to write smoothed values to
-        var lineSegments = new List<Vector3>(points.Count);
+        var lineSegments = new List<Vector3>(Points.Count);
 
         // Find segments in each section
-        for (var i = 0; i < points.Count; i++) {
+        for (var i = 0; i < Points.Count; i++) {
             // Add first point
-            lineSegments.Add(points[i]);
+            lineSegments.Add(Points[i]);
 
             // Make sure within range of array
-            if (i + 1 < points.Count) {
+            if (i + 1 < Points.Count) {
                 // Find distance to next point
-                var distanceToNext = Vector.Distance(points[i], points[i + 1]);
+                var distanceToNext = Vector.Distance(Points[i], Points[i + 1]);
 
                 // Number of segments
                 var segments = (float) (int) (distanceToNext / segmentSize);
@@ -196,6 +193,6 @@ public class Line
             }
         }
 
-        points = lineSegments;
+        Points = lineSegments;
     }
 }

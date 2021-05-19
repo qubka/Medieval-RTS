@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3955035760925036409}
   m_Layer: 0
-  m_Name: Main camera
+  m_Name: Combat Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,10 +219,9 @@ GameObject:
   - component: {fileID: 6780167007369548825}
   - component: {fileID: 6910906969377814027}
   - component: {fileID: 6867766275445662813}
-  - component: {fileID: 3699808381654530615}
-  - component: {fileID: 4039807868695096176}
-  - component: {fileID: 844460127661634525}
   - component: {fileID: 6796195854697879537}
+  - component: {fileID: 4783705456963893884}
+  - component: {fileID: 2437737467004703844}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -303,7 +302,68 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6796195854703305981}
   m_Enabled: 1
---- !u!82 &3699808381654530615
+--- !u!114 &6796195854697879537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6796195854703305981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e786fe815803e4fb7ab98295f44969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardMovementSpeed: 80
+  screenEdgeMovementSpeed: 40
+  followingSpeed: 80
+  rotationSpeed: 100
+  panningSpeed: 50
+  mouseRotationSpeed: 80
+  clampRotationAngle: {x: 10, y: 45}
+  maxHeight: 70
+  minHeight: 5
+  keyboardZoomingSensitivity: 2
+  scrollWheelZoomingSensitivity: 40
+  zoomPos: 0.5
+  smoothZoomTime: 0.1
+  useZoomRotation: 0
+  rotationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  limitMap: 1
+  target: {fileID: 0}
+  distance: 10
+  TraumaExponent: 1
+  MaximumAngularShake: {x: 0.25, y: 0.25, z: 0.25}
+  MaximumTranslationShake: {x: 0.01, y: 0.01, z: 0.01}
+  useScreenEdgeInput: 1
+  screenEdgeBorder: 10
+  useKeyboardInput: 1
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  useKeyboardZooming: 1
+  zoomInKey: 122
+  zoomOutKey: 120
+  useScrollwheelZooming: 1
+  zoomingAxis: Mouse ScrollWheel
+  useKeyboardRotation: 1
+  rotateRightKey: 101
+  rotateLeftKey: 113
+  mouseHorizontalAxis: Mouse X
+  useHorizontalRotation: 1
+  rotateUpKey: 114
+  rotateDownKey: 102
+  mouseVerticalAxis: Mouse Y
+  useVerticalRotation: 1
+  useMousePanning: 1
+  mousePanningKey: 326
+  useMouseRotation: 1
+  mouseRotationKey: 325
+--- !u!82 &4783705456963893884
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -314,104 +374,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 0.3
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!82 &4039807868695096176
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6796195854703305981}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_PlayOnAwake: 1
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -495,7 +459,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!82 &844460127661634525
+--- !u!82 &2437737467004703844
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -506,15 +470,15 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 0
+  m_PlayOnAwake: 1
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
@@ -591,64 +555,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6796195854697879537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6796195854703305981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50e786fe815803e4fb7ab98295f44969, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  keyboardMovementSpeed: 80
-  screenEdgeMovementSpeed: 40
-  followingSpeed: 80
-  rotationSpeed: 100
-  panningSpeed: 50
-  mouseRotationSpeed: 80
-  clampRotationAngle: {x: 10, y: 45}
-  maxHeight: 70
-  minHeight: 5
-  keyboardZoomingSensitivity: 2
-  scrollWheelZoomingSensitivity: 40
-  zoomPos: 0.5
-  smoothZoomTime: 0.1
-  useZoomRotation: 0
-  rotationCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  limitMap: 1
-  target: {fileID: 0}
-  distance: 10
-  TraumaExponent: 1
-  MaximumAngularShake: {x: 0.25, y: 0.25, z: 0.25}
-  MaximumTranslationShake: {x: 0.01, y: 0.01, z: 0.01}
-  useScreenEdgeInput: 1
-  screenEdgeBorder: 10
-  useKeyboardInput: 1
-  horizontalAxis: Horizontal
-  verticalAxis: Vertical
-  useKeyboardZooming: 1
-  zoomInKey: 122
-  zoomOutKey: 120
-  useScrollwheelZooming: 1
-  zoomingAxis: Mouse ScrollWheel
-  useKeyboardRotation: 1
-  rotateRightKey: 101
-  rotateLeftKey: 113
-  mouseHorizontalAxis: Mouse X
-  useHorizontalRotation: 1
-  rotateUpKey: 114
-  rotateDownKey: 102
-  mouseVerticalAxis: Mouse Y
-  useVerticalRotation: 1
-  useMousePanning: 1
-  mousePanningKey: 326
-  useMouseRotation: 1
-  mouseRotationKey: 325

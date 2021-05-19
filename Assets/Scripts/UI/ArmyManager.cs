@@ -66,7 +66,7 @@ public class ArmyManager : SingletonObject<ArmyManager>
             if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building | Manager.Army)) {
                 var obj = ObjectTable.Instance[hit.transform.gameObject];
                 if (obj is Town town) {
-                    army.SetDestination(town.entrance.position, obj);
+                    army.SetDestination(town.doorPosition, obj);
                 } else {
                     army.SetDestination(obj.GetPosition(), obj);
                 }

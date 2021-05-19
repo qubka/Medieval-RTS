@@ -26,12 +26,12 @@ public class ButtonInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private IEnumerator Show()
     {
         yield return new WaitForSecondsRealtime(1f);
-        Manager.tooltipPopup.DisplayInfo("", description);
+        Manager.fixedPopup.DisplayInfo("", description);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         StopAllCoroutines();
-        Manager.tooltipPopup.HideInfo();
+        Manager.fixedPopup.HideInfo();
     }
 }

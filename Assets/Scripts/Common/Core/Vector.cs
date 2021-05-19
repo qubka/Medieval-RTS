@@ -11,6 +11,8 @@ public static class Vector // MathExtension ?
 		0, 1, 2,  2, 1, 3,  4, 6, 0,  0, 6, 2,  6, 7, 2,  2, 7, 3,  7, 5, 3,  3, 5, 1,  5, 0, 1,  1, 4, 0,  4, 5, 6,  6, 5, 7
 	};
 
+	public static readonly Vector3 infinity = new Vector3(float.MaxValue / 2f, float.MaxValue / 2f, float.MaxValue / 2f);
+
 	public static Rect GetScreenRect(Vector3 start, Vector3 end)
 	{
 		start.y = Screen.height - start.y;

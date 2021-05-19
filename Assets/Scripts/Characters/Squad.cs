@@ -136,14 +136,13 @@ public class Squad : MonoBehaviour, IGameObject
     private bool isRunSound;
     private bool isFarSound;
     private bool forwardMove;
-    private bool select;
-    
+
     private Collider[] colliders = new Collider[32];
     
     #region SettersAndGetters
     
     public bool isMoving => seek.enabled;
-    public bool isSelect => select;
+    public bool isSelect { get; private set; }
     public bool isActive => state != SquadFSM.Idle && state != SquadFSM.Retreat;
     public bool isEscape => morale <= 10f || isUnreachable;
     public bool isValidEnemy => enemy && enemy.hasUnits && !enemy.isUnreachable;
@@ -279,7 +278,7 @@ public class Squad : MonoBehaviour, IGameObject
         
         // Disabling the Crowd Manager here to change prototype settings
         // Enabling it after this will make it re-initialize with the new settings for the prototypes
-        modelManager.enabled = false;
+        //modelManager.enabled = false;
 
         // Setup the first prototype in the manager
         var instances = new List<GPUInstancerPrefab>(squadSize);
@@ -399,7 +398,7 @@ public class Squad : MonoBehaviour, IGameObject
         GPUInstancerAPI.InitializeGPUInstancer(modelManager);
         
         // Enabling the Crowd Manager back; this will re-initialize it with the new settings for the prototypes
-        modelManager.enabled = true;
+        //modelManager.enabled = true;
 
         // Set children size
         UpdateCollision();
@@ -468,7 +467,7 @@ public class Squad : MonoBehaviour, IGameObject
         }
 
         // Disable circle radius if we not in range anymore
-        radiusCircle.SetActive(team == Team.Self && select && (isRange || Input.GetKey(radiusKey)));
+        radiusCircle.SetActive(team == Team.Self && isSelect && (isRange || Input.GetKey(radiusKey)));
     }
 
     private IEnumerator Tick()
@@ -673,7 +672,7 @@ public class Squad : MonoBehaviour, IGameObject
 
     public void ChangeSelectState(bool value)
     {
-        if (select == value)
+        if (isSelect == value)
             return;
         
         foreach (var unit in units) {
@@ -685,20 +684,20 @@ public class Squad : MonoBehaviour, IGameObject
         if (barInnerRoutine != null) StopCoroutine(barInnerRoutine);
         
         if (value) {
-            cardSelectRoutine = StartCoroutine(cardSelect.Fade(0f, 0.15f));
-            barSelectRoutine = StartCoroutine(iconSelect.Fade(0f, 0.15f));
-            barInnerRoutine = StartCoroutine(iconInner.Fade(0f, 0.15f));
-            mapBorder.color = Color.yellow;
-        } else {
             cardSelectRoutine = StartCoroutine(cardSelect.Fade(1f, 0.15f));
             barSelectRoutine = StartCoroutine(iconSelect.Fade(1f, 0.15f));
             barInnerRoutine = StartCoroutine(iconInner.Fade(1f, 0.15f));
+            mapBorder.color = Color.yellow;
+        } else {
+            cardSelectRoutine = StartCoroutine(cardSelect.Fade(0f, 0.15f));
+            barSelectRoutine = StartCoroutine(iconSelect.Fade(0f, 0.15f));
+            barInnerRoutine = StartCoroutine(iconInner.Fade(0f, 0.15f));
             mapBorder.color = Color.black;
         }
-        select = !select;
+        isSelect = !isSelect;
 
         if (team == Team.Self) {
-            if (select) {
+            if (isSelect) {
                 PlaySound(RandomExtention.NextBool ? data.commanderSounds.formTheOrder : data.commanderSounds.longLiveTheKing);
             
                 if (!selectAudio.isPlaying) {
@@ -1630,7 +1629,7 @@ public class Squad : MonoBehaviour, IGameObject
 
     public void OnMouseOver()
     {
-        if (manager.IsActive) {
+        if (manager.isActive) {
             manager.hover = null;
         } else {
             if (manager.hover == null) {

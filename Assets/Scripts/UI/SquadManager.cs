@@ -41,9 +41,9 @@ public class SquadManager : SingletonObject<SquadManager>
 	private bool groundCast;
 	private bool pointerUI;
 
-	public bool IsActive => onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit || pointerUI;
-	private bool InvalidHit => !groundCast || border.IsOutsideBorder(groundHit.point) || Input.GetKey(Manager.global.stopKey);
 	public int selectedCount => selectedSquads.Count;
+	public bool isActive => onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit || pointerUI;
+	private bool InvalidHit => !groundCast || border.IsOutsideBorder(groundHit.point) || Input.GetKey(Manager.global.stopKey);
 
 	private void Start()
 	{
@@ -866,7 +866,7 @@ public class SquadManager : SingletonObject<SquadManager>
 
 		public bool Update()
 		{
-			if (line.IsActive && line.Count > 1) {
+			if (line.isActive && line.Count > 1) {
 				var position = squad.worldTransform.position;
 				if (Vector.DistanceSq(position, line.First) > Vector.DistanceSq(position, line.Second)) {
 					line.RemoveAt(0);
@@ -940,7 +940,7 @@ public class SquadManager : SingletonObject<SquadManager>
 
 		public bool Update()
 		{
-			if (line.IsActive && targets.Count > 0) {
+			if (line.isActive && targets.Count > 0) {
 				var currentTime = Time.time;
 				if (currentTime > nextUpdateTime) {
 					line.Clear();

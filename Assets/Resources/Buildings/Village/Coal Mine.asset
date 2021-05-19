@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
+  m_Name: Coal Mine
+  m_EditorClassIdentifier: 
+  description: ???
+  icon: {fileID: 21300000, guid: 77e423728f917344ea0ae8da8839b762, type: 3}
+  dependencies:
+  - {fileID: 11400000, guid: 5172edc9f24e6224cb618d75ea607e72, type: 2}
+  buildingSpeed: 0.02
+  cost: e8030000c409000088130000
+  type: 2
+  effects: []

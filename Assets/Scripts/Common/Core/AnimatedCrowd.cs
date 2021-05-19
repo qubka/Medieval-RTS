@@ -1,4 +1,5 @@
-﻿using GPUInstancer;
+﻿using System;
+using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,7 +11,13 @@ public class AnimatedCrowd : MonoBehaviour
     [HideInInspector] public GPUICrowdPrefab crowd;
     [SerializeField] private AnimationClip idle;
     [SerializeField] private AnimationClip walk;
+    private Transform worldTransform;
     private AnimationState state;
+    
+    private void Start()
+    {
+        worldTransform = transform;
+    }
 
     // This is the relevant part for using the Crowd Animator Workflow. 
     // All animation handling is done per instance in this method.
@@ -53,9 +60,15 @@ public class AnimatedCrowd : MonoBehaviour
         }
     }
 
+    public void SetActive(bool value)
+    {
+        worldTransform.localPosition = value ? Vector3.zero : Vector.infinity;
+    }
+    
     private enum AnimationState
     {
         Idle, 
         Locomotion
     }
+
 }

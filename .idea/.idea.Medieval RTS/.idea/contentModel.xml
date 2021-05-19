@@ -1042,7 +1042,46 @@
               <e p="StandardSpecular_GPUICA.shader" t="Include" />
             </e>
           </e>
+          <e p="Grass And Flowers Pack 1" t="Include">
+            <e p="Example Scene" t="Include">
+              <e p="SimpleTextureDrawing.cs" t="Include" />
+              <e p="Skyboxes" t="Include">
+                <e p="_skybox info.txt" t="Include" />
+              </e>
+            </e>
+          </e>
           <e p="MapMagic" t="Include">
+            <e p="Brush" t="Include">
+              <e p="Core" t="Include">
+                <e p="BrushOps.cs" t="Include" />
+                <e p="MapMagic.asmref" t="Include" />
+                <e p="MapMagicBrush.cs" t="Include" />
+                <e p="Preset.cs" t="Include" />
+                <e p="Stamp.cs" t="Include" />
+                <e p="TerrainCache.cs" t="Include" />
+                <e p="TerrainManager.cs" t="Include" />
+                <e p="Trace.cs" t="Include" />
+                <e p="TuneStroke.cs" t="Include" />
+                <e p="UndoBac.cs" t="Include" />
+                <e p="UndoFull.cs" t="Include" />
+              </e>
+              <e p="Editor" t="Include">
+                <e p="BrushDraw.cs" t="Include" />
+                <e p="BrushGraphTemplate.cs" t="Include" />
+                <e p="BrushInspector.cs" t="Include" />
+                <e p="GeneratorEditors.cs" t="Include" />
+                <e p="MapMagic.Editor.asmref" t="Include" />
+                <e p="PresetInspector.cs" t="Include" />
+              </e>
+              <e p="Generators" t="Include">
+                <e p="GrassInOut.cs" t="Include" />
+                <e p="HeightInOut.cs" t="Include" />
+                <e p="MapMagic.asmref" t="Include" />
+                <e p="ObjectsInOut.cs" t="Include" />
+                <e p="TexturesSetsInOut.cs" t="Include" />
+                <e p="TreesInOut.cs" t="Include" />
+              </e>
+            </e>
             <e p="Compatibility" t="Include">
               <e p="Editor" t="Include">
                 <e p="CTSEditor.cs" t="Include" />
@@ -1060,6 +1099,12 @@
                 <e p="Placeholders" t="Include">
                   <e p="MapMagic.asmref" t="Include" />
                   <e p="VSProMapsPlaceholder.cs" t="Include" />
+                </e>
+              </e>
+              <e p="VegetationStudioObjects" t="Include">
+                <e p="Placeholders" t="Include">
+                  <e p="MapMagic.asmref" t="Include" />
+                  <e p="VSProObjectsPlaceholder.cs" t="Include" />
                 </e>
               </e>
             </e>
@@ -1088,6 +1133,12 @@
                   <e p="MicroSplat.shader" t="Include" />
                   <e p="MicroSplat_Base.shader" t="Include" />
                 </e>
+              </e>
+              <e p="Shaders" t="Include">
+                <e p="LeafFunctions.cginc" t="Include" />
+                <e p="LightingLeafSSS.cginc" t="Include" />
+                <e p="Tree.shader" t="Include" />
+                <e p="Tree_GPUI.shader" t="Include" />
               </e>
             </e>
             <e p="Expose" t="Include">
@@ -1120,6 +1171,45 @@
                   <e p="MatrixModifiers.cs" t="Include" />
                   <e p="TexturesIn.cs" t="Include" />
                   <e p="TexturesOut.cs" t="Include" />
+                </e>
+              </e>
+              <e p="MatrixSets" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="MapMagic.Editor.asmref" t="Include" />
+                  <e p="MatrixSetsEditors.cs" t="Include" />
+                </e>
+                <e p="Runtime" t="Include">
+                  <e p="MapMagic.asmref" t="Include" />
+                  <e p="MatrixSetsGenerators.cs" t="Include" />
+                  <e p="MatrixSetsSpecial.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Objects" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="MapMagic.Editor.asmref" t="Include" />
+                  <e p="ObjectsEditors.cs" t="Include" />
+                </e>
+                <e p="Runtime" t="Include">
+                  <e p="MapMagic.asmref" t="Include" />
+                  <e p="ObjectsInitial.cs" t="Include" />
+                  <e p="ObjectsLockData.cs" t="Include" />
+                  <e p="ObjectsModifiers.cs" t="Include" />
+                  <e p="ObjectsOut.cs" t="Include" />
+                  <e p="ObjectsPortals.cs" t="Include" />
+                  <e p="TreesLockData.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Splines" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="MapMagic.Editor.asmref" t="Include" />
+                  <e p="SplinesEditors.cs" t="Include" />
+                </e>
+                <e p="Runtime" t="Include">
+                  <e p="MapMagic.asmref" t="Include" />
+                  <e p="Pathfinding.cs" t="Include" />
+                  <e p="SplinesGenerators.cs" t="Include" />
+                  <e p="SplinesOut.cs" t="Include" />
+                  <e p="SplinesPortals.cs" t="Include" />
                 </e>
               </e>
             </e>

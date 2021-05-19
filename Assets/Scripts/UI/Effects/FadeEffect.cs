@@ -31,7 +31,7 @@ public class FadeEffect : MonoBehaviour
     {
         while (true) {
             enable = !enable;
-            StartCoroutine(image.Fade(enable ? 0f : 1f, fadeSpeed - 0.1f));
+            StartCoroutine(image.Fade(enable ? 1f : 0f, fadeSpeed - 0.1f));
             yield return new WaitForSecondsRealtime(fadeSpeed);
         }
     }

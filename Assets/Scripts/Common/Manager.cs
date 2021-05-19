@@ -11,12 +11,16 @@
 	public bool isCheat;
 	public Global globalInfo;
 	public GPUICrowdManager crowdManager;
+	[Space]
 	public RectTransform holderFrames;
 	public RectTransform layoutGroup;
 	public RectTransform cardGroup;
+	[Space]
 	public Camera main;
 	public Camera minimap;
-	public TooltipPopup tooltip;
+	[Space]
+	public TooltipPopup fix;
+	public TooltipPopup dynamic;
 	public ChartPopup chart;
 
 	public static int Ground;
@@ -39,7 +43,8 @@
 	public static RectTransform layoutCanvas;
 	public static RectTransform cardCanvas;
 	public static GPUICrowdManager modelManager;
-	public static TooltipPopup tooltipPopup;
+	public static TooltipPopup fixedPopup;
+	public static TooltipPopup dynamicPopup;
 	public static ChartPopup chartPopup;
 	public static EventSystem eventSystem;
 	
@@ -103,7 +108,8 @@
 		camController = main.GetComponent<CamController>();
 		cameraSources = main.GetComponents<AudioSource>();
 
-		tooltipPopup = tooltip;
+		fixedPopup = fix;
+		dynamicPopup = dynamic;
 		chartPopup = chart;
 		modelManager = crowdManager;
 		holderCanvas = holderFrames;

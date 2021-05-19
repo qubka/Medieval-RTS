@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,13 +16,9 @@ public class SoundManager : SingletonObject<SoundManager>
     [Space]
     public float playRange = 150f;
     public float soundRange = 10f;
-    [Header(("Ambient"))] 
-    public AudioClip ambientSound;
-    public AnimationCurve ambientCurve;
-    
-#pragma warning disable 108,114
-    private AudioSource audio;
-#pragma warning restore 108,114
+    [Header(("Ambient"))]
+    public Ambient[] ambients;
+
     //private Transform worldTransform;
     private Transform camTransform;
     private CamController camController;
@@ -41,11 +39,17 @@ public class SoundManager : SingletonObject<SoundManager>
 
     private void Start()
     {
-        audio = Manager.cameraSources[2];
-        audio.loop = true;
-        audio.clip = ambientSound;
-        audio.Play();
-        
+        var camera = Manager.mainCamera.gameObject;
+        foreach (var ambient in ambients) {
+            var source = camera.AddComponent<AudioSource>();
+            source.dopplerLevel = 0f;
+            source.loop = true;
+            source.clip = ambient.sound;
+            source.volume = 0f;
+            source.Play();
+            ambient.audio = source;
+        }
+
         camTransform = Manager.camTransform;
         camController = Manager.camController;
         
@@ -99,7 +103,12 @@ public class SoundManager : SingletonObject<SoundManager>
 
     public void LateUpdate()
     {
-        audio.volume = ambientCurve.Evaluate(MathExtention.Clamp01(camController.DistToGround));
+        var time = CampaignTime.Instance.TimeDelta;
+        var volume = 1f - MathExtention.Clamp01(camController.DistToGround);
+
+        foreach (var ambient in ambients) {
+            ambient.Update(time, volume);
+        }
         
         foreach (var source in sources) {
             if (!source.isPlaying) {
@@ -132,5 +141,24 @@ public class SoundManager : SingletonObject<SoundManager>
         }
         
         clipTable.Clear();
+    }
+
+    [Serializable]
+    public class Ambient
+    {
+        [HideInInspector] public AudioSource audio;
+        public AudioClip sound;
+        public AnimationCurve curve;
+        [MinTo(0f, 24f)] public Vector2 time;
+        private float currentVelocity;
+
+        public void Update(float delta, float volume)
+        {
+            if (delta >= time.x && delta <= time.y) {
+                audio.volume = Mathf.SmoothDamp(audio.volume, curve.Evaluate(volume), ref currentVelocity, 1f);
+            } else {
+                audio.volume = Mathf.SmoothDamp(audio.volume, 0f, ref currentVelocity, 1f);
+            }
+        }
     }
 }

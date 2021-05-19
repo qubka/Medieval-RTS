@@ -13,7 +13,7 @@ public class PartyEditor : Editor
         if (GUILayout.Button("Add Random Troop")) {
             var party = ((Party) target);
             var troops = party.leader.faction.troops;
-            party.troops.Add(troops[Random.Range(0, troops.Length)]);
+            party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
             EditorUtility.SetDirty(target);
         }
     }

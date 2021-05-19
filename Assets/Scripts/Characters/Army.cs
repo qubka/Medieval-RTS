@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using BehaviorDesigner.Runtime;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
@@ -21,6 +22,7 @@ public class Army : MonoBehaviour, IGameObject
     private TextMeshProUGUI iconText;
     private GameObject armyBanner;
     [Space(10f)]
+    [HideInInspector] public ExternalBehavior behavior;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform iconTransform;
 
@@ -37,17 +39,17 @@ public class Army : MonoBehaviour, IGameObject
 #pragma warning restore 108,114
     private NavMeshAgent agent;
     private ArmyManager armyManager;
-    private GPUICrowdManager modelManager;
-    private List<GPUInstancerPrefab> instances;
+    private List<AnimatedCrowd> animators = new List<AnimatedCrowd>(2);
+    private float nextHoverTime;
     private bool visible = true;
 
-    public IGameObject Target {
+    private IGameObject target {
         get => data.followingObject;
-        private set => data.followingObject = value;
+        set => data.followingObject = value;
     }
 
-    public bool IsPlayer => data.leader.type == CharacterType.Player;
-    public bool IsPeasant => data.leader.type == CharacterType.Peasant;
+    private bool isPlayer => data.leader.type == CharacterType.Player;
+    private bool isPeasant => data.leader.type == CharacterType.Peasant;
 
     #endregion
     
@@ -66,8 +68,7 @@ public class Army : MonoBehaviour, IGameObject
         // Get information from manager
         camera = Manager.mainCamera;
         //camController = Manager.camController;
-        modelManager = Manager.modelManager;
-
+        
         // Create bar if exist
         var house = data.leader.house;
         if (house) {
@@ -77,9 +78,12 @@ public class Army : MonoBehaviour, IGameObject
         }
 
         // Attach scripts
-        if (IsPlayer) {
+        if (isPlayer) {
             armyManager = ArmyManager.Instance;
             armyManager.SetPlayer(this);
+        } else {
+            var tree = gameObject.AddComponent<BehaviorTree>();
+            tree.ExternalBehavior = behavior;
         }
         
         // Add a army to the tables
@@ -88,30 +92,24 @@ public class Army : MonoBehaviour, IGameObject
 
         // Parent a bar to the screen
         iconText = iconTransform.GetComponentInChildren<TextMeshProUGUI>();
-        iconText.color = IsPlayer ? Color.green : (Color) data.leader.faction.color;
+        iconText.color = isPlayer ? Color.green : (Color) data.leader.faction.color;
         iconText.text = data.troopCount.ToString();
         iconTransform.SetParent(Manager.holderCanvas, false);
         iconTransform.localScale = barScale;
-        
-        // Disabling the Crowd Manager here to change prototype settings
-        // Enabling it after this will make it re-initialize with the new settings for the prototypes
-        modelManager.enabled = false;
-        
+
         // Setup the first prototype in the manager
-        instances = new List<GPUInstancerPrefab>(2);
+        var instances = new List<GPUInstancerPrefab>(2);
         
         // Initialize the crowds
-        var faction = IsPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
+        var faction = isPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
         if (faction.primary) instances.Add(CreateCrowd(faction.primary));
         if (faction.secondary) instances.Add(CreateCrowd(faction.secondary));
-        
-        // Register the instantiated GOs to the Crowd Manager
-        GPUInstancerAPI.RegisterPrefabInstanceList(modelManager, instances);
-        GPUInstancerAPI.InitializeGPUInstancer(modelManager);
-        
-        // Enabling the Crowd Manager back; this will re-initialize it with the new settings for the prototypes
-        modelManager.enabled = true;
-        
+
+        // Register instances
+        foreach (var prefab in instances) {
+            GPUInstancerAPI.AddPrefabInstance(Manager.modelManager, prefab);
+        }
+
         // TODO: Finish save for town waiting
         /*if (data.localTown) {
             Debug.Log("Entered city!");
@@ -121,23 +119,23 @@ public class Army : MonoBehaviour, IGameObject
 
     public void Update()
     {
-        if (Target != null) {
-            if (!Target.IsVisible()) {
-                Target = null;
+        if (target != null) {
+            if (!target.IsVisible()) {
+                target = null;
             } else if (agent.IsArrived()) {
-                switch (Target.GetUI()) {
+                switch (target.GetUI()) {
                     case UI.Settlement:
-                        TownInteraction(Target as Town);
-                        worldTransform.position = Target.GetPosition();
+                        TownInteraction(target as Town);
+                        worldTransform.position = target.GetPosition();
                         break;
                     case UI.Army:
                         break;
                 }
-                Target = null;
+                target = null;
             } else {
                 // Update destination for player only
-                if (IsPlayer && Target.GetUI() == UI.Army) {
-                    agent.SetDestination(Target.GetPosition());
+                if (isPlayer && target.GetUI() == UI.Army) {
+                    agent.SetDestination(target.GetPosition());
                 }
             }
         }
@@ -171,6 +169,7 @@ public class Army : MonoBehaviour, IGameObject
         var animator = obj.GetComponent<AnimatedCrowd>();
         animator.agent = agent;
         animator.crowd = crowd;
+        animators.Add(animator);
         return crowd;
     }
 
@@ -178,17 +177,9 @@ public class Army : MonoBehaviour, IGameObject
     {
         if (visible == value)
             return;
-        
-        if (value) {
-            foreach (var prefab in instances) {
-                GPUInstancerAPI.AddPrefabInstance(modelManager, prefab);
-                prefab.gameObject.SetActive(true);
-            }
-        } else {
-            foreach (var prefab in instances) {
-                GPUInstancerAPI.RemovePrefabInstance(modelManager, prefab);
-                prefab.gameObject.SetActive(false);
-            }
+
+        foreach (var animator in animators) {
+            animator.SetActive(value);
         }
         
         armyIcon.SetActive(value);
@@ -205,12 +196,14 @@ public class Army : MonoBehaviour, IGameObject
             return;
         
         agent.SetDestination(position);
-        Target = enemy;
+        target = enemy;
         
         if (data.localTown) {
-            var door = data.localTown.entrance;
+            var town = data.localTown;
+            var pos = town.doorPosition;
+            var rot = town.doorRotation;
             TownInteraction(null);
-            worldTransform.SetPositionAndRotation(door.position, door.rotation);
+            worldTransform.SetPositionAndRotation(pos, rot);
         }
     } 
     
@@ -224,18 +217,12 @@ public class Army : MonoBehaviour, IGameObject
             data.localTown.data.parties.Remove(data);
         }
         SetVisibility(!town);
-        if (IsPlayer) {
+        if (isPlayer) {
             var controller = armyManager.townController;
             controller.Toggle(town);
             controller.OnUpdate();
         }
         data.localTown = town;
-    }
-
-    public void SetBehavior(ExternalBehavior behavior)
-    {
-        var tree = gameObject.AddComponent<BehaviorTree>();
-        tree.ExternalBehavior = behavior;
     }
 
     #region Base
@@ -263,6 +250,122 @@ public class Army : MonoBehaviour, IGameObject
     public bool IsVisible()
     {
         return visible;
+    }
+
+    #endregion
+    
+    #region Tooltip
+
+    private void OnMouseOver()
+    {
+        if (Manager.IsPointerOnUI || !visible) {
+            Manager.fixedPopup.HideInfo();
+            return;
+        }
+        
+        var currentTime = Time.unscaledTime;
+        if (currentTime > nextHoverTime) {
+            var color = data.leader.faction.color.ToHexString();
+            var builder = new StringBuilder();
+            var totalCount = 0;
+
+            builder
+                .Append("<size=18>")
+                .Append("<color=#")
+                .Append(color)
+                .Append('>')
+                .Append('(')
+                .Append(data.leader.faction.label)
+                .Append(')')
+                .Append("</size>")
+                .Append("</color>")
+                .AppendLine();
+
+            if (data.troops.Count > 0) {
+                builder
+                    .AppendLine()
+                    .Append("<size=15>")
+                    .Append("<color=#ffffffff>")
+                    .Append("TROOPS:")
+                    .Append("</size>")
+                    .Append("</color>")
+                    .AppendLine()
+                    .Append("<color=#00ffffff>");
+
+                var dict = new Dictionary<Squadron, int>(data.troops.Count);
+
+                foreach (var troop in data.troops) {
+                    var troopCount = troop.size;
+                    totalCount += troopCount;
+                    
+                    var data = troop.data;
+                    if (dict.ContainsKey(data)) {
+                        dict[data] += troop.size;
+                    } else {
+                        dict.Add(data, troop.size);
+                    }
+                }
+                
+                foreach (var pair in dict) {
+                    builder
+                        .Append(pair.Key.name)
+                        .Append(' ')
+                        .Append('(')
+                        .Append(pair.Value)
+                        .Append(')')
+                        .AppendLine();
+                }
+
+                builder.Append("</color>").AppendLine();
+            }
+            
+            var description = builder.ToString();
+
+            builder.Clear();
+
+            builder
+                .Append("<color=#")
+                .Append(color)
+                .Append('>');
+
+            switch (data.leader.type) {
+                case CharacterType.Player:
+                case CharacterType.Noble:
+                    builder
+                        .Append(data.leader.title)
+                        .Append(' ')
+                        .Append(data.leader.surname)
+                        .Append("'s Party");
+                    break;
+                case CharacterType.Bandit:
+                    builder.Append("Marauders");
+                    break;
+                case CharacterType.Peasant:
+                    builder.Append("Villagers");
+                    break;
+            }
+
+            if (totalCount > 0) {
+                builder
+                    .Append(' ')
+                    .Append('(')
+                    .Append(totalCount)
+                    .Append(')');
+            }
+
+            builder.Append("</color>");
+
+            var caption = builder.ToString();
+
+            Manager.dynamicPopup.DisplayInfo(caption, description);
+            
+            nextHoverTime = currentTime + 1f;
+        }
+    }
+    
+    private void OnMouseExit()
+    {
+        Manager.dynamicPopup.HideInfo();
     }
 
     #endregion

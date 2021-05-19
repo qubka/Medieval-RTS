@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 6304490103194596817}
   - component: {fileID: 3299190002078805078}
   - component: {fileID: 386258411679357761}
-  - component: {fileID: 907671224087992653}
+  - component: {fileID: 2630303793070343781}
   m_Layer: 15
   m_Name: horsemen_yellow_army
   m_TagString: Untagged
@@ -176,7 +176,7 @@ MonoBehaviour:
   crowd: {fileID: 0}
   idle: {fileID: 7400010, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
   walk: {fileID: 7400026, guid: dacbfba3b5036d44ab5e8823770dcb0f, type: 3}
---- !u!114 &907671224087992653
+--- !u!114 &2630303793070343781
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383841de6da8ff64dbf29c40801408a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPrototype: {fileID: 11400000, guid: f565ed7632afb38498a594c621c382d5, type: 2}
+  prefabPrototype: {fileID: 11400000, guid: 7ef0343820d24f04795b76819411408f, type: 2}
   gpuInstancerID: 0
   state: 0
   animatorRef: {fileID: 0}

@@ -19,7 +19,8 @@ MonoBehaviour:
     rgba: 4278255360
   leader: {fileID: 0}
   allies: []
-  enemies: []
+  enemies:
+  - {fileID: 11400000, guid: 6960650d042d6824c9fcc4a13030e858, type: 2}
   troops:
   - size: 48
     data: {fileID: 11400000, guid: 735e1f1177b5cdc4ab991cba274b6bdb, type: 2}
@@ -100,4 +101,3 @@ MonoBehaviour:
     secondary: {fileID: 5833737430854866804, guid: 730e3a3e23f63ee4aa394d2ed61941e7, type: 3}
   - primary: {fileID: 867521972099932765, guid: a6bd15fbd1d3f45428c838d315d84cbc, type: 3}
     secondary: {fileID: 5833737430854866804, guid: 730e3a3e23f63ee4aa394d2ed61941e7, type: 3}
-  behavior: {fileID: 0}

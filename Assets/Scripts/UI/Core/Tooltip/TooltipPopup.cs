@@ -7,7 +7,7 @@ public class TooltipPopup : Tooltip
 {
     [SerializeField] private TextMeshProUGUI textMesh;
     
-    public void DisplayInfo(string caption, string description, TextAlignmentOptions alignment = TextAlignmentOptions.TopLeft)
+    public void DisplayInfo(string caption, string description)
     {
         var builder = new StringBuilder();
         if (caption.Length > 0) {
@@ -20,8 +20,7 @@ public class TooltipPopup : Tooltip
         builder.Append(description);
         
         textMesh.text = builder.ToString();
-        textMesh.alignment = alignment;
-        
+
         SetActive(true);
         ForceRebuildLayoutImmediate();
     }

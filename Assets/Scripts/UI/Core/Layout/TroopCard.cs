@@ -22,6 +22,6 @@ public class TroopCard : MonoBehaviour
     public void Select(bool value)
     {
         StopAllCoroutines();
-        StartCoroutine(shadow.Fade(value ? 0f : 1f, 0.15f));
+        StartCoroutine(shadow.Fade(value ? 1f : 0f, 0.15f));
     }
 }

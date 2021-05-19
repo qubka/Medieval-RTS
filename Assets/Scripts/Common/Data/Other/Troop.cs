@@ -34,4 +34,9 @@ public class Troop
         card.Select(value);
         isSelect = value;
     }
+
+    public Troop Clone()
+    {
+        return (Troop) MemberwiseClone();
+    }
 }

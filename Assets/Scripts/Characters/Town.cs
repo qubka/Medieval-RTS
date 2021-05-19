@@ -16,7 +16,7 @@ public class Town : MonoBehaviour, IGameObject
     public Settlement data;
 
     [Header("Children References")] 
-    public Transform entrance;
+    [SerializeField] private Transform entrance;
     [SerializeField] private Transform[] wallBanners;
     [SerializeField] private Transform[] townBanners;
     [SerializeField] private Transform[] armyBanners;
@@ -25,7 +25,10 @@ public class Town : MonoBehaviour, IGameObject
     //[HideInInspector] public Transform iconTransform;
     [HideInInspector] public Transform iconTransform;
 
-    [Header("Misc")] public float canvasHeight;
+    [Header("Misc")] 
+    [ReadOnly] public Vector3 doorPosition;
+    [ReadOnly] public Quaternion doorRotation;
+    public float canvasHeight;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
     public Vector3 bannerPosition = new Vector3(0f, 2f, 0f);
     [Range(1f, 2f)] public float populationGrowth = 0.005f;
@@ -73,6 +76,8 @@ public class Town : MonoBehaviour, IGameObject
         iconTransform = townIcon.transform;
         initialPosition = transform.position;
         initialPosition.y += canvasHeight;
+        doorPosition = entrance.position;
+        doorRotation = entrance.rotation;
         
         // Parent a bar to the screen
         townIcon.SetSettlement(data);
@@ -276,7 +281,7 @@ public class Town : MonoBehaviour, IGameObject
         if (Application.isPlaying) {
             Handles.Label(transform.position + Vector3.up * 5f, "Population: " + data.population + " | Prosperity: " + data.prosperity + " | Loyalty: " + data.loyalty + " | Food: " + data.food);
         } else {
-            Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") {fontSize = 30});
+           // Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") {fontSize = 30});
         }
     }
 
@@ -304,30 +309,33 @@ public class Town : MonoBehaviour, IGameObject
 
     private void CreatePeasant()
     {
-        var party = ScriptableObject.CreateInstance<Party>();
+        var game = Game.Instance;
+        
         var leader = ScriptableObject.CreateInstance<Character>();
-        leader.id = Game.Instance.characters.OrderByDescending(c => c.id).First().id++;
-        leader.faction = data.ruler.faction;
         leader.name = "Peasant";
+        leader.id = game.characters.OrderByDescending(c => c.id).First().id++;
+        leader.faction = data.ruler.faction;
         leader.type = CharacterType.Peasant;
-        party.leader = leader;
+        
+        var party = ScriptableObject.CreateInstance<Party>();
         party.name = "Peasants";
+        party.leader = leader;
         party.skin = Random.Range(0, 2);
 
         var count = Random.Range(1, 4);
         if (party.troops == null) party.troops = new List<Troop>(count);
         for (var i = 0; i < count; i++) {
             var troops = Manager.global.troops;
-            party.troops.Add(troops[Random.Range(0, troops.Length)]);
+            party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
         }
         
-        Game.Instance.parties.Add(party);
-        Game.Instance.characters.Add(leader);
+        game.parties.Add(party);
+        game.characters.Add(leader);
         
         var army = Instantiate(Manager.global.armyPrefab, initialPosition, Quaternion.identity).GetComponent<Army>();
         army.data = party;
-        army.SetBehavior(Manager.global.behavior);
         army.data.targetTown = TownTable.Instance.Values.First(t => t.GetID() == data.neighbours[0].id);
+        army.behavior = Manager.global.behavior;
     }
 
     public void BeginNewWeek()
@@ -369,10 +377,12 @@ public class Town : MonoBehaviour, IGameObject
     
     #endregion
 
+    #region Tooltip
+
     private void OnMouseOver()
     {
         if (Manager.IsPointerOnUI) {
-            Manager.tooltipPopup.HideInfo();
+            Manager.fixedPopup.HideInfo();
             return;
         }
         
@@ -381,9 +391,7 @@ public class Town : MonoBehaviour, IGameObject
             var color = data.ruler.faction.color.ToHexString();
             var builder = new StringBuilder();
             var totalCount = 0;
-
-            #region Label
-
+            
             builder
                 .Append("<size=18>")
                 .Append("<color=#")
@@ -395,8 +403,6 @@ public class Town : MonoBehaviour, IGameObject
                 .Append("</size>")
                 .Append("</color>")
                 .AppendLine();
-
-            #endregion
 
             if (data.parties.Count > 0) {
                 builder
@@ -413,14 +419,26 @@ public class Town : MonoBehaviour, IGameObject
                     var troopCount = party.troopCount;
                     totalCount += troopCount;
 
-                    builder
-                        .Append(party.leader.title)
-                        .Append(' ')
-                        .Append(party.leader.surname);
+                    switch (party.leader.type) {
+                        case CharacterType.Player:
+                        case CharacterType.Noble:
+                            builder
+                                .Append(party.leader.title)
+                                .Append(' ')
+                                .Append(party.leader.surname)
+                                .Append("'s Party");
+                            break;
+                        case CharacterType.Bandit:
+                            builder.Append("Marauders");
+                            break;
+                        case CharacterType.Peasant:
+                            builder.Append("Villagers");
+                            break;
+                    }
 
                     if (troopCount > 0) {
                         builder
-                            .Append("'s Party ")
+                            .Append(' ')
                             .Append('(')
                             .Append(troopCount)
                             .Append(')')
@@ -502,14 +520,16 @@ public class Town : MonoBehaviour, IGameObject
 
             var caption = builder.ToString();
 
-            Manager.tooltipPopup.DisplayInfo(caption, description, TextAlignmentOptions.Center);
+            Manager.dynamicPopup.DisplayInfo(caption, description);
             
-            nextHoverTime = currentTime + 0.1f;
+            nextHoverTime = currentTime + 1f;
         }
     }
 
     private void OnMouseExit()
     {
-        Manager.tooltipPopup.HideInfo();
+        Manager.dynamicPopup.HideInfo();
     }
+    
+    #endregion
 }

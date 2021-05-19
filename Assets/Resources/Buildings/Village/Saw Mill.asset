@@ -12,16 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
   m_Name: Saw Mill
   m_EditorClassIdentifier: 
-  label: Saw Mill
   description: ???
-  icon: {fileID: 21300000, guid: 023b2f390bcc998478381ae385735b9b, type: 3}
+  icon: {fileID: 21300000, guid: 4a5c0056a042238458f94e2ff0821d3b, type: 3}
   dependencies:
   - {fileID: 11400000, guid: 385aa35df9c944d4cb75aa1f10b189ee, type: 2}
   buildingSpeed: 0.02
   cost: e8030000c409000088130000
   type: 2
-  effects:
-  - effect: 1
-    bonus: 05000000070000000a000000
-  - effect: 2
-    bonus: 010000000200000003000000
+  effects: []

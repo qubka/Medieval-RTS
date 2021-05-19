@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using TMPro;
@@ -22,16 +23,15 @@ public class CampaignTime : SingletonObject<CampaignTime> {
     private float daysFromStart;
     private string timeStamp;
     private float timeDelta;
-    private float lastDelta;
     
     public DateTime Now => dateTime;
+    public float TimeDelta => timeDelta;
 
     private void Start()
     {
         lightManager = LightManager.Instance;
         dateTime = new DateTime(startingYear, startingMonth, startingDay);
         timeDelta = startingHour;
-        lastDelta = timeDelta;
         timeStamp = ToString();
         timeMesh.text = timeStamp + GetTimeOfDay();
     }
@@ -53,32 +53,48 @@ public class CampaignTime : SingletonObject<CampaignTime> {
             timeStamp = ToString();
         }
 
-        timeMesh.text = timeStamp + GetTimeOfDay();
+        timeMesh.text = timeStamp + Environment.NewLine + GetTimeOfDay();
     }
 
     public override string ToString()
     {
-        return dateTime.ToString("d MMMM, yyyy", CultureInfo.InvariantCulture) + Environment.NewLine;
+        return dateTime.ToString("d MMMM, yyyy", CultureInfo.InvariantCulture);
+    }
+
+    public TimeOfDay GetTimeOfDay() {
+        if (timeDelta >= 0.5f && timeDelta < 5f) {
+            return TimeOfDay.Night;
+        } else if (timeDelta >= 5f && timeDelta < 7f) {
+            return TimeOfDay.EarlyMorning;
+        } else if (timeDelta >= 7f && timeDelta < 11.5f) {
+            return TimeOfDay.Morning;
+        } else if (timeDelta >= 11.5f && timeDelta < 12.5f) {
+            return TimeOfDay.Noon;
+        } else if (timeDelta >= 12.5f && timeDelta < 17f) {
+            return TimeOfDay.Afternoon;
+        } else if (timeDelta >= 17f && timeDelta < 19.5f) {
+            return TimeOfDay.Evening;
+        } else if (timeDelta >= 19.5f && timeDelta < 22f) {
+            return TimeOfDay.LateEvening;
+        } else if (timeDelta >= 22f && timeDelta < 23.5f) {
+            return TimeOfDay.Twilight;
+        }
+        return TimeOfDay.Midnight;
     }
     
-    public string GetTimeOfDay() {
-        if (timeDelta >= 0.5f && timeDelta < 5f) {
-            return "Night";
-        } else if (timeDelta >= 5f && timeDelta < 7f) {
-            return "Early Morning";
-        } else if (timeDelta >= 7f && timeDelta < 11.5f) {
-            return "Morning";
-        } else if (timeDelta >= 11.5f && timeDelta < 12.5f) {
-            return "Noon";
-        } else if (timeDelta >= 12.5f && timeDelta < 17f) {
-            return "Afternoon";
-        } else if (timeDelta >= 17f && timeDelta < 19.5f) {
-            return "Evening";
-        } else if (timeDelta >= 19.5f && timeDelta < 22f) {
-            return "Late Evening";
-        } else if (timeDelta >= 22f && timeDelta < 23.5f) {
-            return "Twilight";
-        }
-        return "Midnight";
+    [Serializable]
+    public enum TimeOfDay
+    {
+        Midnight,
+        Twilight,
+        [Description("Late Evening")]
+        LateEvening,
+        Evening,
+        Afternoon,
+        Noon,
+        Morning,
+        [Description("Early Morning")]
+        EarlyMorning,
+        Night
     }
 }
