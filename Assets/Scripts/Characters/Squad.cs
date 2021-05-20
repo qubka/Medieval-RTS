@@ -19,6 +19,7 @@ public class Squad : MonoBehaviour, IGameObject
 {
     [Header("Main Information")]
     public Squadron data;
+    [Space]
     public int squadSize;
     public List<GameObject> primaryPrefabs;
     public List<GameObject> secondaryPrefabs;

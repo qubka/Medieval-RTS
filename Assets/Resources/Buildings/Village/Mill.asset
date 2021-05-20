@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
-  m_Name: Masonry
+  m_Name: Mill
   m_EditorClassIdentifier: 
-  description: ???
-  icon: {fileID: 21300000, guid: dbe5976748a556545ac3e72ae71b1a07, type: 3}
-  dependencies:
-  - {fileID: 11400000, guid: e591a4125e363d04995798b7232df682, type: 2}
+  description: By which the elements themselves grind the corn.
+  icon: {fileID: 21300000, guid: c0f8e6ab8f73190469de05329cdf57b4, type: 3}
+  dependencies: []
   buildingSpeed: 0.02
   cost: e8030000c409000088130000
   type: 2
-  effects: []
+  effects:
+  - effect: 4
+    bonus: 0f0000000f0000000f000000
+  - effect: 14
+    bonus: 010000000200000003000000

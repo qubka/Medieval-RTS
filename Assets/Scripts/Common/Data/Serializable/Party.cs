@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityJSON;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/Party Config", order = 0)]
 [Serializable]
-[InitializeOnLoad]
 public class Party : SerializableObject
 {
     [JSONNode(NodeOptions.DontSerialize)] 
@@ -23,7 +24,7 @@ public class Party : SerializableObject
     [JSONNode(NodeOptions.DontSerialize)] 
     public Town localTown;
     [JSONNode(NodeOptions.DontSerialize)] 
-    public Town targetTown;
+    public Town targetTown; // for AI
     //public PartyFSM state;
     public int skin;
     
@@ -80,6 +81,49 @@ public class Party : SerializableObject
     }
     
     #endregion
+    
+    public static void CreatePeasant(Town town)
+    {
+        var game = Game.Instance;
+        
+        var leader = CreateInstance<Character>();
+        leader.name = "Peasant";
+        leader.id = game.characters.OrderByDescending(c => c.id).First().id++;
+        leader.faction = town.data.ruler.faction;
+        leader.type = CharacterType.Peasant;
+        leader.home = town.data;
+        
+        var party = CreateInstance<Party>();
+        party.name = "Peasants";
+        party.leader = leader;
+        party.skin = Random.Range(0, 2);
+
+        var count = math.min(math.max(1, town.data.prosperity / 10), 3);
+        if (party.troops == null) party.troops = new List<Troop>(count);
+        for (var i = 0; i < count; i++) {
+            var troops = Manager.global.troops;
+            party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
+        }
+        
+        game.parties.Add(party);
+        game.characters.Add(leader);
+        
+        var army = Instantiate(Manager.global.armyPrefab, town.initialPosition, Quaternion.identity).GetComponent<Army>();
+        army.data = party;
+        army.data.targetTown = TownTable.Instance.Values.First(t => t.GetID() == town.data.neighbours[0].id);
+        army.behavior = Manager.global.behavior;
+    }
+    
+    public void DestroyParty(bool withLeader = false)
+    {
+        var game = Game.Instance;
+        game.parties.Remove(this);
+        Destroy(this);
+        if (withLeader) {
+            game.characters.Remove(leader);
+            Destroy(leader);
+        }
+    }
 }
 
 [Serializable]

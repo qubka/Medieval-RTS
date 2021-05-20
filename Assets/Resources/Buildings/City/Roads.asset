@@ -10,12 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
-  m_Name: Road
+  m_Name: Roads
   m_EditorClassIdentifier: 
-  description: ???
+  description: Dirt Roads increase the movement speed of units that travel along
+    them, as well as improve trade.
   icon: {fileID: 21300000, guid: 5c3a4e03b6760914386ccaed6473b61b, type: 3}
   dependencies: []
-  buildingSpeed: 0.02
-  cost: e8030000c409000088130000
-  type: 2
-  effects: []
+  buildingSpeed: 0.01
+  cost: 8813000010270000204e0000
+  type: 0
+  effects:
+  - effect: 14
+    bonus: 010000000200000003000000
+  - effect: 16
+    bonus: 050000000a0000000f000000

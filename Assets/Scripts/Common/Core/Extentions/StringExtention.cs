@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.ComponentModel;
 using UnityEngine;
 
 public static class StringExtention
@@ -25,4 +26,13 @@ public static class StringExtention
         var temp = str.Substring(1, str.Length - 2).Split(',');
         return new Vector3 (float.Parse(temp[0]), float.Parse(temp[1]), float.Parse(temp[2]));
     }*/
+    
+    public static string GetPrettyName(Enum e)
+    {
+        var nm = e.ToString();
+        var tp = e.GetType();
+        var field = tp.GetField(nm);
+
+        return Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attrib ? attrib.Description : nm;
+    }
 }

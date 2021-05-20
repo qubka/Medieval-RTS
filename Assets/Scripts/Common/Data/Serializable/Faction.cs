@@ -7,7 +7,6 @@ using UnityJSON;
 
 [CreateAssetMenu(menuName = "Medieval/Faction Config", order = 0)]
 [Serializable]
-[InitializeOnLoad]
 public class Faction : SerializableObject
 {
     [Header("General")]

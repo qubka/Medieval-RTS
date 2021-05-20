@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
-  m_Name: Crop Farm
+  m_Name: Mint
   m_EditorClassIdentifier: 
-  description: ???
-  icon: {fileID: 21300000, guid: 9d5dca37c2eb80b4092df678206a4376, type: 3}
-  dependencies:
-  - {fileID: 11400000, guid: 5a14a40419ed8aa4a9c0a0aa80dd41e1, type: 2}
-  buildingSpeed: 0.02
-  cost: e8030000c409000088130000
-  type: 2
-  effects: []
+  description: Coins hold power beyond wealth. They are legitimacy. They are loyalty.
+  icon: {fileID: 21300000, guid: 8f6797deb65f88843b4a74217c29d390, type: 3}
+  dependencies: []
+  buildingSpeed: 0.01
+  cost: 8813000010270000204e0000
+  type: 0
+  effects:
+  - effect: 14
+    bonus: 010000000200000003000000
+  - effect: 15
+    bonus: 3200000064000000c8000000

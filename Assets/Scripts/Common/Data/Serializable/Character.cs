@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/Character Config", order = 0)]
 [Serializable]
-[InitializeOnLoad]
 public class Character : SerializableObject
 {
     [Header("Primary")]
@@ -22,7 +21,8 @@ public class Character : SerializableObject
 
     [Header("Game")]
     public CharacterType type;
-    //public bool isCompanion;
+    [JSONNode(NodeOptions.DontSerialize)] 
+    public Settlement home;
     [JSONNode(NodeOptions.DontSerialize)] 
     public List<Settlement> settlements;
 
@@ -36,6 +36,7 @@ public class Character : SerializableObject
     /* For serialization */
     [JSONNode] private int factionId;
     [JSONNode] private int houseId;
+    [JSONNode] private int homeId;
     [JSONNode] private int[] settlementsIds;
 
 #if UNITY_EDITOR    
@@ -58,6 +59,7 @@ public class Character : SerializableObject
     {
         factionId = faction ? faction.id : -1;
         houseId = house ? house.id : -1;
+        homeId = home ? home.id : -1;
         settlementsIds = new int[settlements.Count];
         for (var i = 0; i < settlements.Count; i++) {
             settlementsIds[i] = settlements[i].id;
@@ -72,6 +74,9 @@ public class Character : SerializableObject
         }
         if (houseId != -1) {
             house = game.houses.Find(h => h.id == houseId);
+        }
+        if (homeId != -1) {
+            home = game.settlements.Find(s => s.id == homeId);
         }
         settlements.Capacity = settlementsIds.Length;
         foreach (var settlementId in settlementsIds) {

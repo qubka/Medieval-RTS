@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +9,12 @@ using GPUInstancer.CrowdAnimations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class Army : MonoBehaviour, IGameObject
 {
     [Header("Main Information")]
     public Party data;
-    
+
     [Header("Children References")]
     //[Space(10f)]
     public GameObject armyIcon;
@@ -33,16 +32,19 @@ public class Army : MonoBehaviour, IGameObject
     
     #region Local
     
-#pragma warning disable 108,114    
+#pragma warning disable 108,114
     private Camera camera;
+    private AudioSource audio;
     private Collider collider;
 #pragma warning restore 108,114
     private NavMeshAgent agent;
     private ArmyManager armyManager;
     private List<AnimatedCrowd> animators = new List<AnimatedCrowd>(2);
+    private Model model;
     private float nextHoverTime;
-    private bool visible = true;
-
+    private bool isVisible = true;
+    private bool isFootstepPlaying;
+    
     private IGameObject target {
         get => data.followingObject;
         set => data.followingObject = value;
@@ -57,6 +59,7 @@ public class Army : MonoBehaviour, IGameObject
     {
         // Set up the squad components
         collider = GetComponent<Collider>();
+        audio = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
         armyIcon = Instantiate(armyIcon);
         iconTransform = armyIcon.transform;
@@ -101,13 +104,14 @@ public class Army : MonoBehaviour, IGameObject
         var instances = new List<GPUInstancerPrefab>(2);
         
         // Initialize the crowds
-        var faction = isPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
-        if (faction.primary) instances.Add(CreateCrowd(faction.primary));
-        if (faction.secondary) instances.Add(CreateCrowd(faction.secondary));
-
+        var prefab = isPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
+        if (prefab.primary) instances.Add(CreateCrowd(prefab.primary));
+        if (prefab.secondary) instances.Add(CreateCrowd(prefab.secondary));
+        model = prefab;
+        
         // Register instances
-        foreach (var prefab in instances) {
-            GPUInstancerAPI.AddPrefabInstance(Manager.modelManager, prefab);
+        foreach (var instance in instances) {
+            GPUInstancerAPI.AddPrefabInstance(Manager.modelManager, instance);
         }
 
         // TODO: Finish save for town waiting
@@ -144,7 +148,7 @@ public class Army : MonoBehaviour, IGameObject
         data.position = pos;
         data.rotation = worldTransform.rotation;
 
-        if (visible) {
+        if (isVisible) {
             // Calculate position for the ui bar
             pos.y += canvasHeight;
             pos = camera.WorldToScreenPoint(pos);
@@ -159,6 +163,12 @@ public class Army : MonoBehaviour, IGameObject
         
             // TODO: Remove
             //barText.text = troopCount.ToString();
+        }
+        
+        if (isVisible && agent.velocity.SqMagnitude() > 0f) {
+            if(!isFootstepPlaying) {
+                StartCoroutine(PlayFootstep());
+            }
         }
     }
 
@@ -175,7 +185,7 @@ public class Army : MonoBehaviour, IGameObject
 
     public void SetVisibility(bool value)
     {
-        if (visible == value)
+        if (isVisible == value)
             return;
 
         foreach (var animator in animators) {
@@ -187,7 +197,7 @@ public class Army : MonoBehaviour, IGameObject
             armyBanner.SetActive(value);
         }
         
-        visible = value;
+        isVisible = value;
     }
 
     public void SetDestination(Vector3 position, IGameObject enemy = null)
@@ -223,6 +233,27 @@ public class Army : MonoBehaviour, IGameObject
             controller.OnUpdate();
         }
         data.localTown = town;
+
+        if (town && isPeasant) {
+            switch (town.data.type) {
+                case InfrastructureType.Village:
+                    data.DestroyParty(true);
+                    data.localTown.data.prosperity++;
+                    DestroyImmediate(this);
+                    return;
+                case InfrastructureType.City:
+                case InfrastructureType.Castle:
+                    StartCoroutine(VillagesEntered());
+                    return;
+            }
+        }
+    }
+
+    private IEnumerator VillagesEntered()
+    {
+        yield return new WaitForSeconds(1f); // wait to lock behavior tree
+        data.localTown.data.prosperity++;
+        data.targetTown = TownTable.Instance.Values.First(t => t.GetID() == data.leader.home.id);
     }
 
     #region Base
@@ -249,7 +280,7 @@ public class Army : MonoBehaviour, IGameObject
 
     public bool IsVisible()
     {
-        return visible;
+        return isVisible;
     }
 
     #endregion
@@ -258,7 +289,7 @@ public class Army : MonoBehaviour, IGameObject
 
     private void OnMouseOver()
     {
-        if (Manager.IsPointerOnUI || !visible) {
+        if (Manager.IsPointerOnUI || !isVisible) {
             Manager.fixedPopup.HideInfo();
             return;
         }
@@ -369,4 +400,16 @@ public class Army : MonoBehaviour, IGameObject
     }
 
     #endregion
+    
+    private IEnumerator PlayFootstep() 
+    {
+        isFootstepPlaying = true;
+
+        audio.clip = model.footstepSounds.Clip;
+        audio.Play();
+	
+        yield return new WaitForSeconds(model.interval);
+
+        isFootstepPlaying = false;
+    }
 }

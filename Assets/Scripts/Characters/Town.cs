@@ -13,21 +13,25 @@ using Random = UnityEngine.Random;
 
 public class Town : MonoBehaviour, IGameObject
 {
+    [Header("Main Information")]
     public Settlement data;
-
-    [Header("Children References")] 
+    [Space]
+    public Community communitySounds;
+    
+    [Header("Children References")]
+    [SerializeField] private ParticleSystem dust;
     [SerializeField] private Transform entrance;
     [SerializeField] private Transform[] wallBanners;
     [SerializeField] private Transform[] townBanners;
     [SerializeField] private Transform[] armyBanners;
     [HideInInspector] public TownIcon townIcon;
     [HideInInspector] public Vector3 initialPosition;
+    [HideInInspector] public Vector3 doorPosition;
+    [HideInInspector] public Quaternion doorRotation;
     //[HideInInspector] public Transform iconTransform;
     [HideInInspector] public Transform iconTransform;
 
-    [Header("Misc")] 
-    [ReadOnly] public Vector3 doorPosition;
-    [ReadOnly] public Quaternion doorRotation;
+    [Header("Misc")]
     public float canvasHeight;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
     public Vector3 bannerPosition = new Vector3(0f, 2f, 0f);
@@ -35,12 +39,12 @@ public class Town : MonoBehaviour, IGameObject
     public Vector2Int maxProsperity = new Vector2Int(-1000, 10000);
     public Vector2Int maxLoyalty = new Vector2Int(-100, 100);
     public Vector2Int maxStock = new Vector2Int(-100, 700);
-    public float PopGrowth => populationGrowth + populationGrowthSpeed / 1000f;
-    
+
     #region Local
 
 #pragma warning disable 108,114
     private Camera camera;
+    private AudioSource audio;
 #pragma warning restore 108,114
     private CamController camController;
     private Transform camTransform;
@@ -51,20 +55,38 @@ public class Town : MonoBehaviour, IGameObject
 
     #region Economy
 
-    [ReadOnly] public int loyalty;
-    [ReadOnly] public int tax;
-    [ReadOnly] public int prosperity;
-    [ReadOnly] public int foodStock;
-    [ReadOnly] public int foodProduction;
-    [ReadOnly] public int garrisonCapacity;
-    [ReadOnly] public int armyRecruitSpeed;
-    [ReadOnly] public int wallRepairSpeed;
-    [ReadOnly] public int siegeEngineSpeed;
-    [ReadOnly] public int populationGrowthSpeed;
-    [ReadOnly] public int villageDevelopmentDaily;
-    [ReadOnly] public int experience;
-
+    public float PopGrowth => populationGrowth + populationGrowthSpeed / 1000f;
+    public int ProsperityGrowth => prosperity;
+    public int LoyaltyGrowth => loyalty;
+    public int FoodProductionGrowth => foodProduction;
+    
+    [SerializeField, ReadOnly] private int loyalty;
+    [SerializeField, ReadOnly] private int tax;
+    [SerializeField, ReadOnly] private int prosperity;
+    [SerializeField, ReadOnly] private int foodStock;
+    [SerializeField, ReadOnly] private int foodProduction;
+    [SerializeField, ReadOnly] private int garrisonCapacity;
+    [SerializeField, ReadOnly] private int armyRecruitSpeed;
+    [SerializeField, ReadOnly] private int wallRepairSpeed;
+    [SerializeField, ReadOnly] private int siegeEngineSpeed;
+    [SerializeField, ReadOnly] private int populationGrowthSpeed;
+    [SerializeField, ReadOnly] private int villageDevelopmentDaily;
+    [SerializeField, ReadOnly] private int experience;
+    [SerializeField, ReadOnly] private int armorQualityBonus;
+    [SerializeField, ReadOnly] private int weaponQualityBonus;
+    [SerializeField, ReadOnly] private int trade;
+    [SerializeField, ReadOnly] private int gold;
+    [SerializeField, ReadOnly] private int armyMovementSpeed;
+    [SerializeField, ReadOnly] private int researchCostReduction;
+    [SerializeField, ReadOnly] private int influenceGrowthSpeed;
+    [SerializeField, ReadOnly] private int armyUpkeepCost;
     #endregion
+
+    private void Awake()
+    {
+        audio = GetComponent<AudioSource>();
+        dust.Stop();
+    }
 
     private void Start()
     {
@@ -170,6 +192,12 @@ public class Town : MonoBehaviour, IGameObject
                 }
             }
         }
+
+        var time = CampaignTime.Instance.TimeDelta;
+        audio.clip = (time > 7f && time < 22f) ? communitySounds.daySound : communitySounds.nightSound;
+        if (!audio.isPlaying) {
+            audio.Play();
+        }
     }
 
     public void CalculateTraits()
@@ -187,7 +215,15 @@ public class Town : MonoBehaviour, IGameObject
         populationGrowthSpeed = 0; //
         villageDevelopmentDaily = 0;
         experience = 0;
-
+        armorQualityBonus = 0;
+        weaponQualityBonus = 0;
+        trade = 0;
+        gold = 0;
+        armyMovementSpeed = 0;
+        researchCostReduction = 0;
+        influenceGrowthSpeed = 0;
+        armyUpkeepCost = 0;
+        
         //
         foreach (var pair in data.buildings) {
             var building = pair.Key;
@@ -233,6 +269,30 @@ public class Town : MonoBehaviour, IGameObject
                         break;
                     case BuildingEffectType.Experience:
                         experience += bonus;
+                        break;
+                    case BuildingEffectType.ArmorQualityBonus:
+                        armorQualityBonus += bonus;
+                        break;
+                    case BuildingEffectType.WeaponQualityBonus:
+                        weaponQualityBonus += bonus;
+                        break;
+                    case BuildingEffectType.Trade:
+                        trade += bonus;
+                        break;
+                    case BuildingEffectType.Gold:
+                        gold += bonus;
+                        break;
+                    case BuildingEffectType.ArmyMovementSpeed:
+                        armyMovementSpeed += bonus;
+                        break;
+                    case BuildingEffectType.ResearchCostReduction:
+                        researchCostReduction += bonus;
+                        break;
+                    case BuildingEffectType.InfluenceGrowthSpeed:
+                        influenceGrowthSpeed += bonus;
+                        break;
+                    case BuildingEffectType.ArmyUpkeepCost:
+                        armyUpkeepCost += bonus;
                         break;
                 }
             }
@@ -303,39 +363,8 @@ public class Town : MonoBehaviour, IGameObject
         CalculateTraits();
 
         if (isVillage) {
-            CreatePeasant();
+            Party.CreatePeasant(this);
         }
-    }
-
-    private void CreatePeasant()
-    {
-        var game = Game.Instance;
-        
-        var leader = ScriptableObject.CreateInstance<Character>();
-        leader.name = "Peasant";
-        leader.id = game.characters.OrderByDescending(c => c.id).First().id++;
-        leader.faction = data.ruler.faction;
-        leader.type = CharacterType.Peasant;
-        
-        var party = ScriptableObject.CreateInstance<Party>();
-        party.name = "Peasants";
-        party.leader = leader;
-        party.skin = Random.Range(0, 2);
-
-        var count = Random.Range(1, 4);
-        if (party.troops == null) party.troops = new List<Troop>(count);
-        for (var i = 0; i < count; i++) {
-            var troops = Manager.global.troops;
-            party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
-        }
-        
-        game.parties.Add(party);
-        game.characters.Add(leader);
-        
-        var army = Instantiate(Manager.global.armyPrefab, initialPosition, Quaternion.identity).GetComponent<Army>();
-        army.data = party;
-        army.data.targetTown = TownTable.Instance.Values.First(t => t.GetID() == data.neighbours[0].id);
-        army.behavior = Manager.global.behavior;
     }
 
     public void BeginNewWeek()

@@ -17,7 +17,13 @@ public class BuildingInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             .AppendLine();
         
         foreach (var effect in layout.building.effects) {
-            builder.Append(effect.GetName()).Append(": +").Append(effect.bonus[0]).AppendLine();
+            builder
+                .Append(StringExtention.GetPrettyName(effect.effect))
+                .Append(':')
+                .Append(' ')
+                .Append('+')
+                .Append(effect.bonus[0])
+                .AppendLine();
         }
 
         builder.AppendLine()

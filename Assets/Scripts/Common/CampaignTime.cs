@@ -33,7 +33,7 @@ public class CampaignTime : SingletonObject<CampaignTime> {
         dateTime = new DateTime(startingYear, startingMonth, startingDay);
         timeDelta = startingHour;
         timeStamp = ToString();
-        timeMesh.text = timeStamp + GetTimeOfDay();
+        timeMesh.text = timeStamp + StringExtention.GetPrettyName(GetTimeOfDay());
     }
 
     private void Update()
@@ -81,7 +81,7 @@ public class CampaignTime : SingletonObject<CampaignTime> {
         }
         return TimeOfDay.Midnight;
     }
-    
+
     [Serializable]
     public enum TimeOfDay
     {

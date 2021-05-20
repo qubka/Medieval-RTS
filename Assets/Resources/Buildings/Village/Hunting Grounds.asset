@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
   m_Name: Hunting Grounds
   m_EditorClassIdentifier: 
-  description: ???
+  description: Stalked in the forest, too close to hide.
   icon: {fileID: 21300000, guid: fb659c8a33be4fb489467dcfc7679963, type: 3}
-  dependencies:
-  - {fileID: 0}
+  dependencies: []
   buildingSpeed: 0.05
   cost: e8030000c409000088130000
   type: 2
-  effects: []
+  effects:
+  - effect: 4
+    bonus: 0f0000001900000023000000

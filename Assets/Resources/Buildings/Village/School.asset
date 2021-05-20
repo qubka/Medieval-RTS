@@ -10,13 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
-  m_Name: Leather Working
+  m_Name: School
   m_EditorClassIdentifier: 
-  description: ???
-  icon: {fileID: 21300000, guid: a7304561127ddb4448b995b8d7083d22, type: 3}
-  dependencies:
-  - {fileID: 11400000, guid: 5839609a6e3f2e74799c10d45c89cc58, type: 2}
+  description: Learning is constant process, but it has to start somewhere.
+  icon: {fileID: 21300000, guid: 2650ee6072cafaf4a8761a709ae6259b, type: 3}
+  dependencies: []
   buildingSpeed: 0.02
   cost: e8030000c409000088130000
   type: 2
-  effects: []
+  effects:
+  - effect: 0
+    bonus: 010000000200000003000000
+  - effect: 2
+    bonus: 010000000200000003000000
+  - effect: 1
+    bonus: 050000000a0000000f000000

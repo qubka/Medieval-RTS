@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/House (Family) Config", order = 0)]
 [Serializable]
-[InitializeOnLoad]
 public class House : SerializableObject
 {
     public int id;

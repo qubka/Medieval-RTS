@@ -68,13 +68,13 @@ public class TownController : TweenBehaviour
                 
                 caption.text = settlement.label;
                 prosperity.text = settlement.prosperity.ToString();
-                prosperityInc.SetInteger(town.prosperity);
+                prosperityInc.SetInteger(town.ProsperityGrowth);
                 loyality.text = settlement.loyalty.ToString();
-                loyalityInc.SetInteger(town.loyalty);
+                loyalityInc.SetInteger(town.LoyaltyGrowth);
                 population.text = settlement.population.ToString();
                 populationInc.SetFloat(town.PopGrowth);
                 food.text = settlement.food.ToString();
-                foodInc.SetInteger(town.foodProduction);
+                foodInc.SetInteger(town.FoodProductionGrowth);
                 
                 foreach (var pair in buildings) {
                     var active = ((InfrastructureType) pair.Key) == settlement.type;

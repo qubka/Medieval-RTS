@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
-  m_Name: Animal Husbandry
+  m_Name: Pottery
   m_EditorClassIdentifier: 
-  description: ???
-  icon: {fileID: 21300000, guid: 9ed8608a897ec4343bff93edbfddefd6, type: 3}
-  dependencies:
-  - {fileID: 11400000, guid: 747ec4cc6c2054d4aa37c40451447e10, type: 2}
+  description: In the right hands, clay is far from just being a type of mud.
+  icon: {fileID: 21300000, guid: fcb1df964be2b934fa9dd0c308083047, type: 3}
+  dependencies: []
   buildingSpeed: 0.02
   cost: e8030000c409000088130000
   type: 2
-  effects: []
+  effects:
+  - effect: 14
+    bonus: 010000000200000003000000
+  - effect: 15
+    bonus: 320000006400000096000000

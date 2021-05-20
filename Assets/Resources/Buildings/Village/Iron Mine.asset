@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73237adbde08433c89b8693979b2faa1, type: 3}
   m_Name: Iron Mine
   m_EditorClassIdentifier: 
-  description: ???
-  icon: {fileID: 21300000, guid: 9acef14302d99134ebeedb640938b871, type: 3}
-  dependencies:
-  - {fileID: 11400000, guid: 6cddb965980ca86449d8a905168ad6ff, type: 2}
+  description: Iron ore is as common as it is useful.
+  icon: {fileID: 21300000, guid: 77e423728f917344ea0ae8da8839b762, type: 3}
+  dependencies: []
   buildingSpeed: 0.02
   cost: e8030000c409000088130000
   type: 2
-  effects: []
+  effects:
+  - effect: 19
+    bonus: 030000000400000005000000
