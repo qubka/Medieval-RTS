@@ -8,7 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ArmyManager : SingletonObject<ArmyManager>
+public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 {
     [Header("Refs")]
     public TownController townController;

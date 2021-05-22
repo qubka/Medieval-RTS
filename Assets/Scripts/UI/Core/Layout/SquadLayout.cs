@@ -37,7 +37,7 @@ public class SquadLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
  				
  				for (var i = 0; i < count; i++) {
  					var squad = parentTransform.GetChild(i).GetComponent<SquadLayout>().squad;
- 					if (squad.isSelect) {
+ 					if (squad.IsSelect()) {
  						min = math.min(min, i);
  						max = math.max(max, i);
  					}

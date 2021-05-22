@@ -36,7 +36,7 @@ public class TroopLayout : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 				
                 for (var i = 0; i < count; i++) {
                     var troop = parentTransform.GetChild(i).GetComponent<TroopLayout>().troop;
-                    if (troop.isSelect) {
+                    if (troop.IsSelect()) {
                         min = math.min(min, i);
                         max = math.max(max, i);
                     }

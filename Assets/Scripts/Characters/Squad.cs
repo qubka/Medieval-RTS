@@ -15,7 +15,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
 
-public class Squad : MonoBehaviour, IGameObject
+public class Squad : MonoBehaviour, IGameObject, ISelectable
 {
     [Header("Main Information")]
     public Squadron data;
@@ -671,7 +671,12 @@ public class Squad : MonoBehaviour, IGameObject
         }
     }
 
-    public void ChangeSelectState(bool value)
+    public bool IsSelect()
+    {
+        return isSelect;
+    }
+
+    public void Select(bool value)
     {
         if (isSelect == value)
             return;
@@ -1030,7 +1035,7 @@ public class Squad : MonoBehaviour, IGameObject
                 anchorTransform.position = centroid;
             }
             if (isEscape) {
-                ChangeSelectState(false);
+                Select(false);
                 manager.RemoveSquad(this);
                 PlaySound(data.commanderSounds.saveYourLives);
                 isForward = true;
@@ -1342,7 +1347,7 @@ public class Squad : MonoBehaviour, IGameObject
         if (border.IsOutsideBorder(centroid)) {
             if (!crossBorder.HasValue) {
                 crossBorder = centroid;
-                ChangeSelectState(false);
+                Select(false);
                 manager.RemoveSquad(this);
             } else if (Vector.DistanceSq(crossBorder.Value, centroid) > removeRange) {
                 foreach (var unit in units) {

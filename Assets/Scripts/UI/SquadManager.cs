@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
 
-public class SquadManager : SingletonObject<SquadManager>
+public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 {
 	[Header("Refs")]
 	public SquadDescription squadDesc;
@@ -523,11 +523,11 @@ public class SquadManager : SingletonObject<SquadManager>
 			if (!selectedSquads.Contains(squad)) {
 				if (!squad.isEscape) {
 					selectedSquads.Add(squad);
-					squad.ChangeSelectState(true);
+					squad.Select(true);
 				}
 			} else if (toggle) {
 				selectedSquads.Remove(squad);
-				squad.ChangeSelectState(false);
+				squad.Select(false);
 			}
 			squadDesc.OnUpdate();
 		}
@@ -536,7 +536,7 @@ public class SquadManager : SingletonObject<SquadManager>
 	public void DeselectAll()
 	{
 		foreach (var squad in selectedSquads) {
-			squad.ChangeSelectState(false);
+			squad.Select(false);
 		}
 		selectedSquads.Clear();
 	}
@@ -545,7 +545,7 @@ public class SquadManager : SingletonObject<SquadManager>
 	{
 		foreach (var squad in selectedSquads) {
 			if (squad != filter) {
-				squad.ChangeSelectState(false);
+				squad.Select(false);
 			}
 		}
 
@@ -569,6 +569,10 @@ public class SquadManager : SingletonObject<SquadManager>
 		
 		lastSelectTime = time;
 		lastSelectSquad = filter;
+	}
+
+	public void SwapSelected(int newPos, int oldPos)
+	{
 	}
 
 	private void AddToDynamicGroup(Squad squad, GameObject obj, float? orientation = null, float? length = null)

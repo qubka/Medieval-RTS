@@ -5,7 +5,7 @@ using UnityJSON;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class Troop
+public class Troop : ISelectable
 {
     [Header("General")] 
     public int size;
@@ -18,14 +18,19 @@ public class Troop
     // Hide in inspector
     [HideInInspector] public TroopCard card;
     [HideInInspector] public TroopLayout layout;
-    public bool isSelect { get; private set; }
+    private bool isSelect;
     
     public void Destroy()
     {
         Object.DestroyImmediate(card.gameObject);
         Object.DestroyImmediate(layout.gameObject);
     }
-    
+
+    public bool IsSelect()
+    {
+        return isSelect;
+    }
+
     public void Select(bool value)
     {
         if (isSelect == value) 
