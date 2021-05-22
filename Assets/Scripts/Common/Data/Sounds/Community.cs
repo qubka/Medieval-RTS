@@ -7,4 +7,5 @@ public class Community : ScriptableObject
 {
     public AudioClip daySound;
     public AudioClip nightSound;
+    public AudioClip[] buildingSounds;
 }

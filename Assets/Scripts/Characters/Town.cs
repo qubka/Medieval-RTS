@@ -19,7 +19,7 @@ public class Town : MonoBehaviour, IGameObject
     public Community communitySounds;
     
     [Header("Children References")]
-    [SerializeField] private ParticleSystem dust;
+    //[SerializeField] private ParticleSystem dust;
     [SerializeField] private Transform entrance;
     [SerializeField] private Transform[] wallBanners;
     [SerializeField] private Transform[] townBanners;
@@ -44,12 +44,14 @@ public class Town : MonoBehaviour, IGameObject
 
 #pragma warning disable 108,114
     private Camera camera;
-    private AudioSource audio;
 #pragma warning restore 108,114
     private CamController camController;
     private Transform camTransform;
+    private AudioSource mainAudio;
+    private AudioSource buildAudio;
     private float nextHoverTime;
     private bool isVillage;
+    private bool isBuilding;
     
     #endregion
 
@@ -84,8 +86,10 @@ public class Town : MonoBehaviour, IGameObject
 
     private void Awake()
     {
-        audio = GetComponent<AudioSource>();
-        dust.Stop();
+        var sources = gameObject.GetComponents<AudioSource>();
+        mainAudio = sources[0];
+        buildAudio = sources[1];
+        //dust.Stop();
     }
 
     private void Start()
@@ -194,9 +198,27 @@ public class Town : MonoBehaviour, IGameObject
         }
 
         var time = CampaignTime.Instance.TimeDelta;
-        audio.clip = (time > 7f && time < 22f) ? communitySounds.daySound : communitySounds.nightSound;
-        if (!audio.isPlaying) {
-            audio.Play();
+        var isDay = (time > 7f && time < 22f);
+        mainAudio.clip = isDay ? communitySounds.daySound : communitySounds.nightSound;
+        if (!mainAudio.isPlaying) {
+            mainAudio.Play();
+        }
+        
+        if (isDay && isBuilding) {
+            /*if (!dust.isPlaying) {
+                dust.Play();
+            }*/
+            if (!buildAudio.isPlaying) {
+                buildAudio.clip = communitySounds.buildingSounds.GetRandom();
+                buildAudio.Play();
+            }
+        } else {
+            /*if (dust.isPlaying) {
+                dust.Stop();
+            }*/
+            if (buildAudio.isPlaying) {
+                buildAudio.Stop();
+            }
         }
     }
 
@@ -349,12 +371,15 @@ public class Town : MonoBehaviour, IGameObject
 
     public void BeginNewDay()
     {
+        isBuilding = false;
         foreach (var pair in data.buildings) {
             var data = pair.Value;
             if (data.item2 < 1f) {
                 data.item2 += pair.Key.buildingSpeed;
                 if (data.item2 > 1f) {
                     data.item2 = 1f;
+                } else {
+                    isBuilding = true;
                 }
                 break;
             }

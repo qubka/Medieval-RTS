@@ -15,11 +15,11 @@ C:/Users/playf/Medieval RTS
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-49180
+59812
 Successfully changed project path to: C:/Users/playf/Medieval RTS
 C:/Users/playf/Medieval RTS
 Using Asset Import Pipeline V2.
-Refreshing native plugins compatible for Editor in 181.17 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 166.72 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.3.0f1 (c7b5465681fb)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/Resources/UnitySubsystems
@@ -36,32 +36,32 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56740
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56548
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.002197 seconds.
+Registered in 0.003197 seconds.
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 147.78 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 131.47 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.659 seconds
+- Completed reload, in  1.515 seconds
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
-Registered in 0.011451 seconds.
+Registered in 0.019478 seconds.
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 141.31 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 151.54 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-TypeManager.Initialize took: 198ms
+TypeManager.Initialize took: 191ms
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  2.371 seconds
+- Completed reload, in  2.402 seconds
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
@@ -73,20 +73,20 @@ Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapShader' shader 'Hidden/
 Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapGenShader' shader 'Hidden/HDRP/TerrainLit_BasemapGen' not found
 Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapShader' shader 'Hidden/HDRP/TerrainLit_Basemap' not found
 Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapGenShader' shader 'Hidden/HDRP/TerrainLit_BasemapGen' not found
+Shader 'Custom/RainShader': fallback shader 'Particles/Alpha Blended' not found
 Shader 'MapMagic/TerrainPreviewURP': fallback shader 'Hidden/Universal Render Pipeline/FallbackError' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'AddPassShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Add Pass)' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'BaseMapShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'BaseMapGenShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Basemap Gen)' not found
-Shader 'Custom/RainShader': fallback shader 'Particles/Alpha Blended' not found
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
-Refreshing native plugins compatible for Editor in 1.80 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 1.59 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 5838 Unused Serialized files (Serialized files now loaded: 0)
-System memory in use before: 432.7 MB.
-System memory in use after: 432.7 MB.
+Unloading 5841 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 432.9 MB.
+System memory in use after: 432.9 MB.
 
-Unloading 45 unused Assets to reduce memory usage. Loaded Objects now: 6349.
-Total: 5.086000 ms (FindLiveObjects: 0.538300 ms CreateObjectMapping: 0.393400 ms MarkObjects: 3.473200 ms  DeleteObjects: 0.679800 ms)
+Unloading 45 unused Assets to reduce memory usage. Loaded Objects now: 6352.
+Total: 6.326800 ms (FindLiveObjects: 0.883300 ms CreateObjectMapping: 0.535300 ms MarkObjects: 4.153000 ms  DeleteObjects: 0.753300 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:DOTSType/Town: f1f11a48a106c71ff1f11a48a106c71f -> 
@@ -96,7 +96,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.CapsuleCollider2DEditor: 3cb7406a39d1dd813cb7406a39d1dd81 -> 
   custom:DOTSType/Unity.Burst.Editor.BurstPlatformLegacySettings: e3dbc988d45217ffe3dbc988d45217ff -> 
   custom:DOTSType/Portrait: b0b0cb873b39ea45b0b0cb873b39ea45 -> 
-  custom:DOTSType/Den.Tools.Matrices.Window.MatrixWindow: f18f5880f4d1b5aff18f5880f4d1b5af -> 
+  custom:DOTSType/UnityEditor.NavMeshObstacleInspector: e09ab8310b8a0334e09ab8310b8a0334 -> 
   custom:DOTSType/GPUInstancer.GPUInstancerDetailManager: b68e416e3c38beebb68e416e3c38beeb -> 
   custom:DOTSType/UnityEngine.SparseTexture: 5874f939f38d67cd5874f939f38d67cd -> 
   custom:DOTSType/UnityEditor.MonoScript: 7424f06be27046517424f06be2704651 -> 
@@ -395,9 +395,10 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/Unity.Entities.Editor.DynamicBufferProxyBaseEditor: 02d9c56ffee7fcc902d9c56ffee7fcc9 -> 
   custom:DOTSType/Unity.Scenes.DisableSceneResolveAndLoad: 41c98fa73f31b21a41c98fa73f31b21a -> 
   custom:DOTSType/Unity.Entities.LinkedEntityGroup: 21e54b5ea49ca7be21e54b5ea49ca7be -> 
+  custom:DOTSType/AnimatorRandomizer: bbc6a17c74aaf5fabbc6a17c74aaf5fa -> 
   custom:DOTSType/Unity.Scenes.ResourceGUID: 1f7cd32e8d68ddcd1f7cd32e8d68ddcd -> 
-  custom:DOTSType/Unity.Scenes.BundleElementData: c69657eccd1cdef1c69657eccd1cdef1 -> 
   custom:DOTSType/UnityEngine.Rendering.UI.DebugUIHandlerBitField: af0d5a26273d1c57af0d5a26273d1c57 -> 
+  custom:DOTSType/Unity.Scenes.BundleElementData: c69657eccd1cdef1c69657eccd1cdef1 -> 
   custom:DOTSType/BehaviorDesigner.Runtime.VariableSynchronizer: 8166af477ac55d568166af477ac55d56 -> 
   custom:DOTSType/UnityEditor.MonoScriptImporterInspector: e9a51f80f5ad856ae9a51f80f5ad856a -> 
   custom:DOTSType/MeleeWeapon: 25bcbfcc30ee34c325bcbfcc30ee34c3 -> 
@@ -745,6 +746,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.Timeline.AnimationTrack: 3f7e8beeda5854263f7e8beeda585426 -> 
   custom:DOTSType/BehaviorDesigner.Runtime.JSONDeserialization: c403db47a227639ac403db47a227639a -> 
   custom:DOTSType/UnityEditor.Formats.Fbx.Exporter.ConvertToPrefabSettingsEditor: d9985c436d26824cd9985c436d26824c -> 
+  custom:DOTSType/TerrainSurface: 61c85564a0465a7e61c85564a0465a7e -> 
   custom:DOTSType/UnityEditor.SafeModeToolbarWindow: 47fc5a54bf7eba6247fc5a54bf7eba62 -> 
   custom:DOTSType/Unity.Transforms.Frozen: f6aac45797677a67f6aac45797677a67 -> 
   custom:DOTSType/UnityEngine.AI.NavMeshModifierVolume: 765142eb4894c844765142eb4894c844 -> 
@@ -834,8 +836,8 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/SoxwareInteractive.AnimationConversion.AnimationConverterLogWindow: f3371b1cd9608819f3371b1cd9608819 -> 
   custom:DOTSType/UnityEditor.WebCamTextureInspector: f3ee8ae331d309c4f3ee8ae331d309c4 -> 
   custom:DOTSType/UnityEngine.Playables.PlayableDirector: 5e646bbf57f9128a5e646bbf57f9128a -> 
-  custom:DOTSType/UnityEditor.PopupWindowWithoutFocus: a20bfe313d7f63a5a20bfe313d7f63a5 -> 
   custom:DOTSType/UnityEditor.TagManagerInspector: eebcac03c368e19beebcac03c368e19b -> 
+  custom:DOTSType/UnityEditor.PopupWindowWithoutFocus: a20bfe313d7f63a5a20bfe313d7f63a5 -> 
   custom:DOTSType/UnityEditor.TimeManagerEditor: d797300757aad311d797300757aad311 -> 
   custom:DOTSType/CTI.CTI_CustomWind: 2277b86ee6b5c2c52277b86ee6b5c2c5 -> 
   custom:DOTSType/GPUInstancer.GPUInstancerSettingsExtension: 844196c133007f19844196c133007f19 -> 
@@ -1042,6 +1044,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.CapsuleCollider: be84ea475def5c96be84ea475def5c96 -> 
   custom:DOTSType/UnityEditor.EditorBuildSettings: 9e940e8677e3fc4e9e940e8677e3fc4e -> 
   custom:DOTSType/UnityEditor.UndoWindow: 7c70f66996f44edc7c70f66996f44edc -> 
+  custom:DOTSType/Community: 04d9118993f3949404d9118993f39494 -> 
   custom:DOTSType/GPUInstancer.PrefabsWithoutGameObjects: c49a0008c4b75306c49a0008c4b75306 -> 
   custom:DOTSType/RenderGraphViewer: 83246aa4686a3d6283246aa4686a3d62 -> 
   custom:DOTSType/UnityEngine.Rendering.PostProcessing.PostProcessVolume: b59c116f70d1c215b59c116f70d1c215 -> 
@@ -1250,8 +1253,8 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.UI.Dropdown+DropdownItem: befa92aec62bc2d6befa92aec62bc2d6 -> 
   custom:DOTSType/UnityEngine.ProceduralMaterial: 47a1900ca00ed06d47a1900ca00ed06d -> 
   custom:DOTSType/UnityEditor.U2D.Animation.TransformCache: 0b248fc4e48328950b248fc4e4832895 -> 
-  custom:DOTSType/UnityEditor.AudioSourceInspector: 58d1210dd2ee97a258d1210dd2ee97a2 -> 
   custom:DOTSType/UnityEditor.UnityConnectSettings: 2c8062cbba7d81db2c8062cbba7d81db -> 
+  custom:DOTSType/UnityEditor.AudioSourceInspector: 58d1210dd2ee97a258d1210dd2ee97a2 -> 
   custom:DOTSType/UnityEditor.InspectorWindow: 770d5fb3a028121d770d5fb3a028121d -> 
   custom:DOTSType/UnityEngine.HingeJoint2D: c433aef1143b2532c433aef1143b2532 -> 
   custom:DOTSType/UnityEngine.RectTransform: 01cd79284a67cf0b01cd79284a67cf0b -> 
@@ -1621,13 +1624,13 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityStandardAssets.Water.GerstnerDisplaceEditor: ec39c34f9d461636ec39c34f9d461636 -> 
   custom:DOTSType/BehaviorDesigner.Runtime.BehaviorTree: 650583623221f600650583623221f600 -> 
   custom:DOTSType/UnityEditor.Collaboration.CollabCannotPublishDialog: 908b30ecf2ade51e908b30ecf2ade51e -> 
-  custom:DOTSType/Unity.Transforms.CopyTransformFromGameObject: d41d7fab26a99695d41d7fab26a99695 -> 
   custom:DOTSType/UnityEngine.U2D.IK.CCDSolver2D: a51cfd182c8d9150a51cfd182c8d9150 -> 
+  custom:DOTSType/Unity.Transforms.CopyTransformFromGameObject: d41d7fab26a99695d41d7fab26a99695 -> 
+  custom:DOTSType/Unity.Build.BuildConfigurationScriptedImporter: a19e7a27a395c2f6a19e7a27a395c2f6 -> 
   custom:DOTSType/UnityEditor.BoxPrimitiveColliderTool: 46c46783aede4bf746c46783aede4bf7 -> 
   custom:DOTSType/UnityEditor.RelativeJoint2DEditor: 71ca7966912a9d3d71ca7966912a9d3d -> 
   custom:DOTSType/UnityEngine.Canvas: 3d6505b969331d583d6505b969331d58 -> 
   custom:DOTSType/GPUInstancer.CrowdAnimations.OptionalRendererRandomizer: a30a5c15f84d07bda30a5c15f84d07bd -> 
-  custom:DOTSType/Unity.Build.BuildConfigurationScriptedImporter: a19e7a27a395c2f6a19e7a27a395c2f6 -> 
   custom:DOTSType/UnityEngine.AI.NavMeshObstacle: d4524c4aca5462e5d4524c4aca5462e5 -> 
   custom:DOTSType/UnityEngine.Animations.ScaleConstraint: 858dbf4a311e8df8858dbf4a311e8df8 -> 
   custom:DOTSType/UnityEditor.EditorTools.EditorToolCustomEditor: 0f762e418756a1790f762e418756a179 -> 
@@ -1670,62 +1673,110 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.ExternalPlayModeView: 47f4ce84766401f147f4ce84766401f1 -> 
   custom:DOTSType/TreeEditor.TreeData: 75029f79747de22b75029f79747de22b -> 
   custom:DOTSType/UnityEditor.CircleCollider2DEditor: 2306875b29acbf472306875b29acbf47 -> 
-  custom:DOTSType/Unity.Scenes.DisableLiveLink: acfec9bf12a4cae8acfec9bf12a4cae8 -> 
   custom:DOTSType/UnityEditor.U2D.Sprites.SpriteUtilityWindow: 766fc4f2b14d7b62766fc4f2b14d7b62 -> 
-  custom:DOTSType/UnityEditor.NavMeshObstacleInspector: e09ab8310b8a0334e09ab8310b8a0334 -> 
+  custom:DOTSType/Unity.Scenes.DisableLiveLink: acfec9bf12a4cae8acfec9bf12a4cae8 -> 
+  custom:DOTSType/Den.Tools.Matrices.Window.MatrixWindow: f18f5880f4d1b5aff18f5880f4d1b5af -> 
 ========================================================================
 Received Import Request.
-  path: Assets/Models/Units/Materials/Material_2_baseColor.mat
-  artifactKey: Guid(da85bf1274d533743ab6cfc0b95cdf16) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Models/Units/Materials/Material_2_baseColor.mat using Guid(da85bf1274d533743ab6cfc0b95cdf16) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e7fa59481b9a150b7b270fad2aa75295') in 0.163450 seconds
-  Import took 0.174596 seconds .
+  path: Assets/Resources/Sounds/Other/Big Town.asset
+  artifactKey: Guid(0139574032ef3a344bc37d1556956501) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Sounds/Other/Big Town.asset using Guid(0139574032ef3a344bc37d1556956501) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb0b27965a7b3a074824c644703d8aba') in 0.061284 seconds
+  Import took 0.074601 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000415 seconds.
-  path: Assets/Resources/Global.asset
-  artifactKey: Guid(f490bc8b869cd2d4ca3c03b24af54ca3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Global.asset using Guid(f490bc8b869cd2d4ca3c03b24af54ca3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a612252fb6af1dc83b04a46b4ad76fdc') in 10.830031 seconds
-  Import took 10.901413 seconds .
+  Time since last request: 0.000546 seconds.
+  path: Assets/Resources/Sounds/Other/Village.asset
+  artifactKey: Guid(4dd0459adac5ea246a47feb1909b6398) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Sounds/Other/Village.asset using Guid(4dd0459adac5ea246a47feb1909b6398) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b48c187f9d1bccf01ec805a849ada242') in 0.003660 seconds
+  Import took 0.014228 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000453 seconds.
-  path: Assets/Models/Units/Materials/Material_6_baseColor.mat
-  artifactKey: Guid(83ccfaa7e470341458c478bfb20d11bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Models/Units/Materials/Material_6_baseColor.mat using Guid(83ccfaa7e470341458c478bfb20d11bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fd0db8fd573cf5e4163a76c48008a767') in 0.025001 seconds
-  Import took 0.036340 seconds .
+  Time since last request: 43.739641 seconds.
+  path: Assets/Resources/Buildings/City/Roads.asset
+  artifactKey: Guid(2f4923ab42d4cd84d9698118b1297eb0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Buildings/City/Roads.asset using Guid(2f4923ab42d4cd84d9698118b1297eb0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4e8e83aada7d0d1ae4c9324e4e92a4de') in 0.003219 seconds
+  Import took 0.013938 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000336 seconds.
-  path: Assets/Models/Units/Materials/Material_3_baseColor.mat
-  artifactKey: Guid(0f262ef3caef3434abd843f77e4febac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Models/Units/Materials/Material_3_baseColor.mat using Guid(0f262ef3caef3434abd843f77e4febac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '120de35c2c624e109e598b507c1a7ed3') in 0.023211 seconds
-  Import took 0.035091 seconds .
+  Time since last request: 50.169920 seconds.
+  path: Assets/Prefabs/Buildings/Village.prefab
+  artifactKey: Guid(d3ec2e449ce3a584bbf24b02766089b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/Village.prefab using Guid(d3ec2e449ce3a584bbf24b02766089b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'abf430da87647b44a6248b480f473231') in 0.745054 seconds
+  Import took 0.779143 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000456 seconds.
-  path: Assets/Models/Units/Materials/Material_5_baseColor.mat
-  artifactKey: Guid(917f06127c8e94d488c86e195580e98d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Models/Units/Materials/Material_5_baseColor.mat using Guid(917f06127c8e94d488c86e195580e98d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '691e55fd31787b778d563ffc7899c6b8') in 0.023470 seconds
-  Import took 0.036284 seconds .
+  Time since last request: 15.648294 seconds.
+  path: Assets/Prefabs/Buildings/City_1.prefab
+  artifactKey: Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/City_1.prefab using Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '633030bfaebf48c54ee3acdc97d2f5d8') in 5.424817 seconds
+  Import took 5.522571 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.515666 seconds.
+  path: Assets/Prefabs/Buildings/City_1.prefab
+  artifactKey: Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/City_1.prefab using Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd782fae7dbbaf4455417cfdcf78ebf9f') in 4.643936 seconds
+  Import took 4.734385 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.379301 seconds.
+  path: Assets/Prefabs/Other/BuildingDust.prefab
+  artifactKey: Guid(cec719f247b92eb428a439f2bcba8bb5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Other/BuildingDust.prefab using Guid(cec719f247b92eb428a439f2bcba8bb5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9a74613029eb363caa738f4cc815499e') in 0.006071 seconds
+  Import took 0.016296 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000224 seconds.
+  path: Assets/Prefabs/Other/Campaign Manager.prefab
+  artifactKey: Guid(8b4bd2cd75d3130489fa4d900b912ed0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Other/Campaign Manager.prefab using Guid(8b4bd2cd75d3130489fa4d900b912ed0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '24d2f250f7bf8e78b9cfc754ca664015') in 5.090965 seconds
+  Import took 5.159395 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000311 seconds.
+  path: Assets/Prefabs/Other/Campaign Manager.prefab
+  artifactKey: Guid(8b4bd2cd75d3130489fa4d900b912ed0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Other/Campaign Manager.prefab using Guid(8b4bd2cd75d3130489fa4d900b912ed0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '24d2f250f7bf8e78b9cfc754ca664015') in 5.072810 seconds
+  Import took 5.143225 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000293 seconds.
+  path: Assets/Prefabs/Buildings/City_1.prefab
+  artifactKey: Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/City_1.prefab using Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a331e2d61c14682af6865d84b442d55f') in 4.618079 seconds
+  Import took 4.724326 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 110.619108 seconds.
+  path: Assets/Prefabs/Buildings/City_1.prefab
+  artifactKey: Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/City_1.prefab using Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9de2c32e820509908ed82140b539288e') in 5.665753 seconds
+  Import took 5.795680 seconds .
 
 ========================================================================
 Received Prepare
 Registering precompiled user dll's ...
-Registered in 0.009952 seconds.
+Registered in 0.014061 seconds.
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
-Refreshing native plugins compatible for Editor in 1.69 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 1.77 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-TypeManager.Initialize took: 189ms
+TypeManager.Initialize took: 197ms
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.850 seconds
+- Completed reload, in  1.926 seconds
 Platform modules already initialized, skipping
 Shader 'MapMagic/TerrainPreviewURP': fallback shader 'Hidden/Universal Render Pipeline/FallbackError' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'AddPassShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Add Pass)' not found
@@ -1735,19 +1786,19 @@ Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapShader' shader 'Hidden/
 Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapGenShader' shader 'Hidden/HDRP/TerrainLit_BasemapGen' not found
 Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapShader' shader 'Hidden/HDRP/TerrainLit_Basemap' not found
 Shader 'MapMagic/TerrainPreviewHDRP': dependency 'BaseMapGenShader' shader 'Hidden/HDRP/TerrainLit_BasemapGen' not found
-Shader 'Custom/RainShader': fallback shader 'Particles/Alpha Blended' not found
 Shader 'MapMagic/TerrainPreviewURP': fallback shader 'Hidden/Universal Render Pipeline/FallbackError' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'AddPassShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Add Pass)' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'BaseMapShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)' not found
 Shader 'MapMagic/TerrainPreviewURP': dependency 'BaseMapGenShader' shader 'Hidden/Universal Render Pipeline/Terrain/Lit (Basemap Gen)' not found
-Refreshing native plugins compatible for Editor in 1.53 ms, found 4 plugins.
+Shader 'Custom/RainShader': fallback shader 'Particles/Alpha Blended' not found
+Refreshing native plugins compatible for Editor in 1.69 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 5677 Unused Serialized files (Serialized files now loaded: 0)
-System memory in use before: 440.1 MB.
-System memory in use after: 440.0 MB.
+Unloading 5680 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 440.5 MB.
+System memory in use after: 440.5 MB.
 
-Unloading 37 unused Assets to reduce memory usage. Loaded Objects now: 6395.
-Total: 5.173900 ms (FindLiveObjects: 0.552300 ms CreateObjectMapping: 0.348100 ms MarkObjects: 3.673300 ms  DeleteObjects: 0.598500 ms)
+Unloading 37 unused Assets to reduce memory usage. Loaded Objects now: 6366.
+Total: 5.884400 ms (FindLiveObjects: 0.933600 ms CreateObjectMapping: 0.471200 ms MarkObjects: 3.794900 ms  DeleteObjects: 0.682400 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:DOTSType/Town: f1f11a48a106c71ff1f11a48a106c71f -> 
@@ -2056,9 +2107,10 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/Unity.Entities.Editor.DynamicBufferProxyBaseEditor: 02d9c56ffee7fcc902d9c56ffee7fcc9 -> 
   custom:DOTSType/Unity.Scenes.DisableSceneResolveAndLoad: 41c98fa73f31b21a41c98fa73f31b21a -> 
   custom:DOTSType/Unity.Entities.LinkedEntityGroup: 21e54b5ea49ca7be21e54b5ea49ca7be -> 
+  custom:DOTSType/AnimatorRandomizer: bbc6a17c74aaf5fabbc6a17c74aaf5fa -> 
   custom:DOTSType/Unity.Scenes.ResourceGUID: 1f7cd32e8d68ddcd1f7cd32e8d68ddcd -> 
-  custom:DOTSType/Unity.Scenes.BundleElementData: c69657eccd1cdef1c69657eccd1cdef1 -> 
   custom:DOTSType/UnityEngine.Rendering.UI.DebugUIHandlerBitField: af0d5a26273d1c57af0d5a26273d1c57 -> 
+  custom:DOTSType/Unity.Scenes.BundleElementData: c69657eccd1cdef1c69657eccd1cdef1 -> 
   custom:DOTSType/BehaviorDesigner.Runtime.VariableSynchronizer: 8166af477ac55d568166af477ac55d56 -> 
   custom:DOTSType/UnityEditor.MonoScriptImporterInspector: e9a51f80f5ad856ae9a51f80f5ad856a -> 
   custom:DOTSType/MeleeWeapon: 25bcbfcc30ee34c325bcbfcc30ee34c3 -> 
@@ -2406,6 +2458,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.Timeline.AnimationTrack: 3f7e8beeda5854263f7e8beeda585426 -> 
   custom:DOTSType/BehaviorDesigner.Runtime.JSONDeserialization: c403db47a227639ac403db47a227639a -> 
   custom:DOTSType/UnityEditor.Formats.Fbx.Exporter.ConvertToPrefabSettingsEditor: d9985c436d26824cd9985c436d26824c -> 
+  custom:DOTSType/TerrainSurface: 61c85564a0465a7e61c85564a0465a7e -> 
   custom:DOTSType/UnityEditor.SafeModeToolbarWindow: 47fc5a54bf7eba6247fc5a54bf7eba62 -> 
   custom:DOTSType/Unity.Transforms.Frozen: f6aac45797677a67f6aac45797677a67 -> 
   custom:DOTSType/UnityEngine.AI.NavMeshModifierVolume: 765142eb4894c844765142eb4894c844 -> 
@@ -2703,6 +2756,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEngine.CapsuleCollider: be84ea475def5c96be84ea475def5c96 -> 
   custom:DOTSType/UnityEditor.EditorBuildSettings: 9e940e8677e3fc4e9e940e8677e3fc4e -> 
   custom:DOTSType/UnityEditor.UndoWindow: 7c70f66996f44edc7c70f66996f44edc -> 
+  custom:DOTSType/Community: 04d9118993f3949404d9118993f39494 -> 
   custom:DOTSType/GPUInstancer.PrefabsWithoutGameObjects: c49a0008c4b75306c49a0008c4b75306 -> 
   custom:DOTSType/RenderGraphViewer: 83246aa4686a3d6283246aa4686a3d62 -> 
   custom:DOTSType/UnityEngine.Rendering.PostProcessing.PostProcessVolume: b59c116f70d1c215b59c116f70d1c215 -> 
@@ -3336,74 +3390,34 @@ AssetImportParameters requested are different than current active one (requested
   custom:DOTSType/UnityEditor.NavMeshObstacleInspector: e09ab8310b8a0334e09ab8310b8a0334 -> 
 ========================================================================
 Received Import Request.
-  Time since last request: 684.963468 seconds.
-  path: Assets/_TerrainAutoUpgrade/layer_Groundplants 1_DGroundplants 1_N2023054508611406.terrainlayer
-  artifactKey: Guid(49a096b1686454842accfb38cdb2b2b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/_TerrainAutoUpgrade/layer_Groundplants 1_DGroundplants 1_N2023054508611406.terrainlayer using Guid(49a096b1686454842accfb38cdb2b2b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ad6ee791cd4bfeebfa9ea1c709ce7471') in 0.048486 seconds
-  Import took 0.063529 seconds .
+  Time since last request: 62.668081 seconds.
+  path: Assets/Prefabs/Buildings/Castle.prefab
+  artifactKey: Guid(5c46a817451712148bbae5e5f552bd1d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/Castle.prefab using Guid(5c46a817451712148bbae5e5f552bd1d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '070e34df25a57801ec1a472b281c088e') in 0.260868 seconds
+  Import took 0.282417 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000488 seconds.
-  path: Assets/_TerrainAutoUpgrade/layer_RockSharp 1_DRockSharp 1_N793646612c42751.terrainlayer
-  artifactKey: Guid(9f8bd1826b6faf049b4cb5981c9ff235) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/_TerrainAutoUpgrade/layer_RockSharp 1_DRockSharp 1_N793646612c42751.terrainlayer using Guid(9f8bd1826b6faf049b4cb5981c9ff235) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '55f970bd912cbf95abf689647abda616') in 0.012372 seconds
-  Import took 0.024651 seconds .
+  Time since last request: 0.000291 seconds.
+  path: Assets/Prefabs/Buildings/City_2.prefab
+  artifactKey: Guid(7510675f24dd7ab42a8baea291197bd3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/City_2.prefab using Guid(7510675f24dd7ab42a8baea291197bd3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b05ea291443eee987f19e17c44ac99ae') in 0.806653 seconds
+  Import took 0.845748 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 144.640531 seconds.
-  path: Assets/Textures/UI/Artworks/Technology/PSD
-  artifactKey: Guid(e9d02a6550c930a4f82be0ba50e692b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/UI/Artworks/Technology/PSD using Guid(e9d02a6550c930a4f82be0ba50e692b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6cb5856ec42a10b52b7e698c431ef4b9') in 0.002210 seconds
-  Import took 0.014244 seconds .
+  Time since last request: 0.000405 seconds.
+  path: Assets/Prefabs/Buildings/Village.prefab
+  artifactKey: Guid(d3ec2e449ce3a584bbf24b02766089b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/Village.prefab using Guid(d3ec2e449ce3a584bbf24b02766089b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e6baabc61abcc49117a51f6570e95578') in 0.321829 seconds
+  Import took 0.355439 seconds .
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.026695 seconds.
-  path: Assets/Textures/UI/Artworks/Technology/PSD
-  artifactKey: Guid(e9d02a6550c930a4f82be0ba50e692b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Textures/UI/Artworks/Technology/PSD using Guid(e9d02a6550c930a4f82be0ba50e692b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6cb5856ec42a10b52b7e698c431ef4b9') in 0.001964 seconds
-  Import took 0.013306 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 14.843477 seconds.
-  path: Assets/Audio/Ambient/Cockerel.mp3
-  artifactKey: Guid(48727f8f40a7e0d4a96a6faed180136b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Audio/Ambient/Cockerel.mp3 using Guid(48727f8f40a7e0d4a96a6faed180136b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c49b8c179ae80d423e7eff2560795fc9') in 0.030019 seconds
-  Import took 0.043027 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 3.335277 seconds.
-  path: Assets/Audio/UI
-  artifactKey: Guid(dcd168cf7be9b8143be79f830e4219ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Audio/UI using Guid(dcd168cf7be9b8143be79f830e4219ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '04d0bd8dd9650113be3de501850fa32a') in 0.002308 seconds
-  Import took 0.013757 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.015518 seconds.
-  path: Assets/Audio/UI
-  artifactKey: Guid(dcd168cf7be9b8143be79f830e4219ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Audio/UI using Guid(dcd168cf7be9b8143be79f830e4219ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '04d0bd8dd9650113be3de501850fa32a') in 0.001971 seconds
-  Import took 0.013469 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 2.823607 seconds.
-  path: Assets/Audio/Voice
-  artifactKey: Guid(3737df01ad6e96442914e23a6adc0959) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Audio/Voice using Guid(3737df01ad6e96442914e23a6adc0959) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'abec714ded5f5d1db67a7e077ea9d6e6') in 0.002187 seconds
-  Import took 0.014484 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.035046 seconds.
-  path: Assets/Audio/Voice
-  artifactKey: Guid(3737df01ad6e96442914e23a6adc0959) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Audio/Voice using Guid(3737df01ad6e96442914e23a6adc0959) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'abec714ded5f5d1db67a7e077ea9d6e6') in 0.001878 seconds
-  Import took 0.013901 seconds .
+  Time since last request: 0.000302 seconds.
+  path: Assets/Prefabs/Buildings/City_1.prefab
+  artifactKey: Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Buildings/City_1.prefab using Guid(80a036686659aed4ba06c9e80a402b43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f755fc72ea23aa98764badfaae0d5ee4') in 5.332090 seconds
+  Import took 5.426727 seconds .
 
 AssetImportWorkerClient::OnTransportError - code=2 error=End of file
