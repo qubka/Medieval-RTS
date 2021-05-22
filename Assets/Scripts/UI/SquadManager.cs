@@ -12,7 +12,6 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 
 	//variables not visible in the inspector
 	[HideInInspector] public Squad hover;
-	[HideInInspector] public SquadLayout squadLayout;
 	[HideInInspector] public List<Squad> selectedSquads = new List<Squad>();
 	private Dictionary<Squad, IMovement> movementGroup = new Dictionary<Squad, IMovement>();
 	private List<Formation> placedFormations = new List<Formation>();
@@ -24,6 +23,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 	private Camera camera;
 #pragma warning restore 108,114	
 	private CamController camController;
+	public ILayout squadLayout;
 	private Line drawedLine;
 	private Squad lastSelectSquad;
 	private float lastSelectTime;
@@ -40,8 +40,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 	private RaycastHit groundHit;
 	private bool groundCast;
 	private bool pointerUI;
-
-	public int selectedCount => selectedSquads.Count;
+	
 	public bool isActive => onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit || pointerUI;
 	private bool InvalidHit => !groundCast || border.IsOutsideBorder(groundHit.point) || Input.GetKey(Manager.global.stopKey);
 
@@ -74,7 +73,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 		if (onSelect.enabled || onPlace.enabled || onShift.enabled)
 			return;
 
-		onDrag.enabled = squadLayout;
+		onDrag.enabled = squadLayout != null;
 	}
 	
 	private void OnSelection()
@@ -515,6 +514,21 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 				movementGroup[squad].DestroyAll();
 			}
 		}
+	}
+
+	public int SelectedCount()
+	{
+		return selectedSquads.Count;
+	}
+
+	public void SetLayout(ILayout layout)
+	{
+		squadLayout = layout;
+	}
+
+	public ILayout GetLayout()
+	{
+		return squadLayout;
 	}
 
 	public void AddSelected(Squad squad, bool toggle = false)

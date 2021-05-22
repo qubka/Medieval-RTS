@@ -17,11 +17,11 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 
     //variables not visible in the inspector
     [HideInInspector] public List<Troop> selectedTroops = new List<Troop>();
-    [HideInInspector] public TroopLayout troopLayout;
 #pragma warning disable 108,114
     private Camera camera;
 #pragma warning restore 108,114
     private CamController camController;
+    private ILayout troopLayout;
     private TerrainBorder border;
     private Army army;
     private Ray groundRay;
@@ -32,8 +32,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 
     public bool isActive => army;
     public Party player => army.data;
-    public int selectedCount => selectedTroops.Count;
-    
+
     public void SetPlayer(Army target)
     {
         army = target;
@@ -79,6 +78,21 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
             
             camController.SetTarget(army.worldTransform);
         }
+    }
+
+    public int SelectedCount()
+    {
+        return selectedTroops.Count;
+    }
+
+    public void SetLayout(ILayout layout)
+    {
+        troopLayout = layout;
+    }
+
+    public ILayout GetLayout()
+    {
+        return troopLayout;
     }
 
     public void AddSelected(Troop troop, bool toggle = false)
@@ -132,7 +146,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         var card = cardObject.GetComponent<TroopCard>();
         card.SetTroop(troop);
         var layout = layoutObject.GetComponent<TroopLayout>();
-        layout.troop = troop;
+        layout.layout = troop;
         layout.cardPursue = pursue;
 
         troop.card = card;

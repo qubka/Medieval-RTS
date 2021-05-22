@@ -20,7 +20,7 @@ public class SquadBar : BarBehavior
 
     public override void OnUpdate()
     {
-        var count = manager.selectedCount;
+        var count = manager.SelectedCount();
         if (count > 0) {
             Toggle(true);
 

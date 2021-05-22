@@ -17,7 +17,7 @@ public class TroopBar : BarBehavior
     public override void OnUpdate()
     {
         if (manager.isActive) {
-            var count = manager.selectedCount;
+            var count = manager.SelectedCount();
             if (count > 0) {
                 var selected = manager.selectedTroops;
                 SetInteractable(disband, true);

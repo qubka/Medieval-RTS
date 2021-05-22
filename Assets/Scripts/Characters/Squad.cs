@@ -700,7 +700,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
             barInnerRoutine = StartCoroutine(iconInner.Fade(0f, 0.15f));
             mapBorder.color = Color.black;
         }
-        isSelect = !isSelect;
+        isSelect = value;
 
         if (team == Team.Self) {
             if (isSelect) {

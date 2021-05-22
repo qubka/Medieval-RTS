@@ -239,7 +239,7 @@ public class Army : MonoBehaviour, IGameObject
                 case InfrastructureType.Village:
                     data.DestroyParty(true);
                     data.localTown.data.prosperity++;
-                    DestroyImmediate(this);
+                    DestroyImmediate(gameObject);
                     return;
                 case InfrastructureType.City:
                 case InfrastructureType.Castle:

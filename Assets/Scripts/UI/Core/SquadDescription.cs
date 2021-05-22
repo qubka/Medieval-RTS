@@ -24,7 +24,7 @@ public class SquadDescription : TweenBehaviour
 
     public override void OnUpdate()
     {
-        if (manager.selectedCount == 1) {
+        if (manager.SelectedCount() == 1) {
             Toggle(true);
 
             var squad = manager.selectedSquads[0];

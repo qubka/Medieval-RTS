@@ -2046,6 +2046,11 @@
                 <e p="StringExtention.cs" t="Include" />
                 <e p="TextExtention.cs" t="Include" />
               </e>
+              <e p="Interface" t="Include">
+                <e p="ILayout.cs" t="Include" />
+                <e p="IManager.cs" t="Include" />
+                <e p="ISelectable.cs" t="Include" />
+              </e>
               <e p="Line.cs" t="Include" />
               <e p="Matrix.cs" t="Include" />
               <e p="ObjectPool.cs" t="Include" />
@@ -2182,6 +2187,7 @@
               <e p="Layout" t="Include">
                 <e p="AttributeLayout.cs" t="Include" />
                 <e p="BuildingLayout.cs" t="Include" />
+                <e p="Layout.cs" t="Include" />
                 <e p="LayoutPursue.cs" t="Include" />
                 <e p="RecruitLayout.cs" t="Include" />
                 <e p="SquadLayout.cs" t="Include" />
