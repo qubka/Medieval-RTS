@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 3611982833316667066}
   - component: {fileID: 3685309824277759594}
   - component: {fileID: 3266205435106549779}
+  - component: {fileID: 863705605510140917}
   m_Layer: 12
   m_Name: Campaign Manager
   m_TagString: Untagged
@@ -74,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11161128b513461da14eadef7c883841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSounds: 50
+  maxSounds: 0
   dopplerLevel: 0
   spatialBlend: 1
   defaultVolume: 1
@@ -293,7 +294,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeMesh: {fileID: 0}
-  timeBar: {fileID: 0}
   timeScale: 0.25
   hoursInDay: 24
   startingYear: 1080
@@ -316,4 +316,15 @@ MonoBehaviour:
   amount: {fileID: 0}
   maxTroops: 10
   selectedTroops: []
-  troopLayout: {fileID: 0}
+--- !u!114 &863705605510140917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3611982833316667047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21889678fcf142f40a544454a862d563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

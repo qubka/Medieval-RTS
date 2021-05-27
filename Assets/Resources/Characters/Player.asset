@@ -19,7 +19,15 @@ MonoBehaviour:
   age: 23
   renown: 0
   honor: 0
+  money: 0
+  influence: 0
   type: 0
-  settlements: []
+  home: {fileID: 0}
+  settlements:
+  - {fileID: 11400000, guid: dbdba53c8d75599499c721ae923b95b8, type: 2}
+  - {fileID: 11400000, guid: 1e7c025dceabc6e4190f1494e827abdf, type: 2}
+  - {fileID: 11400000, guid: cbc25fea4abe31940ba6091671bb3bc1, type: 2}
+  - {fileID: 11400000, guid: 897c26657b32f6e40ac360fda5299425, type: 2}
+  - {fileID: 11400000, guid: a7f3758e4d817f845944a73e11dbe76e, type: 2}
   faction: {fileID: 11400000, guid: 55a0536e475f8b041b133d93e5edbe7f, type: 2}
   house: {fileID: 11400000, guid: 65c54ec1774794e41838224c30958ef5, type: 2}

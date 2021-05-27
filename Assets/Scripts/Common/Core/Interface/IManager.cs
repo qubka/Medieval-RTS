@@ -1,4 +1,4 @@
-﻿public interface IManager<T> where T: ISelectable
+﻿public interface IManager<in T> where T: ISelectable
 {
     int SelectedCount();
     void SetLayout(ILayout layout);

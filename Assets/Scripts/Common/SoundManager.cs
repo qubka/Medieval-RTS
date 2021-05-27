@@ -103,7 +103,7 @@ public class SoundManager : SingletonObject<SoundManager>
 
     public void LateUpdate()
     {
-        var time = CampaignTime.Instance.TimeDelta;
+        var time = TimeManager.Instance.TimeDelta;
         var volume = 1f - MathExtention.Clamp01(camController.DistToGround);
 
         foreach (var ambient in ambients) {

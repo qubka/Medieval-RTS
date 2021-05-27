@@ -28,12 +28,11 @@ public class TownController : TweenBehaviour
     [SerializeField] private GameObject recruitsLayout;
 
     private Dictionary<int, Dictionary<Building, BuildingLayout>> buildings = new Dictionary<int, Dictionary<Building, BuildingLayout>>();
-    private ArmyManager manager;
+    private List<RecruitLayout> recruits = new List<RecruitLayout>();
     private bool recruitsInit;
     
     protected override void Start()
     {
-        manager = ArmyManager.Instance;
         foreach (InfrastructureType type in Enum.GetValues(typeof(InfrastructureType))) {
             var list = Manager.defaultBuildings.Where(b => b.type == type).ToList();
             var count = list.Count;
@@ -53,48 +52,52 @@ public class TownController : TweenBehaviour
 
     public override void OnUpdate()
     {
-        if (manager.isActive) {
-            var town = manager.player.localTown;
-            if (town) {
-                if (!recruitsInit) {
-                    var faction = manager.player.leader.faction;
-                    foreach (var troop in faction.troops) {
-                        Instantiate(recruitsLayout, recruitsCanvas).GetComponent<RecruitLayout>().SetTroop(faction, troop);
-                    }
-                    recruitsInit = true;
+        var player = Game.Player;
+        var settlement = player.localSettlement;
+        if (settlement) {
+            if (!recruitsInit) {
+                var troops = player.leader.faction.troops;
+                recruits.Capacity = troops.Length;
+                foreach (var troop in troops) {
+                    var layout = Instantiate(recruitsLayout, recruitsCanvas).GetComponent<RecruitLayout>();
+                    layout.SetTroop(troop);
+                    recruits.Add(layout);
                 }
-                
-                var settlement = town.data;
-                
-                caption.text = settlement.label;
-                prosperity.text = settlement.prosperity.ToString();
-                prosperityInc.SetInteger(town.ProsperityGrowth);
-                loyality.text = settlement.loyalty.ToString();
-                loyalityInc.SetInteger(town.LoyaltyGrowth);
-                population.text = settlement.population.ToString();
-                populationInc.SetFloat(town.PopGrowth);
-                food.text = settlement.food.ToString();
-                foodInc.SetInteger(town.FoodProductionGrowth);
-                
-                foreach (var pair in buildings) {
-                    var active = ((InfrastructureType) pair.Key) == settlement.type;
-                    foreach (var layout in pair.Value.Values) {
-                        layout.SetActive(active);
-                    }
+                recruitsInit = true;
+            } else {
+                foreach (var layout in recruits) {
+                    layout.OnUpdate();
                 }
+            }
+
+            caption.text = settlement.label;
+            prosperity.text = settlement.prosperity.ToString();
+            prosperityInc.SetInteger(settlement.ProsperityGrowth);
+            loyality.text = settlement.loyalty.ToString();
+            loyalityInc.SetInteger(settlement.LoyaltyGrowth);
+            population.text = settlement.population.ToString();
+            populationInc.SetFloat(settlement.PopGrowth);
+            food.text = settlement.food.ToString();
+            foodInc.SetInteger(settlement.FoodProductionGrowth);
+            
+            foreach (var pair in buildings) {
+                var active = ((InfrastructureType) pair.Key) == settlement.type;
+                foreach (var layout in pair.Value.Values) {
+                    layout.SetActive(active);
+                }
+            }
+            
+            var builded = settlement.buildings;
+            var dictionary = buildings[(int) settlement.type];
+            foreach (var pair in dictionary) {
+                var building = pair.Key;
+                var layout = pair.Value;
                 
-                var builded = settlement.buildings;
-                var dictionary = buildings[(int) settlement.type];
-                foreach (var pair in dictionary) {
-                    var building = pair.Key;
-                    var layout = pair.Value;
-                    
-                    layout.SetBuilding(settlement, building);
-                    if (builded.Contains(building)) {
-                        layout.Enable(builded[building]);
-                    } else {
-                        layout.Disable();
-                    }
+                layout.SetBuilding(settlement, building);
+                if (builded.Contains(building)) {
+                    layout.Enable(builded[building]);
+                } else {
+                    layout.Disable();
                 }
             }
         }

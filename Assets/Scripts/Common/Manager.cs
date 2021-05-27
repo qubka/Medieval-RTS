@@ -23,69 +23,69 @@
 	public TooltipPopup dynamic;
 	public ChartPopup chart;
 
-	public static int Ground;
-	public static int Army;
-	public static int Unit;
-	public static int Obstacle;
-	public static int Building;
-	public static int Squad;
-	public static int Water;
+	public static int Ground { get; private set; }
+	public static int Army { get; private set; }
+	public static int Unit { get; private set; }
+	public static int Obstacle { get; private set; }
+	public static int Building { get; private set; }
+	public static int Squad { get; private set; }
+	public static int Water { get; private set; }
 
-	public static Global global;
-	public static Terrain terrain;
-	public static TerrainBorder border;
-	public static Camera mainCamera;
-	public static Camera minimapCamera;
-	public static Transform camTransform;
-	public static CamController camController;
-	public static AudioSource[] cameraSources;
-	public static RectTransform holderCanvas;
-	public static RectTransform layoutCanvas;
-	public static RectTransform cardCanvas;
-	public static GPUICrowdManager modelManager;
-	public static TooltipPopup fixedPopup;
-	public static TooltipPopup dynamicPopup;
-	public static ChartPopup chartPopup;
-	public static EventSystem eventSystem;
+	public static Global global { get; private set; }
+	public static Terrain terrain { get; private set; }
+	public static TerrainBorder border { get; private set; }
+	public static Camera mainCamera { get; private set; }
+	public static Camera minimapCamera { get; private set; }
+	public static Transform camTransform { get; private set; }
+	public static CamController camController { get; private set; }
+	public static AudioSource[] cameraSources { get; private set; }
+	public static RectTransform holderCanvas { get; private set; }
+	public static RectTransform layoutCanvas { get; private set; }
+	public static RectTransform cardCanvas { get; private set; }
+	public static GPUICrowdManager modelManager { get; private set; }
+	public static TooltipPopup fixedPopup { get; private set; }
+	public static TooltipPopup dynamicPopup { get; private set; }
+	public static ChartPopup chartPopup { get; private set; }
+	public static EventSystem eventSystem { get; private set; }
 	
-	public static MoraleAttribute ChargedInFlank;
-	public static MoraleAttribute ChargedInRear;
-	public static MoraleAttribute Disordered;
-	public static MoraleAttribute Exhausted;
-	public static MoraleAttribute FlanksProtected;
-	public static MoraleAttribute FlanksThreatened;
-	public static MoraleAttribute FoodVariety;
-	public static MoraleAttribute GeneralAround;
-	public static MoraleAttribute GeneralWound;
-	public static MoraleAttribute LosingAttack;
-	public static MoraleAttribute LosingBattle;
-	public static MoraleAttribute LowGround;
-	public static MoraleAttribute Marauding;
-	public static MoraleAttribute NoEnemies;
-	public static MoraleAttribute NoRetreatOption;
-	public static MoraleAttribute OutnumberEnemy;
-	public static MoraleAttribute Outnumbered;
-	public static MoraleAttribute Rain;
-	public static MoraleAttribute RoutingEnemies;
-	public static MoraleAttribute RoutingFriends;
-	public static MoraleAttribute Starvation;
-	public static MoraleAttribute TotallyExhausted;
-	public static MoraleAttribute UnderFire;
-	public static MoraleAttribute Unity;
-	public static MoraleAttribute UphillPosition;
-	public static MoraleAttribute VeryTired;
-	public static MoraleAttribute WinningBattle;
-	public static MoraleAttribute WithoutAmmo;
+	public static MoraleAttribute ChargedInFlank { get; private set; }
+	public static MoraleAttribute ChargedInRear { get; private set; }
+	public static MoraleAttribute Disordered { get; private set; }
+	public static MoraleAttribute Exhausted { get; private set; }
+	public static MoraleAttribute FlanksProtected { get; private set; }
+	public static MoraleAttribute FlanksThreatened { get; private set; }
+	public static MoraleAttribute FoodVariety { get; private set; }
+	public static MoraleAttribute GeneralAround { get; private set; }
+	public static MoraleAttribute GeneralWound { get; private set; }
+	public static MoraleAttribute LosingAttack { get; private set; }
+	public static MoraleAttribute LosingBattle { get; private set; }
+	public static MoraleAttribute LowGround { get; private set; }
+	public static MoraleAttribute Marauding { get; private set; }
+	public static MoraleAttribute NoEnemies { get; private set; }
+	public static MoraleAttribute NoRetreatOption { get; private set; }
+	public static MoraleAttribute OutnumberEnemy { get; private set; }
+	public static MoraleAttribute Outnumbered { get; private set; }
+	public static MoraleAttribute Rain { get; private set; }
+	public static MoraleAttribute RoutingEnemies { get; private set; }
+	public static MoraleAttribute RoutingFriends { get; private set; }
+	public static MoraleAttribute Starvation { get; private set; }
+	public static MoraleAttribute TotallyExhausted { get; private set; }
+	public static MoraleAttribute UnderFire { get; private set; }
+	public static MoraleAttribute Unity { get; private set; }
+	public static MoraleAttribute UphillPosition { get; private set; }
+	public static MoraleAttribute VeryTired { get; private set; }
+	public static MoraleAttribute WinningBattle { get; private set; }
+	public static MoraleAttribute WithoutAmmo { get; private set; }
 	
-	public static List<MoraleAttribute> moraleAttributes;
-	public static List<Faction> defaultFactions;
-	public static List<Character> defaultCharacters;
-	public static List<Settlement> defaultSettlements;
-	public static List<Party> defaultParties;
-	public static List<House> defaultHouses;
-	public static List<Building> defaultBuildings;
+	public static List<MoraleAttribute> moraleAttributes { get; private set; }
+	public static List<Faction> defaultFactions { get; private set; }
+	public static List<Character> defaultCharacters { get; private set; }
+	public static List<Settlement> defaultSettlements { get; private set; }
+	public static List<Party> defaultParties { get; private set; }
+	public static List<House> defaultHouses { get; private set; }
+	public static List<Building> defaultBuildings { get; private set; }
 	
-	public static float TerrainDistance;
+	public static float TerrainDistance { get; private set; }
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
 	public static readonly int Pointer = "PointerMove".GetHashCode();
 	public static readonly int Way = "Way".GetHashCode();

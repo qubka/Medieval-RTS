@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 {
-    [Header("Refs")]
+    [Header("Main")]
     public TownController townController;
     public TextMeshProUGUI amount;
     public int maxTroops;
@@ -29,14 +29,14 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
     private bool groundCast;
 
     private Collider[] colliders = new Collider[1];
+    
+    //public Party player => Game.Player;
 
-    public bool isActive => army;
-    public Party player => army.data;
-
-    public void SetPlayer(Army target)
+    public void SetArmy(Army target)
     {
         army = target;
         camController.SetTarget(army.worldTransform);
+        var player = Game.Player;
         foreach (var troop in player.troops) {
             AddLayout(troop);
         }
@@ -133,14 +133,14 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 
     public void SwapSelected(int newPos, int oldPos)
     {
-        player.troops.Swap(newPos, oldPos);
+        Game.Player.troops.Swap(newPos, oldPos);
     }
     
     public void AddLayout(Troop troop)
     {
         var cardObject = Instantiate(Manager.global.troopCard, Manager.cardCanvas);
         var layoutObject = Instantiate(Manager.global.troopLayout, Manager.layoutCanvas);
-        
+       
         var pursue = cardObject.GetComponent<LayoutPursue>();
         pursue.layoutTransform = layoutObject.transform;
         var card = cardObject.GetComponent<TroopCard>();
@@ -151,16 +151,29 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 
         troop.card = card;
         troop.layout = layout;
+        
+        cardObject.SetActive(false);
+        StartCoroutine(RepositionCard(cardObject, pursue.layoutTransform)); // fix for re-parenting
     }
-    
+
+    private IEnumerator RepositionCard(GameObject cardObject, Transform layoutTransform)
+    {
+        yield return new WaitForEndOfFrame();
+        cardObject.SetActive(true);
+        cardObject.transform.position = layoutTransform.position;
+    }
+
+    // RemoveTroop
     public void Disband()
     {
+        var player = Game.Player;
         for (var i = selectedTroops.Count - 1; i > -1; i--) {
             var troop = selectedTroops[i];
             player.troops.Remove(troop);
             troop.Destroy();
             selectedTroops.RemoveAt(i);
         }
+        amount.text = player.troops.Count + "/" + maxTroops; 
     }
     
     public void Merge()
@@ -170,5 +183,14 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
     
     public void Garrison()
     {
+    }
+
+    public void AddTroop(Troop troop)
+    {
+        var player = Game.Player;
+        player.troops.Add(troop);
+        AddLayout(troop);
+        amount.text = player.troops.Count + "/" + maxTroops;
+        player.leader.money -= troop.data.recruitCost;
     }
 }

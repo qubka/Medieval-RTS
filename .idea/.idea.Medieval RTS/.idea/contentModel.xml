@@ -157,9 +157,9 @@
                   <e p="Army" t="Include">
                     <e p="ChaseEnemy.cs" t="Include" />
                     <e p="IsEnemyNearby.cs" t="Include" />
-                    <e p="IsInTown.cs" t="Include" />
+                    <e p="IsInSettlement.cs" t="Include" />
                     <e p="IsPowerfulThenEnemy.cs" t="Include" />
-                    <e p="MoveToTown.cs" t="Include" />
+                    <e p="MoveToSettlement.cs" t="Include" />
                     <e p="RunFromEnemy.cs" t="Include" />
                   </e>
                   <e p="AudioSource" t="Include">
@@ -2026,10 +2026,9 @@
             <e p="Unit.cs" t="Include" />
           </e>
           <e p="Common" t="Include">
-            <e p="CampaignTime.cs" t="Include" />
             <e p="Core" t="Include">
-              <e p="AnimatedCrowd.cs" t="Include" />
               <e p="AnimatedUVs.cs" t="Include" />
+              <e p="AnimatorCrowd.cs" t="Include" />
               <e p="AnimatorRandomizer.cs" t="Include" />
               <e p="BlockRotation.cs" t="Include" />
               <e p="Circle.cs" t="Include" />
@@ -2047,6 +2046,7 @@
                 <e p="TextExtention.cs" t="Include" />
               </e>
               <e p="Interface" t="Include">
+                <e p="IGameObject.cs" t="Include" />
                 <e p="ILayout.cs" t="Include" />
                 <e p="IManager.cs" t="Include" />
                 <e p="ISelectable.cs" t="Include" />
@@ -2090,7 +2090,6 @@
               <e p="Serializable" t="Include">
                 <e p="Character.cs" t="Include" />
                 <e p="Faction.cs" t="Include" />
-                <e p="Game.cs" t="Include" />
                 <e p="House.cs" t="Include" />
                 <e p="Party.cs" t="Include" />
                 <e p="Settlement.cs" t="Include" />
@@ -2107,14 +2106,11 @@
                 <e p="RangeWeapon.cs" t="Include" />
               </e>
             </e>
-            <e p="EconomyManager.cs" t="Include" />
-            <e p="FactionManager.cs" t="Include" />
+            <e p="EventManager.cs" t="Include" />
+            <e p="Game.cs" t="Include" />
             <e p="LightManager.cs" t="Include" />
             <e p="Manager.cs" t="Include" />
             <e p="Objects" t="Include">
-              <e p="Interface" t="Include">
-                <e p="IGameObject.cs" t="Include" />
-              </e>
               <e p="ListObject.cs" t="Include" />
               <e p="SerializableObject.cs" t="Include" />
               <e p="SingletonObject.cs" t="Include" />
@@ -2129,6 +2125,13 @@
               <e p="SquadTable.cs" t="Include" />
               <e p="TownTable.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Diplomacy" t="Include">
+            <e p="Campaign" t="Include">
+              <e p="AllianceBehavior.cs" t="Include" />
+              <e p="FactionManager.cs" t="Include" />
+              <e p="TimeManager.cs" t="Include" />
             </e>
           </e>
           <e p="Steering" t="Include">
@@ -2165,6 +2168,7 @@
             <e p="Core" t="Include">
               <e p="Bar" t="Include">
                 <e p="BarBehavior.cs" t="Include" />
+                <e p="ResourceBar.cs" t="Include" />
                 <e p="SquadBar.cs" t="Include" />
                 <e p="TimeBar.cs" t="Include" />
                 <e p="TownBar.cs" t="Include" />
@@ -2181,8 +2185,9 @@
               <e p="Info" t="Include">
                 <e p="BuildingInfo.cs" t="Include" />
                 <e p="ButtonInfo.cs" t="Include" />
+                <e p="MoneyInfo.cs" t="Include" />
                 <e p="RecruitInfo.cs" t="Include" />
-                <e p="TroopIcon.cs" t="Include" />
+                <e p="TroopInfo.cs" t="Include" />
               </e>
               <e p="Layout" t="Include">
                 <e p="AttributeLayout.cs" t="Include" />

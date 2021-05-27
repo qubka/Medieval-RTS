@@ -13,8 +13,9 @@ public class TownEditor : Editor
         
         GUILayout.Space(10f);
         
+        var town = ((Town) target);
+        
         if (GUILayout.Button("Add Random Troop")) {
-            var town = ((Town) target);
             var troops = town.data.ruler.faction.troops;
             town.data.garrison.Add(troops[Random.Range(0, troops.Length)]);
             EditorUtility.SetDirty(target);
@@ -22,14 +23,19 @@ public class TownEditor : Editor
         
         if (GUILayout.Button("Generate Name")) {
             var names = Resources.LoadAll<TownNames>("Names/");
-            ((Town) target).GenerateName(names[Random.Range(0, names.Length)]);
+            town.GenerateName(names[Random.Range(0, names.Length)]);
             EditorUtility.SetDirty(target);
         }
 
         infrastructureType = (InfrastructureType) EditorGUILayout.EnumPopup(infrastructureType);
         
         if (GUILayout.Button("Generate Location")) {
-            ((Town) target).GenerateLocation(infrastructureType);
+            town.GenerateLocation(infrastructureType);
+            EditorUtility.SetDirty(target);
+        }
+        
+        if (GUILayout.Button("Update Location")) {
+            town.data.position = town.transform.position;
             EditorUtility.SetDirty(target);
         }
     }

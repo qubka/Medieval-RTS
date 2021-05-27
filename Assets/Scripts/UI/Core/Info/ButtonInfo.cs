@@ -17,7 +17,6 @@ public class ButtonInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (button.interactable) {
-            
             StopAllCoroutines();
             StartCoroutine(Show());
         }

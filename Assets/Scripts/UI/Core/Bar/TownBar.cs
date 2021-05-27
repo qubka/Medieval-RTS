@@ -6,9 +6,11 @@ using UnityEngine.UI;
 
 public class TownBar : MonoBehaviour
 {
+    [SerializeField] private Image barIcon;
+    [Space]
     [SerializeField] private ControlButton building;
     [SerializeField] private ControlButton unit;
-    [SerializeField] private ControlButton market;
+    [SerializeField] private ControlButton recruit;
     [SerializeField] private ControlButton info;
     [Space]
     [SerializeField] private Sprite activateImage;
@@ -22,6 +24,7 @@ public class TownBar : MonoBehaviour
         public GameObject target;
         public Button button;
         public Image image;
+        public Sprite icon;
     }
 
     public void Building()
@@ -34,9 +37,9 @@ public class TownBar : MonoBehaviour
         Switch(isUnit: true);
     }
     
-    public void Market()
+    public void Recruit()
     {
-        Switch(isMarket: true);
+        Switch(isRecruit: true);
     }
     
     public void Info()
@@ -44,11 +47,11 @@ public class TownBar : MonoBehaviour
         Switch(isInfo: true);
     }
 
-    private void Switch(bool isBuilding = false, bool isUnit = false, bool isMarket = false, bool isInfo = false)
+    private void Switch(bool isBuilding = false, bool isUnit = false, bool isRecruit = false, bool isInfo = false)
     {
         SetInteractable(building, isBuilding);
         SetInteractable(unit, isUnit);
-        SetInteractable(market, isMarket);
+        SetInteractable(recruit, isRecruit);
         SetInteractable(info, isInfo);
     }
     
@@ -59,6 +62,7 @@ public class TownBar : MonoBehaviour
         if (value) {
             control.image.sprite = activateImage;
             control.image.color = activateColor;
+            barIcon.sprite = control.icon;
         } else {
             control.image.sprite = disabledImage;
             control.image.color = disabledColor;

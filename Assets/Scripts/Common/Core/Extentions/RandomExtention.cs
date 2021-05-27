@@ -49,4 +49,5 @@ public static class RandomExtention
     }
 
     public static bool NextBool => Random.Range(0, 2) == 0;
+    public static float NextFloat => Random.Range(0f, 1f);
 }

@@ -9,17 +9,11 @@ public class SquadBar : BarBehavior
     [SerializeField] private ControlButton hold;
     [SerializeField] private ControlButton range;
     [SerializeField] private ControlButton flee;
-    private SquadManager manager;
     private bool enable;
-    
-    protected override void Start()
-    {
-        manager = SquadManager.Instance;
-        base.Start();
-    }
 
     public override void OnUpdate()
     {
+        var manager = SquadManager.Instance;
         var count = manager.SelectedCount();
         if (count > 0) {
             Toggle(true);
@@ -57,26 +51,26 @@ public class SquadBar : BarBehavior
     
     public void Run()
     {
-        manager.selectedSquads.Run();
+        SquadManager.Instance.selectedSquads.Run();
     }
 
     public void Stop()
     {
-        manager.selectedSquads.Stop();
+        SquadManager.Instance.selectedSquads.Stop();
     }
 
     public void Hold()
     {
-        manager.selectedSquads.Hold();
+        SquadManager.Instance.selectedSquads.Hold();
     }
 
     public void Range()
     {
-        manager.selectedSquads.Range();
+        SquadManager.Instance.selectedSquads.Range();
     }
 
     public void Flee()
     {
-        manager.selectedSquads.Flee();
+        SquadManager.Instance.selectedSquads.Flee();
     }
 }

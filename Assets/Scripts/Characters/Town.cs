@@ -34,7 +34,6 @@ public class Town : MonoBehaviour, IGameObject
     [Header("Misc")]
     public float canvasHeight;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
-    public Vector3 bannerPosition = new Vector3(0f, 2f, 0f);
     [Range(1f, 2f)] public float populationGrowth = 0.005f;
     public Vector2Int maxProsperity = new Vector2Int(-1000, 10000);
     public Vector2Int maxLoyalty = new Vector2Int(-100, 100);
@@ -50,38 +49,11 @@ public class Town : MonoBehaviour, IGameObject
     private AudioSource mainAudio;
     private AudioSource buildAudio;
     private float nextHoverTime;
-    private bool isVillage;
-    private bool isBuilding;
-    
+
     #endregion
 
     #region Economy
 
-    public float PopGrowth => populationGrowth + populationGrowthSpeed / 1000f;
-    public int ProsperityGrowth => prosperity;
-    public int LoyaltyGrowth => loyalty;
-    public int FoodProductionGrowth => foodProduction;
-    
-    [SerializeField, ReadOnly] private int loyalty;
-    [SerializeField, ReadOnly] private int tax;
-    [SerializeField, ReadOnly] private int prosperity;
-    [SerializeField, ReadOnly] private int foodStock;
-    [SerializeField, ReadOnly] private int foodProduction;
-    [SerializeField, ReadOnly] private int garrisonCapacity;
-    [SerializeField, ReadOnly] private int armyRecruitSpeed;
-    [SerializeField, ReadOnly] private int wallRepairSpeed;
-    [SerializeField, ReadOnly] private int siegeEngineSpeed;
-    [SerializeField, ReadOnly] private int populationGrowthSpeed;
-    [SerializeField, ReadOnly] private int villageDevelopmentDaily;
-    [SerializeField, ReadOnly] private int experience;
-    [SerializeField, ReadOnly] private int armorQualityBonus;
-    [SerializeField, ReadOnly] private int weaponQualityBonus;
-    [SerializeField, ReadOnly] private int trade;
-    [SerializeField, ReadOnly] private int gold;
-    [SerializeField, ReadOnly] private int armyMovementSpeed;
-    [SerializeField, ReadOnly] private int researchCostReduction;
-    [SerializeField, ReadOnly] private int influenceGrowthSpeed;
-    [SerializeField, ReadOnly] private int armyUpkeepCost;
     #endregion
 
     private void Awake()
@@ -109,17 +81,17 @@ public class Town : MonoBehaviour, IGameObject
         townIcon.SetSettlement(data);
         iconTransform.SetParent(Manager.holderCanvas, false);
         iconTransform.localScale = barScale;
-        isVillage = data.type == InfrastructureType.Village;
-        
+
         // Add a town to the tables
         TownTable.Instance.Add(gameObject, this);
         ObjectTable.Instance.Add(gameObject, this);
         
-        //
-        CalculateTraits();
-
+        // Register events
+        EventManager.DailyTickEvent.AddListener(DailyTick);
+        EventManager.WeeklyTickEvent.AddListener(WeeklyTick);
+        
         // Skip on village
-        if (data.type == InfrastructureType.Village)
+        if (data.isVillage)
             return;
 
         // Create banners
@@ -127,11 +99,9 @@ public class Town : MonoBehaviour, IGameObject
         foreach (var trans in wallBanners) {
             Instantiate(banner.clearWall, trans);
         }
-
         foreach (var trans in townBanners) {
             Instantiate(banner.clearTown, trans);
         }
-
         foreach (var trans in armyBanners) {
             Instantiate(banner.clearArmy, trans);
         }
@@ -172,7 +142,7 @@ public class Town : MonoBehaviour, IGameObject
             townIcon.SetActive(true);
 
             // Icon UI mode
-            if (isVillage) {
+            if (data.isVillage) {
                 townIcon.Enable();
             }
         } else {
@@ -188,7 +158,7 @@ public class Town : MonoBehaviour, IGameObject
             }
 
             // Icon UI mode
-            if (isVillage) {
+            if (data.isVillage) {
                 if (camController.zoomPos > 0.75f) {
                     townIcon.Disable();
                 } else {
@@ -197,14 +167,14 @@ public class Town : MonoBehaviour, IGameObject
             }
         }
 
-        var time = CampaignTime.Instance.TimeDelta;
+        var time = TimeManager.Instance.TimeDelta;
         var isDay = (time > 7f && time < 22f);
         mainAudio.clip = isDay ? communitySounds.daySound : communitySounds.nightSound;
         if (!mainAudio.isPlaying) {
             mainAudio.Play();
         }
         
-        if (isDay && isBuilding) {
+        if (isDay && data.isBuilding) {
             /*if (!dust.isPlaying) {
                 dust.Play();
             }*/
@@ -218,105 +188,6 @@ public class Town : MonoBehaviour, IGameObject
             }*/
             if (buildAudio.isPlaying) {
                 buildAudio.Stop();
-            }
-        }
-    }
-
-    public void CalculateTraits()
-    {
-        //
-        loyalty = 0; //
-        tax = 0;
-        prosperity = 0; //
-        foodStock = 0; //
-        foodProduction = 0; //
-        garrisonCapacity = 0;
-        armyRecruitSpeed = 0;
-        wallRepairSpeed = 0;
-        siegeEngineSpeed = 0;
-        populationGrowthSpeed = 0; //
-        villageDevelopmentDaily = 0;
-        experience = 0;
-        armorQualityBonus = 0;
-        weaponQualityBonus = 0;
-        trade = 0;
-        gold = 0;
-        armyMovementSpeed = 0;
-        researchCostReduction = 0;
-        influenceGrowthSpeed = 0;
-        armyUpkeepCost = 0;
-        
-        //
-        foreach (var pair in data.buildings) {
-            var building = pair.Key;
-            var level = pair.Value;
-            if (level.item2 < 1f)
-                continue;
-            
-            foreach (var effect in building.effects) {
-                var bonus = effect.bonus[level.item1];
-                switch (effect.effect) {
-                    case BuildingEffectType.Loyalty:
-                        loyalty += bonus;
-                        break;
-                    case BuildingEffectType.Tax:
-                        tax += bonus;
-                        break;
-                    case BuildingEffectType.Prosperity:
-                        prosperity += bonus;
-                        break;
-                    case BuildingEffectType.FoodStock:
-                        foodStock += bonus;
-                        break;
-                    case BuildingEffectType.FoodProduction:
-                        foodProduction += bonus;
-                        break;
-                    case BuildingEffectType.GarrisonCapacity:
-                        garrisonCapacity += bonus;
-                        break;
-                    case BuildingEffectType.ArmyRecruitSpeed:
-                        armyRecruitSpeed += bonus;
-                        break;
-                    case BuildingEffectType.WallRepairSpeed:
-                        wallRepairSpeed += bonus;
-                        break;
-                    case BuildingEffectType.SiegeEngineSpeed:
-                        siegeEngineSpeed += bonus;
-                        break;
-                    case BuildingEffectType.PopulationGrowthSpeed:
-                        populationGrowthSpeed += bonus;
-                        break;
-                    case BuildingEffectType.VillageDevelopmentDaily:
-                        villageDevelopmentDaily += bonus;
-                        break;
-                    case BuildingEffectType.Experience:
-                        experience += bonus;
-                        break;
-                    case BuildingEffectType.ArmorQualityBonus:
-                        armorQualityBonus += bonus;
-                        break;
-                    case BuildingEffectType.WeaponQualityBonus:
-                        weaponQualityBonus += bonus;
-                        break;
-                    case BuildingEffectType.Trade:
-                        trade += bonus;
-                        break;
-                    case BuildingEffectType.Gold:
-                        gold += bonus;
-                        break;
-                    case BuildingEffectType.ArmyMovementSpeed:
-                        armyMovementSpeed += bonus;
-                        break;
-                    case BuildingEffectType.ResearchCostReduction:
-                        researchCostReduction += bonus;
-                        break;
-                    case BuildingEffectType.InfluenceGrowthSpeed:
-                        influenceGrowthSpeed += bonus;
-                        break;
-                    case BuildingEffectType.ArmyUpkeepCost:
-                        armyUpkeepCost += bonus;
-                        break;
-                }
             }
         }
     }
@@ -344,6 +215,7 @@ public class Town : MonoBehaviour, IGameObject
         loc.loyalty = Random.Range(70, 100);
         loc.food = Random.Range(70, 100);
         loc.type = infrastructure;
+        loc.position = transform.position;
         var resources = Resources.LoadAll<Resource>("Resources/");
         if (isVillage || RandomExtention.NextBool) {
             loc.resources = new[] {resources[Random.Range(0, resources.Length)]};
@@ -366,41 +238,6 @@ public class Town : MonoBehaviour, IGameObject
            // Handles.Label(transform.position + Vector3.up * 5f, name, new GUIStyle("Button") {fontSize = 30});
         }
     }
-
-    #region Economy
-
-    public void BeginNewDay()
-    {
-        isBuilding = false;
-        foreach (var pair in data.buildings) {
-            var data = pair.Value;
-            if (data.item2 < 1f) {
-                data.item2 += pair.Key.buildingSpeed;
-                if (data.item2 > 1f) {
-                    data.item2 = 1f;
-                } else {
-                    isBuilding = true;
-                }
-                break;
-            }
-        }
-        
-        CalculateTraits();
-
-        if (isVillage) {
-            Party.CreatePeasant(this);
-        }
-    }
-
-    public void BeginNewWeek()
-    {
-        data.population = (int) (data.population * (1f + PopGrowth));
-        data.prosperity = math.clamp(data.prosperity + prosperity, maxProsperity.x, maxProsperity.y);
-        data.loyalty = math.clamp(data.loyalty + loyalty, maxLoyalty.x, maxLoyalty.y);
-        data.food = math.clamp(data.food + foodProduction, maxStock.x, maxStock.y + foodStock);
-    }
-
-    #endregion
 
     #region Base
 
@@ -586,4 +423,14 @@ public class Town : MonoBehaviour, IGameObject
     }
     
     #endregion
+    
+    private void DailyTick()
+    {
+        data.DailyTick();
+    }
+    
+    private void WeeklyTick()
+    {
+        data.WeeklyTick();
+    }
 }

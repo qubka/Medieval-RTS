@@ -14,16 +14,9 @@ public class SquadDescription : TweenBehaviour
     [SerializeField] private StatsRadarChart chart;
     [SerializeField] private int layoutTrigger = 12;
 
-    private SquadManager manager;
-
-    protected override void Start()
-    {
-        manager = SquadManager.Instance;
-        base.Start();
-    }
-
     public override void OnUpdate()
     {
+        var manager = SquadManager.Instance;
         if (manager.SelectedCount() == 1) {
             Toggle(true);
 

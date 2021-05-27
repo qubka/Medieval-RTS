@@ -21,8 +21,10 @@ public class BuildingInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 .Append(StringExtention.GetPrettyName(effect.effect))
                 .Append(':')
                 .Append(' ')
+                .Append("<color=#00ff00ff>")
                 .Append('+')
                 .Append(effect.bonus[0])
+                .Append("</color>")
                 .AppendLine();
         }
 

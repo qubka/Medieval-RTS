@@ -19,6 +19,10 @@ public class Character : SerializableObject
     public int renown;
     public int honor;
 
+    [Header("Resources")] 
+    public int money;
+    public int influence;
+
     [Header("Game")]
     public CharacterType type;
     [JSONNode(NodeOptions.DontSerialize)] 

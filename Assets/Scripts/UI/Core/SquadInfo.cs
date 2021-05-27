@@ -26,13 +26,11 @@ public class SquadInfo : Tooltip
     [SerializeField] private Sprite friendlyIcon;
     [SerializeField] private Sprite enemyBar;
     [SerializeField] private Sprite friendlyBar;
-    
-    private SquadManager manager;
+
     private readonly Dictionary<MoraleAttribute, GameObject> attributes = new Dictionary<MoraleAttribute, GameObject>();
 
     private void Start()
     {
-        manager = SquadManager.Instance;
         foreach (var attribute in Manager.moraleAttributes.OrderByDescending(a => a.bonus)) {
             var obj = Instantiate(attributeLayout, attributeCanvas);
             obj.GetComponent<AttributeLayout>().SetAttribute(attribute);
@@ -53,7 +51,7 @@ public class SquadInfo : Tooltip
     
     public void OnUpdate()
     {
-        var squad = manager.hover;
+        var squad = SquadManager.Instance.hover;
         if (squad) {
             switch (squad.state) {
                 case SquadFSM.Idle:
