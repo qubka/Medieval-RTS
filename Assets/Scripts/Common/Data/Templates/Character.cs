@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityJSON;
 using Random = UnityEngine.Random;
 
-[CreateAssetMenu(menuName = "Medieval/Character Config", order = 0)]
+[CreateAssetMenu(menuName = "Medieval/Templates/Character", order = 0)]
 [Serializable]
 public class Character : SerializableObject
 {
@@ -36,6 +36,14 @@ public class Character : SerializableObject
     //public string portrait;
     [JSONNode(NodeOptions.DontSerialize)]
     public House house;
+
+    public static List<Character> All => Game.Characters;
+    public bool IsPlayer => type == CharacterType.Player;
+    public bool IsPeasant => type == CharacterType.Peasant;
+    public bool IsBandit => type == CharacterType.Bandit;
+    public bool IsNoble => type == CharacterType.Noble;
+    
+    #region Serialization
 
     /* For serialization */
     [JSONNode] private int factionId;
@@ -72,24 +80,25 @@ public class Character : SerializableObject
 
     public override void OnDeserialization()
     {
-        var game = SaveLoadManager.Instance.current;
         if (factionId != -1) {
-            faction = game.factions.Find(f => f.id == factionId);
+            faction = Game.Factions.Find(f => f.id == factionId);
         }
         if (houseId != -1) {
-            house = game.houses.Find(h => h.id == houseId);
+            house = Game.Houses.Find(h => h.id == houseId);
         }
         if (homeId != -1) {
-            home = game.settlements.Find(s => s.id == homeId);
+            home = Game.Settlements.Find(s => s.id == homeId);
         }
         settlements.Capacity = settlementsIds.Length;
         foreach (var settlementId in settlementsIds) {
-            settlements.Add(game.settlements.Find(s => s.id == settlementId));
+            settlements.Add(Game.Settlements.Find(s => s.id == settlementId));
         }
         if (settlementsIds.Length > 0) {
             settlementsIds = new int[0];
         }
     }
+    
+    #endregion
 }
 
 [Serializable]

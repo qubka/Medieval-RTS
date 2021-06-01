@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityJSON;
 using Wintellect.PowerCollections;
 
-[CreateAssetMenu(menuName = "Medieval/Location Config", order = 0)]
+[CreateAssetMenu(menuName = "Medieval/Templates/Location", order = 0)]
 [Serializable]
 public class Settlement : SerializableObject
 {
@@ -16,7 +16,7 @@ public class Settlement : SerializableObject
     [Header("General")]
     public int id;
     public string label;
-    public bool isCapital;
+    //public bool isCapital;
     public bool isMarker;
     public int prosperity;
     public int population;
@@ -37,9 +37,10 @@ public class Settlement : SerializableObject
     [JSONNode(NodeOptions.DontSerialize)] 
     public BuildingDictionary buildings;
     
-    public bool isVillage => type == InfrastructureType.Village;
-    public bool isCastle => type == InfrastructureType.Castle;
-    public bool isCity => type == InfrastructureType.City;
+    public static List<Settlement> All => Game.Settlements;
+    public bool IsVillage => type == InfrastructureType.Village;
+    public bool IsCastle => type == InfrastructureType.Castle;
+    public bool IsCity => type == InfrastructureType.City;
 
     #region Economy
 
@@ -91,7 +92,7 @@ public class Settlement : SerializableObject
         
         CalculateTraits();
 
-        if (isVillage) {
+        if (IsVillage) {
             Party.CreatePeasant(this);
         }
     }
@@ -136,9 +137,8 @@ public class Settlement : SerializableObject
 
     public override void OnDeserialization()
     {
-        var game = SaveLoadManager.Instance.current;
         if (rulerId != -1) {
-            ruler = game.characters.Find(c => c.id == rulerId);
+            ruler = Game.Characters.Find(c => c.id == rulerId);
         }
         garrison.Capacity = garrisonData.Length;
         foreach (var pack in garrisonData) {
@@ -151,7 +151,7 @@ public class Settlement : SerializableObject
         }
         parties.Capacity = partiesIds.Length;
         foreach (var leaderId in partiesIds) {
-            parties.Add(game.parties.Find(p => p.leader.id == leaderId));
+            parties.Add(Game.Parties.Find(p => p.leader.id == leaderId));
         }
         if (partiesIds.Length > 0) {
             partiesIds = new int[0];
@@ -166,7 +166,7 @@ public class Settlement : SerializableObject
         resources = settlement.resources;
         neighbours = settlement.neighbours;
         for (var i = 0; i < neighbours.Length; i++) {
-            neighbours[i] = game.settlements.Find(s => s.id == neighbours[i].id);
+            neighbours[i] = Game.Settlements.Find(s => s.id == neighbours[i].id);
         }
     }
     

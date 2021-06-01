@@ -1,22 +1,59 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using UnityEngine;
 using UnityJSON;
 
 [Serializable]
 public class Game : SingletonObject<Game>, IDeserializationListener
 {
-    [JSONNode(NodeOptions.DontSerialize)] public static Party Player { get; private set; } = Party.Dummy();
-    public List<Faction> factions = new List<Faction>();
-    public List<Character> characters = new List<Character>();
-    public List<Party> parties = new List<Party>();
-    public List<Settlement> settlements = new List<Settlement>();
-    public List<House> houses = new List<House>();
+    public static Party Player { get; private set; } = Party.Dummy();
+    public static DateTime Now => Instance.dateTime;
+    public static List<Faction> Factions => Instance.factions;
+    public static List<Character> Characters => Instance.characters;
+    public static List<Party> Parties => Instance.parties;
+    public static List<Settlement> Settlements => Instance.settlements;
+    public static List<House> Houses => Instance.houses;
+    
+    /* Serialization */
+    
+    [JSONNode, SerializeField] private List<Faction> factions = new List<Faction>();
+    [JSONNode, SerializeField] private List<Character> characters = new List<Character>();
+    [JSONNode, SerializeField] private List<Party> parties = new List<Party>();
+    [JSONNode, SerializeField] private List<Settlement> settlements = new List<Settlement>();
+    [JSONNode, SerializeField] private List<House> houses = new List<House>();
+    [JSONNode] private DateTime dateTime = new DateTime(1080, 1, 1, 12, 0, 0);
+    [JSONNode] private int prevDay = 1;
     
     private void Start()
     {
         NewGame();
         OnDeserializationSucceeded(null);
+        StartCoroutine(Tick());
+    }
+
+    private IEnumerator Tick()
+    {
+        while (true) {
+            OnUpdate();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void OnUpdate()
+    {
+        dateTime = dateTime.AddMinutes(1);
+        var day = dateTime.Day;
+        if (day != prevDay) {
+            var events = Events.Instance;
+            events.OnDailyTickEvent();
+            if (dateTime.DayOfWeek == DayOfWeek.Monday) {
+                events.OnWeeklyTickEvent();
+            }
+        }
+        prevDay = day;
     }
 
     public void NewGame()
@@ -92,7 +129,7 @@ public class Game : SingletonObject<Game>, IDeserializationListener
         foreach (var party in parties) {
             var army = Instantiate(Manager.global.armyPrefab, party.position, party.rotation).GetComponent<Army>();
             army.data = party;
-            if (army.isPlayer) {
+            if (party.leader.IsPlayer) {
                 Player = party;
             }
         }

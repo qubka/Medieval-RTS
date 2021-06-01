@@ -10,7 +10,7 @@ public class ChartPopup : Tooltip
     public void DisplayInfo(Troop troop)
     {
         caption.text = troop.data.name;
-        chart.SetStats(troop.data.stats);
+        chart.SetStats(troop.data.Stats);
         SetActive(true);
     }
 

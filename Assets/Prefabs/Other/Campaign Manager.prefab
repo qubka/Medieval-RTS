@@ -10,15 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3611982833316405343}
   - component: {fileID: 3611982833306484457}
+  - component: {fileID: 7394997860315267317}
   - component: {fileID: 6169367791295493446}
   - component: {fileID: 2024981626}
   - component: {fileID: 3611982833316667067}
   - component: {fileID: 3611982833316667045}
   - component: {fileID: 3611982833316667044}
   - component: {fileID: 3611982833316667066}
-  - component: {fileID: 3685309824277759594}
-  - component: {fileID: 3266205435106549779}
-  - component: {fileID: 863705605510140917}
   m_Layer: 12
   m_Name: Campaign Manager
   m_TagString: Untagged
@@ -63,6 +61,22 @@ MonoBehaviour:
   fix: {fileID: 0}
   dynamic: {fileID: 0}
   chart: {fileID: 0}
+--- !u!114 &7394997860315267317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3611982833316667047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab887d4f8824d7b8892e8a342190b4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  townController: {fileID: 0}
+  amount: {fileID: 0}
+  maxTroops: 10
+  selectedTroops: []
 --- !u!114 &6169367791295493446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,50 +295,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current: {fileID: 0}
---- !u!114 &3685309824277759594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3611982833316667047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78aa04bae78e426996c80000406a2112, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeMesh: {fileID: 0}
-  timeScale: 0.25
-  hoursInDay: 24
-  startingYear: 1080
-  startingMonth: 1
-  startingDay: 1
-  startingHour: 7
---- !u!114 &3266205435106549779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3611982833316667047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ab887d4f8824d7b8892e8a342190b4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  townController: {fileID: 0}
-  amount: {fileID: 0}
-  maxTroops: 10
-  selectedTroops: []
---- !u!114 &863705605510140917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3611982833316667047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21889678fcf142f40a544454a862d563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

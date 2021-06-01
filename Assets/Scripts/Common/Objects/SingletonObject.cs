@@ -16,7 +16,7 @@ public abstract class SingletonObject<T> : MonoBehaviour where T : MonoBehaviour
 
 	protected virtual void Awake()
 	{
-		if(instance != null) DestroyImmediate(gameObject);
+		if (instance != null) DestroyImmediate(gameObject);
 		instance = GetComponent<T>();
 	}
 }

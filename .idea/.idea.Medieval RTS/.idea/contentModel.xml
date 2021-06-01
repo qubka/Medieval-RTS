@@ -2065,6 +2065,9 @@
               <e p="Building.cs" t="Include" />
               <e p="Global.cs" t="Include" />
               <e p="LightPreset.cs" t="Include" />
+              <e p="Main" t="Include">
+                <e p="Character.cs" t="Include" />
+              </e>
               <e p="MoraleAttribute.cs" t="Include" />
               <e p="Names" t="Include">
                 <e p="CharacterNames.cs" t="Include" />
@@ -2087,13 +2090,6 @@
                 <e p="ReadOnlyAttribute.cs" t="Include" />
               </e>
               <e p="Resource.cs" t="Include" />
-              <e p="Serializable" t="Include">
-                <e p="Character.cs" t="Include" />
-                <e p="Faction.cs" t="Include" />
-                <e p="House.cs" t="Include" />
-                <e p="Party.cs" t="Include" />
-                <e p="Settlement.cs" t="Include" />
-              </e>
               <e p="Sounds" t="Include">
                 <e p="Commander.cs" t="Include" />
                 <e p="Community.cs" t="Include" />
@@ -2101,12 +2097,20 @@
                 <e p="Sounds.cs" t="Include" />
               </e>
               <e p="Squadron.cs" t="Include" />
+              <e p="Templates" t="Include">
+                <e p="Character.cs" t="Include" />
+                <e p="Faction.cs" t="Include" />
+                <e p="House.cs" t="Include" />
+                <e p="Party.cs" t="Include" />
+                <e p="Settlement.cs" t="Include" />
+              </e>
               <e p="Weapons" t="Include">
                 <e p="MeleeWeapon.cs" t="Include" />
                 <e p="RangeWeapon.cs" t="Include" />
               </e>
             </e>
-            <e p="EventManager.cs" t="Include" />
+            <e p="Events.cs" t="Include" />
+            <e p="FactionManager.cs" t="Include" />
             <e p="Game.cs" t="Include" />
             <e p="LightManager.cs" t="Include" />
             <e p="Manager.cs" t="Include" />
@@ -2125,13 +2129,6 @@
               <e p="SquadTable.cs" t="Include" />
               <e p="TownTable.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
-            </e>
-          </e>
-          <e p="Diplomacy" t="Include">
-            <e p="Campaign" t="Include">
-              <e p="AllianceBehavior.cs" t="Include" />
-              <e p="FactionManager.cs" t="Include" />
-              <e p="TimeManager.cs" t="Include" />
             </e>
           </e>
           <e p="Steering" t="Include">
@@ -2181,6 +2178,7 @@
                 <e p="ImageToggle.cs" t="Include" />
                 <e p="TweenBehavior.cs" t="Include" />
               </e>
+              <e p="ClockController.cs" t="Include" />
               <e p="CombatSliderController.cs" t="Include" />
               <e p="Info" t="Include">
                 <e p="BuildingInfo.cs" t="Include" />

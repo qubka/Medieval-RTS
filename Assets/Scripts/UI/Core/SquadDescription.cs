@@ -22,7 +22,7 @@ public class SquadDescription : TweenBehaviour
 
             var squad = manager.selectedSquads[0];
             var data = squad.data;
-            chart.SetStats(data.stats);
+            chart.SetStats(data.Stats);
             icon.sprite = data.classIcon;
             caption.text = data.name; //TODO: Translation
             count.text = $"{squad.unitCount} ({squad.squadSize})";

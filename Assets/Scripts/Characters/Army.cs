@@ -54,9 +54,6 @@ public class Army : MonoBehaviour, IGameObject
         set => data.followingObject = value;
     }
 
-    public bool isPlayer => data.leader.type == CharacterType.Player;
-    public bool isPeasant => data.leader.type == CharacterType.Peasant;
-
     #endregion
     
     private void Awake()
@@ -87,7 +84,7 @@ public class Army : MonoBehaviour, IGameObject
         }
 
         // Attach scripts
-        if (isPlayer) {
+        if (data.leader.IsPlayer) {
             manager = ArmyManager.Instance;
             manager.SetArmy(this);
         } else {
@@ -101,13 +98,13 @@ public class Army : MonoBehaviour, IGameObject
 
         // Parent a bar to the screen
         iconText = iconTransform.GetComponentInChildren<TextMeshProUGUI>();
-        iconText.color = isPlayer ? Color.green : (Color) data.leader.faction.color;
-        iconText.text = data.troopCount.ToString();
+        iconText.color = data.leader.IsPlayer ? Color.green : (Color) data.leader.faction.color;
+        iconText.text = data.TroopCount.ToString();
         iconTransform.SetParent(Manager.holderCanvas, false);
         iconTransform.localScale = barScale;
 
         // Initialize the crowds
-        var prefab = isPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
+        var prefab = data.leader.IsPeasant ? Manager.global.models[data.skin] : data.leader.faction.models[data.skin];
         if (prefab.primary) CreateCrowd(prefab.primary);
         if (prefab.secondary) CreateCrowd(prefab.secondary);
         model = prefab;
@@ -143,7 +140,7 @@ public class Army : MonoBehaviour, IGameObject
                 armyIcon.SetActive(true);
             }
 
-            var troopCount = data.troopCount;
+            var troopCount = data.TroopCount;
             if (lastTroopCount != troopCount) {
                 iconText.text = troopCount.ToString();
                 lastTroopCount = troopCount;
@@ -170,7 +167,7 @@ public class Army : MonoBehaviour, IGameObject
                 target = null;
             } else {
                 // Update destination for player only
-                if (isPlayer && target.GetUI() == UI.Army) {
+                if (data.leader.IsPlayer && target.GetUI() == UI.Army) {
                     agent.SetDestination(target.GetPosition());
                 }
             }
@@ -231,14 +228,14 @@ public class Army : MonoBehaviour, IGameObject
             data.localSettlement.parties.Remove(data);
         }
         SetVisibility(!settlement);
-        if (isPlayer) {
+        if (data.leader.IsPlayer) {
             var controller = manager.townController;
             controller.Toggle(settlement);
             controller.OnUpdate();
         }
         data.localSettlement = settlement;
 
-        if (settlement && isPeasant) {
+        if (settlement && data.leader.IsPeasant) {
             switch (settlement.type) {
                 case InfrastructureType.Village:
                     data.DestroyParty(true);

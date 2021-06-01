@@ -60,9 +60,9 @@ public class Squadron : ScriptableObject
     public int mountHealth;
     public int morale;
     public bool chargeProtection;
-    
-    [NonSerialized] public Stats stats;
-    [NonSerialized] public int totalStats;
+
+    public Stats Stats { get; private set; }
+    public int TotalStats { get; private set; }
 
     private void OnEnable()
     {
@@ -72,7 +72,7 @@ public class Squadron : ScriptableObject
         attack += chargeBonus;
         var defence = defenceSkill + armor + shield;
         var health = manHealth + mountHealth;
-        stats = new Stats(attack, defence, Mathf.RoundToInt(squadRunSpeed * 10f), morale, health);
-        totalStats = attack + defence + health;
+        Stats = new Stats(attack, defence, Mathf.RoundToInt(squadRunSpeed * 10f), morale, health);
+        TotalStats = attack + defence + health;
     }
 }

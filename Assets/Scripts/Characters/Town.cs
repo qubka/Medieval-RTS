@@ -87,11 +87,11 @@ public class Town : MonoBehaviour, IGameObject
         ObjectTable.Instance.Add(gameObject, this);
         
         // Register events
-        EventManager.DailyTickEvent.AddListener(DailyTick);
-        EventManager.WeeklyTickEvent.AddListener(WeeklyTick);
+        Events.DailyTickEvent.AddListener(DailyTick);
+        Events.WeeklyTickEvent.AddListener(WeeklyTick);
         
         // Skip on village
-        if (data.isVillage)
+        if (data.IsVillage)
             return;
 
         // Create banners
@@ -142,7 +142,7 @@ public class Town : MonoBehaviour, IGameObject
             townIcon.SetActive(true);
 
             // Icon UI mode
-            if (data.isVillage) {
+            if (data.IsVillage) {
                 townIcon.Enable();
             }
         } else {
@@ -158,7 +158,7 @@ public class Town : MonoBehaviour, IGameObject
             }
 
             // Icon UI mode
-            if (data.isVillage) {
+            if (data.IsVillage) {
                 if (camController.zoomPos > 0.75f) {
                     townIcon.Disable();
                 } else {
@@ -167,8 +167,8 @@ public class Town : MonoBehaviour, IGameObject
             }
         }
 
-        var time = TimeManager.Instance.TimeDelta;
-        var isDay = (time > 7f && time < 22f);
+        var time = Game.Now.Hour;
+        var isDay = (time > 7 && time < 22);
         mainAudio.clip = isDay ? communitySounds.daySound : communitySounds.nightSound;
         if (!mainAudio.isPlaying) {
             mainAudio.Play();
@@ -307,7 +307,7 @@ public class Town : MonoBehaviour, IGameObject
                     .Append("<color=#00ffffff>");
 
                 foreach (var party in data.parties) {
-                    var troopCount = party.troopCount;
+                    var troopCount = party.TroopCount;
                     totalCount += troopCount;
 
                     switch (party.leader.type) {

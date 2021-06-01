@@ -28,7 +28,7 @@ public class CombatSliderController : MonoBehaviour
                 if (squad.state == SquadFSM.Retreat)
                     continue;
                 
-                var stats = squad.unitCount * squad.data.totalStats;
+                var stats = squad.unitCount * squad.data.TotalStats;
                 if (squad.team == Team.Enemy) {
                     enemies += stats;
                 } else {

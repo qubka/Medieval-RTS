@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityJSON;
 using Random = UnityEngine.Random;
 
-[CreateAssetMenu(menuName = "Medieval/Party Config", order = 0)]
+[CreateAssetMenu(menuName = "Medieval/Templates/Party", order = 0)]
 [Serializable]
 public class Party : SerializableObject
 {
@@ -27,9 +27,12 @@ public class Party : SerializableObject
     public Settlement targetSettlement; // for AI
     //public PartyFSM state;
     public int skin;
+    
+    public static List<Party> All => Game.Parties;
+    public int TroopStrength => troops.Sum(t => t.data.TotalStats);
+    public int TroopCount => troops.Sum(t => t.size);
+    public int TroopWage => -Convert.ToInt32(troops.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
 
-    public int troopCount => troops.Sum(t => t.size);
-    public int troopWage => -Convert.ToInt32(troops.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
     public static Party Dummy()
     {
         var party = CreateInstance<Party>();
@@ -62,15 +65,14 @@ public class Party : SerializableObject
 
     public override void OnDeserialization()
     {
-        var game = SaveLoadManager.Instance.current;
         if (leaderId != -1) {
-            leader = game.characters.Find(c => c.id == leaderId);
+            leader = Game.Characters.Find(c => c.id == leaderId);
         }
         if (localSettlementId != -1) {
-            localSettlement = game.settlements.Find(s => s.id == localSettlementId);
+            localSettlement = Game.Settlements.Find(s => s.id == localSettlementId);
         }
         if (targetSettlementId != -1) {
-            targetSettlement = game.settlements.Find(s => s.id == targetSettlementId);
+            targetSettlement = Game.Settlements.Find(s => s.id == targetSettlementId);
         }
         troops.Capacity = troopsData.Length;
         foreach (var pack in troopsData) {
@@ -91,11 +93,9 @@ public class Party : SerializableObject
     
     public static void CreatePeasant(Settlement settlement)
     {
-        var game = Game.Instance;
-        
         var leader = CreateInstance<Character>();
         leader.name = "Peasant";
-        leader.id = game.characters.OrderByDescending(c => c.id).First().id++;
+        leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
         leader.faction = settlement.ruler.faction;
         leader.type = CharacterType.Peasant;
         leader.home = settlement;
@@ -112,8 +112,8 @@ public class Party : SerializableObject
             party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
         }
         
-        game.parties.Add(party);
-        game.characters.Add(leader);
+        Party.All.Add(party);
+        Character.All.Add(leader);
         
         var army = Instantiate(Manager.global.armyPrefab, settlement.position, Quaternion.identity).GetComponent<Army>();
         army.data = party;
@@ -123,11 +123,10 @@ public class Party : SerializableObject
     
     public void DestroyParty(bool withLeader = false)
     {
-        var game = Game.Instance;
-        game.parties.Remove(this);
+        Party.All.Remove(this);
         Destroy(this);
         if (withLeader) {
-            game.characters.Remove(leader);
+            Character.All.Remove(leader);
             Destroy(leader);
         }
     }

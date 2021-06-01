@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using UnityJSON;
-
+ 
 public abstract class SerializableObject : ScriptableObject, ISerializationListener
 {
     public void OnSerializationWillBegin(Serializer serializer)

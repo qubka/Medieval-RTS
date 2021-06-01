@@ -18,7 +18,7 @@ public class RangeWeapon : ScriptableObject
     public float distant;
     public Range[] ranges;
     
-    [NonSerialized] public int id;
+    public int id { get; private set; }
 
     private void OnEnable()
     {
