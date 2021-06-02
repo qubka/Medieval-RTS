@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityJSON;
 
 public class SaveLoadManager : SingletonObject<SaveLoadManager>
 {
@@ -23,7 +24,7 @@ public class SaveLoadManager : SingletonObject<SaveLoadManager>
     public void Save() {
         var bf = new BinaryFormatter();
         var file = File.Create(Path);
-        bf.Serialize(file, JsonUtility.ToJson(current));
+        bf.Serialize(file, current.ToJSONString());
         file.Close();
         Debug.Log("Game data saved!");
     }
@@ -32,7 +33,9 @@ public class SaveLoadManager : SingletonObject<SaveLoadManager>
         if(File.Exists(Path)) {
             var bf = new BinaryFormatter();
             var file = File.Open(Path, FileMode.Open);
-            JsonUtility.FromJsonOverwrite((string) bf.Deserialize(file), current);
+            DestroyImmediate(current);
+            //JsonUtility.FromJsonOverwrite((string) bf.Deserialize(file), current);
+            current = JSON.Deserialize<Game>((string) bf.Deserialize(file));
             file.Close();
         }else {
             Debug.Log("There is no save data!");
