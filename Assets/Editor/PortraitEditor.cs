@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEditor;
-using System.Collections.Generic;
-using UnityEngine.UI;
 
 [CustomEditor(typeof(Portrait))]
 public class PortraitEditor : Editor

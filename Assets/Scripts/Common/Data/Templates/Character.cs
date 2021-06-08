@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using Den.Tools;
 using UnityEditor;
 using UnityEngine;
-using UnityJSON;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/Templates/Character", order = 0)]
 [Serializable]
-public class Character : SerializableObject
+public class Character : ScriptableObject
 {
     [Header("Primary")]
     public int id;
@@ -25,16 +25,12 @@ public class Character : SerializableObject
 
     [Header("Game")]
     public CharacterType type;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Settlement home;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public List<Settlement> settlements;
 
     [Header("Data")] 
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Faction faction;
     //public string portrait;
-    [JSONNode(NodeOptions.DontSerialize)]
     public House house;
 
     public static List<Character> All => Game.Characters;
@@ -44,12 +40,6 @@ public class Character : SerializableObject
     public bool IsNoble => type == CharacterType.Noble;
     
     #region Serialization
-
-    /* For serialization */
-    [JSONNode] private int factionId;
-    [JSONNode] private int houseId;
-    [JSONNode] private int homeId;
-    [JSONNode] private int[] settlementsIds;
 
 #if UNITY_EDITOR    
     public void GenerateName(CharacterNames names)
@@ -67,7 +57,7 @@ public class Character : SerializableObject
     }
 #endif
 
-    public override void OnSerialization()
+    /*public override void OnSerialization()
     {
         factionId = faction ? faction.id : -1;
         houseId = house ? house.id : -1;
@@ -80,15 +70,7 @@ public class Character : SerializableObject
 
     public override void OnDeserialization()
     {
-        if (factionId != -1) {
-            faction = Game.Factions.Find(f => f.id == factionId);
-        }
-        if (houseId != -1) {
-            house = Game.Houses.Find(h => h.id == houseId);
-        }
-        if (homeId != -1) {
-            home = Game.Settlements.Find(s => s.id == homeId);
-        }
+        
         settlements.Capacity = settlementsIds.Length;
         foreach (var settlementId in settlementsIds) {
             settlements.Add(Game.Settlements.Find(s => s.id == settlementId));
@@ -96,17 +78,94 @@ public class Character : SerializableObject
         if (settlementsIds.Length > 0) {
             settlementsIds = new int[0];
         }
-    }
+    }*/
     
     #endregion
+
+    public static Character Create(CharacterSave save)
+    {
+        var obj = CreateInstance<Character>();
+        obj.id = save.id;
+        return obj;
+    }
+
+    public void Load(CharacterSave save = null)
+    {
+        if (save != null) {
+            surname = save.surname;
+            title = save.title;
+            gender = (Gender) save.gender;
+            age = save.age;
+            renown = save.renown;
+            honor = save.honor;
+            money = save.money;
+            influence = save.influence;
+            type = (CharacterType) save.type;
+            if (save.home != -1) home = Settlement.All.First(s => s.id == save.home);
+            if (save.faction != -1) faction = Faction.All.First(f => f.id == save.faction);
+            if (save.house != -1) house = House.All.First(h => h.id == save.house);
+            settlements = Settlement.All.Where(s => save.settlements.Contains(s.id)).ToList();
+            
+        } else {
+            if (home) home = Settlement.All.First(s => s.id == home.id);
+            if (faction) faction = Faction.All.First(f => f.id == faction.id);
+            if (house) house = House.All.First(h => h.id == house.id);
+            for (var i = 0; i < settlements.Count; i++) {
+                settlements[i] = Settlement.All.First(s => s.id == settlements[i].id);
+            }
+        }
+    }
+
+    public Character Clone()
+    {
+        var obj = Instantiate(this);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
 }
 
 [Serializable]
-[JSONEnum(format = JSONEnumMemberFormating.Lowercased)]
 public enum CharacterType
 {
     Player,
     Noble,
     Bandit,
     Peasant,
+}
+
+[Serializable]
+public class CharacterSave
+{
+    [HideInInspector] public int id;
+    [HideInInspector] public string surname;
+    [HideInInspector] public string title;
+    [HideInInspector] public int gender;
+    [HideInInspector] public int age;
+    [HideInInspector] public int renown;
+    [HideInInspector] public int honor;
+    [HideInInspector] public int money;
+    [HideInInspector] public int influence;
+    [HideInInspector] public int type;
+    [HideInInspector] public int home;
+    [HideInInspector] public int faction;
+    [HideInInspector] public int house;
+    [HideInInspector] public int[] settlements;
+    
+    public CharacterSave(Character character)
+    {
+        id = character.id;
+        surname = character.surname;
+        title = character.title;
+        gender = (int) character.gender;
+        age = character.age;
+        renown = character.renown;
+        honor = character.honor;
+        money = character.money;
+        influence = character.influence;
+        type = (int) character.type;
+        home = character.home ? character.home.id : -1;
+        faction = character.faction ? character.faction.id : -1;
+        house = character.house ? character.house.id : -1;
+        settlements = character.settlements.Select(s => s.id).ToArray();
+    }
 }

@@ -4,8 +4,6 @@
 // -- Runs once on play, Fix will need to be called if resolution is changed in game.
 // -- Script will need expansion if you want to use non-square cells.
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 

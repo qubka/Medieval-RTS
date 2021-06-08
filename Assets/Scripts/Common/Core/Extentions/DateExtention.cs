@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using UnityEngine;
-using UnityJSON;
 
 public static class CampaignTime
 {

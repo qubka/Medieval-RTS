@@ -1,5 +1,3 @@
-﻿using System.Collections.Generic;
-
-public class ObjectTable : TableObject<IGameObject>
+﻿public class ObjectTable : TableObject<IGameObject>
 {
 }

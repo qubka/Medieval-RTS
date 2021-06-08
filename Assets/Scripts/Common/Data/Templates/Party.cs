@@ -1,96 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Den.Tools;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
-using UnityJSON;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/Templates/Party", order = 0)]
 [Serializable]
-public class Party : SerializableObject
-{
-    [JSONNode(NodeOptions.DontSerialize)] 
+public class Party : ScriptableObject
+{ 
     public Character leader;
     public float morale;
     public float speed;
     public Vector3 position;
-    public Quaternion rotation;
-    [JSONNode(NodeOptions.DontSerialize)] 
+    public Quaternion rotation; 
     public List<Troop> troops;
-    [JSONNode(NodeOptions.DontSerialize)] 
-    public IGameObject followingObject;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Settlement localSettlement;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Settlement targetSettlement; // for AI
-    //public PartyFSM state;
     public int skin;
-    
+
     public static List<Party> All => Game.Parties;
     public int TroopStrength => troops.Sum(t => t.data.TotalStats);
     public int TroopCount => troops.Sum(t => t.size);
     public int TroopWage => -Convert.ToInt32(troops.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
 
-    public static Party Dummy()
-    {
-        var party = CreateInstance<Party>();
-        party.leader = CreateInstance<Character>();
-        return party;
-    }
-
-    #region Serialization
-    
-    [JSONNode] private int leaderId;
-    [JSONNode] private int localSettlementId;
-    [JSONNode] private int targetSettlementId;
-    [JSONNode] private Pack<int, int>[] troopsData;
-    [JSONNode] private Pack<UI, int> followingData;
-
-    public override void OnSerialization()
-    {
-        leaderId = leader ? leader.id : -1;
-        localSettlementId = localSettlement ? localSettlement.id : -1;
-        targetSettlementId = targetSettlement ? targetSettlement.id : -1;
-        troopsData = new Pack<int, int>[troops.Count];
-        for (var i = 0; i < troops.Count; i++) {
-            var troop = troops[i];
-            troopsData[i] = new Pack<int, int>(Array.IndexOf(leader.faction.troops, troop), troop.size);
-        }
-        if (followingObject != null) {
-            followingData = new Pack<UI, int>(followingObject.GetUI(), followingObject.GetID());
-        }
-    }
-
-    public override void OnDeserialization()
-    {
-        if (leaderId != -1) {
-            leader = Game.Characters.Find(c => c.id == leaderId);
-        }
-        if (localSettlementId != -1) {
-            localSettlement = Game.Settlements.Find(s => s.id == localSettlementId);
-        }
-        if (targetSettlementId != -1) {
-            targetSettlement = Game.Settlements.Find(s => s.id == targetSettlementId);
-        }
-        troops.Capacity = troopsData.Length;
-        foreach (var pack in troopsData) {
-            var troop = leader.faction.troops[pack.item1];
-            troop.size = pack.item2;
-            troops.Add(troop);
-        }
-        if (troopsData.Length > 0) {
-            troopsData = new Pack<int, int>[0];
-        }
-        if (followingData != null) {
-            followingObject = ObjectTable.Instance.Values.First(o => o.GetUI() == followingData.item1 && o.GetID() == followingData.item2);
-            followingData = null;
-        }
-    }
-    
-    #endregion
-    
     public static void CreatePeasant(Settlement settlement)
     {
         var leader = CreateInstance<Character>();
@@ -130,14 +64,71 @@ public class Party : SerializableObject
             Destroy(leader);
         }
     }
+
+    public static Party Create(PartySave save)
+    {
+        var obj = CreateInstance<Party>();
+        obj.leader = Character.All.First(c => c.id == save.leader);
+        return obj;
+    }
+
+    public void Load(PartySave save = null)
+    {
+        if (save != null) {
+            morale = save.morale;
+            speed = save.speed;
+            position = save.position;
+            rotation = save.rotation;
+            troops = save.troops;
+            if (save.localSettlement != -1) localSettlement = Settlement.All.First(s => s.id == save.localSettlement);
+            if (save.targetSettlement != -1) targetSettlement = Settlement.All.First(s => s.id == save.targetSettlement);
+            skin = save.skin;
+        } else {
+            if (localSettlement) localSettlement = Settlement.All.First(s => s.id == localSettlement.id);
+            if (targetSettlement) targetSettlement = Settlement.All.First(s => s.id == targetSettlement.id);
+        }
+    }
+
+    public Party Clone()
+    {
+        var obj = Instantiate(this);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
 }
 
 [Serializable]
-[JSONEnum(format = JSONEnumMemberFormating.Lowercased)]
 public enum PartyFSM
 {
     Holding,
     Traveling,
     Chasing,
     Escaping
+}
+
+[Serializable]
+public class PartySave
+{
+    [HideInInspector] public int leader;
+    [HideInInspector] public float morale;
+    [HideInInspector] public float speed;
+    [HideInInspector] public Vector3 position;
+    [HideInInspector] public Quaternion rotation; 
+    [HideInInspector] public List<Troop> troops;
+    [HideInInspector] public int localSettlement;
+    [HideInInspector] public int targetSettlement;
+    [HideInInspector] public int skin;
+
+    public PartySave(Party party)
+    {
+        leader = party.leader.id; // cant be null
+        morale = party.morale;
+        speed = party.speed;
+        position = party.position;
+        rotation = party.rotation;
+        troops = party.troops;
+        localSettlement = party.localSettlement ? party.localSettlement.id : -1;
+        targetSettlement = party.targetSettlement ? party.targetSettlement.id : -1;
+        skin = party.skin;
+    }
 }

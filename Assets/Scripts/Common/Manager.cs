@@ -36,8 +36,8 @@
 	public static TerrainBorder border { get; private set; }
 	public static Camera mainCamera { get; private set; }
 	public static Camera minimapCamera { get; private set; }
-	public static Transform camTransform { get; private set; }
-	public static CamController camController { get; private set; }
+	public static Transform cameraTransform { get; private set; }
+	public static CameraController cameraController { get; private set; }
 	public static AudioSource[] cameraSources { get; private set; }
 	public static RectTransform holderCanvas { get; private set; }
 	public static RectTransform layoutCanvas { get; private set; }
@@ -76,14 +76,7 @@
 	public static MoraleAttribute VeryTired { get; private set; }
 	public static MoraleAttribute WinningBattle { get; private set; }
 	public static MoraleAttribute WithoutAmmo { get; private set; }
-	
-	public static List<MoraleAttribute> moraleAttributes { get; private set; }
-	public static List<Faction> defaultFactions { get; private set; }
-	public static List<Character> defaultCharacters { get; private set; }
-	public static List<Settlement> defaultSettlements { get; private set; }
-	public static List<Party> defaultParties { get; private set; }
-	public static List<House> defaultHouses { get; private set; }
-	public static List<Building> defaultBuildings { get; private set; }
+	public static MoraleAttribute[] MoraleAttributes { get; private set; }
 	
 	public static float TerrainDistance { get; private set; }
 	public static readonly int Selector = "SelectorPoint".GetHashCode();
@@ -104,8 +97,8 @@
 
 		mainCamera = main;
 		minimapCamera = minimap;
-		camTransform = main.transform;
-		camController = main.GetComponent<CamController>();
+		cameraTransform = main.transform;
+		cameraController = main.GetComponent<CameraController>();
 		cameraSources = main.GetComponents<AudioSource>();
 
 		fixedPopup = fix;
@@ -160,7 +153,7 @@
 
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		
-		moraleAttributes = new List<MoraleAttribute>(32) {
+		MoraleAttributes = new[] {
 			global.chargedInFlank,
 			global.chargedInRear,
 			global.disordered,
@@ -190,12 +183,6 @@
 			global.winningBattle,
 			global.withoutAmmo
 		};
-		defaultFactions = Resources.LoadAll<Faction>("Factions/").ToList();
-		defaultCharacters = Resources.LoadAll<Character>("Characters/").ToList();
-		defaultSettlements = Resources.LoadAll<Settlement>("Settlements/").ToList();
-		defaultParties = Resources.LoadAll<Party>("Parties/").ToList();
-		defaultHouses = Resources.LoadAll<House>("Houses/").ToList();
-		defaultBuildings = Resources.LoadAll<Building>("Buildings/").ToList();
 	}
 
 	public static bool IsPointerOnUI => eventSystem.IsPointerOverGameObject();

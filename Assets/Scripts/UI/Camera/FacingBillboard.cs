@@ -1,5 +1,4 @@
-﻿using System;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +10,7 @@ public class FacingBillboard : MonoBehaviour
     [SerializeField] private float maxScale;
 
     private Transform worldTransform;
-    private Transform camTransform;
+    private Transform cameraTransform;
 
     private void Awake()
     {
@@ -20,15 +19,15 @@ public class FacingBillboard : MonoBehaviour
 
     private void Start()
     {
-        camTransform = Manager.camTransform;
+        cameraTransform = Manager.cameraTransform;
         scaleFactor = Manager.mainCamera.fieldOfView;
     }
 
     public void LateUpdate()
     {
         var position = worldTransform.position;
-        var rotation = camTransform.rotation;
-        var direction = position - camTransform.position;
+        var rotation = cameraTransform.rotation;
+        var direction = position - cameraTransform.position;
         var scale = math.clamp(direction.Magnitude() / scaleFactor, minScale, maxScale);
         worldTransform.localScale = new Vector3(scale, scale, 1f);
         worldTransform.LookAt(position + rotation * Vector3.forward, rotation * Vector3.up);

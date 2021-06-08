@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Den.Tools;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using UnityJSON;
-using Wintellect.PowerCollections;
 
 [CreateAssetMenu(menuName = "Medieval/Templates/Location", order = 0)]
 [Serializable]
-public class Settlement : SerializableObject
+public class Settlement : ScriptableObject
 {
-    [ReadOnly, JSONNode(NodeOptions.DontSerialize)] public Town data;
+    [ReadOnly] public Town data;
     [Header("General")]
     public int id;
     public string label;
@@ -23,18 +22,12 @@ public class Settlement : SerializableObject
     public int loyalty;
     public int food;
     public Vector3 position;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Character ruler;
-    public InfrastructureType type;
-    [JSONNode(NodeOptions.DontSerialize)] 
+    public InfrastructureType type; 
     public List<Troop> garrison;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public List<Party> parties;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Settlement[] neighbours;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Resource[] resources;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public BuildingDictionary buildings;
     
     public static List<Settlement> All => Game.Settlements;
@@ -51,26 +44,26 @@ public class Settlement : SerializableObject
     public int LoyaltyGrowth => loyaltyGrowth;
     public int FoodProductionGrowth => foodProduction;
     
-    [JSONNode] private int loyaltyGrowth;
-    [JSONNode] private int prosperityGrowth;
-    [JSONNode] private int tax;
-    [JSONNode] private int foodStock;
-    [JSONNode] private int foodProduction;
-    [JSONNode] private int garrisonCapacity;
-    [JSONNode] private int armyRecruitSpeed;
-    [JSONNode] private int wallRepairSpeed;
-    [JSONNode] private int siegeEngineSpeed;
-    [JSONNode] private int populationGrowthSpeed;
-    [JSONNode] private int villageDevelopmentDaily;
-    [JSONNode] private int experience;
-    [JSONNode] private int armorQualityBonus;
-    [JSONNode] private int weaponQualityBonus;
-    [JSONNode] private int trade;
-    [JSONNode] private int gold;
-    [JSONNode] private int armyMovementSpeed;
-    [JSONNode] private int researchCostReduction;
-    [JSONNode] private int influenceGrowthSpeed;
-    [JSONNode] private int armyUpkeepCost;
+    [NonSerialized] public int loyaltyGrowth;
+    [NonSerialized] public int prosperityGrowth;
+    [NonSerialized] public int tax;
+    [NonSerialized] public int foodStock;
+    [NonSerialized] public int foodProduction;
+    [NonSerialized] public int garrisonCapacity;
+    [NonSerialized] public int armyRecruitSpeed;
+    [NonSerialized] public int wallRepairSpeed;
+    [NonSerialized] public int siegeEngineSpeed;
+    [NonSerialized] public int populationGrowthSpeed;
+    [NonSerialized] public int villageDevelopmentDaily;
+    [NonSerialized] public int experience;
+    [NonSerialized] public int armorQualityBonus;
+    [NonSerialized] public int weaponQualityBonus;
+    [NonSerialized] public int trade;
+    [NonSerialized] public int gold;
+    [NonSerialized] public int armyMovementSpeed;
+    [NonSerialized] public int researchCostReduction;
+    [NonSerialized] public int influenceGrowthSpeed;
+    [NonSerialized] public int armyUpkeepCost;
     
     [ReadOnly] public bool isBuilding;
 
@@ -106,72 +99,8 @@ public class Settlement : SerializableObject
         ruler.money += Income;
     }
     
-    #endregion
     
-    #region Serialization
 
-    [JSONNode] private int rulerId;
-    [JSONNode] private int[] partiesIds;
-    [JSONNode] private Pack<int, int>[] garrisonData;
-    [JSONNode] private Pack<string, Pack<int, float>>[] buildingsAssets;
-
-    public override void OnSerialization()
-    {
-        rulerId = ruler ? ruler.id : -1;
-        garrisonData = new Pack<int, int>[garrison.Count];
-        for (var i = 0; i < garrison.Count; i++) {
-            var troop = garrison[i];
-            garrisonData[i] = new Pack<int, int>(Array.IndexOf(ruler.faction.troops, troop), troop.size);
-        }
-        partiesIds = new int[parties.Count];
-        for (var i = 0; i < parties.Count; i++) {
-            partiesIds[i] = parties[i].leader.id;
-        }
-        var x = 0;
-        buildingsAssets = new Pack<string, Pack<int, float>>[buildings.Count];
-        foreach (var pair in buildings) {
-            buildingsAssets[x] = new Pack<string, Pack<int, float>>(Path.GetFileName(AssetDatabase.GetAssetPath(pair.Key)), pair.Value);
-            x++;
-        }
-    }
-
-    public override void OnDeserialization()
-    {
-        if (rulerId != -1) {
-            ruler = Game.Characters.Find(c => c.id == rulerId);
-        }
-        garrison.Capacity = garrisonData.Length;
-        foreach (var pack in garrisonData) {
-            var troop = ruler.faction.troops[pack.item1];
-            troop.size = pack.item2;
-            garrison.Add(troop);
-        }
-        if (garrisonData.Length > 0) {
-            garrisonData = new Pack<int, int>[0];
-        }
-        parties.Capacity = partiesIds.Length;
-        foreach (var leaderId in partiesIds) {
-            parties.Add(Game.Parties.Find(p => p.leader.id == leaderId));
-        }
-        if (partiesIds.Length > 0) {
-            partiesIds = new int[0];
-        }
-        foreach (var building in buildingsAssets) {
-            buildings.Add(AssetDatabase.LoadAssetAtPath<Building>("Assets/Resources/Buildings/" + type + "/" + building.item1), building.item2);
-        }
-        if (buildingsAssets.Length > 0) {
-            buildingsAssets = new Pack<string, Pack<int, float>>[0];
-        }
-        var settlement = Manager.defaultSettlements.Find(s => s.id == id);
-        resources = settlement.resources;
-        neighbours = settlement.neighbours;
-        for (var i = 0; i < neighbours.Length; i++) {
-            neighbours[i] = Game.Settlements.Find(s => s.id == neighbours[i].id);
-        }
-    }
-    
-    #endregion
-    
     public void Build(Building building)
     {
         if (buildings.TryGetValue(building, out var data)) {
@@ -288,10 +217,74 @@ public class Settlement : SerializableObject
             }
         }
     }
+    
+    #endregion
+    
+    public static Settlement Create(SettlementSave save)
+    {
+        var obj = CreateInstance<Settlement>();
+        obj.id = save.id;
+        return obj;
+    }
+
+    public void Load(SettlementSave save = null)
+    {
+        if (save != null) {
+            label = save.label;
+            isMarker = save.isMarker;
+            prosperity = save.prosperity;
+            population = save.population;
+            loyalty = save.loyalty;
+            food = save.food;
+            position = save.position;
+            if (save.ruler != -1) ruler = Character.All.First(c => c.id == save.ruler);
+            type = (InfrastructureType) save.type; 
+            garrison = save.garrison;
+            parties = Party.All.Where(p => save.parties.Contains(p.leader.id)).ToList();
+            neighbours = Settlement.All.Where(s => save.neighbours.Contains(s.id)).ToArray();
+            resources = save.resources;
+            buildings = save.buildings;
+            loyaltyGrowth = save.loyaltyGrowth;
+            prosperityGrowth = save.prosperityGrowth;
+            tax = save.tax;
+            foodStock = save.foodStock;
+            foodProduction = save.foodProduction;
+            garrisonCapacity = save.garrisonCapacity;
+            armyRecruitSpeed = save.armyRecruitSpeed;
+            wallRepairSpeed = save.wallRepairSpeed;
+            siegeEngineSpeed = save.siegeEngineSpeed;
+            populationGrowthSpeed = save.populationGrowthSpeed;
+            villageDevelopmentDaily = save.villageDevelopmentDaily;
+            experience = save.experience;
+            armorQualityBonus = save.armorQualityBonus;
+            weaponQualityBonus = save.weaponQualityBonus;
+            trade = save.trade;
+            gold = save.gold;
+            armyMovementSpeed = save.armyMovementSpeed;
+            researchCostReduction = save.researchCostReduction;
+            influenceGrowthSpeed = save.influenceGrowthSpeed;
+            armyUpkeepCost = save.armyUpkeepCost;
+            isBuilding = save.isBuilding;
+        } else {
+            if (ruler) ruler = Character.All.First(c => c.id == ruler.id);
+            for (var i = 0; i < parties.Count; i++) {
+                parties[i] = Party.All.First(p => p.leader.id == parties[i].leader.id);
+            }
+            for (var i = 0; i < neighbours.Length; i++) {
+                neighbours[i] = Settlement.All.First(s => s.id == neighbours[i].id);
+            }
+        }
+    }
+
+    public Settlement Clone()
+    {
+        var obj = Instantiate(this);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
 }
 
 [Serializable]
-[JSONEnum(format = JSONEnumMemberFormating.Lowercased)]
 public enum InfrastructureType
 {
     City,
@@ -302,4 +295,84 @@ public enum InfrastructureType
 [Serializable]
 public class BuildingDictionary : SerializableDictionary<Building, Pack<int, float>>
 {
+}
+
+[Serializable]
+public class SettlementSave
+{
+    [HideInInspector] public int id;
+    [HideInInspector] public string label;
+    [HideInInspector] public bool isMarker;
+    [HideInInspector] public int prosperity;
+    [HideInInspector] public int population;
+    [HideInInspector] public int loyalty;
+    [HideInInspector] public int food;
+    [HideInInspector] public Vector3 position;
+    [HideInInspector] public int ruler;
+    [HideInInspector] public int type; 
+    [HideInInspector] public List<Troop> garrison;
+    [HideInInspector] public int[] parties;
+    [HideInInspector] public int[] neighbours;
+    [HideInInspector] public Resource[] resources;
+    [HideInInspector] public BuildingDictionary buildings;
+    [HideInInspector] public int loyaltyGrowth;
+    [HideInInspector] public int prosperityGrowth;
+    [HideInInspector] public int tax;
+    [HideInInspector] public int foodStock;
+    [HideInInspector] public int foodProduction;
+    [HideInInspector] public int garrisonCapacity;
+    [HideInInspector] public int armyRecruitSpeed;
+    [HideInInspector] public int wallRepairSpeed;
+    [HideInInspector] public int siegeEngineSpeed;
+    [HideInInspector] public int populationGrowthSpeed;
+    [HideInInspector] public int villageDevelopmentDaily;
+    [HideInInspector] public int experience;
+    [HideInInspector] public int armorQualityBonus;
+    [HideInInspector] public int weaponQualityBonus;
+    [HideInInspector] public int trade;
+    [HideInInspector] public int gold;
+    [HideInInspector] public int armyMovementSpeed;
+    [HideInInspector] public int researchCostReduction;
+    [HideInInspector] public int influenceGrowthSpeed;
+    [HideInInspector] public int armyUpkeepCost;
+    [HideInInspector] public bool isBuilding;
+    
+    public SettlementSave(Settlement settlement)
+    {
+        id = settlement.id;
+        label = settlement.label;
+        isMarker = settlement.isMarker;
+        prosperity = settlement.prosperity;
+        population = settlement.population;
+        loyalty = settlement.loyalty;
+        food = settlement.food;
+        position = settlement.position;
+        ruler = settlement.ruler ? settlement.ruler.id : -1;
+        type = (int) settlement.type; 
+        garrison = settlement.garrison;
+        parties = settlement.parties.Select(p => p.leader.id).ToArray();
+        neighbours = settlement.neighbours.Select(s => s.id).ToArray();
+        resources = settlement.resources;
+        buildings = settlement.buildings;
+        loyaltyGrowth = settlement.loyaltyGrowth;
+        prosperityGrowth = settlement.prosperityGrowth;
+        tax = settlement.tax;
+        foodStock = settlement.foodStock;
+        foodProduction = settlement.foodProduction;
+        garrisonCapacity = settlement.garrisonCapacity;
+        armyRecruitSpeed = settlement.armyRecruitSpeed;
+        wallRepairSpeed = settlement.wallRepairSpeed;
+        siegeEngineSpeed = settlement.siegeEngineSpeed;
+        populationGrowthSpeed = settlement.populationGrowthSpeed;
+        villageDevelopmentDaily = settlement.villageDevelopmentDaily;
+        experience = settlement.experience;
+        armorQualityBonus = settlement.armorQualityBonus;
+        weaponQualityBonus = settlement.weaponQualityBonus;
+        trade = settlement.trade;
+        gold = settlement.gold;
+        armyMovementSpeed = settlement.armyMovementSpeed;
+        researchCostReduction = settlement.researchCostReduction;
+        influenceGrowthSpeed = settlement.influenceGrowthSpeed;
+        armyUpkeepCost = settlement.armyUpkeepCost;
+    }
 }

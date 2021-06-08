@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using TMPro;
@@ -10,7 +8,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using ShapeModule = UnityEngine.ParticleSystem.ShapeModule;
@@ -51,7 +48,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     [ReadOnly] public bool touchEnemies;
     [HideInInspector] public UnitSize unitSize;
     [HideInInspector] public Transform worldTransform;
-    [HideInInspector] public Transform camTransform;
+    [HideInInspector] public Transform cameraTransform;
     [HideInInspector] public Transform iconTransform;
     [HideInInspector] public Transform layoutTransform;
     [HideInInspector] public Transform cardTransform;
@@ -113,7 +110,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     private BoxCollider collider;
     private Camera camera;
 #pragma warning restore 108,114
-    private CamController camController;
+    private CameraController cameraController;
     private TerrainBorder border;
     private GPUICrowdManager modelManager;
     private EntityManager entityManager;
@@ -271,8 +268,8 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         squadTable = SquadTable.Instance;
         modelManager = Manager.modelManager;
         camera = Manager.mainCamera;
-        camController = Manager.camController;
-        camTransform = Manager.camTransform;
+        cameraController = Manager.cameraController;
+        cameraTransform = Manager.cameraTransform;
         selectAudio = Manager.cameraSources[1];
         border = Manager.border;
         var terrain = Manager.terrain;
@@ -517,7 +514,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     private void SoundSystem()
     {
         if (IsUnitsFighting()) {
-            var listener = camTransform.position;
+            var listener = cameraTransform.position;
             
             // Play group footstep sound
             var isFarAway = SoundManager.Instance.playRange < Vector.DistanceSq(listener, centroid);
@@ -788,13 +785,13 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     
     public void CreateShake(Vector3 position)
     {
-        var distance = Vector.DistanceSq(position, camTransform.position);
+        var distance = Vector.DistanceSq(position, cameraTransform.position);
         if (distance > shakeRange)
             return;
 
         var scale = MathExtention.Clamp01(distance / shakeRange);
         var stress = (1f - scale * scale) * maximumShake;
-        camController.InduceShake(stress);
+        cameraController.InduceShake(stress);
     }
 
     public void CreateDamage(Unit inflictor, Vector3 position, DamageType type, int damage, float radius = 2f)
@@ -1621,7 +1618,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
 
     public UI GetUI()
     {
-        return UI.None;
+        return UI.Squad;
     }
 
     public bool IsVisible()

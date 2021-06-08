@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using UnityEngine;
-using UnityJSON;
 
 [Serializable]
-public class Game : SingletonObject<Game>, IDeserializationListener
+public class Game : SingletonObject<Game>
 {
-    public static Party Player { get; private set; } = Party.Dummy();
-    public static DateTime Now => Instance.dateTime;
+    [Header("Refs")] 
+    public TimeController timeController;
+    public CameraController cameraController;
+    
+    public static Party Player { get; private set; }
     public static List<Faction> Factions => Instance.factions;
     public static List<Character> Characters => Instance.characters;
     public static List<Party> Parties => Instance.parties;
@@ -19,112 +20,135 @@ public class Game : SingletonObject<Game>, IDeserializationListener
     
     /* Serialization */
     
-    [JSONNode, SerializeField] private List<Faction> factions = new List<Faction>();
-    [JSONNode, SerializeField] private List<Character> characters = new List<Character>();
-    [JSONNode, SerializeField] private List<Party> parties = new List<Party>();
-    [JSONNode, SerializeField] private List<Settlement> settlements = new List<Settlement>();
-    [JSONNode, SerializeField] private List<House> houses = new List<House>();
-    [JSONNode] private DateTime dateTime = new DateTime(1080, 1, 1, 12, 0, 0);
-    [JSONNode] private int prevDay = 1;
-    
+    [ReadOnly] public List<Faction> factions = new List<Faction>();
+    [ReadOnly] public List<Character> characters = new List<Character>();
+    [ReadOnly] public List<Party> parties = new List<Party>();
+    [ReadOnly] public List<Settlement> settlements = new List<Settlement>();
+    [ReadOnly] public List<House> houses = new List<House>();
+
+    protected override void Awake()
+    {
+        base.Awake();
+        
+        //load world if it exists
+        var save = SaveLoadManager.GetGameData();
+        if (save != null) {
+            LoadGame(save);
+        } else {
+            CreateWorld();
+        }
+    }
+
     private void Start()
     {
-        NewGame();
-        OnDeserializationSucceeded(null);
-        StartCoroutine(Tick());
+        GenerateWorld();
     }
 
-    private IEnumerator Tick()
+    public void LoadGame(ProgressSave save) 
     {
-        while (true) {
-            OnUpdate();
-            yield return new WaitForSeconds(0.1f);
+        timeController.Load(save.time);
+        cameraController.Load(save.camera);
+
+        factions.Capacity = save.factions.Count;
+        foreach (var faction in save.factions) {
+            factions.Add(Faction.Create(faction));
+        }
+        
+        characters.Capacity = save.characters.Count;
+        foreach (var character in save.characters) {
+            characters.Add(Character.Create(character));
+        }
+        
+        parties.Capacity = save.parties.Count;
+        foreach (var party in save.parties) {
+            parties.Add(Party.Create(party));
+        }
+        
+        settlements.Capacity = save.settlements.Count;
+        foreach (var settlement in save.settlements) {
+            settlements.Add(Settlement.Create(settlement));
+        }
+        
+        houses.Capacity = save.houses.Count;
+        foreach (var house in save.houses) {
+            houses.Add(House.Create(house));
+        }
+
+        for (var i = 0; i < factions.Count; i++) {
+            factions[i].Load(save.factions[i]);
+        }
+        
+        for (var i = 0; i < characters.Count; i++) {
+            characters[i].Load(save.characters[i]);
+        }
+        
+        for (var i = 0; i < parties.Count; i++) {
+            parties[i].Load(save.parties[i]);
+        }
+        
+        for (var i = 0; i < settlements.Count; i++) {
+            settlements[i].Load(save.settlements[i]);
+        }
+        
+        for (var i = 0; i < houses.Count; i++) {
+            houses[i].Load(save.houses[i]);
         }
     }
-
-    private void OnUpdate()
+    
+    public void CreateWorld()
     {
-        dateTime = dateTime.AddMinutes(1);
-        var day = dateTime.Day;
-        if (day != prevDay) {
-            var events = Events.Instance;
-            events.OnDailyTickEvent();
-            if (dateTime.DayOfWeek == DayOfWeek.Monday) {
-                events.OnWeeklyTickEvent();
-            }
-        }
-        prevDay = day;
-    }
-
-    public void NewGame()
-    {
-        var f = Manager.defaultFactions;
-        factions.Capacity = f.Count;
-        foreach (var faction in f) {
-            factions.Add(Instantiate(faction));
+        var defaultFactions = Resources.LoadAll<Faction>("Factions/");
+        factions.Capacity = defaultFactions.Length;
+        foreach (var faction in defaultFactions) {
+            factions.Add(faction.Clone());
         }
         
-        var c = Manager.defaultCharacters;
-        characters.Capacity = c.Count;
-        foreach (var character in c) {
-            characters.Add(Instantiate(character));
+        var defaultCharacters = Resources.LoadAll<Character>("Characters/");
+        characters.Capacity = defaultCharacters.Length;
+        foreach (var character in defaultCharacters) {
+            characters.Add(character.Clone());
         }
         
-        var p = Manager.defaultParties;
-        parties.Capacity = p.Count;
-        foreach (var party in p) {
-            parties.Add(Instantiate(party));
+        var defaultParties = Resources.LoadAll<Party>("Parties/");
+        parties.Capacity = defaultParties.Length;
+        foreach (var party in defaultParties) {
+            parties.Add(party.Clone());
         }
         
-        var s = Manager.defaultSettlements;
-        settlements.Capacity = s.Count;
-        foreach (var settlement in s) {
-            settlements.Add(Instantiate(settlement));
+        var defaultSettlements = Resources.LoadAll<Settlement>("Settlements/");
+        settlements.Capacity = defaultSettlements.Length;
+        foreach (var settlement in defaultSettlements) {
+            settlements.Add(settlement.Clone());
         }
         
-        var h = Manager.defaultHouses;
-        houses.Capacity = h.Count;
-        foreach (var house in h) {
-            houses.Add(Instantiate(house));
+        var defaultHouses = Resources.LoadAll<House>("Houses/");
+        houses.Capacity = defaultHouses.Length;
+        foreach (var house in defaultHouses) {
+            houses.Add(house.Clone());
         }
-
-        // Adjust data to the copies of scriptable objects instead of real ones
 
         foreach (var faction in factions) {
-            if (faction.leader) faction.leader = characters.Find(c => c.id == faction.leader.id);
-            for (var i = 0; i < faction.allies.Count; i++) {
-                faction.allies[i] = factions.Find(f => f.id == faction.allies[i].id);
-            }
-            for (var i = 0; i < faction.enemies.Count; i++) {
-                faction.enemies[i] = factions.Find(f => f.id == faction.enemies[i].id);
-            }
+            faction.Load();
         }
 
         foreach (var character in characters) {
-            if (character.faction) character.faction = factions.Find(f => f.id == character.faction.id);
-            //if (character.party) character.party = parties.Find(p => p.leader.id == character.party.leader);
-            for (var i = 0; i < character.settlements.Count; i++) {
-                character.settlements[i] = settlements.Find(s => s.id == character.settlements[i].id);
-            }
+            character.Load();
         }
 
         foreach (var party in parties) {
-            if (party.leader) party.leader = characters.Find(c => c.id == party.leader.id);
+            party.Load();
         }
 
         foreach (var settlement in settlements) {
-            if (settlement.ruler) settlement.ruler = characters.Find(c => c.id == settlement.ruler.id);
-            for (var i = 0; i < settlement.neighbours.Length; i++) {
-                settlement.neighbours[i] = settlements.Find(s => s.id == settlement.neighbours[i].id);
-            }
+            settlement.Load();
+        }
+        
+        foreach (var house in houses) {
+            house.Load();
         }
     }
 
-    public void OnDeserializationWillBegin(Deserializer deserializer)
-    {
-    }
-
-    public void OnDeserializationSucceeded(Deserializer deserializer)
+    public void GenerateWorld()
     {
         foreach (var party in parties) {
             var army = Instantiate(Manager.global.armyPrefab, party.position, party.rotation).GetComponent<Army>();
@@ -133,15 +157,5 @@ public class Game : SingletonObject<Game>, IDeserializationListener
                 Player = party;
             }
         }
-
-        foreach (var settlement in settlements) {
-            var town = TownTable.Instance.Values.First(t => t.GetID() == settlement.id);
-            town.data = settlement;
-            settlement.data = town;
-        }
-    }
-
-    public void OnDeserializationFailed(Deserializer deserializer)
-    {
     }
 }

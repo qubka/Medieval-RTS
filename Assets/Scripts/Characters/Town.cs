@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Den.Tools;
-using TMPro;
+using Unity.Assertions;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Town : MonoBehaviour, IGameObject
@@ -44,8 +41,8 @@ public class Town : MonoBehaviour, IGameObject
 #pragma warning disable 108,114
     private Camera camera;
 #pragma warning restore 108,114
-    private CamController camController;
-    private Transform camTransform;
+    private CameraController cameraController;
+    private Transform cameraTransform;
     private AudioSource mainAudio;
     private AudioSource buildAudio;
     private float nextHoverTime;
@@ -68,8 +65,8 @@ public class Town : MonoBehaviour, IGameObject
     {
         // Get information from manager
         camera = Manager.mainCamera;
-        camController = Manager.camController;
-        camTransform = Manager.camTransform;
+        cameraController = Manager.cameraController;
+        cameraTransform = Manager.cameraTransform;
         townIcon = Instantiate(Manager.global.townIcon).GetComponent<TownIcon>();
         iconTransform = townIcon.transform;
         initialPosition = transform.position;
@@ -81,6 +78,11 @@ public class Town : MonoBehaviour, IGameObject
         townIcon.SetSettlement(data);
         iconTransform.SetParent(Manager.holderCanvas, false);
         iconTransform.localScale = barScale;
+        
+        // Update a default ref to the valid one
+        var settlement = Settlement.All.First(s => s.id == data.id);
+        data = settlement;
+        settlement.data = this;
 
         // Add a town to the tables
         TownTable.Instance.Add(gameObject, this);
@@ -112,7 +114,7 @@ public class Town : MonoBehaviour, IGameObject
         // Only valid for market mode
         if (data.isMarker) {
             // Temporary variable to store the converted position from 3D world point to 2D screen point
-            var pos = camera.WorldToScreenPointProjected(camTransform, initialPosition);
+            var pos = camera.WorldToScreenPointProjected(cameraTransform, initialPosition);
             var rect = townIcon.Rect;
             
             // Giving limits to the icon so it sticks on the screen
@@ -128,7 +130,7 @@ public class Town : MonoBehaviour, IGameObject
             var maxY = Screen.height - minY;
 
             // Check if the target is behind us, to only show the icon once the target is in front
-            if (Vector.Dot((initialPosition - camTransform.position), camTransform.forward) < 0f) {
+            if (Vector.Dot((initialPosition - cameraTransform.position), cameraTransform.forward) < 0f) {
                 // Check if the target is on the left side of the screen
                 pos.x = pos.x < Screen.width / 2f ? maxX : minX;
             }
@@ -159,7 +161,7 @@ public class Town : MonoBehaviour, IGameObject
 
             // Icon UI mode
             if (data.IsVillage) {
-                if (camController.zoomPos > 0.75f) {
+                if (cameraController.zoomPos > 0.75f) {
                     townIcon.Disable();
                 } else {
                     townIcon.Enable();
@@ -167,7 +169,7 @@ public class Town : MonoBehaviour, IGameObject
             }
         }
 
-        var time = Game.Now.Hour;
+        var time = TimeController.Now.Hour;
         var isDay = (time > 7 && time < 22);
         mainAudio.clip = isDay ? communitySounds.daySound : communitySounds.nightSound;
         if (!mainAudio.isPlaying) {

@@ -1,33 +1,26 @@
 ﻿﻿using System;
 using System.Collections.Generic;
- using System.Linq;
- using BehaviorDesigner.Runtime;
+using System.Linq;
+ using Den.Tools;
  using Unity.Mathematics;
- using UnityEditor;
 using UnityEngine;
-using UnityJSON;
 
 [CreateAssetMenu(menuName = "Medieval/Templates/Faction", order = 0)]
 [Serializable]
-public class Faction : SerializableObject
+public class Faction : ScriptableObject
 {
     [Header("General")]
     public int id;
     public string label;
     public Color32 color;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Character leader;
     
     [Header("Relationship")]
-    [JSONNode(NodeOptions.DontSerialize)]
     public List<Faction> allies;
-    [JSONNode(NodeOptions.DontSerialize)]
     public List<Faction> enemies;
 
     [Header("Initial")]
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Troop[] troops;
-    [JSONNode(NodeOptions.DontSerialize)] 
     public Model[] models;
 
     public static List<Faction> All => Game.Factions;
@@ -36,52 +29,6 @@ public class Faction : SerializableObject
     public List<Settlement> Settlements => Settlement.All.Where(s => s.ruler.faction == this).ToList();
     public List<Character> Characters => Character.All.Where(c => c.faction == this).ToList();
     public List<House> Houses => House.All.Where(h => h.leader.faction == this).ToList();
-
-    #region Serialization
-    
-    /* For serialization */
-    [JSONNode] private int leaderId;
-    [JSONNode] private int[] alliedFactions;
-    [JSONNode] private int[] enemyFactions;
-
-    public override void OnSerialization()
-    {
-        leaderId = leader ? leader.id : -1;
-        alliedFactions = new int[allies.Count];
-        for (var i = 0; i < allies.Count; i++) {
-            alliedFactions[i] = allies[i].id;
-        }
-        enemyFactions = new int[enemies.Count];
-        for (var i = 0; i < enemies.Count; i++) {
-            enemyFactions[i] = enemies[i].id;
-        }
-    }
-
-    public override void OnDeserialization()
-    {
-        if (leaderId != -1) {
-            leader = Game.Characters.Find(c => c.id == leaderId);
-        }
-        allies.Capacity = alliedFactions.Length;
-        foreach (var alliedId in alliedFactions) {
-            allies.Add(Game.Factions.Find(f => f.id == alliedId));
-        }
-        if (alliedFactions.Length > 0) {
-            alliedFactions = new int[0];
-        }
-        enemies.Capacity = enemyFactions.Length;
-        foreach (var enemyId in enemyFactions) {
-            enemies.Add(Game.Factions.Find(f => f.id == enemyId));
-        }
-        if (enemyFactions.Length > 0) {
-            enemyFactions = new int[0];
-        }
-        var faction = Manager.defaultFactions.Find(f => f.id == id);
-        troops = faction.troops;
-        models = faction.models;
-    }
-    
-    #endregion
 
     public bool IsStrong()
     {
@@ -122,5 +69,65 @@ public class Faction : SerializableObject
     public float GetMinimumExpansionism()
     {
         return 0f;//ExpansionismManager.Instance!.GetMinimumExpansionism(faction);
+    }
+
+    public static Faction Create(FactionSave save)
+    {
+        var obj = CreateInstance<Faction>();
+        obj.id = save.id;
+        return obj;
+    }
+
+    public void Load(FactionSave save = null)
+    {
+        if (save != null) {
+            label = save.label;
+            color = save.color;
+            if (save.leader != -1) leader = Character.All.First(c => c.id == save.leader);
+            allies = Faction.All.Where(f => save.allies.Contains(f.id)).ToList();
+            enemies = Faction.All.Where(f => save.enemies.Contains(f.id)).ToList();
+            troops = save.troops;
+            models = save.models; 
+        } else {
+            if (leader) leader = Character.All.First(c => c.id == leader.id);
+            for (var i = 0; i < allies.Count; i++) {
+                allies[i] = Faction.All.First(f => f.id == allies[i].id);
+            }
+            for (var i = 0; i < enemies.Count; i++) {
+                enemies[i] = Faction.All.First(f => f.id == enemies[i].id);
+            }
+        }
+    }
+
+    public Faction Clone()
+    {
+        var obj = Instantiate(this);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
+}
+
+[Serializable]
+public class FactionSave
+{
+    [HideInInspector] public int id;
+    [HideInInspector] public string label;
+    [HideInInspector] public Color32 color;
+    [HideInInspector] public int leader;
+    [HideInInspector] public int[] allies;
+    [HideInInspector] public int[] enemies;
+    [HideInInspector] public Troop[] troops;
+    [HideInInspector] public Model[] models;
+
+    public FactionSave(Faction faction)
+    {
+        id = faction.id;
+        label = faction.label;
+        color = faction.color;
+        leader = faction.leader ? faction.leader.id : -1;
+        allies = faction.allies.Select(f => f.id).ToArray();
+        enemies = faction.enemies.Select(f => f.id).ToArray();;
+        troops = faction.troops;
+        models = faction.models; 
     }
 }

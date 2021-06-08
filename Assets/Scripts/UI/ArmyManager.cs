@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 {
@@ -20,7 +15,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 #pragma warning disable 108,114
     private Camera camera;
 #pragma warning restore 108,114
-    private CamController camController;
+    private CameraController cameraController;
     private ILayout troopLayout;
     private TerrainBorder border;
     private Army army;
@@ -35,7 +30,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
     public void SetArmy(Army target)
     {
         army = target;
-        camController.SetTarget(army.worldTransform);
+        cameraController.SetTarget(army.worldTransform);
         var player = Game.Player;
         foreach (var troop in player.troops) {
             AddLayout(troop);
@@ -48,7 +43,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
     {
         CursorManager.SetCursor(Manager.global.basicCursor);
         camera = Manager.mainCamera;
-        camController = Manager.camController;
+        cameraController = Manager.cameraController;
         border = Manager.border;
         enabled = false;
     }
@@ -76,7 +71,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
                 //Instantiate(Manager.global.deployParticle, dest, Quaternion.identity);
             }
             
-            camController.SetTarget(army.worldTransform);
+            cameraController.SetTarget(army.worldTransform);
         }
     }
 

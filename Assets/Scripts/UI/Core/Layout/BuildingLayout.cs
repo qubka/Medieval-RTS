@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using Slider = UnityEngine.UI.Slider;

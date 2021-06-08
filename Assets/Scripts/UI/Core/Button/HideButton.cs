@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DigitalRuby.Tween;
 using UnityEngine;
 using UnityEngine.UI;

@@ -1,6 +1,4 @@
 ﻿using System;
-using GPUInstancer;
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 

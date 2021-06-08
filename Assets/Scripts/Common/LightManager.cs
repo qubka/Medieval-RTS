@@ -12,7 +12,7 @@ public class LightManager : SingletonObject<LightManager>
       if (!Application.isPlaying) {
          UpdateLighting(timeOfDay / 24f);
       } else {
-         UpdateLighting(Game.Now.GetDayPercent());
+         UpdateLighting(TimeController.Now.GetDayPercent());
       }
    }
 

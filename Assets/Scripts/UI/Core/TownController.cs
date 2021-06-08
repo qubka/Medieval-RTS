@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalRuby.Tween;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TownController : TweenBehaviour
 {
@@ -27,15 +24,15 @@ public class TownController : TweenBehaviour
     [SerializeField] private RectTransform recruitsCanvas;
     [SerializeField] private GameObject recruitsLayout;
 
-    private Dictionary<int, Dictionary<Building, BuildingLayout>> buildings = new Dictionary<int, Dictionary<Building, BuildingLayout>>();
+    private Dictionary<InfrastructureType, Dictionary<Building, BuildingLayout>> buildings = new Dictionary<InfrastructureType, Dictionary<Building, BuildingLayout>>();
     private List<RecruitLayout> recruits = new List<RecruitLayout>();
     private bool recruitsInit;
     
     protected override void Start()
     {
         foreach (InfrastructureType type in Enum.GetValues(typeof(InfrastructureType))) {
-            var list = Manager.defaultBuildings.Where(b => b.type == type).ToList();
-            var count = list.Count;
+            var list = Resources.LoadAll<Building>("Buildings/").Where(b => b.type == type).ToArray();
+            var count = list.Length;
             if (count > 0) {
                 var layouts = new Dictionary<Building, BuildingLayout>(count);
                 for (var i = 0; i < count; i++) {
@@ -44,7 +41,7 @@ public class TownController : TweenBehaviour
                     layout.SetActive(false);
                     layouts.Add(building, layout);
                 }
-                buildings.Add((int) type, layouts);
+                buildings.Add(type, layouts);
             }
         }
         base.Start();
@@ -81,14 +78,14 @@ public class TownController : TweenBehaviour
             foodInc.SetInteger(settlement.FoodProductionGrowth);
             
             foreach (var pair in buildings) {
-                var active = ((InfrastructureType) pair.Key) == settlement.type;
+                var active = pair.Key == settlement.type;
                 foreach (var layout in pair.Value.Values) {
                     layout.SetActive(active);
                 }
             }
             
             var builded = settlement.buildings;
-            var dictionary = buildings[(int) settlement.type];
+            var dictionary = buildings[settlement.type];
             foreach (var pair in dictionary) {
                 var building = pair.Key;
                 var layout = pair.Value;

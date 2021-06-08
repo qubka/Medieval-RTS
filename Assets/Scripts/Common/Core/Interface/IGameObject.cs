@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityJSON;
 
 public interface IGameObject
 {
@@ -12,10 +11,9 @@ public interface IGameObject
 }
 
 [Serializable]
-[JSONEnum(format = JSONEnumMemberFormating.Lowercased)]
 public enum UI
 {
-    None,
-    Settlement,
-    Army
+    Squad,
+    Army,
+    Settlement
 }

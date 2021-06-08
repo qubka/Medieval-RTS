@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
- 
+
 // Can use it on:
 // VECTOR2 / VECTOR2INT
 // FLOAT

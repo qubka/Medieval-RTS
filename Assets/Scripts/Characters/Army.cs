@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using BehaviorDesigner.Runtime;
-using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using TMPro;
 using UnityEngine;
@@ -44,15 +41,11 @@ public class Army : MonoBehaviour, IGameObject
     private ArmyManager manager;
     private List<AnimatorCrowd> animators = new List<AnimatorCrowd>(2);
     private Model model;
+    private IGameObject target;
     private float nextHoverTime;
     private int lastTroopCount = -1;
     private bool isVisible = true;
     private bool isFootstepPlaying;
-    
-    private IGameObject target {
-        get => data.followingObject;
-        set => data.followingObject = value;
-    }
 
     #endregion
     
@@ -115,10 +108,15 @@ public class Army : MonoBehaviour, IGameObject
         }
 
         // TODO: Finish save for town waiting
-        /*if (data.localTown) {
+        if (data.localSettlement) {
             Debug.Log("Entered city!");
             SetVisibility(false);
-        }*/
+            if (data.leader.IsPlayer) {
+                var controller = manager.townController;
+                controller.Toggle(data.localSettlement);
+                controller.OnUpdate();
+            }
+        }
     }
 
     public void Update()

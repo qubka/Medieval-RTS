@@ -1,5 +1,4 @@
-﻿using System;
-using GPUInstancer;
+﻿using GPUInstancer;
 using GPUInstancer.CrowdAnimations;
 using Unity.Mathematics;
 using UnityEngine;
@@ -62,7 +61,7 @@ public class AnimatorCrowd : MonoBehaviour
 
     public void SetActive(bool value)
     {
-        worldTransform.localPosition = value ? Vector3.zero : Vector.infinity;
+        worldTransform.localPosition = value ? Vector3.zero : Vector.max;
     }
     
     private enum AnimationState

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,8 +18,8 @@ public class SoundManager : SingletonObject<SoundManager>
     public Ambient[] ambients;
 
     //private Transform worldTransform;
-    private Transform camTransform;
-    private CamController camController;
+    private Transform cameraTransform;
+    private CameraController cameraController;
     private AudioSource[] sources;
     private readonly List<AudioSource> available = new List<AudioSource>();
     private readonly Dictionary<Vector3, Sounds> clipTable = new Dictionary<Vector3, Sounds>(1000);
@@ -50,8 +48,8 @@ public class SoundManager : SingletonObject<SoundManager>
             ambient.audio = source;
         }
 
-        camTransform = Manager.camTransform;
-        camController = Manager.camController;
+        cameraTransform = Manager.cameraTransform;
+        cameraController = Manager.cameraController;
         
         for (var i = 0; i < maxSounds; i++) {
             var source = new GameObject("Audio shot").AddComponent<AudioSource>();
@@ -66,7 +64,7 @@ public class SoundManager : SingletonObject<SoundManager>
 
     public void RequestPlaySound(Vector3 position, Sounds sounds)
     {
-        var listener = camTransform.position;
+        var listener = cameraTransform.position;
         
         if (Vector.DistanceSq(listener, position) <= playRange) {
             //if (sounds.sounds.Count == 0) Debug.Log(sounds.name);
@@ -103,8 +101,8 @@ public class SoundManager : SingletonObject<SoundManager>
 
     public void LateUpdate()
     {
-        var time = Game.Now.Hour + (Game.Now.Minute / 60f);
-        var volume = 1f - MathExtention.Clamp01(camController.DistToGround);
+        var time = TimeController.Now.GetHourAndMinutes();
+        var volume = 1f - MathExtention.Clamp01(cameraController.DistToGround);
 
         foreach (var ambient in ambients) {
             ambient.Update(time, volume);
@@ -121,7 +119,7 @@ public class SoundManager : SingletonObject<SoundManager>
         if (index >= 0) {
             //var currentTime = AudioSettings.dspTime;
             
-            var listener = camTransform.position;
+            var listener = cameraTransform.position;
             foreach (var pair in clipTable.OrderBy(p => Vector.DistanceSq(listener, p.Key))) {
                 var pos = pair.Key;
                 var source = available[index];

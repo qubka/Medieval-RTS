@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -31,7 +30,7 @@ public class SquadInfo : Tooltip
 
     private void Start()
     {
-        foreach (var attribute in Manager.moraleAttributes.OrderByDescending(a => a.bonus)) {
+        foreach (var attribute in Manager.MoraleAttributes.OrderByDescending(a => a.bonus)) {
             var obj = Instantiate(attributeLayout, attributeCanvas);
             obj.GetComponent<AttributeLayout>().SetAttribute(attribute);
             obj.SetActive(false);

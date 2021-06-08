@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityJSON;
-using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Medieval/Templates/House", order = 0)]
 [Serializable]
-public class House : SerializableObject
+public class House : ScriptableObject
 {
     public int id;
     public string label;
-    [JSONNode(NodeOptions.DontSerialize)]
     public Character leader;
     public int tier;
     public int influence;
-    [JSONNode(NodeOptions.DontSerialize)]
     public Banner banner;
 
     public static List<House> All => Game.Houses;
@@ -34,27 +30,6 @@ public class House : SerializableObject
         banner = Resources.LoadAll<Banner>("Banners/")[id - 1];
     }
 #endif
-    
-    #region Serialization
-    
-    /* For serialization */
-    [JSONNode] private int leaderId;
-
-    public override void OnSerialization()
-    {
-        leaderId = leader ? leader.id : -1;
-    }
-
-    public override void OnDeserialization()
-    {
-        if (leaderId != -1) {
-            leader = Game.Characters.Find(c => c.id == leaderId);
-        }
-        var house = Manager.defaultHouses.Find(h => h.id == id);
-        banner = house.banner;
-    }
-    
-    #endregion
     
     /*public static float GetCorruption(this Clan clan)
         {
@@ -77,4 +52,52 @@ public class House : SerializableObject
         }
 
         public static IEnumerable<Town> GetPermanentFiefs(this Clan clan) => clan.Fiefs.Where(fief => !fief.IsOwnerUnassigned);*/
+    
+    public static House Create(HouseSave save)
+    {
+        var obj = CreateInstance<House>();
+        obj.id = save.id;
+        return obj;
+    }
+    
+    public void Load(HouseSave save = null)
+    {
+        if (save != null) {
+            label = save.label;
+            if (save.leader != -1) leader = Character.All.First(c => c.id == save.leader);
+            tier = save.tier;
+            influence = save.influence;
+            banner = save.banner;
+        } else {
+            if (leader) leader = Character.All.First(c => c.id == leader.id);
+        }
+    }
+
+    public House Clone()
+    {
+        var obj = Instantiate(this);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
+}
+
+[Serializable]
+public class HouseSave
+{
+    [HideInInspector] public int id;
+    [HideInInspector] public string label;
+    [HideInInspector] public int leader;
+    [HideInInspector] public int tier;
+    [HideInInspector] public int influence;
+    [HideInInspector] public Banner banner;
+
+    public HouseSave(House house)
+    {
+        id = house.id;
+        label = house.label;
+        leader = house.leader ? house.leader.id : -1;
+        tier = house.tier;
+        influence = house.influence;
+        banner = house.banner;  
+    }
 }

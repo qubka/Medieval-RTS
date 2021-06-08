@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityJSON;
 using Object = UnityEngine.Object;
 
 [Serializable]
@@ -15,9 +13,9 @@ public class Troop : ISelectable
     public GameObject[] primaryPrefabs;
     public GameObject[] secondaryPrefabs;
 
-    // Hide in inspector
-    [HideInInspector] public TroopCard card;
-    [HideInInspector] public TroopLayout layout;
+    //[Header("Other")]
+    [NonSerialized] public TroopCard card;
+    [NonSerialized] public TroopLayout layout;
     private bool isSelect;
     
     public void Destroy()

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using DigitalRuby.Tween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

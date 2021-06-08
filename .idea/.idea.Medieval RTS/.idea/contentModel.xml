@@ -1978,17 +1978,6 @@
               <e p="ProjectVersion.txt" t="Include" />
             </e>
           </e>
-          <e p="UnityJSON" t="Include">
-            <e p="Attributes.cs" t="Include" />
-            <e p="Deserializer.cs" t="Include" />
-            <e p="Enums.cs" t="Include" />
-            <e p="Instantiater.cs" t="Include" />
-            <e p="Interfaces.cs" t="Include" />
-            <e p="JSON.cs" t="Include" />
-            <e p="Serializer.cs" t="Include" />
-            <e p="SimpleJSON.cs" t="Include" />
-            <e p="Util.cs" t="Include" />
-          </e>
         </e>
         <e p="Editor" t="Include">
           <e p="AutoNameAnimations.cs" t="Include" />
@@ -2045,6 +2034,7 @@
                 <e p="StringExtention.cs" t="Include" />
                 <e p="TextExtention.cs" t="Include" />
               </e>
+              <e p="GameFile.cs" t="Include" />
               <e p="Interface" t="Include">
                 <e p="IGameObject.cs" t="Include" />
                 <e p="ILayout.cs" t="Include" />
@@ -2059,7 +2049,6 @@
               <e p="Target.cs" t="Include" />
               <e p="Vector.cs" t="Include" />
             </e>
-            <e p="CursorManager.cs" t="Include" />
             <e p="Data" t="Include">
               <e p="Animations.cs" t="Include" />
               <e p="Building.cs" t="Include" />
@@ -2116,7 +2105,6 @@
             <e p="Manager.cs" t="Include" />
             <e p="Objects" t="Include">
               <e p="ListObject.cs" t="Include" />
-              <e p="SerializableObject.cs" t="Include" />
               <e p="SingletonObject.cs" t="Include" />
               <e p="TableObject.cs" t="Include" />
             </e>
@@ -2130,6 +2118,8 @@
               <e p="TownTable.cs" t="Include" />
               <e p="UnitTable.cs" t="Include" />
             </e>
+            <e p="TimeController.cs" t="Include" />
+            <e p="WorldController.cs" t="Include" />
           </e>
           <e p="Steering" t="Include">
             <e p="Agent.cs" t="Include" />
@@ -2158,7 +2148,7 @@
           <e p="UI" t="Include">
             <e p="ArmyManager.cs" t="Include" />
             <e p="Camera" t="Include">
-              <e p="CamController.cs" t="Include" />
+              <e p="CameraController.cs" t="Include" />
               <e p="FacingBillboard.cs" t="Include" />
               <e p="Minimap.cs" t="Include" />
             </e>
@@ -2178,7 +2168,6 @@
                 <e p="ImageToggle.cs" t="Include" />
                 <e p="TweenBehavior.cs" t="Include" />
               </e>
-              <e p="ClockController.cs" t="Include" />
               <e p="CombatSliderController.cs" t="Include" />
               <e p="Info" t="Include">
                 <e p="BuildingInfo.cs" t="Include" />
@@ -2230,6 +2219,7 @@
                 <e p="TransformInRect.cs" t="Include" />
               </e>
             </e>
+            <e p="CursorManager.cs" t="Include" />
             <e p="Domain" t="Include">
               <e p="Nation.cs" t="Include" />
               <e p="NationProperties.cs" t="Include" />

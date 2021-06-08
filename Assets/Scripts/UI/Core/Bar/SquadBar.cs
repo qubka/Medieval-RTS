@@ -1,6 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SquadBar : BarBehavior
 {

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
-
-public static class FactionManager
+﻿public static class FactionManager
 {
     public static bool IsAlliedWithFaction(Faction faction1, Faction faction2)
     {

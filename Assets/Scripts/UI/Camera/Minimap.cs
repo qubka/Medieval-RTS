@@ -1,5 +1,4 @@
-﻿using System;
-using DigitalRuby.Tween;
+﻿using DigitalRuby.Tween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,7 +11,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
 #pragma warning disable 108,114
     private Camera camera;
 #pragma warning restore 108,114
-    private CamController camController;
+    private CameraController cameraController;
     private TerrainBorder border;
     private RectTransform iconTransform;
     private RectTransform rectTransform;
@@ -39,7 +38,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
     {
         border = Manager.border;
         camera = Manager.minimapCamera;
-        camController = Manager.camController;
+        cameraController = Manager.cameraController;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -60,7 +59,7 @@ public class Minimap : MonoBehaviour, IPointerDownHandler
             if (border.IsOutsideBorder(hit))
                 return;
 
-            camController.SetTarget(ObjectPool.Instance.SpawnFromPool(Manager.Way, hit).transform);
+            cameraController.SetTarget(ObjectPool.Instance.SpawnFromPool(Manager.Way, hit).transform);
         }
 
         lastClickTime = time;

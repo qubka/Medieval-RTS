@@ -11,7 +11,7 @@ public static class Vector // MathExtension ?
 		0, 1, 2,  2, 1, 3,  4, 6, 0,  0, 6, 2,  6, 7, 2,  2, 7, 3,  7, 5, 3,  3, 5, 1,  5, 0, 1,  1, 4, 0,  4, 5, 6,  6, 5, 7
 	};
 
-	public static readonly Vector3 infinity = new Vector3(float.MaxValue / 2f, float.MaxValue / 2f, float.MaxValue / 2f);
+	public static readonly Vector3 max = new Vector3(float.MaxValue / 2f, float.MaxValue / 2f, float.MaxValue / 2f);
 
 	public static Rect GetScreenRect(Vector3 start, Vector3 end)
 	{
@@ -257,10 +257,10 @@ public static class Vector // MathExtension ?
 	}
 	
 	// https://forum.unity.com/threads/camera-worldtoscreenpoint-bug.85311/ki
-	public static Vector2 WorldToScreenPointProjected(this Camera camera, Transform camTransform, Vector3 worldPos)
+	public static Vector2 WorldToScreenPointProjected(this Camera camera, Transform cameraTransform, Vector3 worldPos)
 	{
-		var camNormal = camTransform.forward;
-		var camPosition = camTransform.position;
+		var camNormal = cameraTransform.forward;
+		var camPosition = cameraTransform.position;
 		var vectorFromCam = worldPos - camPosition;
 		var camNormDot = Dot(camNormal, vectorFromCam);
 		if (camNormDot <= 0f) {

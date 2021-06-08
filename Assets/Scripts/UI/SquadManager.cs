@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
-using UnityEngine.EventSystems;
 
 public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 {
@@ -22,7 +21,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 	private AudioSource audio;
 	private Camera camera;
 #pragma warning restore 108,114	
-	private CamController camController;
+	private CameraController cameraController;
 	public ILayout squadLayout;
 	private Line drawedLine;
 	private Squad lastSelectSquad;
@@ -49,7 +48,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 		CursorManager.SetCursor(Manager.global.basicCursor);
 		border = Manager.border;
 		camera = Manager.mainCamera;
-		camController = Manager.camController;
+		cameraController = Manager.cameraController;
 		audio = Manager.cameraSources[0];
 	}
 
@@ -91,7 +90,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 			var currentTime = Time.unscaledTime;
 			if ((currentTime - lastClickTime < 0.5f) && Vector.TruncDistance(lastClickPos, groundHit.point) <= 1f) {
 				if (Physics.OverlapSphereNonAlloc(groundHit.point, 2f, colliders, Manager.Squad) == 0) {
-					camController.SetTarget(ObjectPool.Instance.SpawnFromPool(Manager.Way, groundHit.point).transform);
+					cameraController.SetTarget(ObjectPool.Instance.SpawnFromPool(Manager.Way, groundHit.point).transform);
 					//clickAudio.clip = targetSound;
 					//clickAudio.Play();
 					onSelect.locked = true;
@@ -574,8 +573,8 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 		var time = Time.unscaledTime;
 		if ((time - lastSelectTime < 0.5f) && lastSelectSquad == filter) {
 			var trans = filter.centerTransform;
-			if (camController.target != trans) {
-				camController.SetTarget(trans);
+			if (cameraController.target != trans) {
+				cameraController.SetTarget(trans);
 				audio.clip = Manager.global.targetSound;
 				audio.Play();
 			}
