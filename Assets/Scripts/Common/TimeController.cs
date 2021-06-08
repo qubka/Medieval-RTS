@@ -13,16 +13,17 @@ public class TimeController : SingletonObject<TimeController>
     [HideInInspector] public int prevDay;
     
     public static DateTime Now => Instance.dateTime;
+    public static string Date => Instance.dateStamp;
     
     protected override void Awake()
     {
         base.Awake();
         
         dateTime = new DateTime(startDate.x, startDate.y, startDate.z, 12, 0, 0);
-        dateStamp = ToString();
+        dateStamp = DateStamp();
         prevDay = startDate.z;
         
-        timeLabel.text = dateStamp + StringExtention.GetPrettyName(dateTime.GetTimeOfDay());
+        timeLabel.text = dateStamp + DayTime();
     }
     
     private IEnumerator Start()
@@ -35,11 +36,11 @@ public class TimeController : SingletonObject<TimeController>
 
     public void Load(TimeSave save) {
 
-        dateTime = save.dateTime;
-        dateStamp = ToString();
+        dateTime = new DateTime(save.ticks);
+        dateStamp = DateStamp();
         prevDay = save.prevDay;
         
-        timeLabel.text = dateStamp + StringExtention.GetPrettyName(dateTime.GetTimeOfDay());
+        timeLabel.text = dateStamp + DayTime();
     }
 
     private void OnUpdate()
@@ -53,25 +54,26 @@ public class TimeController : SingletonObject<TimeController>
             if (dateTime.DayOfWeek == DayOfWeek.Monday) {
                 events.OnWeeklyTickEvent();
             }
-            dateStamp = ToString();
+            dateStamp = DateStamp();
         }
         prevDay = day;
         
-        timeLabel.text = dateStamp + StringExtention.GetPrettyName(dateTime.GetTimeOfDay());
+        timeLabel.text = dateStamp + DayTime();
     }
     
-    public override string ToString() => dateTime.ToString("d MMMM, yyyy", CultureInfo.InvariantCulture) + Environment.NewLine;
+    private string DateStamp() => dateTime.ToString("d MMMM, yyyy", CultureInfo.InvariantCulture);
+    private string DayTime() => Environment.NewLine + StringExtention.GetPrettyName(dateTime.GetTimeOfDay());
 }
 
 [Serializable]
 public class TimeSave {
 
-    public DateTime dateTime;
+    public long ticks;
     public int prevDay;
 
     public TimeSave(TimeController tc)
     {
-        dateTime = tc.dateTime;
+        ticks = tc.dateTime.Ticks;
         prevDay = tc.prevDay;
     }
 }

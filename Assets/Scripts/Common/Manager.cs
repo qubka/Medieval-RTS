@@ -1,4 +1,5 @@
-﻿﻿using System.Collections.Generic;
+﻿﻿using System;
+ using System.Collections.Generic;
  using System.Linq;
  using GPUInstancer.CrowdAnimations;
  using Unity.Mathematics;
@@ -186,4 +187,12 @@
 	}
 
 	public static bool IsPointerOnUI => eventSystem.IsPointerOverGameObject();
+
+	private void OnGUI()
+	{
+		if (GUI.Button(new Rect(Screen.width-200,0,200,50), "Save"))
+		{
+			SaveLoadManager.SaveGame("test", DateTime.Now.ToString("dd_MM_yy_HH_m_s"));
+		}
+	}
 }

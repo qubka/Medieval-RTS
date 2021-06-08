@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class SaveLoadManager
 {
-    private const string scenariosDirectory = "Assets/Resources/Scenarios";
-    private const string fileType = ".alu";
+    private const string fileType = ".dat";
 
     public static GameFile file;
 
@@ -21,14 +20,14 @@ public class SaveLoadManager
         var savedGame = new ProgressSave(Game.Instance);
         var bf = new BinaryFormatter();
         var stream = File.Create(Path.Combine(datapath + dir, filename + fileType));
-        bf.Serialize(stream, savedGame);
+        bf.Serialize(stream, JsonUtility.ToJson(savedGame));
         stream.Close();
         Debug.Log(filename + " saved!");
     }
 
-    public static void LoadLevel()
+    public static AsyncOperation LoadLevel()
     {
-        //SceneManager.LoadSceneAsync("Scenes/");
+        return SceneManager.LoadSceneAsync("Campaign");
     }
 
     public static bool FileExistsInFiles(string d, string f)
@@ -55,7 +54,7 @@ public class SaveLoadManager
     {
         var bf = new BinaryFormatter();
         var stream = File.Open(Path.Combine(dir, name + fileType), FileMode.Open);
-        var savedGame = (ProgressSave) bf.Deserialize(stream);
+        var savedGame = JsonUtility.FromJson<ProgressSave>((string) bf.Deserialize(stream));
         stream.Close();
         return savedGame;
     }
