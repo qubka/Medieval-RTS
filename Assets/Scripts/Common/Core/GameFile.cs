@@ -1,14 +1,12 @@
-﻿using System;
+﻿﻿using System;
 
 [Serializable]
 public class GameFile 
 {
-    public string FileLocation { get; }
     public string FileName { get; }
 
-    public GameFile(string l, string n) 
+    public GameFile(string name) 
     {
-        FileLocation = l;
-        FileName = n;
+        FileName = name;
     }
 }

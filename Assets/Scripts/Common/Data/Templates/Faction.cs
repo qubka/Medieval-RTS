@@ -16,8 +16,8 @@ public class Faction : ScriptableObject
     public Character leader;
     
     [Header("Relationship")]
-    public List<Faction> allies;
-    public List<Faction> enemies;
+    public List<Faction> allies = new List<Faction>();
+    public List<Faction> enemies = new List<Faction>();
 
     [Header("Initial")]
     public Troop[] troops;
@@ -75,6 +75,7 @@ public class Faction : ScriptableObject
     {
         var obj = CreateInstance<Faction>();
         obj.id = save.id;
+        obj.name = save.name;
         return obj;
     }
 
@@ -111,6 +112,7 @@ public class Faction : ScriptableObject
 public class FactionSave
 {
     [HideInInspector] public int id;
+    [HideInInspector] public string name;
     [HideInInspector] public string label;
     [HideInInspector] public Color32 color;
     [HideInInspector] public int leader;
@@ -122,6 +124,7 @@ public class FactionSave
     public FactionSave(Faction faction)
     {
         id = faction.id;
+        name = faction.name;
         label = faction.label;
         color = faction.color;
         leader = faction.leader ? faction.leader.id : -1;

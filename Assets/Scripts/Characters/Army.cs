@@ -18,7 +18,6 @@ public class Army : MonoBehaviour, IGameObject
     private TextMeshProUGUI iconText;
     private GameObject armyBanner;
     [Space(10f)]
-    [HideInInspector] public ExternalBehavior behavior;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform iconTransform;
 
@@ -82,7 +81,7 @@ public class Army : MonoBehaviour, IGameObject
             manager.SetArmy(this);
         } else {
             var tree = gameObject.AddComponent<BehaviorTree>();
-            tree.ExternalBehavior = behavior;
+            tree.ExternalBehavior = data.behavior;
         }
         
         // Add a army to the tables
@@ -201,7 +200,7 @@ public class Army : MonoBehaviour, IGameObject
 
     public void SetDestination(Vector3 position, IGameObject enemy = null)
     {
-        if (data.localSettlement && data.localSettlement.data == enemy)
+        if (data.localSettlement && ReferenceEquals(data.localSettlement.data, enemy))
             return;
         
         agent.SetDestination(position);

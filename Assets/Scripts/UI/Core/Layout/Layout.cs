@@ -96,7 +96,7 @@ public class Layout<T> : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, 
     
     private void OnDestroy()
     {
-        if (manager.GetLayout() == this) {
+        if (ReferenceEquals(manager.GetLayout(), this)) {
             manager.SetLayout(null);
         }
     }

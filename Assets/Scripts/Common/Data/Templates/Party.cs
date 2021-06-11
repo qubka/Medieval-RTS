@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Den.Tools;
+using BehaviorDesigner.Runtime;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,9 +15,10 @@ public class Party : ScriptableObject
     public float speed;
     public Vector3 position;
     public Quaternion rotation; 
-    public List<Troop> troops;
+    public List<Troop> troops = new List<Troop>();
     public Settlement localSettlement;
     public Settlement targetSettlement; // for AI
+    public ExternalBehavior behavior;
     public int skin;
 
     public static List<Party> All => Game.Parties;
@@ -28,7 +29,7 @@ public class Party : ScriptableObject
     public static void CreatePeasant(Settlement settlement)
     {
         var leader = CreateInstance<Character>();
-        leader.name = "Peasant";
+        leader.name = "Peasant Leader";
         leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
         leader.faction = settlement.ruler.faction;
         leader.type = CharacterType.Peasant;
@@ -40,19 +41,19 @@ public class Party : ScriptableObject
         party.skin = Random.Range(0, 2);
 
         var count = math.min(math.max(1, settlement.prosperity / 10), 3);
-        if (party.troops == null) party.troops = new List<Troop>(count);
+        //if (party.troops == null) party.troops = new List<Troop>(count);
+        var troops = Manager.global.troops;
         for (var i = 0; i < count; i++) {
-            var troops = Manager.global.troops;
             party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
         }
         
         Party.All.Add(party);
         Character.All.Add(leader);
         
-        var army = Instantiate(Manager.global.armyPrefab, settlement.position, Quaternion.identity).GetComponent<Army>();
+        var army = Instantiate(Manager.global.armyPrefab, settlement.data.doorPosition, settlement.data.doorRotation).GetComponent<Army>();
         army.data = party;
         army.data.targetSettlement = settlement.neighbours[0];
-        army.behavior = Manager.global.behavior;
+        army.data.behavior = Manager.global.behavior;
     }
     
     public void DestroyParty(bool withLeader = false)
@@ -69,6 +70,7 @@ public class Party : ScriptableObject
     {
         var obj = CreateInstance<Party>();
         obj.leader = Character.All.First(c => c.id == save.leader);
+        obj.name = save.name;
         return obj;
     }
 
@@ -110,6 +112,7 @@ public enum PartyFSM
 public class PartySave
 {
     [HideInInspector] public int leader;
+    [HideInInspector] public string name;
     [HideInInspector] public float morale;
     [HideInInspector] public float speed;
     [HideInInspector] public Vector3 position;
@@ -117,11 +120,13 @@ public class PartySave
     [HideInInspector] public List<Troop> troops;
     [HideInInspector] public int localSettlement;
     [HideInInspector] public int targetSettlement;
+    [HideInInspector] public ExternalBehavior behavior;
     [HideInInspector] public int skin;
 
     public PartySave(Party party)
     {
         leader = party.leader.id; // cant be null
+        name = party.name; // cant be null
         morale = party.morale;
         speed = party.speed;
         position = party.position;
@@ -129,6 +134,7 @@ public class PartySave
         troops = party.troops;
         localSettlement = party.localSettlement ? party.localSettlement.id : -1;
         targetSettlement = party.targetSettlement ? party.targetSettlement.id : -1;
+        behavior = party.behavior;
         skin = party.skin;
     }
 }

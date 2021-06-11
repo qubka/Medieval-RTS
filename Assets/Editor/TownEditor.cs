@@ -33,10 +33,5 @@ public class TownEditor : Editor
             town.GenerateLocation(infrastructureType);
             EditorUtility.SetDirty(target);
         }
-        
-        if (GUILayout.Button("Update Location")) {
-            town.data.position = town.transform.position;
-            EditorUtility.SetDirty(target);
-        }
     }
 }

@@ -788,12 +788,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainText: {fileID: 4462325573081444717}
-  actionButtons: {fileID: 2268008879442678250}
-  yesText: {fileID: 6824941315768334349}
-  yesButton: {fileID: 8649754029769614419}
-  noText: {fileID: 5602575377452402165}
-  noButton: {fileID: 1790056776801296903}
-  closeButton: {fileID: 6144130961689276680}
+  actions: {fileID: 2268008879442678250}
+  yes:
+    target: {fileID: 4877093842909728352}
+    button: {fileID: 8649754029769614419}
+    text: {fileID: 6824941315768334349}
+  no:
+    target: {fileID: 5677162519142325418}
+    button: {fileID: 1790056776801296903}
+    text: {fileID: 5602575377452402165}
+  close: {fileID: 6144130961689276680}
 --- !u!1 &5421427032493607034
 GameObject:
   m_ObjectHideFlags: 0

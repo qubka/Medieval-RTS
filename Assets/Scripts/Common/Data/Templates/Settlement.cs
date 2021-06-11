@@ -21,14 +21,13 @@ public class Settlement : ScriptableObject
     public int population;
     public int loyalty;
     public int food;
-    public Vector3 position;
     public Character ruler;
     public InfrastructureType type; 
-    public List<Troop> garrison;
-    public List<Party> parties;
-    public Settlement[] neighbours;
-    public Resource[] resources;
-    public BuildingDictionary buildings;
+    public List<Troop> garrison = new List<Troop>();
+    public List<Party> parties = new List<Party>();
+    public Settlement[] neighbours = new Settlement[0];
+    public Resource[] resources = new Resource[0];
+    public BuildingDictionary buildings = new BuildingDictionary();
     
     public static List<Settlement> All => Game.Settlements;
     public bool IsVillage => type == InfrastructureType.Village;
@@ -224,6 +223,7 @@ public class Settlement : ScriptableObject
     {
         var obj = CreateInstance<Settlement>();
         obj.id = save.id;
+        obj.name = save.name;
         return obj;
     }
 
@@ -236,7 +236,6 @@ public class Settlement : ScriptableObject
             population = save.population;
             loyalty = save.loyalty;
             food = save.food;
-            position = save.position;
             if (save.ruler != -1) ruler = Character.All.First(c => c.id == save.ruler);
             type = (InfrastructureType) save.type; 
             garrison = save.garrison;
@@ -301,13 +300,13 @@ public class BuildingDictionary : SerializableDictionary<Building, Pack<int, flo
 public class SettlementSave
 {
     [HideInInspector] public int id;
+    [HideInInspector] public string name;
     [HideInInspector] public string label;
     [HideInInspector] public bool isMarker;
     [HideInInspector] public int prosperity;
     [HideInInspector] public int population;
     [HideInInspector] public int loyalty;
     [HideInInspector] public int food;
-    [HideInInspector] public Vector3 position;
     [HideInInspector] public int ruler;
     [HideInInspector] public int type; 
     [HideInInspector] public List<Troop> garrison;
@@ -340,13 +339,13 @@ public class SettlementSave
     public SettlementSave(Settlement settlement)
     {
         id = settlement.id;
+        name = settlement.name;
         label = settlement.label;
         isMarker = settlement.isMarker;
         prosperity = settlement.prosperity;
         population = settlement.population;
         loyalty = settlement.loyalty;
         food = settlement.food;
-        position = settlement.position;
         ruler = settlement.ruler ? settlement.ruler.id : -1;
         type = (int) settlement.type; 
         garrison = settlement.garrison;

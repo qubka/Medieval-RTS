@@ -12,13 +12,11 @@ public class MessageBox : MonoBehaviour
 {
 	[SerializeField] private TextMeshProUGUI mainText;
 	[Space]
-	[SerializeField] private GameObject actionButtons;
-	[SerializeField] private TextMeshProUGUI yesText;
-	[SerializeField] private Button yesButton;
-	[SerializeField] private TextMeshProUGUI noText;
-	[SerializeField] private Button noButton;
+	[SerializeField] private GameObject actions;
+	[SerializeField] private ConfirmationButton yes;
+	[SerializeField] private ConfirmationButton no;
 	[Space]
-	[SerializeField] private GameObject closeButton;
+	[SerializeField] private GameObject close;
 	
 	public readonly UnityEvent onYes = new UnityEvent();
 	public readonly UnityEvent onNo = new UnityEvent();
@@ -30,24 +28,24 @@ public class MessageBox : MonoBehaviour
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
-		//DisableYesAndNo();
+		DisableYesAndNo();
 	}
 
-	private void DisableYesAndNo()
+	public void DisableYesAndNo()
 	{
-		actionButtons.SetActive(false);
+		actions.SetActive(false);
 	}
 	
 	public void DisableCloseBtn()
 	{
-		closeButton.SetActive(false);
+		close.SetActive(false);
 	}
 	
-	public void EnableYesAndNo(string yes = "Yes", string no = "No")
+	public void EnableYesAndNo(string yesLabel = "Yes", string noLabel = "No")
 	{
-		actionButtons.SetActive(true);
-		yesText.text = yes;
-		noText.text = no;
+		actions.SetActive(true);
+		yes.text.text = yesLabel;
+		no.text.text = noLabel;
 	}
 	
 	public void SetMessage(string message)
@@ -72,8 +70,8 @@ public class MessageBox : MonoBehaviour
 		if (destroyed != null)
 			return;
 		
-		yesButton.interactable = false;
-		noButton.interactable = false;
+		yes.button.interactable = false;
+		no.button.interactable = false;
 		
 		destroyed = StartCoroutine(Delete());
 		animator.Play("MessageBoxDisappear");

@@ -217,7 +217,6 @@ public class Town : MonoBehaviour, IGameObject
         loc.loyalty = Random.Range(70, 100);
         loc.food = Random.Range(70, 100);
         loc.type = infrastructure;
-        loc.position = transform.position;
         var resources = Resources.LoadAll<Resource>("Resources/");
         if (isVillage || RandomExtention.NextBool) {
             loc.resources = new[] {resources[Random.Range(0, resources.Length)]};

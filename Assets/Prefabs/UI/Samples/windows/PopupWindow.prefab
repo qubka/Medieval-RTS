@@ -84,7 +84,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2906606448773009059}
-  - component: {fileID: 2856817784523979237}
   m_Layer: 5
   m_Name: PopupWindow
   m_TagString: Untagged
@@ -114,18 +113,6 @@ RectTransform:
   m_AnchoredPosition: {x: 840.21, y: 46.479}
   m_SizeDelta: {x: 830, y: 885.04395}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2856817784523979237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8967083865919244330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64a36ebaf1f55344db7badce62783d1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1394318337552565383
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -241,19 +228,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3127725704282287660, guid: 58cead89cda2e424da894eecbcadd85a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3127725704282287660, guid: 58cead89cda2e424da894eecbcadd85a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2856817784523979237}
+      objectReference: {fileID: 8967083865919244330}
     - target: {fileID: 3127725704282287660, guid: 58cead89cda2e424da894eecbcadd85a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3127725704282287660, guid: 58cead89cda2e424da894eecbcadd85a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Close
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 3127725704282287660, guid: 58cead89cda2e424da894eecbcadd85a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3127725704282287660, guid: 58cead89cda2e424da894eecbcadd85a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

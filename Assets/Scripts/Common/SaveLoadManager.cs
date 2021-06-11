@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -7,33 +8,38 @@ using UnityEngine.SceneManagement;
 
 public class SaveLoadManager
 {
-    private const string fileType = ".dat";
+    private const string fileType = ".sav";
+    private static readonly string saveDirectory = Path.Combine(Application.persistentDataPath, "Game Saves");
+    
+    private static GameFile file;
 
-    public static GameFile file;
-
-    public static void SaveGame(string dir, string filename)
+    public static void LoadGame(string fileName)
     {
-        var datapath = Application.persistentDataPath + "/";
-
-        if (!Directory.Exists(datapath + dir)) Directory.CreateDirectory(datapath + dir);
+        file = new GameFile(fileName);
+        SaveList.Instance.LoadLevel();
+    }
+    
+    public static void SaveGame(string fileName)
+    {
+        if (!Directory.Exists(saveDirectory)) Directory.CreateDirectory(saveDirectory);
 
         var savedGame = new ProgressSave(Game.Instance);
         var bf = new BinaryFormatter();
-        var stream = File.Create(Path.Combine(datapath + dir, filename + fileType));
+        var stream = File.Create(GetPath(fileName));
         bf.Serialize(stream, JsonUtility.ToJson(savedGame));
         stream.Close();
-        Debug.Log(filename + " saved!");
+        
+        Debug.Log(fileName + " saved!");
     }
 
-    public static AsyncOperation LoadLevel()
+    public static bool FileExistsInFiles(string fileName)
     {
-        return SceneManager.LoadSceneAsync("Campaign");
+        return File.Exists(GetPath(fileName));
     }
-
-    public static bool FileExistsInFiles(string d, string f)
+    
+    public static void DeleteFile(string fileName)
     {
-        var datapath = Application.persistentDataPath + '/';
-        return File.Exists(Path.Combine(datapath + d, f + fileType));
+        File.Delete(GetPath(fileName));
     }
 
     public static ProgressSave GetGameData()
@@ -41,28 +47,27 @@ public class SaveLoadManager
         if (file == null) return null;
 
         //keep current selected world
-        var fileLoc = file.FileLocation;
         var fileName = file.FileName;
-
+        var filePath = GetPath(fileName);
+        
         //reset current selected world
         file = null;
 
-        return GetSavedFromFiles(Application.persistentDataPath + '/' + fileLoc, fileName);
-    }
-
-    public static ProgressSave GetSavedFromFiles(string dir, string name)
-    {
+        if (!File.Exists(filePath)) return null;
+        
         var bf = new BinaryFormatter();
-        var stream = File.Open(Path.Combine(dir, name + fileType), FileMode.Open);
+        var stream = File.Open(filePath, FileMode.Open);
         var savedGame = JsonUtility.FromJson<ProgressSave>((string) bf.Deserialize(stream));
         stream.Close();
+        
+        Debug.Log(fileName + " loaded!");
+        
         return savedGame;
     }
-
-    public static void DeleteFile(string dir, string name)
-    {
-        File.Delete(Application.persistentDataPath + '/' + dir + '/' + name + fileType);
-    }
+    
+    public static string GetPath(string fileName) => Path.Combine(saveDirectory, fileName + fileType);
+    public static string[] GetFiles() => Directory.Exists(saveDirectory) ? Directory.GetFiles(saveDirectory, '*' + fileType) : new string[0];
+    
 }
 
 [Serializable]
@@ -70,9 +75,8 @@ public class ProgressSave {
     
     public CameraSave camera;
     public TimeSave time;
-    public DateTime saveDate;
 
-	public List<FactionSave> factions = new List<FactionSave>();
+    public List<FactionSave> factions = new List<FactionSave>();
     public List<CharacterSave> characters = new List<CharacterSave>();
     public List<PartySave> parties = new List<PartySave>();
     public List<SettlementSave> settlements = new List<SettlementSave>();
@@ -80,10 +84,7 @@ public class ProgressSave {
 
     public ProgressSave(Game game) 
     {
-        saveDate = DateTime.Now;
-		Debug.Log(saveDate.ToString("MM/dd/yyyy"));
-
-		//SAVE IN-GAME STUFF
+        //SAVE IN-GAME STUFF
 		time = new TimeSave(game.timeController);
         camera = new CameraSave(game.cameraController);
 

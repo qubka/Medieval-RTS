@@ -57,6 +57,7 @@ public class House : ScriptableObject
     {
         var obj = CreateInstance<House>();
         obj.id = save.id;
+        obj.name = save.name;
         return obj;
     }
     
@@ -85,6 +86,7 @@ public class House : ScriptableObject
 public class HouseSave
 {
     [HideInInspector] public int id;
+    [HideInInspector] public string name;
     [HideInInspector] public string label;
     [HideInInspector] public int leader;
     [HideInInspector] public int tier;
@@ -94,6 +96,7 @@ public class HouseSave
     public HouseSave(House house)
     {
         id = house.id;
+        name = house.name;
         label = house.label;
         leader = house.leader ? house.leader.id : -1;
         tier = house.tier;

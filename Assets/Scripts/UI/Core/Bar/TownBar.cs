@@ -15,15 +15,6 @@ public class TownBar : MonoBehaviour
     [SerializeField] private Sprite disabledImage;
     [SerializeField] private Color activateColor;
     [SerializeField] private Color disabledColor;
-    
-    [Serializable]
-    public class ControlButton
-    {
-        public GameObject target;
-        public Button button;
-        public Image image;
-        public Sprite icon;
-    }
 
     public void Building()
     {

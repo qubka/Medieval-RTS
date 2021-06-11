@@ -26,7 +26,7 @@ public class Character : ScriptableObject
     [Header("Game")]
     public CharacterType type;
     public Settlement home;
-    public List<Settlement> settlements;
+    public List<Settlement> settlements = new List<Settlement>();
 
     [Header("Data")] 
     public Faction faction;
@@ -86,6 +86,7 @@ public class Character : ScriptableObject
     {
         var obj = CreateInstance<Character>();
         obj.id = save.id;
+        obj.name = save.name;
         return obj;
     }
 
@@ -137,6 +138,7 @@ public enum CharacterType
 public class CharacterSave
 {
     [HideInInspector] public int id;
+    [HideInInspector] public string name;
     [HideInInspector] public string surname;
     [HideInInspector] public string title;
     [HideInInspector] public int gender;
@@ -154,6 +156,7 @@ public class CharacterSave
     public CharacterSave(Character character)
     {
         id = character.id;
+        name = character.name;
         surname = character.surname;
         title = character.title;
         gender = (int) character.gender;
