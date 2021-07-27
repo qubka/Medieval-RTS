@@ -4,7 +4,7 @@ using UnityEngine;
 public class SaveLayout : MonoBehaviour
 {
     public TMP_Text label;
-    public TextMeshProUGUI date;
+    public TMP_Text date;
 
     public void Load()
     {

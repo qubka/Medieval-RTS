@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class TownIcon : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TMP_Text text;
     [SerializeField] private Image background;
     [SerializeField] private Image icon;
 

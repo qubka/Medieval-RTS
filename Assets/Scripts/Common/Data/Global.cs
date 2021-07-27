@@ -6,12 +6,15 @@ using UnityEngine;
 [Serializable]
 public class Global : ScriptableObject
 {
+    //TODO: REWORK KEYS
     [Header("Hot Keys")]
     public KeyCode addKey = KeyCode.LeftShift;
     public KeyCode inclusiveKey = KeyCode.LeftControl;
     public KeyCode shiftKey = KeyCode.LeftAlt;
     public KeyCode drawKey = KeyCode.LeftAlt;
     public KeyCode stopKey = KeyCode.Escape;
+
+    #region Resources
 
     [Header("Prefabs")] 
     public GameObject armyPrefab;
@@ -35,7 +38,11 @@ public class Global : ScriptableObject
     public AudioClip placeSound;
     public AudioClip selectSound;
     public AudioClip targetSound;
+
+    #endregion
     
+    #region Layers
+
     [Header("Layers")]
     public LayerMask ground = -1;
     public LayerMask army = -1;
@@ -44,7 +51,11 @@ public class Global : ScriptableObject
     public LayerMask building = -1;
     public LayerMask squad = -1;
     public LayerMask water = -1;
+
+    #endregion
     
+    #region MoraleAttributes
+
     [Header("Attributes")] 
     public MoraleAttribute chargedInFlank;
     public MoraleAttribute chargedInRear;
@@ -74,7 +85,11 @@ public class Global : ScriptableObject
     public MoraleAttribute veryTired;
     public MoraleAttribute winningBattle;
     public MoraleAttribute withoutAmmo;
+
+    #endregion
     
+    #region Cursors
+
     [Header("Cursors")]
     public Texture2D basicCursor;
     public Texture2D moveCursor;
@@ -90,14 +105,19 @@ public class Global : ScriptableObject
     public Texture2D inclusiveCursor;
     public Texture2D lookCursor;
 
-    [Header("Other")]
-    public GUIStyle rectangleStyle;
+    #endregion
+
+    #region Armies
 
     [Header("Peasants")] 
     public Troop[] troops;
     public Model[] models;
     public ExternalBehavior behavior;
+
+    #endregion
     
+    #region Diplomacy
+
     [Header("Kingdom Diplomacy")]
     public bool enableFiefFirstRight = true;
     public int minimumWarDurationInDays = 10;
@@ -164,4 +184,10 @@ public class Global : ScriptableObject
     public int maximumFactionDurationInDays = 120;
     public int factionCreationInfluenceCost = 100;
     public int factionTendency = 0;
+    
+    #endregion
+    
+    [Header("Other")]
+    public GUIStyle rectangleStyle;
+    public int maxTroops = 10;
 }

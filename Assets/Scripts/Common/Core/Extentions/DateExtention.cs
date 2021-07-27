@@ -3,6 +3,12 @@ using System.ComponentModel;
 
 public static class CampaignTime
 {
+    public static bool IsDay(this DateTime date)
+    {
+        var hour = date.Hour;
+        return (hour > 7 && hour < 22);
+    }
+    
     public static Season GetSeason(this DateTime date) 
     {
         var value = date.Month + date.Day / 100f;  // <month>.<day(2 digit)>    

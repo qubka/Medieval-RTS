@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TooltipPopup : Tooltip
 {
-    [SerializeField] private TextMeshProUGUI textMesh;
+    [SerializeField] private TMP_Text textMesh;
     
     public void DisplayInfo(string caption, string description)
     {

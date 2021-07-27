@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+ using BehaviorDesigner.Runtime;
  using Den.Tools;
  using Unity.Mathematics;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class Faction : ScriptableObject
     [Header("Initial")]
     public Troop[] troops;
     public Model[] models;
+    public ExternalBehavior behavior;
 
     public static List<Faction> All => Game.Factions;
     public int TotalStrength => Party.All.Where(p => p.leader.faction == this).Select(p => p.TroopStrength).Sum();
@@ -78,6 +80,13 @@ public class Faction : ScriptableObject
         obj.name = save.name;
         return obj;
     }
+    
+    public static Faction Copy(Faction faction)
+    {
+        var obj = Instantiate(faction);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
 
     public void Load(FactionSave save = null)
     {
@@ -88,7 +97,8 @@ public class Faction : ScriptableObject
             allies = Faction.All.Where(f => save.allies.Contains(f.id)).ToList();
             enemies = Faction.All.Where(f => save.enemies.Contains(f.id)).ToList();
             troops = save.troops;
-            models = save.models; 
+            models = save.models;
+            behavior = save.behavior;
         } else {
             if (leader) leader = Character.All.First(c => c.id == leader.id);
             for (var i = 0; i < allies.Count; i++) {
@@ -98,13 +108,6 @@ public class Faction : ScriptableObject
                 enemies[i] = Faction.All.First(f => f.id == enemies[i].id);
             }
         }
-    }
-
-    public Faction Clone()
-    {
-        var obj = Instantiate(this);
-        obj.name = obj.name.Replace("(Clone)", "");
-        return obj;
     }
 }
 
@@ -120,7 +123,8 @@ public class FactionSave
     [HideInInspector] public int[] enemies;
     [HideInInspector] public Troop[] troops;
     [HideInInspector] public Model[] models;
-
+    [HideInInspector] public ExternalBehavior behavior;
+    
     public FactionSave(Faction faction)
     {
         id = faction.id;
@@ -131,6 +135,7 @@ public class FactionSave
         allies = faction.allies.Select(f => f.id).ToArray();
         enemies = faction.enemies.Select(f => f.id).ToArray();;
         troops = faction.troops;
-        models = faction.models; 
+        models = faction.models;
+        behavior = faction.behavior;
     }
 }

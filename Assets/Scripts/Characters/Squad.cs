@@ -77,7 +77,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     public GameObject cardIndicator;
     public Image cardFlash;
     public Image cardSelect;
-    public TextMeshProUGUI cardNumber;
+    public TMP_Text cardNumber;
     public Image cardClass;
     public GameObject squadLayout;
     [Space(5f)]

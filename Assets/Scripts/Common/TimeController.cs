@@ -6,12 +6,13 @@ using UnityEngine;
 
 public class TimeController : SingletonObject<TimeController>
 {
-    [SerializeField] private TextMeshProUGUI timeLabel;
+    [SerializeField] private TimeBar timeBar;
+    [SerializeField] private TMP_Text timeLabel;
     [SerializeField] private Vector3Int startDate = new Vector3Int(1080, 1, 1);
     [HideInInspector] public DateTime dateTime;
     [HideInInspector] public string dateStamp;
     [HideInInspector] public int prevDay;
-    
+
     public static DateTime Now => Instance.dateTime;
     public static string Date => Instance.dateStamp;
     
@@ -63,6 +64,18 @@ public class TimeController : SingletonObject<TimeController>
     
     private string DateStamp() => dateTime.ToString("d MMMM, yyyy", CultureInfo.InvariantCulture);
     private string DayTime() => Environment.NewLine + StringExtention.GetPrettyName(dateTime.GetTimeOfDay());
+
+    public void Lock()
+    {
+        timeBar.Stop();
+        timeBar.isLocked = true;
+    }
+    
+    public void Unlock()
+    {
+        timeBar.isLocked = false;
+        timeBar.Normal();
+    }
 }
 
 [Serializable]

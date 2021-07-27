@@ -13,7 +13,7 @@ public class AnimatorCrowd : MonoBehaviour
     private Transform worldTransform;
     private AnimationState state;
     
-    private void Start()
+    private void Awake()
     {
         worldTransform = transform;
     }

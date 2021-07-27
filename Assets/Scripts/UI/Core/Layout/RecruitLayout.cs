@@ -10,14 +10,14 @@ public class RecruitLayout : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private Button button;
     [SerializeField] private Image portrait;
     [SerializeField] private Image type;
-    [SerializeField] private TextMeshProUGUI amount;
-    [SerializeField] private TextMeshProUGUI cost;
+    [SerializeField] private TMP_Text amount;
+    [SerializeField] private TMP_Text cost;
 
-    [HideInInspector] public Troop troop;
+    public Troop Troop { get; private set; }
     
     public void SetTroop(Troop troop)
     {
-        this.troop = troop;
+        Troop = troop;
         var data = troop.data;
         portrait.sprite = data.bigIcon;
         type.sprite = data.classIcon;
@@ -37,18 +37,18 @@ public class RecruitLayout : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void Pressed()
     {
-        ArmyManager.Instance.AddTroop(troop.Clone());
+        ArmyManager.Instance.AddTroop(Troop.Clone());
         OnUpdate();
     }
 
     public void OnUpdate()
     {
         var player = Game.Player;
-        if (player.leader.money < troop.data.recruitCost) {
+        if (player.leader.money < Troop.data.recruitCost) {
             cost.color = Color.red;
             portrait.material = gray;
             button.interactable = false;
-        } else if (player.troops.Count >= ArmyManager.Instance.maxTroops) {
+        } else if (player.troops.Count >= Manager.global.maxTroops) {
             cost.color = Color.white;
             portrait.material = gray;
             button.interactable = false;

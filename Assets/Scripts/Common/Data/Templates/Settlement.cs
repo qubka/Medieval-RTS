@@ -95,11 +95,9 @@ public class Settlement : ScriptableObject
         prosperity = math.clamp(prosperity + prosperityGrowth, data.maxProsperity.x, data.maxProsperity.y);
         loyalty = math.clamp(loyalty + loyaltyGrowth, data.maxLoyalty.x, data.maxLoyalty.y);
         food = math.clamp(food + foodProduction, data.maxStock.x, data.maxStock.y + foodStock);
-        ruler.money += Income;
+        if (ruler) ruler.money += Income;
     }
     
-    
-
     public void Build(Building building)
     {
         if (buildings.TryGetValue(building, out var data)) {
@@ -226,6 +224,13 @@ public class Settlement : ScriptableObject
         obj.name = save.name;
         return obj;
     }
+    
+    public static Settlement Copy(Settlement settlement)
+    {
+        var obj = Instantiate(settlement);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
 
     public void Load(SettlementSave save = null)
     {
@@ -273,13 +278,6 @@ public class Settlement : ScriptableObject
                 neighbours[i] = Settlement.All.First(s => s.id == neighbours[i].id);
             }
         }
-    }
-
-    public Settlement Clone()
-    {
-        var obj = Instantiate(this);
-        obj.name = obj.name.Replace("(Clone)", "");
-        return obj;
     }
 }
 

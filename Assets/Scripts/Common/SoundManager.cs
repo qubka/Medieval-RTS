@@ -21,7 +21,7 @@ public class SoundManager : SingletonObject<SoundManager>
     private Transform cameraTransform;
     private CameraController cameraController;
     private AudioSource[] sources;
-    private readonly List<AudioSource> available = new List<AudioSource>();
+    private List<AudioSource> available;
     private readonly Dictionary<Vector3, Sounds> clipTable = new Dictionary<Vector3, Sounds>(1000);
     //private readonly Dictionary<AudioSource, Vector3> playTable = new Dictionary<AudioSource, Vector3>();
 
@@ -32,7 +32,7 @@ public class SoundManager : SingletonObject<SoundManager>
         playRange *= playRange;
         soundRange *= soundRange;
         sources = new AudioSource[maxSounds];
-        available.Capacity = maxSounds;
+        available = new List<AudioSource>(maxSounds);
     }
 
     private void Start()

@@ -18,18 +18,19 @@ public class Party : ScriptableObject
     public List<Troop> troops = new List<Troop>();
     public Settlement localSettlement;
     public Settlement targetSettlement; // for AI
+    public Party enemyParty;
     public ExternalBehavior behavior;
     public int skin;
 
     public static List<Party> All => Game.Parties;
-    public int TroopStrength => troops.Sum(t => t.data.TotalStats);
+    public int TroopStrength => troops.Sum(t => t.size * t.data.TotalStats);
     public int TroopCount => troops.Sum(t => t.size);
     public int TroopWage => -Convert.ToInt32(troops.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
 
     public static void CreatePeasant(Settlement settlement)
     {
         var leader = CreateInstance<Character>();
-        leader.name = "Peasant Leader";
+        leader.name = "Peasant Elder";
         leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
         leader.faction = settlement.ruler.faction;
         leader.type = CharacterType.Peasant;
@@ -39,9 +40,10 @@ public class Party : ScriptableObject
         party.name = "Peasants";
         party.leader = leader;
         party.skin = Random.Range(0, 2);
-
+        party.targetSettlement = settlement.neighbours[0];
+        party.behavior = Manager.global.behavior;
+        
         var count = math.min(math.max(1, settlement.prosperity / 10), 3);
-        //if (party.troops == null) party.troops = new List<Troop>(count);
         var troops = Manager.global.troops;
         for (var i = 0; i < count; i++) {
             party.troops.Add(troops[Random.Range(0, troops.Length)].Clone());
@@ -49,20 +51,50 @@ public class Party : ScriptableObject
         
         Party.All.Add(party);
         Character.All.Add(leader);
-        
-        var army = Instantiate(Manager.global.armyPrefab, settlement.data.doorPosition, settlement.data.doorRotation).GetComponent<Army>();
+
+        var town = settlement.data;
+        var army = Instantiate(Manager.global.armyPrefab, town.doorPosition, town.doorRotation).GetComponent<Army>();
         army.data = party;
-        army.data.targetSettlement = settlement.neighbours[0];
-        army.data.behavior = Manager.global.behavior;
+    }
+
+    public static void CreateBandit()
+    {
+        // Find marauder faction, should be this hardcoded?
+        var faction = Faction.All.First(f => f.id == 0);
+        
+        var leader = CreateInstance<Character>();
+        leader.name = "Bandit Leader";
+        leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
+        leader.faction = faction;
+        leader.type = CharacterType.Bandit;
+        
+        var party = CreateInstance<Party>();
+        party.name = "Bandits";
+        party.leader = leader;
+        party.skin = Random.Range(0, 2);
+        party.behavior = faction.behavior;
+        
+        var count = Random.Range(1, 5);
+        for (var i = 0; i < count; i++) {
+            party.troops.Add(faction.troops[Random.Range(0, faction.troops.Length)].Clone());
+        }
+
+        Party.All.Add(party);
+        Character.All.Add(leader);
+        
+        
+        
+        var army = Instantiate(Manager.global.armyPrefab, pos, rot).GetComponent<Army>();
+        army.data = party;
     }
     
-    public void DestroyParty(bool withLeader = false)
+    public void Destroy(bool withLeader = false)
     {
         Party.All.Remove(this);
-        Destroy(this);
+        ScriptableObject.Destroy(this);
         if (withLeader) {
             Character.All.Remove(leader);
-            Destroy(leader);
+            ScriptableObject.Destroy(leader);
         }
     }
 
@@ -71,6 +103,13 @@ public class Party : ScriptableObject
         var obj = CreateInstance<Party>();
         obj.leader = Character.All.First(c => c.id == save.leader);
         obj.name = save.name;
+        return obj;
+    }
+    
+    public static Party Copy(Party party)
+    {
+        var obj = Instantiate(party);
+        obj.name = obj.name.Replace("(Clone)", "");
         return obj;
     }
 
@@ -84,18 +123,13 @@ public class Party : ScriptableObject
             troops = save.troops;
             if (save.localSettlement != -1) localSettlement = Settlement.All.First(s => s.id == save.localSettlement);
             if (save.targetSettlement != -1) targetSettlement = Settlement.All.First(s => s.id == save.targetSettlement);
+            if (save.enemyParty != -1) enemyParty = Party.All.First(p => p.leader.id == save.enemyParty);
+            behavior = save.behavior;
             skin = save.skin;
         } else {
             if (localSettlement) localSettlement = Settlement.All.First(s => s.id == localSettlement.id);
             if (targetSettlement) targetSettlement = Settlement.All.First(s => s.id == targetSettlement.id);
         }
-    }
-
-    public Party Clone()
-    {
-        var obj = Instantiate(this);
-        obj.name = obj.name.Replace("(Clone)", "");
-        return obj;
     }
 }
 
@@ -120,13 +154,14 @@ public class PartySave
     [HideInInspector] public List<Troop> troops;
     [HideInInspector] public int localSettlement;
     [HideInInspector] public int targetSettlement;
+    [HideInInspector] public int enemyParty;
     [HideInInspector] public ExternalBehavior behavior;
     [HideInInspector] public int skin;
 
     public PartySave(Party party)
     {
         leader = party.leader.id; // cant be null
-        name = party.name; // cant be null
+        name = party.name;
         morale = party.morale;
         speed = party.speed;
         position = party.position;
@@ -134,6 +169,7 @@ public class PartySave
         troops = party.troops;
         localSettlement = party.localSettlement ? party.localSettlement.id : -1;
         targetSettlement = party.targetSettlement ? party.targetSettlement.id : -1;
+        enemyParty = party.enemyParty ? party.enemyParty.leader.id : -1;
         behavior = party.behavior;
         skin = party.skin;
     }

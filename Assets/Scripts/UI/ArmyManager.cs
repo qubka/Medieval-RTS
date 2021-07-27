@@ -6,9 +6,9 @@ using UnityEngine;
 public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
 {
     [Header("Main")]
-    public TownController townController;
-    public TextMeshProUGUI amount;
-    public int maxTroops;
+    public TownWindow townWindow;
+    public BattleWindow battleWindow;
+    public TMP_Text amount;
 
     //variables not visible in the inspector
     [HideInInspector] public List<Troop> selectedTroops = new List<Troop>();
@@ -23,9 +23,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
     private RaycastHit groundHit;
     private bool groundCast;
 
-    private Collider[] colliders = new Collider[1];
-    
-    //public Party player => Game.Player;
+    //private Collider[] colliders = new Collider[1];
 
     public void SetArmy(Army target)
     {
@@ -35,7 +33,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         foreach (var troop in player.troops) {
             AddLayout(troop);
         }
-        amount.text = player.troops.Count + "/" + maxTroops; 
+        amount.text = player.troops.Count + "/" + Manager.global.maxTroops; 
         enabled = true;
     }
 
@@ -168,7 +166,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
             troop.Destroy();
             selectedTroops.RemoveAt(i);
         }
-        amount.text = player.troops.Count + "/" + maxTroops; 
+        amount.text = player.troops.Count + "/" + Manager.global.maxTroops; 
     }
     
     public void Merge()
@@ -185,7 +183,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         var player = Game.Player;
         player.troops.Add(troop);
         AddLayout(troop);
-        amount.text = player.troops.Count + "/" + maxTroops;
+        amount.text = player.troops.Count + "/" + Manager.global.maxTroops;
         player.leader.money -= troop.data.recruitCost;
     }
 }

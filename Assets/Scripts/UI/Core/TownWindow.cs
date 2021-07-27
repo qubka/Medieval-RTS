@@ -4,17 +4,17 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class TownController : TweenBehaviour
+public class TownWindow : TweenBehaviour
 {
-    [SerializeField] private TextMeshProUGUI caption;
-    [SerializeField] private TextMeshProUGUI prosperity;
-    [SerializeField] private TextMeshProUGUI prosperityInc;
-    [SerializeField] private TextMeshProUGUI loyality;
-    [SerializeField] private TextMeshProUGUI loyalityInc;
-    [SerializeField] private TextMeshProUGUI population;
-    [SerializeField] private TextMeshProUGUI populationInc;
-    [SerializeField] private TextMeshProUGUI food;
-    [SerializeField] private TextMeshProUGUI foodInc;
+    [SerializeField] private TMP_Text caption;
+    [SerializeField] private TMP_Text prosperity;
+    [SerializeField] private TMP_Text prosperityInc;
+    [SerializeField] private TMP_Text loyality;
+    [SerializeField] private TMP_Text loyalityInc;
+    [SerializeField] private TMP_Text population;
+    [SerializeField] private TMP_Text populationInc;
+    [SerializeField] private TMP_Text food;
+    [SerializeField] private TMP_Text foodInc;
     [Space]
     [SerializeField] private GameObject tabs;
     [Space]
@@ -25,8 +25,7 @@ public class TownController : TweenBehaviour
     [SerializeField] private GameObject recruitsLayout;
 
     private Dictionary<InfrastructureType, Dictionary<Building, BuildingLayout>> buildings = new Dictionary<InfrastructureType, Dictionary<Building, BuildingLayout>>();
-    private List<RecruitLayout> recruits = new List<RecruitLayout>();
-    private bool recruitsInit;
+    private List<RecruitLayout> recruits;
     
     protected override void Start()
     {
@@ -52,15 +51,14 @@ public class TownController : TweenBehaviour
         var player = Game.Player;
         var settlement = player.localSettlement;
         if (settlement) {
-            if (!recruitsInit) {
+            if (recruits == null) {
                 var troops = player.leader.faction.troops;
-                recruits.Capacity = troops.Length;
+                recruits = new List<RecruitLayout>(troops.Length);
                 foreach (var troop in troops) {
                     var layout = Instantiate(recruitsLayout, recruitsCanvas).GetComponent<RecruitLayout>();
                     layout.SetTroop(troop);
                     recruits.Add(layout);
                 }
-                recruitsInit = true;
             } else {
                 foreach (var layout in recruits) {
                     layout.OnUpdate();

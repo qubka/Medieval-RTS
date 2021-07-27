@@ -2,38 +2,57 @@
 
 public class TimeBar : MonoBehaviour
 {
-    public bool isPaused { get; set; }
     [SerializeField] private GameObject status;
     [SerializeField] private Material play;
     [SerializeField] private Material stop;
     [SerializeField] private Material fast;
     [SerializeField] private Material rapid;
-
+    [SerializeField] private bool stopOnAwake;
+    
+    public bool isPaused { get; set; }
+    public bool isLocked { get; set; }
+    
     private void Awake()
     {
-        Normal();
+        if (stopOnAwake) {
+            Stop();
+        } else {
+            Normal();
+        }
     }
 
     public void Normal()
     {
+        if (isLocked) 
+            return;
+        
         Time.timeScale = 1f;
         Switch(true);
     }
     
     public void Stop()
     {
+        if (isLocked) 
+            return;
+        
         Time.timeScale = 0f;
         Switch(isStop: true);
     }
 
     public void Fast()
     {
+        if (isLocked) 
+            return;
+        
         Time.timeScale = 2f;
         Switch(isFast: true);
     }
 
     public void Rapid()
     {
+        if (isLocked) 
+            return;
+        
         Time.timeScale = 4f;
         Switch(isRapid: true);
     }
@@ -48,11 +67,14 @@ public class TimeBar : MonoBehaviour
         isPaused = isStop;
         status.SetActive(isStop);
     }
-
+    
     private void Update()
     {
+        if (isLocked) 
+            return;
+        
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (isPaused || Time.timeScale > 1f) {
+            if (Time.timeScale == 0f || Time.timeScale > 1f) {
                 Normal();
             } else {
                 Stop();

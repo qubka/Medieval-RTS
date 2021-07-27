@@ -1,5 +1,4 @@
-﻿
-using UnityEngine.AI;
+﻿using UnityEngine.AI;
 
 public static class AgentExtention
 {

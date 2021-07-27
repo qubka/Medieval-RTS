@@ -7,7 +7,7 @@ public class RecruitInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Manager.chartPopup.DisplayInfo(layout.troop);
+        Manager.chartPopup.DisplayInfo(layout.Troop);
     }
 
     public void OnPointerExit(PointerEventData eventData)

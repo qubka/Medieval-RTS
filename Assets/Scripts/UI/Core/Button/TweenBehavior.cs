@@ -41,7 +41,7 @@ public abstract class TweenBehaviour : MonoBehaviour
         var current = rectTransform.localPosition.x;
         var target = rectTransform.sizeDelta.x / (value ? 2f : -2f);
 
-        gameObject.Tween(name + "Move", current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, Move);
+        gameObject.Tween(name + "_Move_" + GetInstanceID(), current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, Move);
     }
 
     public virtual void Shift(bool value)
@@ -54,7 +54,7 @@ public abstract class TweenBehaviour : MonoBehaviour
         var current = rectTransform.localPosition.y;
         var target = value ? initial + offset : initial;
 
-        gameObject.Tween(name + "Shift", current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, Shift);
+        gameObject.Tween(name + "_Shift_" + GetInstanceID(), current, target, 0.5f, TweenScaleFunctions.CubicEaseInOut, Shift);
     }
 
     public void Move(ITween<float> obj)

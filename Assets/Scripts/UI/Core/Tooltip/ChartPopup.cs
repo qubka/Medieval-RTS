@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ChartPopup : Tooltip
 {
-    [SerializeField] private TextMeshProUGUI caption;
+    [SerializeField] private TMP_Text caption;
     [SerializeField] private StatsRadarChart chart;
 
     public void DisplayInfo(Troop troop)

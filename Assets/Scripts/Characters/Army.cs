@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using BehaviorDesigner.Runtime;
 using GPUInstancer.CrowdAnimations;
@@ -14,8 +15,8 @@ public class Army : MonoBehaviour, IGameObject
 
     [Header("Children References")]
     //[Space(10f)]
-    public GameObject armyIcon;
-    private TextMeshProUGUI iconText;
+    [SerializeField] private GameObject armyIcon;
+    private TMP_Text iconText;
     private GameObject armyBanner;
     [Space(10f)]
     [HideInInspector] public Transform worldTransform;
@@ -79,7 +80,7 @@ public class Army : MonoBehaviour, IGameObject
         if (data.leader.IsPlayer) {
             manager = ArmyManager.Instance;
             manager.SetArmy(this);
-        } else {
+        } else if (data.behavior) {
             var tree = gameObject.AddComponent<BehaviorTree>();
             tree.ExternalBehavior = data.behavior;
         }
@@ -89,7 +90,7 @@ public class Army : MonoBehaviour, IGameObject
         objectTable.Add(gameObject, this);
 
         // Parent a bar to the screen
-        iconText = iconTransform.GetComponentInChildren<TextMeshProUGUI>();
+        iconText = iconTransform.GetComponentInChildren<TMP_Text>();
         iconText.color = data.leader.IsPlayer ? Color.green : (Color) data.leader.faction.color;
         iconText.text = data.TroopCount.ToString();
         iconTransform.SetParent(Manager.holderCanvas, false);
@@ -106,16 +107,30 @@ public class Army : MonoBehaviour, IGameObject
             animator.Create();
         }
 
-        // TODO: Finish save for town waiting
+        // Repeat code if game is paused on world load
+        
         if (data.localSettlement) {
             Debug.Log("Entered city!");
             SetVisibility(false);
             if (data.leader.IsPlayer) {
-                var controller = manager.townController;
+                var controller = manager.townWindow;
                 controller.Toggle(data.localSettlement);
                 controller.OnUpdate();
             }
+        } else {
+            var player = Game.Player;
+            if (player && player != data) {
+                var distance = Vector.Distance(data.position, player.position);
+                SetVisibility(distance <= (TimeController.Now.IsDay() ? 100f : 50f));
+            }
         }
+
+        if (data.enemyParty) {
+            
+        }
+        
+        // Call some repeat func
+        StartCoroutine(Tick());
     }
 
     public void Update()
@@ -124,28 +139,20 @@ public class Army : MonoBehaviour, IGameObject
         data.position = pos;
         data.rotation = worldTransform.rotation;
 
-        if (isVisible) {
-            // Calculate position for the ui bar
-            pos.y += canvasHeight;
-            pos = camera.WorldToScreenPoint(pos);
+        if (data.enemyParty) {
+            armyIcon.SetActive(false);
+        } else {
+            if (isVisible) {
+                // Calculate position for the ui bar
+                pos.y += canvasHeight;
+                pos = camera.WorldToScreenPoint(pos);
         
-            // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
-            if (pos.z < 0f) {
-                armyIcon.SetActive(false);
-            } else {
-                iconTransform.position = pos;
-                armyIcon.SetActive(true);
-            }
-
-            var troopCount = data.TroopCount;
-            if (lastTroopCount != troopCount) {
-                iconText.text = troopCount.ToString();
-                lastTroopCount = troopCount;
-            }
-            
-            if (agent.velocity.SqMagnitude() > 0f) {
-                if(!isFootstepPlaying) {
-                    StartCoroutine(PlayFootstep());
+                // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
+                if (pos.z < 0f) {
+                    armyIcon.SetActive(false);
+                } else {
+                    iconTransform.position = pos;
+                    armyIcon.SetActive(true);
                 }
             }
         }
@@ -156,9 +163,10 @@ public class Army : MonoBehaviour, IGameObject
             } else if (agent.IsArrived()) {
                 switch (target.GetUI()) {
                     case UI.Settlement:
-                        OnSettlementEnter((target as Town)?.data);
+                        OnSettlementInteraction((target as Town)?.data);
                         break;
                     case UI.Army:
+                        OnPartyInteraction((target as Army)?.data);
                         break;
                 }
                 target = null;
@@ -166,6 +174,39 @@ public class Army : MonoBehaviour, IGameObject
                 // Update destination for player only
                 if (data.leader.IsPlayer && target.GetUI() == UI.Army) {
                     agent.SetDestination(target.GetPosition());
+                }
+            }
+        }
+    }
+    
+    private IEnumerator Tick()
+    {
+        while (true) {
+            OnUpdate();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void OnUpdate()
+    {
+        if (!data.localSettlement) {
+            var player = Game.Player;
+            if (player && player != data) {
+                var distance = Vector.Distance(data.position, player.position);
+                SetVisibility(distance <= (TimeController.Now.IsDay() ? 100f : 50f));
+            }
+        }
+
+        if (isVisible) {
+            var troopCount = data.TroopCount;
+            if (lastTroopCount != troopCount) {
+                iconText.text = troopCount.ToString();
+                lastTroopCount = troopCount;
+            }
+            
+            if (agent.velocity.SqMagnitude() > 0f) {
+                if(!isFootstepPlaying) {
+                    StartCoroutine(PlayFootstep());
                 }
             }
         }
@@ -210,15 +251,30 @@ public class Army : MonoBehaviour, IGameObject
             var town = data.localSettlement.data;
             var pos = town.doorPosition;
             var rot = town.doorRotation;
-            OnSettlementEnter(null);
+            OnSettlementInteraction(null);
             worldTransform.SetPositionAndRotation(pos, rot);
         }
     } 
     
-    public void OnSettlementEnter(Settlement settlement)
+    public void OnSettlementInteraction(Settlement settlement)
     {
         if (settlement) {
             Debug.Log("Entered settlement!");
+            
+            if (data.leader.IsPeasant) {
+                switch (settlement.type) {
+                    case InfrastructureType.Village:
+                        data.Destroy(true);
+                        settlement.prosperity++;
+                        Destroy();
+                        return;
+                    case InfrastructureType.City:
+                    case InfrastructureType.Castle:
+                        StartCoroutine(ContributionToProsperity());
+                        break;
+                }
+            }
+            
             settlement.parties.Add(data);
         } else {
             Debug.Log("Leave settlement!");
@@ -226,36 +282,35 @@ public class Army : MonoBehaviour, IGameObject
         }
         SetVisibility(!settlement);
         if (data.leader.IsPlayer) {
-            var controller = manager.townController;
+            var controller = manager.townWindow;
             controller.Toggle(settlement);
             controller.OnUpdate();
         }
         data.localSettlement = settlement;
+    }
 
-        if (settlement && data.leader.IsPeasant) {
-            switch (settlement.type) {
-                case InfrastructureType.Village:
-                    data.DestroyParty(true);
-                    data.localSettlement.prosperity++;
-                    armyTable.Remove(gameObject);
-                    objectTable.Remove(gameObject);
-                    
-                    // Remove instances
-                    foreach (var animator in animators) {
-                        animator.Remove();
-                    }
-                    
-                    DestroyImmediate(gameObject);
-                    break;
-                case InfrastructureType.City:
-                case InfrastructureType.Castle:
-                    StartCoroutine(VillagesEntered());
-                    break;
+    public void OnPartyInteraction(Party enemy)
+    {
+        if (data.leader.IsPlayer) {
+            
+        } else {
+            if (!BattleTable.Instance.Values.Any(b => b.Equals(enemy))) {
+                var obj = new GameObject();
+                var battle = obj.AddComponent<Battle>();
+                BattleTable.Instance.Add(obj, battle);
+                
+                battle.party1 = data;
+                battle.party2 = enemy;
+
+                data.enemyParty = enemy;
+                enemy.enemyParty = data;
             }
+            
+            
         }
     }
 
-    private IEnumerator VillagesEntered()
+    private IEnumerator ContributionToProsperity()
     {
         yield return new WaitForSeconds(1f); // wait to lock behavior tree
         data.localSettlement.prosperity++;
@@ -417,5 +472,19 @@ public class Army : MonoBehaviour, IGameObject
         yield return new WaitForSeconds(model.interval);
 
         isFootstepPlaying = false;
+    }
+
+    private void Destroy()
+    {
+        armyTable.Remove(gameObject);
+        objectTable.Remove(gameObject);
+                    
+        // Remove instances
+        foreach (var animator in animators) {
+            animator.Remove();
+        }
+        
+        Destroy(armyIcon);
+        DestroyImmediate(gameObject);
     }
 }

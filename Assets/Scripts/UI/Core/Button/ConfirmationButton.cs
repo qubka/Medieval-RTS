@@ -8,5 +8,5 @@ public class ConfirmationButton
 {
     public GameObject target;
     public Button button;
-    public TextMeshProUGUI text;
+    public TMP_Text text;
 }

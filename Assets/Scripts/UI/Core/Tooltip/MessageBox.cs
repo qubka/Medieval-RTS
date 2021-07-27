@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class MessageBox : MonoBehaviour 
 {
-	[SerializeField] private TextMeshProUGUI mainText;
+	[SerializeField] private TMP_Text mainText;
 	[Space]
 	[SerializeField] private GameObject actions;
 	[SerializeField] private ConfirmationButton yes;

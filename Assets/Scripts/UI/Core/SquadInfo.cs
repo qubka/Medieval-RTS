@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 public class SquadInfo : Tooltip
 {
-    [SerializeField] private TextMeshProUGUI caption;
-    [SerializeField] private TextMeshProUGUI status;
-    [SerializeField] private TextMeshProUGUI count;
+    [SerializeField] private TMP_Text caption;
+    [SerializeField] private TMP_Text status;
+    [SerializeField] private TMP_Text count;
     [SerializeField] private Image type;
     [SerializeField] private Slider morale;
     [Space]
     [SerializeField] private RectTransform attributeCanvas;
     [SerializeField] private GameObject attributeLayout;
-    [SerializeField] private TextMeshProUGUI attributeField;
+    [SerializeField] private TMP_Text attributeField;
     [Space] 
     [SerializeField] private Image countBackground;
     [SerializeField] private Image typeBackground;

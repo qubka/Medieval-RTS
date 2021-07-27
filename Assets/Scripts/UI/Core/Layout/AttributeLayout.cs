@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class AttributeLayout : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI title;
-    [SerializeField] private TextMeshProUGUI bonus;
+    [SerializeField] private TMP_Text title;
+    [SerializeField] private TMP_Text bonus;
     [SerializeField] private Image icon;
     [SerializeField] private RectTransform arrow;
 

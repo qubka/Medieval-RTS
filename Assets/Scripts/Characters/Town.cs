@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -89,8 +90,11 @@ public class Town : MonoBehaviour, IGameObject
         ObjectTable.Instance.Add(gameObject, this);
         
         // Register events
-        Events.DailyTickEvent.AddListener(DailyTick);
-        Events.WeeklyTickEvent.AddListener(WeeklyTick);
+        Events.DailyTickEvent.AddListener(() => data.DailyTick());
+        Events.WeeklyTickEvent.AddListener(() => data.WeeklyTick());
+        
+        // Call some repeat func
+        StartCoroutine(Tick());
         
         // Skip on village
         if (data.IsVillage)
@@ -168,9 +172,19 @@ public class Town : MonoBehaviour, IGameObject
                 }
             }
         }
-
-        var time = TimeController.Now.Hour;
-        var isDay = (time > 7 && time < 22);
+    }
+    
+    private IEnumerator Tick()
+    {
+        while (true) {
+            OnUpdate();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    
+    private void OnUpdate()
+    {
+        var isDay = TimeController.Now.IsDay();
         mainAudio.clip = isDay ? communitySounds.daySound : communitySounds.nightSound;
         if (!mainAudio.isPlaying) {
             mainAudio.Play();
@@ -424,14 +438,4 @@ public class Town : MonoBehaviour, IGameObject
     }
     
     #endregion
-    
-    private void DailyTick()
-    {
-        data.DailyTick();
-    }
-    
-    private void WeeklyTick()
-    {
-        data.WeeklyTick();
-    }
 }

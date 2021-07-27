@@ -1,6 +1,4 @@
-﻿
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -8,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SaveList : SingletonObject<SaveList>
+public class SaveManager : SingletonObject<SaveManager>
 {
     [SerializeField] private RectTransform saveCanvas;
     [SerializeField] private GameObject saveLayout;
@@ -24,7 +22,7 @@ public class SaveList : SingletonObject<SaveList>
             var obj = Instantiate(saveLayout, saveCanvas);
             var layout = obj.GetComponent<SaveLayout>();
             layout.label.text = Path.GetFileNameWithoutExtension(file);
-            layout.date.text = File.GetLastWriteTime(file).ToString("dd MMM, yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            layout.date.text = File.GetLastWriteTime(file).ToString("dd MMM, yyyy HH:mm", CultureInfo.InvariantCulture);
             saves.Add(obj);
         }
     }
@@ -43,13 +41,17 @@ public class SaveList : SingletonObject<SaveList>
     
     private IEnumerator LoadAsyncLevel()
     {
-        var operation = SceneManager.LoadSceneAsync("Campaign");
-
         loadingScreen.SetActive(true);
         
+        var operation = SceneManager.LoadSceneAsync("Campaign");
+        operation.allowSceneActivation = false;
+        
         while (!operation.isDone) {
-            var progress = MathExtention.Clamp01(operation.progress / 0.9f);
-            loadingSlider.value = progress;
+            if (operation.progress < 0.9f) {
+                loadingSlider.value = operation.progress;
+            } else {              
+                operation.allowSceneActivation = true;             
+            }
             yield return null;
         }
         

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c1c28556e6c4e7484cd742926bba4c1, type: 3}
   m_Name: Marauders
   m_EditorClassIdentifier: 
-  id: 4
+  id: 0
   label: Marauders
   color:
     serializedVersion: 2
@@ -30,15 +30,11 @@ MonoBehaviour:
     primaryPrefabs:
     - {fileID: 2075701848563991333, guid: 8fe8c9ff2d9cd84419b4297ac00959d5, type: 3}
     secondaryPrefabs: []
-    card: {fileID: 0}
-    layout: {fileID: 0}
   - size: 48
     data: {fileID: 11400000, guid: 552d93e60766cbb459a7db840a4a6efe, type: 2}
     primaryPrefabs:
     - {fileID: 4182769153587292612, guid: 5589071451044404d84dee7e13b9552c, type: 3}
     secondaryPrefabs: []
-    card: {fileID: 0}
-    layout: {fileID: 0}
   models:
   - primary: {fileID: 5766795129214813177, guid: 87e5caeaf3ba80840a6b8a70a4fba917, type: 3}
     secondary: {fileID: 0}
@@ -48,3 +44,4 @@ MonoBehaviour:
     secondary: {fileID: 0}
     footstepSounds: {fileID: 11400000, guid: e1b68fb49ae11004c880f7774d644f9c, type: 2}
     interval: 0.4
+  behavior: {fileID: 11400000, guid: c94dd5680947fc841bb3b0182da14bee, type: 2}

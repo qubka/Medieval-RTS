@@ -7,13 +7,14 @@ public class TroopCard : MonoBehaviour
     [SerializeField] private GameObject bottom;
     [SerializeField] private Image icon;
     [SerializeField] private Image type;
-    [SerializeField] private TextMeshProUGUI amount;
+    [SerializeField] private TMP_Text amount;
     [SerializeField] private Image shadow;
-    [HideInInspector] public Troop troop;
+    
+    public Troop Troop { get; private set; }
     
     public void SetTroop(Troop troop)
     {
-        this.troop = troop;
+        Troop = troop;
         var data = troop.data;
         icon.sprite = data.bigIcon;
         type.sprite = data.classIcon;

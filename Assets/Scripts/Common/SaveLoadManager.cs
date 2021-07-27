@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,14 +11,14 @@ using UnityEngine.SceneManagement;
 public class SaveLoadManager
 {
     private const string fileType = ".sav";
-    private static readonly string saveDirectory = Path.Combine(Application.persistentDataPath, "Game Saves");
+    private static readonly string saveDirectory = Path.Combine(Application.persistentDataPath, "GameSaves");
     
     private static GameFile file;
 
     public static void LoadGame(string fileName)
     {
         file = new GameFile(fileName);
-        SaveList.Instance.LoadLevel();
+        SaveManager.Instance.LoadLevel();
     }
     
     public static void SaveGame(string fileName)
@@ -26,7 +28,7 @@ public class SaveLoadManager
         var savedGame = new ProgressSave(Game.Instance);
         var bf = new BinaryFormatter();
         var stream = File.Create(GetPath(fileName));
-        bf.Serialize(stream, JsonUtility.ToJson(savedGame));
+        bf.Serialize(stream, Zip(JsonUtility.ToJson(savedGame)));
         stream.Close();
         
         Debug.Log(fileName + " saved!");
@@ -57,7 +59,7 @@ public class SaveLoadManager
         
         var bf = new BinaryFormatter();
         var stream = File.Open(filePath, FileMode.Open);
-        var savedGame = JsonUtility.FromJson<ProgressSave>((string) bf.Deserialize(stream));
+        var savedGame = JsonUtility.FromJson<ProgressSave>(UnZip((byte[]) bf.Deserialize(stream)));
         stream.Close();
         
         Debug.Log(fileName + " loaded!");
@@ -67,7 +69,24 @@ public class SaveLoadManager
     
     public static string GetPath(string fileName) => Path.Combine(saveDirectory, fileName + fileType);
     public static string[] GetFiles() => Directory.Exists(saveDirectory) ? Directory.GetFiles(saveDirectory, '*' + fileType) : new string[0];
-    
+
+    private static byte[] Zip(string str)
+    {
+        using var output = new MemoryStream();
+        using (var gzip = new DeflateStream(output, CompressionMode.Compress)) {
+            using var writer = new StreamWriter(gzip, System.Text.Encoding.UTF8);
+            writer.Write(str);
+        }
+        return output.ToArray();
+    }
+
+    private static string UnZip(byte[] input)
+    {
+        using var inputStream = new MemoryStream(input);
+        using var gzip = new DeflateStream(inputStream, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, System.Text.Encoding.UTF8);
+        return reader.ReadToEnd();
+    }
 }
 
 [Serializable]
@@ -76,42 +95,21 @@ public class ProgressSave {
     public CameraSave camera;
     public TimeSave time;
 
-    public List<FactionSave> factions = new List<FactionSave>();
-    public List<CharacterSave> characters = new List<CharacterSave>();
-    public List<PartySave> parties = new List<PartySave>();
-    public List<SettlementSave> settlements = new List<SettlementSave>();
-    public List<HouseSave> houses = new List<HouseSave>();
+    public FactionSave[] factions;
+    public CharacterSave[] characters;
+    public PartySave[] parties;
+    public SettlementSave[] settlements;
+    public HouseSave[] houses;
 
     public ProgressSave(Game game) 
     {
-        //SAVE IN-GAME STUFF
 		time = new TimeSave(game.timeController);
         camera = new CameraSave(game.cameraController);
-
-        //SAVE OBJECTS FROM PARENT
-        factions.Capacity = game.factions.Count;
-        foreach (var faction in game.factions) {
-            factions.Add(new FactionSave(faction));
-        }
         
-        characters.Capacity = game.characters.Count;
-        foreach (var character in game.characters) {
-            characters.Add(new CharacterSave(character));
-        }
-        
-        parties.Capacity = game.parties.Count;
-        foreach (var party in game.parties) {
-            parties.Add(new PartySave(party));
-        }
-        
-        settlements.Capacity = game.settlements.Count;
-        foreach (var settlement in game.settlements) {
-            settlements.Add(new SettlementSave(settlement));
-        }
-        
-        houses.Capacity = game.houses.Count;
-        foreach (var house in game.houses) {
-            houses.Add(new HouseSave(house));
-        }
+        factions = game.factions.Select(f => new FactionSave(f)).ToArray();
+        characters = game.characters.Select(c => new CharacterSave(c)).ToArray();
+        parties = game.parties.Select(p => new PartySave(p)).ToArray();
+        settlements = game.settlements.Select(s => new SettlementSave(s)).ToArray();
+        houses = game.houses.Select(h => new HouseSave(h)).ToArray();
     }
 }

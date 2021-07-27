@@ -4,7 +4,6 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Medieval/Morale Attribute Config", order = 0)]
 [Serializable]
-[InitializeOnLoad]
 public class MoraleAttribute : ScriptableObject
 {
     public int bonus;

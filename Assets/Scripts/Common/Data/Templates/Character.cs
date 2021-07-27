@@ -38,8 +38,6 @@ public class Character : ScriptableObject
     public bool IsPeasant => type == CharacterType.Peasant;
     public bool IsBandit => type == CharacterType.Bandit;
     public bool IsNoble => type == CharacterType.Noble;
-    
-    #region Serialization
 
 #if UNITY_EDITOR    
     public void GenerateName(CharacterNames names)
@@ -57,36 +55,18 @@ public class Character : ScriptableObject
     }
 #endif
 
-    /*public override void OnSerialization()
-    {
-        factionId = faction ? faction.id : -1;
-        houseId = house ? house.id : -1;
-        homeId = home ? home.id : -1;
-        settlementsIds = new int[settlements.Count];
-        for (var i = 0; i < settlements.Count; i++) {
-            settlementsIds[i] = settlements[i].id;
-        }
-    }
-
-    public override void OnDeserialization()
-    {
-        
-        settlements.Capacity = settlementsIds.Length;
-        foreach (var settlementId in settlementsIds) {
-            settlements.Add(Game.Settlements.Find(s => s.id == settlementId));
-        }
-        if (settlementsIds.Length > 0) {
-            settlementsIds = new int[0];
-        }
-    }*/
-    
-    #endregion
-
     public static Character Create(CharacterSave save)
     {
         var obj = CreateInstance<Character>();
         obj.id = save.id;
         obj.name = save.name;
+        return obj;
+    }
+    
+    public static Character Copy(Character character)
+    {
+        var obj = Instantiate(character);
+        obj.name = obj.name.Replace("(Clone)", "");
         return obj;
     }
 
@@ -106,7 +86,6 @@ public class Character : ScriptableObject
             if (save.faction != -1) faction = Faction.All.First(f => f.id == save.faction);
             if (save.house != -1) house = House.All.First(h => h.id == save.house);
             settlements = Settlement.All.Where(s => save.settlements.Contains(s.id)).ToList();
-            
         } else {
             if (home) home = Settlement.All.First(s => s.id == home.id);
             if (faction) faction = Faction.All.First(f => f.id == faction.id);
@@ -115,13 +94,6 @@ public class Character : ScriptableObject
                 settlements[i] = Settlement.All.First(s => s.id == settlements[i].id);
             }
         }
-    }
-
-    public Character Clone()
-    {
-        var obj = Instantiate(this);
-        obj.name = obj.name.Replace("(Clone)", "");
-        return obj;
     }
 }
 

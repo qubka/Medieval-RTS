@@ -2008,6 +2008,8 @@
         <e p="Scripts" t="Include">
           <e p="Characters" t="Include">
             <e p="Army.cs" t="Include" />
+            <e p="Battle.cs" t="Include" />
+            <e p="Footstep.cs" t="Include" />
             <e p="Obstacle.cs" t="Include" />
             <e p="Projectile.cs" t="Include" />
             <e p="Squad.cs" t="Include" />
@@ -2112,6 +2114,7 @@
             <e p="SoundManager.cs" t="Include" />
             <e p="Tables" t="Include">
               <e p="ArmyTable.cs" t="Include" />
+              <e p="BattleTable.cs" t="Include" />
               <e p="ObjectTable.cs" t="Include" />
               <e p="ObstacleTable.cs" t="Include" />
               <e p="SquadTable.cs" t="Include" />
@@ -2160,6 +2163,7 @@
                 <e p="TownBar.cs" t="Include" />
                 <e p="TroopBar.cs" t="Include" />
               </e>
+              <e p="BattleWindow.cs" t="Include" />
               <e p="Button" t="Include">
                 <e p="ConfirmationButton.cs" t="Include" />
                 <e p="ControlButton.cs" t="Include" />
@@ -2176,6 +2180,7 @@
                 <e p="MoneyInfo.cs" t="Include" />
                 <e p="RecruitInfo.cs" t="Include" />
                 <e p="TroopInfo.cs" t="Include" />
+                <e p="UnitInfo.cs" t="Include" />
               </e>
               <e p="Layout" t="Include">
                 <e p="AttributeLayout.cs" t="Include" />
@@ -2187,6 +2192,7 @@
                 <e p="SquadLayout.cs" t="Include" />
                 <e p="TroopCard.cs" t="Include" />
                 <e p="TroopLayout.cs" t="Include" />
+                <e p="UnitLayout.cs" t="Include" />
               </e>
               <e p="Other" t="Include">
                 <e p="AnimatedWindowController.cs" t="Include" />
@@ -2212,9 +2218,9 @@
                 <e p="Tooltip.cs" t="Include" />
                 <e p="TooltipPopup.cs" t="Include" />
               </e>
-              <e p="TownController.cs" t="Include" />
               <e p="TownIcon.cs" t="Include" />
               <e p="TownInfo.cs" t="Include" />
+              <e p="TownWindow.cs" t="Include" />
               <e p="Transform" t="Include">
                 <e p="LayoutExpander.cs" t="Include" />
                 <e p="ScaleGrid.cs" t="Include" />
@@ -2230,10 +2236,11 @@
             <e p="Effects" t="Include">
               <e p="FadeEffect.cs" t="Include" />
               <e p="RotateEffect.cs" t="Include" />
+              <e p="ScreenFader.cs" t="Include" />
               <e p="Tween.cs" t="Include" />
             </e>
             <e p="InformationManager.cs" t="Include" />
-            <e p="SaveList.cs" t="Include" />
+            <e p="SaveManager.cs" t="Include" />
             <e p="Settings.cs" t="Include" />
             <e p="SortByDistance.cs" t="Include" />
             <e p="SquadManager.cs" t="Include" />

@@ -86,7 +86,7 @@ public class Layout<T> : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, 
     public void OnPointerEnter(PointerEventData eventData)
     {
         var troopLayout = manager.GetLayout();
-        if (troopLayout != null && troopLayout != this) {
+        if (troopLayout != null && !ReferenceEquals(troopLayout, this)) {
             var newPos = worldTransform.GetSiblingIndex();
             var oldPos = troopLayout.GetTransform().GetSiblingIndex();
             troopLayout.GetTransform().SetSiblingIndex(newPos);

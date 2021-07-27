@@ -15,13 +15,13 @@ public class HideButton : MonoBehaviour
     public class Rect
     {
         public RectTransform transform;
-        [HideInInspector] public float y;
+        [HideInInspector] public float initial;
     }
     
     private void Awake()
     {
         foreach (var rect in rectangles) {
-            rect.y = rect.transform.localPosition.y;
+            rect.initial = rect.transform.localPosition.y;
         }
     }
 
@@ -32,7 +32,7 @@ public class HideButton : MonoBehaviour
         foreach (var rect in rectangles) {
             var trans = rect.transform;
             var current = trans.localPosition.y;
-            var target = enable ? rect.y : rect.y - trans.sizeDelta.y;
+            var target = enable ? rect.initial : rect.initial - trans.sizeDelta.y;
 
             void Movement(ITween<float> t) {
                 var pos = trans.localPosition;
@@ -41,7 +41,8 @@ public class HideButton : MonoBehaviour
             }
 
             var obj = trans.gameObject;
-            obj.Tween(obj.name, current, target, 1f, TweenScaleFunctions.CubicEaseOut, Movement);
+            obj.Tween(obj.name + '_' + obj.GetInstanceID(), current, target, 1f, TweenScaleFunctions.CubicEaseOut, Movement);
         }
     }
+    
 }

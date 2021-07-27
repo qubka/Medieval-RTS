@@ -61,6 +61,13 @@ public class House : ScriptableObject
         return obj;
     }
     
+    public static House Copy(House house)
+    {
+        var obj = Instantiate(house);
+        obj.name = obj.name.Replace("(Clone)", "");
+        return obj;
+    }
+    
     public void Load(HouseSave save = null)
     {
         if (save != null) {
@@ -72,13 +79,6 @@ public class House : ScriptableObject
         } else {
             if (leader) leader = Character.All.First(c => c.id == leader.id);
         }
-    }
-
-    public House Clone()
-    {
-        var obj = Instantiate(this);
-        obj.name = obj.name.Replace("(Clone)", "");
-        return obj;
     }
 }
 

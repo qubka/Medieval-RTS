@@ -7,7 +7,7 @@ public class TroopInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Manager.chartPopup.DisplayInfo(card.troop);
+        Manager.chartPopup.DisplayInfo(card.Troop);
     }
 
     public void OnPointerExit(PointerEventData eventData)

@@ -16,7 +16,7 @@ public class BuildingInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             .Append("</color>")
             .AppendLine();
         
-        foreach (var effect in layout.building.effects) {
+        foreach (var effect in layout.Building.effects) {
             builder
                 .Append(StringExtention.GetPrettyName(effect.effect))
                 .Append(':')
@@ -33,9 +33,9 @@ public class BuildingInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             .Append("Description:")
             .Append("</color>")
             .AppendLine()
-            .Append(layout.building.description);
+            .Append(layout.Building.description);
         
-        Manager.fixedPopup.DisplayInfo(layout.building.name, builder.ToString());
+        Manager.fixedPopup.DisplayInfo(layout.Building.name, builder.ToString());
     }
 
     public void OnPointerExit(PointerEventData eventData)

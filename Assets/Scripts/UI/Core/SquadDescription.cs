@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class SquadDescription : TweenBehaviour
 {
-    [SerializeField] private TextMeshProUGUI caption;
-    [SerializeField] private TextMeshProUGUI count;
-    [SerializeField] private TextMeshProUGUI killed;
+    [SerializeField] private TMP_Text caption;
+    [SerializeField] private TMP_Text count;
+    [SerializeField] private TMP_Text killed;
     [SerializeField] private Image icon;
     [SerializeField] private StatsRadarChart chart;
     [SerializeField] private int layoutTrigger = 12;

@@ -8,7 +8,7 @@ using Slider = UnityEngine.UI.Slider;
 public class BuildingLayout : MonoBehaviour
 {
     [SerializeField] private Image icon;
-    [SerializeField] private TextMeshProUGUI label;
+    [SerializeField] private TMP_Text label;
     [SerializeField] private Image level;
     [SerializeField] private Button button;
     [Space]
@@ -22,21 +22,21 @@ public class BuildingLayout : MonoBehaviour
     [Space]
     [SerializeField] private Sprite[] levelIcons;
 
-    [HideInInspector] public Settlement settlement;
-    [HideInInspector] public Building building;
+    public Settlement Settlement { get; private set; }
+    public Building Building { get; private set; }
 
     public void SetBuilding(Settlement settlement, Building building)
     {
-        this.settlement = settlement;
-        this.building = building;
+        Settlement = settlement;
+        Building = building;
     }
     
     public void Enable(Pack<int, float> data)
     {
         button.interactable = true;
         disabled.SetActive(false);
-        icon.sprite = building.icon;
-        label.text = building.name;
+        icon.sprite = Building.icon;
+        label.text = Building.name;
         level.sprite = levelIcons[data.item1];
         if (data.item2 < 1f) {
             slider.value = data.item2;
@@ -53,12 +53,12 @@ public class BuildingLayout : MonoBehaviour
     {
         button.interactable = true;
         
-        icon.sprite = building.icon;
-        label.text = building.name;
+        icon.sprite = Building.icon;
+        label.text = Building.name;
         
-        if (building.dependencies.Length > 0) {
-            foreach (var resource in building.dependencies) {
-                if (!settlement.resources.Contains(resource)) {
+        if (Building.dependencies.Length > 0) {
+            foreach (var resource in Building.dependencies) {
+                if (!Settlement.resources.Contains(resource)) {
                     button.interactable = false;
                     disabled.SetActive(true);
                     break;
@@ -78,7 +78,7 @@ public class BuildingLayout : MonoBehaviour
 
     public void Pressed()
     {
-        settlement.Build(building);
-        ArmyManager.Instance.townController.OnUpdate();
+        Settlement.Build(Building);
+        ArmyManager.Instance.townWindow.OnUpdate();
     }
 }
