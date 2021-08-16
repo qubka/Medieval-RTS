@@ -57,6 +57,9 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         if (groundCast && !border.IsOutsideBorder(groundHit.point)) {
             if (Physics.Raycast(groundRay, out var hit, Manager.TerrainDistance, Manager.Building | Manager.Army)) {
                 var obj = ObjectTable.Instance[hit.transform.gameObject];
+                if (ReferenceEquals(army, obj))
+                    return;
+                
                 if (obj is Town town) {
                     army.SetDestination(town.doorPosition, obj);
                 } else {
@@ -185,5 +188,13 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         AddLayout(troop);
         amount.text = player.troops.Count + "/" + Manager.global.maxTroops;
         player.leader.money -= troop.data.recruitCost;
+    }
+    
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(Screen.width-200,200,200,50), "Spawn Bandits"))
+        {
+            Party.CreateBandit(army.data.position);
+        }
     }
 }

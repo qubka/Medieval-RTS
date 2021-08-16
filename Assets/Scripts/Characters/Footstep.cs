@@ -164,6 +164,7 @@ public class Footstep : MonoBehaviour
     
     private void OnMouseExit()
     {
+        //nextHoverTime = 0f;
         //Manager.dynamicPopup.HideInfo();
     }
 

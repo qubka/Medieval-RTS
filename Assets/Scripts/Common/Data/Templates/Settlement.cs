@@ -11,7 +11,7 @@ using UnityEngine;
 [Serializable]
 public class Settlement : ScriptableObject
 {
-    [ReadOnly] public Town data;
+    [ReadOnly, NonSerialized] public Town town;
     [Header("General")]
     public int id;
     public string label;
@@ -38,7 +38,7 @@ public class Settlement : ScriptableObject
 
     public int Income => (int) (population * math.min(0.15f, tax / 100f) + prosperity * 0.15f) + gold;
     public int Wage => -Convert.ToInt32(garrison.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
-    public float PopGrowth => data.populationGrowth + populationGrowthSpeed / 1000f;
+    public float PopGrowth => town.populationGrowth + populationGrowthSpeed / 1000f;
     public int ProsperityGrowth => prosperityGrowth;
     public int LoyaltyGrowth => loyaltyGrowth;
     public int FoodProductionGrowth => foodProduction;
@@ -92,9 +92,9 @@ public class Settlement : ScriptableObject
     public void WeeklyTick()
     {
         population = (int) (population * (1f + PopGrowth));
-        prosperity = math.clamp(prosperity + prosperityGrowth, data.maxProsperity.x, data.maxProsperity.y);
-        loyalty = math.clamp(loyalty + loyaltyGrowth, data.maxLoyalty.x, data.maxLoyalty.y);
-        food = math.clamp(food + foodProduction, data.maxStock.x, data.maxStock.y + foodStock);
+        prosperity = math.clamp(prosperity + prosperityGrowth, town.maxProsperity.x, town.maxProsperity.y);
+        loyalty = math.clamp(loyalty + loyaltyGrowth, town.maxLoyalty.x, town.maxLoyalty.y);
+        food = math.clamp(food + foodProduction, town.maxStock.x, town.maxStock.y + foodStock);
         if (ruler) ruler.money += Income;
     }
     

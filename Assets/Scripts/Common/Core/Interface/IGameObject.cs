@@ -15,5 +15,6 @@ public enum UI
 {
     Squad,
     Army,
-    Settlement
+    Settlement,
+    Battle
 }

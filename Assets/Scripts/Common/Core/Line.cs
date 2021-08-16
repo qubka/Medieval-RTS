@@ -16,8 +16,7 @@ public class Line
         obj = Object.Instantiate(lineObject);
         line = obj.GetComponent<LineRenderer>();
         terrain = Manager.terrain;
-        isActive = true;
-        
+
         if (!line.useWorldSpace) {
             throw new ArgumentOutOfRangeException("LineRenderer should be in world space mode!");
         }
@@ -28,8 +27,8 @@ public class Line
     public Vector3 Second => Points[1];
     public Vector3 Last => Points[Points.Count - 1];
     public Vector3 PreLast => Points[Points.Count - 2];
-    public bool isActive { get; private set; }
     public bool isDestroyed { get; private set; }
+    public bool isActive { get; private set; } = true;
     public List<Vector3> Points { get; private set; } = new List<Vector3>(128);
 
     public void AddPoint(Vector3 pos)

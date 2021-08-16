@@ -378,9 +378,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 824315751627481963}
-  - component: {fileID: 5611214007589441602}
+  - component: {fileID: 6795355892391562633}
   m_Layer: 6
-  m_Name: SquadBar
+  m_Name: SquadIcon
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -408,14 +408,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 25, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &5611214007589441602
-CanvasRenderer:
+--- !u!114 &6795355892391562633
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4587296619961245186}
-  m_CullTransparentMesh: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa5e47703714cc490e08f07c31ec928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6153638471884067232
 GameObject:
   m_ObjectHideFlags: 0

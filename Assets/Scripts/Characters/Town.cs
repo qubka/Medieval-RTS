@@ -83,7 +83,7 @@ public class Town : MonoBehaviour, IGameObject
         // Update a default ref to the valid one
         var settlement = Settlement.All.First(s => s.id == data.id);
         data = settlement;
-        settlement.data = this;
+        data.town = this;
 
         // Add a town to the tables
         TownTable.Instance.Add(gameObject, this);
@@ -318,10 +318,14 @@ public class Town : MonoBehaviour, IGameObject
                     .Append("ARMIES:")
                     .Append("</size>")
                     .Append("</color>")
-                    .AppendLine()
-                    .Append("<color=#00ffffff>");
+                    .AppendLine();
 
                 foreach (var party in data.parties) {
+                    builder
+                        .Append("<color=#")
+                        .Append(party.leader.faction.color.ToHexString())
+                        .Append('>');
+                    
                     var troopCount = party.TroopCount;
                     totalCount += troopCount;
 
@@ -348,9 +352,12 @@ public class Town : MonoBehaviour, IGameObject
                             .Append('(')
                             .Append(troopCount)
                             .Append(')')
+                            .Append("</color>") //
                             .AppendLine();
                     } else {
-                        builder.AppendLine();
+                        builder
+                            .Append("</color>") // 
+                            .AppendLine();
                     }
                 }
             }
@@ -401,7 +408,9 @@ public class Town : MonoBehaviour, IGameObject
                         .AppendLine();
                 }
 
-                builder.Append("</color>").AppendLine();
+                builder
+                    .Append("</color>")
+                    .AppendLine();
             }
 
             var description = builder.ToString();
@@ -434,6 +443,7 @@ public class Town : MonoBehaviour, IGameObject
 
     private void OnMouseExit()
     {
+        nextHoverTime = 0f;
         Manager.dynamicPopup.HideInfo();
     }
     

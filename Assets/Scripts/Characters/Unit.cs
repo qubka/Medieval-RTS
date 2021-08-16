@@ -766,7 +766,7 @@ public class Unit : MonoBehaviour
 
     #region Selector
 
-    public void SelectState(bool value)
+    public void Select(bool value)
     {
         selector.SetActive(value);
     }

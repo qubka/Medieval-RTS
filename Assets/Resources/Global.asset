@@ -19,9 +19,12 @@ MonoBehaviour:
   stopKey: 27
   armyPrefab: {fileID: 2606083169810939128, guid: c717bb9ec6d037c4b92aa3bc48d8f219, type: 3}
   squadPrefab: {fileID: 1294250876125567414, guid: cdc02113d5df6864e9f6da1f44547de6, type: 3}
+  battlePrefab: {fileID: 8400762640402230502, guid: 40da24cd57d43ab49b74b38abf622d76, type: 3}
   troopLayout: {fileID: 8591804096878496596, guid: c6e1dbeba8e35d646978bd0718ac921a, type: 3}
   troopCard: {fileID: 6012286516238468129, guid: 7124bf488fc5528489b87d6b0b182660, type: 3}
   townIcon: {fileID: 4448039031682656356, guid: 52c8e7ee7a301034cb5d179274f524df, type: 3}
+  battleIcon: {fileID: 3980142311170377322, guid: e0099ce80e6a73a4cabb1957048a95da, type: 3}
+  armyIcon: {fileID: 3980142311170377322, guid: 59b146d46d876ef4a9b7566720666b90, type: 3}
   movementLine: {fileID: 1980492109888674, guid: 65a4b6aa3e3b6e9449173e85d1baf0c7, type: 3}
   arrowLine: {fileID: 1980492109888674, guid: e05980a5f6d309d4498427cd9a5d5b15, type: 3}
   directionLine: {fileID: 1980492109888674, guid: 06570074b2049574ca39be50f45205a2, type: 3}
@@ -96,6 +99,75 @@ MonoBehaviour:
   addCursor: {fileID: 2800000, guid: daf580b39fe978f4f93d2871853610b2, type: 3}
   inclusiveCursor: {fileID: 2800000, guid: 0b33dddc53e18b94da2ecdfc515574aa, type: 3}
   lookCursor: {fileID: 2800000, guid: 9cda48e378d35dc4ab62c87729c084dd, type: 3}
+  troops:
+  - size: 12
+    data: {fileID: 11400000, guid: b7c680145aa6bb448966f94c9392620e, type: 2}
+    primaryPrefabs:
+    - {fileID: 4958327102507704916, guid: 820bbdd31960bad409e3a050886d0ae6, type: 3}
+    secondaryPrefabs: []
+  - size: 12
+    data: {fileID: 11400000, guid: b142cdefa32ebd2449c38bff4f764dae, type: 2}
+    primaryPrefabs:
+    - {fileID: 8725890418558346398, guid: c8edb5da798eea549bfa9f1e36765f6c, type: 3}
+    secondaryPrefabs: []
+  models:
+  - primary: {fileID: 8262615800228520621, guid: 4b25f1e4e6f1feb439f658903ab4f362, type: 3}
+    secondary: {fileID: 0}
+    footstepSounds: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    interval: 0.4
+  - primary: {fileID: 0}
+    secondary: {fileID: 3246406506996199410, guid: 4a219cdcff2a4c74ab88bb10f6c078df, type: 3}
+    footstepSounds: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
+    interval: 0.4
+  behavior: {fileID: 11400000, guid: 148f6c61840d4c349abba3c71d777d0d, type: 2}
+  enableFiefFirstRight: 1
+  minimumWarDurationInDays: 10
+  declareWarCooldownInDays: 100
+  enableAlliances: 1
+  minimumAllianceDuration: 10
+  nonAggressionPactDuration: 100
+  nonAggressionPactTendency: 0
+  allianceTendency: 0
+  playerDiplomacyControl: 0
+  sendMessengerGoldCost: 100
+  messengerTravelTime: 3
+  enableWarExhaustion: 1
+  maxWarExhaustion: 100
+  warExhaustionPerDay: 1
+  warExhaustionPerCasualty: 0.01
+  warExhaustionPerSiege: 10
+  warExhaustionPerRaid: 3
+  warExhaustionDecayPerDay: 2
+  enableWarExhaustionDebugMessages: 0
+  grantFiefPositiveRelationMultiplier: 1
+  grantFiefRelationPenalty: -2
+  scalingWarReparationsGoldCostMultiplier: 100
+  declareWarInfluenceCost: 100
+  makePeaceInfluenceCost: 100
+  enableInfluenceCostsForDiplomacyActions: 1
+  scalingInfluenceCosts: 1
+  scalingInfluenceCostMultiplier: 5
+  enableInfluenceBalancing: 1
+  maximumInfluenceLoss: 20
+  enableInfluenceDecay: 1
+  influenceDecayThreshold: 1000
+  influenceDecayPercentage: 2
+  enableCorruption: 1
+  minimumExpansionismPerFief: 3
+  expanisonismPerSiege: 20
+  expansionismDecayPerDay: 1
+  enableStorylineProtection: 1
+  enableUsurpThroneFeature: 0
+  enableCoalitions: 0
+  coalitionChancePercentage: 5
+  criticalExpansionism: 100
+  dailyChanceToStartRebelFaction: 0.05
+  dailyChanceToJoinRebelFaction: 0.1
+  dailyChanceToStartCivilWar: 0.1
+  minimumTimeSinceLastCivilWarInDays: 240
+  maximumFactionDurationInDays: 120
+  factionCreationInfluenceCost: 100
+  factionTendency: 0
   rectangleStyle:
     m_Name: 
     m_Normal:
@@ -163,28 +235,4 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
-  troops:
-  - size: 12
-    data: {fileID: 11400000, guid: b7c680145aa6bb448966f94c9392620e, type: 2}
-    primaryPrefabs:
-    - {fileID: 4958327102507704916, guid: 820bbdd31960bad409e3a050886d0ae6, type: 3}
-    secondaryPrefabs: []
-    card: {fileID: 0}
-    layout: {fileID: 0}
-  - size: 12
-    data: {fileID: 11400000, guid: b142cdefa32ebd2449c38bff4f764dae, type: 2}
-    primaryPrefabs:
-    - {fileID: 8725890418558346398, guid: c8edb5da798eea549bfa9f1e36765f6c, type: 3}
-    secondaryPrefabs: []
-    card: {fileID: 0}
-    layout: {fileID: 0}
-  models:
-  - primary: {fileID: 8262615800228520621, guid: 4b25f1e4e6f1feb439f658903ab4f362, type: 3}
-    secondary: {fileID: 0}
-    footstepSounds: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
-    interval: 0.4
-  - primary: {fileID: 0}
-    secondary: {fileID: 3246406506996199410, guid: 4a219cdcff2a4c74ab88bb10f6c078df, type: 3}
-    footstepSounds: {fileID: 11400000, guid: 88cfee167d567cf44b9ff8c1a11dfe02, type: 2}
-    interval: 0.4
-  behavior: {fileID: 11400000, guid: 148f6c61840d4c349abba3c71d777d0d, type: 2}
+  maxTroops: 10

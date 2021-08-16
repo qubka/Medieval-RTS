@@ -51,7 +51,7 @@ public class Game : SingletonObject<Game>
     {
         timeController.Load(save.time);
         cameraController.Load(save.camera);
-        
+
         // Initialization
         factions = save.factions.Select(Faction.Create).ToList();
         characters = save.characters.Select(Character.Create).ToList();

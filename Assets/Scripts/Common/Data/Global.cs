@@ -19,10 +19,13 @@ public class Global : ScriptableObject
     [Header("Prefabs")] 
     public GameObject armyPrefab;
     public GameObject squadPrefab;
+    public GameObject battlePrefab;
     [Space]
     public GameObject troopLayout;
     public GameObject troopCard;
     public GameObject townIcon;
+    public GameObject battleIcon;
+    public GameObject armyIcon;
     [Space]
     public GameObject movementLine;
     public GameObject arrowLine;

@@ -10,17 +10,17 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Party : ScriptableObject
 { 
+    [ReadOnly, NonSerialized] public Army army;
     public Character leader;
     public float morale;
-    public float speed;
     public Vector3 position;
     public Quaternion rotation; 
     public List<Troop> troops = new List<Troop>();
     public Settlement localSettlement;
     public Settlement targetSettlement; // for AI
-    public Party enemyParty;
     public ExternalBehavior behavior;
     public int skin;
+    public bool inBattle;
 
     public static List<Party> All => Game.Parties;
     public int TroopStrength => troops.Sum(t => t.size * t.data.TotalStats);
@@ -31,6 +31,7 @@ public class Party : ScriptableObject
     {
         var leader = CreateInstance<Character>();
         leader.name = "Peasant Elder";
+        leader.surname = leader.name;
         leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
         leader.faction = settlement.ruler.faction;
         leader.type = CharacterType.Peasant;
@@ -52,18 +53,19 @@ public class Party : ScriptableObject
         Party.All.Add(party);
         Character.All.Add(leader);
 
-        var town = settlement.data;
+        var town = settlement.town;
         var army = Instantiate(Manager.global.armyPrefab, town.doorPosition, town.doorRotation).GetComponent<Army>();
         army.data = party;
     }
 
-    public static void CreateBandit()
+    public static void CreateBandit(Vector3 position)
     {
         // Find marauder faction, should be this hardcoded?
         var faction = Faction.All.First(f => f.id == 0);
         
         var leader = CreateInstance<Character>();
         leader.name = "Bandit Leader";
+        leader.surname = leader.name;
         leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
         leader.faction = faction;
         leader.type = CharacterType.Bandit;
@@ -81,10 +83,10 @@ public class Party : ScriptableObject
 
         Party.All.Add(party);
         Character.All.Add(leader);
-        
-        
-        
-        var army = Instantiate(Manager.global.armyPrefab, pos, rot).GetComponent<Army>();
+
+        var randomPosition = Vector.GetRandomNavMeshPositionNearLocation(position, 20f);
+        var randomRotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        var army = Instantiate(Manager.global.armyPrefab, randomPosition, randomRotation).GetComponent<Army>();
         army.data = party;
     }
     
@@ -116,17 +118,18 @@ public class Party : ScriptableObject
     public void Load(PartySave save = null)
     {
         if (save != null) {
+            if (save.leader != -1) leader = Character.All.First(c => c.id == save.leader);
             morale = save.morale;
-            speed = save.speed;
             position = save.position;
             rotation = save.rotation;
             troops = save.troops;
             if (save.localSettlement != -1) localSettlement = Settlement.All.First(s => s.id == save.localSettlement);
             if (save.targetSettlement != -1) targetSettlement = Settlement.All.First(s => s.id == save.targetSettlement);
-            if (save.enemyParty != -1) enemyParty = Party.All.First(p => p.leader.id == save.enemyParty);
             behavior = save.behavior;
             skin = save.skin;
+            inBattle = save.inBattle;
         } else {
+            if (leader) leader = Character.All.First(c => c.id == leader.id);
             if (localSettlement) localSettlement = Settlement.All.First(s => s.id == localSettlement.id);
             if (targetSettlement) targetSettlement = Settlement.All.First(s => s.id == targetSettlement.id);
         }
@@ -148,29 +151,29 @@ public class PartySave
     [HideInInspector] public int leader;
     [HideInInspector] public string name;
     [HideInInspector] public float morale;
-    [HideInInspector] public float speed;
+    //[HideInInspector] public float speed;
     [HideInInspector] public Vector3 position;
     [HideInInspector] public Quaternion rotation; 
     [HideInInspector] public List<Troop> troops;
     [HideInInspector] public int localSettlement;
     [HideInInspector] public int targetSettlement;
-    [HideInInspector] public int enemyParty;
     [HideInInspector] public ExternalBehavior behavior;
     [HideInInspector] public int skin;
+    [HideInInspector] public bool inBattle;
 
     public PartySave(Party party)
     {
         leader = party.leader.id; // cant be null
         name = party.name;
         morale = party.morale;
-        speed = party.speed;
+        //speed = party.speed;
         position = party.position;
         rotation = party.rotation;
         troops = party.troops;
         localSettlement = party.localSettlement ? party.localSettlement.id : -1;
         targetSettlement = party.targetSettlement ? party.targetSettlement.id : -1;
-        enemyParty = party.enemyParty ? party.enemyParty.leader.id : -1;
         behavior = party.behavior;
         skin = party.skin;
+        inBattle = party.inBattle;
     }
 }

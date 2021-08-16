@@ -5,7 +5,7 @@ using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using Slider = UnityEngine.UI.Slider;
 
-public class BuildingLayout : MonoBehaviour
+public class BuildingLayout : ObjectActivator
 {
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text label;
@@ -21,7 +21,7 @@ public class BuildingLayout : MonoBehaviour
     [SerializeField] private GameObject notBuild;
     [Space]
     [SerializeField] private Sprite[] levelIcons;
-
+    
     public Settlement Settlement { get; private set; }
     public Building Building { get; private set; }
 
@@ -69,11 +69,6 @@ public class BuildingLayout : MonoBehaviour
         bar.SetActive(false);
         build.SetActive(false);
         notBuild.SetActive(true);
-    }
-
-    public void SetActive(bool value)
-    {
-        gameObject.SetActive(value);
     }
 
     public void Pressed()

@@ -47,6 +47,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     [ReadOnly] public bool seeEnemy;
     [ReadOnly] public bool touchEnemies;
     [HideInInspector] public UnitSize unitSize;
+    [HideInInspector] public ObjectActivator iconActivator;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform cameraTransform;
     [HideInInspector] public Transform iconTransform;
@@ -205,6 +206,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         collider = GetComponent<BoxCollider>();
         anchorTransform = new GameObject("Target Anchor").transform;
+        iconActivator = squadIcon.GetComponent<ObjectActivator>();
         iconTransform = squadIcon.transform;
         layoutTransform = squadLayout.transform;
         cardTransform = squadCard.transform;
@@ -458,10 +460,10 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         
         // If the unit is behind the camera, or too far away from the player, make sure to hide the health bar completely
         if (pos.z < 0f) {
-            squadIcon.SetActive(false);
+            iconActivator.SetActive(false);
         } else {
             iconTransform.position = pos;
-            squadIcon.SetActive(true);
+            iconActivator.SetActive(true);
         }
 
         // Disable circle radius if we not in range anymore
@@ -679,7 +681,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
             return;
         
         foreach (var unit in units) {
-            unit.SelectState(value);
+            unit.Select(value);
         }
 
         if (cardSelectRoutine != null) StopCoroutine(cardSelectRoutine);

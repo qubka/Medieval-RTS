@@ -180,9 +180,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: fe2604be23fcb4a47b6deb7fb47a3de3, type: 2}
   armyIcon: {fileID: 3980142311170377322, guid: 59b146d46d876ef4a9b7566720666b90, type: 3}
-  behavior: {fileID: 0}
   worldTransform: {fileID: 0}
   iconTransform: {fileID: 0}
   canvasHeight: 0
+  movingSpeed: 10
+  troopSpeedReduction:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 999.8234
+      value: 71.085266
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   barScale: {x: 1, y: 1, z: 1}
   bannerPosition: {x: 0, y: 2, z: -0.1}

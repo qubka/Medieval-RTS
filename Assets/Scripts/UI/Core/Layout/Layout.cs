@@ -56,8 +56,26 @@ public class Layout<T> : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, 
             } else {
                 manager.AddSelected(layout);
             }
-        } else {
+        } else if (Input.GetKey(Manager.global.inclusiveKey)) {
             manager.AddSelected(layout, true);
+        } else {
+            switch (manager.SelectedCount()) {
+                case 0:
+                    manager.AddSelected(layout);
+                    break;
+                
+                case 1:
+                    if (layout.IsSelect()) {
+                        manager.DeselectAll();
+                    } else {
+                        manager.DeselectAllExcept(layout);
+                    }
+                    break;
+                
+                default:
+                    manager.DeselectAllExcept(layout);
+                    break;
+            }
         }
     }
 

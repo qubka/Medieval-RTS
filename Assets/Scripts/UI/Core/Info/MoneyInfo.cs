@@ -122,6 +122,7 @@ public class MoneyInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        StopAllCoroutines();
         Manager.fixedPopup.HideInfo();
     }
 }

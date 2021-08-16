@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using BehaviorDesigner.Runtime;
 using GPUInstancer.CrowdAnimations;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,15 +18,17 @@ public class Army : MonoBehaviour, IGameObject
 
     [Header("Children References")]
     //[Space(10f)]
-    [SerializeField] private GameObject armyIcon;
     private TMP_Text iconText;
     private GameObject armyBanner;
-    [Space(10f)]
+    [Space(10f)] 
+    [HideInInspector] public ObjectActivator armyIcon;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform iconTransform;
+    [HideInInspector] public Battle currentBattle;
 
     [Header("Misc")]
     public float canvasHeight;
+    public float movingSpeed = 3f;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
     public Vector3 bannerPosition = new Vector3(0f, 2f, 0f);
     
@@ -38,6 +43,7 @@ public class Army : MonoBehaviour, IGameObject
     private Collider collider;
 #pragma warning restore 108,114
     private NavMeshAgent agent;
+    private BehaviorTree tree;
     private ArmyManager manager;
     private List<AnimatorCrowd> animators = new List<AnimatorCrowd>(2);
     private Model model;
@@ -55,7 +61,7 @@ public class Army : MonoBehaviour, IGameObject
         collider = GetComponent<Collider>();
         audio = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
-        armyIcon = Instantiate(armyIcon);
+        armyIcon = Instantiate(Manager.global.armyIcon).GetComponent<ObjectActivator>();
         iconTransform = armyIcon.transform;
         worldTransform = transform;
     }
@@ -81,18 +87,23 @@ public class Army : MonoBehaviour, IGameObject
             manager = ArmyManager.Instance;
             manager.SetArmy(this);
         } else if (data.behavior) {
-            var tree = gameObject.AddComponent<BehaviorTree>();
+            tree = gameObject.AddComponent<BehaviorTree>();
             tree.ExternalBehavior = data.behavior;
         }
+        
+        // Update a default ref to the valid one
+        data.army = this;
         
         // Add a army to the tables
         armyTable.Add(gameObject, this);
         objectTable.Add(gameObject, this);
 
         // Parent a bar to the screen
+        var troopCount = data.TroopCount;
         iconText = iconTransform.GetComponentInChildren<TMP_Text>();
         iconText.color = data.leader.IsPlayer ? Color.green : (Color) data.leader.faction.color;
-        iconText.text = data.TroopCount.ToString();
+        iconText.text = troopCount.ToString();
+        lastTroopCount = troopCount;
         iconTransform.SetParent(Manager.holderCanvas, false);
         iconTransform.localScale = barScale;
 
@@ -125,35 +136,30 @@ public class Army : MonoBehaviour, IGameObject
             }
         }
 
-        if (data.enemyParty) {
-            
-        }
-        
         // Call some repeat func
         StartCoroutine(Tick());
     }
 
     public void Update()
     {
+        if (data.inBattle)
+            return;
+        
         var pos = worldTransform.position;
         data.position = pos;
         data.rotation = worldTransform.rotation;
 
-        if (data.enemyParty) {
-            armyIcon.SetActive(false);
-        } else {
-            if (isVisible) {
-                // Calculate position for the ui bar
-                pos.y += canvasHeight;
-                pos = camera.WorldToScreenPoint(pos);
+        if (isVisible) {
+            // Calculate position for the ui bar
+            pos.y += canvasHeight;
+            pos = camera.WorldToScreenPoint(pos);
         
-                // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
-                if (pos.z < 0f) {
-                    armyIcon.SetActive(false);
-                } else {
-                    iconTransform.position = pos;
-                    armyIcon.SetActive(true);
-                }
+            // If the army is behind the camera, or too far away from the player, make sure to hide the bar completely
+            if (pos.z < 0f) {
+                armyIcon.SetActive(false);
+            } else {
+                iconTransform.position = pos;
+                armyIcon.SetActive(true);
             }
         }
         
@@ -190,11 +196,20 @@ public class Army : MonoBehaviour, IGameObject
     private void OnUpdate()
     {
         if (!data.localSettlement) {
+            var isDay = TimeController.Now.IsDay();
+            
             var player = Game.Player;
             if (player && player != data) {
                 var distance = Vector.Distance(data.position, player.position);
-                SetVisibility(distance <= (TimeController.Now.IsDay() ? 100f : 50f));
+                SetVisibility(distance <= (isDay ? 100f : 50f));
             }
+
+            var speed = movingSpeed;
+            if (!data.leader.IsBandit) {
+                speed -= lastTroopCount * 0.01f;
+                if (!isDay) speed -= 2f;
+            }
+            agent.speed = math.max(speed, 1f);
         }
 
         if (isVisible) {
@@ -230,8 +245,11 @@ public class Army : MonoBehaviour, IGameObject
         foreach (var animator in animators) {
             animator.SetActive(value);
         }
-        
-        armyIcon.SetActive(value);
+
+        if (!data.inBattle) {
+            armyIcon.SetActive(value);
+        }
+
         if (armyBanner) {
             armyBanner.SetActive(value);
         }
@@ -241,14 +259,14 @@ public class Army : MonoBehaviour, IGameObject
 
     public void SetDestination(Vector3 position, IGameObject enemy = null)
     {
-        if (data.localSettlement && ReferenceEquals(data.localSettlement.data, enemy))
+        if (data.inBattle || data.localSettlement && ReferenceEquals(data.localSettlement.town, enemy))
             return;
         
         agent.SetDestination(position);
         target = enemy;
         
         if (data.localSettlement) {
-            var town = data.localSettlement.data;
+            var town = data.localSettlement.town;
             var pos = town.doorPosition;
             var rot = town.doorRotation;
             OnSettlementInteraction(null);
@@ -291,22 +309,22 @@ public class Army : MonoBehaviour, IGameObject
 
     public void OnPartyInteraction(Party enemy)
     {
-        if (data.leader.IsPlayer) {
+        if (data.leader.IsPlayer || enemy.leader.IsPlayer) {
             
         } else {
-            if (!BattleTable.Instance.Values.Any(b => b.Equals(enemy))) {
-                var obj = new GameObject();
-                var battle = obj.AddComponent<Battle>();
-                BattleTable.Instance.Add(obj, battle);
-                
-                battle.party1 = data;
-                battle.party2 = enemy;
-
-                data.enemyParty = enemy;
-                enemy.enemyParty = data;
+            if (enemy.leader.id == data.leader.faction.id || FactionManager.IsAlliedWithFaction(enemy.leader.faction, data.leader.faction)) {
+                var battle = BattleTable.Instance.Values.FirstOrDefault(b => b.Contains(enemy));
+                if (battle) {
+                    battle.AddAsAlly(enemy, data);
+                }
+            } else if (FactionManager.IsAtWarAgainstFaction(enemy.leader.faction, data.leader.faction)) {
+                var battle = BattleTable.Instance.Values.FirstOrDefault(b => b.Contains(enemy));
+                if (battle) {
+                    battle.AddAsEnemy(enemy, data);
+                } else {
+                    Battle.Create(data, enemy);
+                }
             }
-            
-            
         }
     }
 
@@ -350,6 +368,11 @@ public class Army : MonoBehaviour, IGameObject
 
     private void OnMouseOver()
     {
+        if (data.inBattle) {
+            currentBattle.OnMouseOver();
+            return;
+        }
+
         if (Manager.IsPointerOnUI || !isVisible) {
             Manager.fixedPopup.HideInfo();
             return;
@@ -369,6 +392,17 @@ public class Army : MonoBehaviour, IGameObject
                 .Append('(')
                 .Append(data.leader.faction.label)
                 .Append(')')
+                .Append("</size>")
+                .Append("</color>")
+                .AppendLine();
+
+            builder
+                .Append("<size=15>")
+                .Append("<color=#ffffffff>")
+                //.Append(PartyFSM)
+                //.AppendLine()
+                .Append("Speed = ")
+                .Append(agent.speed.ToString("0.0", CultureInfo.InvariantCulture))
                 .Append("</size>")
                 .Append("</color>")
                 .AppendLine();
@@ -408,7 +442,9 @@ public class Army : MonoBehaviour, IGameObject
                         .AppendLine();
                 }
 
-                builder.Append("</color>").AppendLine();
+                builder
+                    .Append("</color>")
+                    .AppendLine();
             }
             
             var description = builder.ToString();
@@ -457,6 +493,7 @@ public class Army : MonoBehaviour, IGameObject
     
     private void OnMouseExit()
     {
+        nextHoverTime = 0f;
         Manager.dynamicPopup.HideInfo();
     }
 
@@ -484,7 +521,22 @@ public class Army : MonoBehaviour, IGameObject
             animator.Remove();
         }
         
-        Destroy(armyIcon);
+        DestroyImmediate(armyIcon.gameObject);
         DestroyImmediate(gameObject);
+    }
+
+    public void SetBattle(Battle battle)
+    {
+        bool value = battle;
+        data.inBattle = value;
+        currentBattle = battle;
+        SetActive(!value);
+    }
+
+    private void SetActive(bool value)
+    {
+        tree.enabled = value;
+        agent.enabled = value;
+        armyIcon.SetActive(value);
     }
 }
