@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityParticleSystem;
+using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Battle : MonoBehaviour, IGameObject
 {
@@ -20,6 +23,7 @@ public class Battle : MonoBehaviour, IGameObject
     [Header("Misc")]
     public float canvasHeight;
     public Vector3 barScale = new Vector3(1f, 1f, 1f);
+    public float strongerCoefficient = 1.4f;
     
     #region Local
     
@@ -29,6 +33,7 @@ public class Battle : MonoBehaviour, IGameObject
 #pragma warning disable 108,114
     private Camera camera;
 #pragma warning restore 108,114
+    private CameraController cameraController;
     private float nextHoverTime;
     private bool isVisible = true;
     
@@ -38,6 +43,7 @@ public class Battle : MonoBehaviour, IGameObject
     {
         // Get information from manager
         camera = Manager.mainCamera;
+        cameraController = Manager.cameraController;
         battleTable = BattleTable.Instance;
         objectTable = ObjectTable.Instance;
         
@@ -47,6 +53,7 @@ public class Battle : MonoBehaviour, IGameObject
         
         // Create some staff
         battleIcon = Instantiate(Manager.global.battleIcon).GetComponent<BattleIcon>();
+        battleIcon.SetActive(false);
         iconTransform = battleIcon.transform;
         worldTransform = transform;
         
@@ -55,11 +62,25 @@ public class Battle : MonoBehaviour, IGameObject
         iconTransform.localScale = barScale;
     }
 
-    private IEnumerator Start()
+    private void Start()
+    {
+        StartCoroutine(Tick());
+        StartCoroutine(Fight());
+    }
+
+    private IEnumerator Tick()
     {
         while (true) {
             OnUpdate();
             yield return new WaitForSeconds(0.1f);
+        }
+    }
+    
+    private IEnumerator Fight()
+    {
+        while (true) {
+            OnFight();
+            yield return new WaitForSeconds(3f);
         }
     }
 
@@ -68,6 +89,25 @@ public class Battle : MonoBehaviour, IGameObject
         var distance = Vector.Distance(worldTransform.position, Game.Player.position);
         SetVisibility(distance <= (TimeController.Now.IsDay() ? 100f : 50f));
         battleIcon.OnUpdate(this);
+    }
+
+    private void OnFight()
+    {
+        // Do logic
+        var attacker = attackers.FindStrongest();
+        var defender = defenders.FindStrongest();
+
+        if (!attacker || !defender) {
+            Exit();
+            return;
+        }
+
+        Fight(attacker, defender);
+
+        // If there not troops, exit now
+        if (!attackers.FindStrongest() || !defenders.FindStrongest()) {
+            Exit();
+        }
     }
     
     public void Update()
@@ -85,6 +125,9 @@ public class Battle : MonoBehaviour, IGameObject
                 iconTransform.position = pos;
                 battleIcon.SetActive(true);
             }
+            
+            // Icon UI mode
+            battleIcon.SetEnabled(cameraController.zoomPos < 0.5f);
         }
     }
 
@@ -213,8 +256,8 @@ public class Battle : MonoBehaviour, IGameObject
                     .Append(party.leader.faction.color.ToHexString())
                     .Append('>');
                 
-                var troopCount = party.TroopCount;
-                defendCount += troopCount;
+                var troopSize = party.TroopSize;
+                defendCount += troopSize;
 
                 switch (party.leader.type) {
                     case CharacterType.Player:
@@ -233,11 +276,11 @@ public class Battle : MonoBehaviour, IGameObject
                         break;
                 }
 
-                if (troopCount > 0) {
+                if (troopSize > 0) {
                     builder
                         .Append(' ')
                         .Append('(')
-                        .Append(troopCount)
+                        .Append(troopSize)
                         .Append(')')
                         .Append("</color>") // 
                         .AppendLine();
@@ -260,8 +303,8 @@ public class Battle : MonoBehaviour, IGameObject
                     .Append(party.leader.faction.color.ToHexString())
                     .Append('>');
                 
-                var troopCount = party.TroopCount;
-                attackCount += troopCount;
+                var troopSize = party.TroopSize;
+                attackCount += troopSize;
 
                 switch (party.leader.type) {
                     case CharacterType.Player:
@@ -280,11 +323,11 @@ public class Battle : MonoBehaviour, IGameObject
                         break;
                 }
 
-                if (troopCount > 0) {
+                if (troopSize > 0) {
                     builder
                         .Append(' ')
                         .Append('(')
-                        .Append(troopCount)
+                        .Append(troopSize)
                         .Append(')')
                         .Append("</color>") // 
                         .AppendLine();
@@ -325,6 +368,107 @@ public class Battle : MonoBehaviour, IGameObject
     }
 
     #endregion
+
+    #region Simulation
+
+    public void Fight(Party party1, Party party2) 
+    {
+        //Debug.Log("Terrain: " + terrain);
+		
+        // ranged fight
+        RangedUnitsShoot(party1, party2);
+        RangedUnitsShoot(party2, party1);
+		
+        // melee fight
+        MeleeUnitsFight(party1, party2);
+        MeleeUnitsFight(party2, party1);
+    }
+    
+    /**
+	 * First stage of battle where ranged units shoot.
+	 */
+    private void RangedUnitsShoot(Party attacker, Party defender) 
+    {
+        if (attacker.TroopCount == 0 || defender.TroopCount == 0) {
+            return;
+        }
+        
+        var rangeTroops = attacker.troops.Where(t => t.data.rangeWeapon);
+        var targetTroops = defender.troops;
+        
+        foreach (var rangedTroop in rangeTroops) {
+            //var terrainModificator = terrain.getModificatorForUnit(rangedUnit);
+            var targetTroop = targetTroops[Random.Range(0, targetTroops.Count)];
+
+            for (var i = 0; i < rangedTroop.size; i++) {
+                if (Random.Range(0, 100) < rangedTroop.data.accuracy/* getGeneralCoeficient() * terrainModificator*/) {
+                    targetTroop.size--;
+                }
+            }
+        }
+
+        defender.Validate();
+    }
+
+    /**
+	 * Second part of the battle where melee units fight to death.
+	 */
+    private void MeleeUnitsFight(Party attacker, Party defender)
+    {
+        if (attacker.TroopCount == 0 || defender.TroopCount == 0) {
+            return;
+        }
+        
+        var meleeTroops = attacker.troops.Where(t => !t.data.rangeWeapon);
+        var targetTroops = defender.troops;
+        
+        foreach (var meleeTroop in meleeTroops) {
+            //var terrainModificator = terrain.getModificatorForUnit(rangedUnit);
+            var targetTroop = targetTroops[Random.Range(0, targetTroops.Count)];
+
+            for (var i = 0; i < meleeTroop.size; i++) {
+                float strCoef;
+                if (meleeTroop.IsStrongAgainst(targetTroop)) {
+                    strCoef = strongerCoefficient;
+                } else if (targetTroop.IsStrongAgainst(meleeTroop)) {
+                    strCoef = 1f / strongerCoefficient;
+                } else {
+                    strCoef = 1f;
+                }
+				
+                //var terrainModificator1 = terrain.getModificatorForUnit(unit1);
+                //var terrainModificator2 = terrain.getModificatorForUnit(unit2);
+                
+                var damage1 = Random.Range(0, (int) (meleeTroop.data.meleeAttack * strCoef /*getGeneralCoeficient() * terrainModificator1*/));
+                var damage2 = Random.Range(0, (int) (targetTroop.data.meleeAttack/* terrainModificator2*/));
+                
+                if (damage1 > damage2) {
+                    targetTroop.size--;
+                }
+            }
+        }
+
+        defender.Validate();
+    }
+
+    private void Exit()
+    {
+        // stop
+        Destroy();
+        foreach (var party in attackers) {
+            party.army.SetBattle(null);
+        }
+        foreach (var party in defenders) {
+            party.army.SetBattle(null);
+        }
+    }
+
+    #endregion
+
+    public void Begin()
+    {
+        
+    }
 }
 
 [Serializable]

@@ -149,7 +149,7 @@ public class Town : MonoBehaviour, IGameObject
 
             // Icon UI mode
             if (data.IsVillage) {
-                townIcon.Enable();
+                townIcon.SetEnabled(true);
             }
         } else {
             // Calculate position for the ui bar
@@ -165,11 +165,7 @@ public class Town : MonoBehaviour, IGameObject
 
             // Icon UI mode
             if (data.IsVillage) {
-                if (cameraController.zoomPos > 0.75f) {
-                    townIcon.Disable();
-                } else {
-                    townIcon.Enable();
-                }
+                townIcon.SetEnabled(cameraController.zoomPos < 0.75f);
             }
         }
     }
@@ -326,8 +322,8 @@ public class Town : MonoBehaviour, IGameObject
                         .Append(party.leader.faction.color.ToHexString())
                         .Append('>');
                     
-                    var troopCount = party.TroopCount;
-                    totalCount += troopCount;
+                    var troopSize = party.TroopSize;
+                    totalCount += troopSize;
 
                     switch (party.leader.type) {
                         case CharacterType.Player:
@@ -346,11 +342,11 @@ public class Town : MonoBehaviour, IGameObject
                             break;
                     }
 
-                    if (troopCount > 0) {
+                    if (troopSize > 0) {
                         builder
                             .Append(' ')
                             .Append('(')
-                            .Append(troopCount)
+                            .Append(troopSize)
                             .Append(')')
                             .Append("</color>") //
                             .AppendLine();

@@ -19,7 +19,7 @@ public class MoneyInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         var totalIncome = 0;
         var player = Game.Player;
         
-        if (player.troops.Count > 0) {
+        if (player.TroopCount > 0) {
             var income = player.TroopWage;
             var amount = income.ToString("+#;-#;0");
             builder

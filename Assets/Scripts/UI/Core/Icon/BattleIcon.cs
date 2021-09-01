@@ -6,11 +6,12 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleIcon : ObjectActivator
+public class BattleIcon : IconActivator
 {
     [SerializeField] private TMP_Text left;
     [SerializeField] private TMP_Text right;
     [SerializeField] private Image icon;
+    [SerializeField] private GameObject status;
     [SerializeField] private Slider slider;
 
     public void OnUpdate(Battle battle)
@@ -24,7 +25,7 @@ public class BattleIcon : ObjectActivator
         var attackerStrength = 0;
         
         foreach (var attacker in attackers) {
-            attackerCount += attacker.TroopCount;
+            attackerCount += attacker.TroopSize;
             attackerStrength += attacker.TroopStrength;
         }
         
@@ -39,7 +40,7 @@ public class BattleIcon : ObjectActivator
         var defenderStrength = 0;
         
         foreach (var defender in defenders) {
-            defenderCount += defender.TroopCount;
+            defenderCount += defender.TroopSize;
             defenderStrength += defender.TroopStrength;
         }
         
@@ -52,5 +53,12 @@ public class BattleIcon : ObjectActivator
         } else {
             slider.value = math.clamp((float) attackerStrength / defenderStrength, 0.1f, 1.9f);
         }
+    }
+
+    public override void OnEnabled(bool value)
+    {
+        left.enabled = value;
+        right.enabled = value;
+        status.SetActive(value);
     }
 }

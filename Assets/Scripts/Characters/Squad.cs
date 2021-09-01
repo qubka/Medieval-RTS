@@ -47,7 +47,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     [ReadOnly] public bool seeEnemy;
     [ReadOnly] public bool touchEnemies;
     [HideInInspector] public UnitSize unitSize;
-    [HideInInspector] public ObjectActivator iconActivator;
+    [HideInInspector] public IconActivator iconActivator;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform cameraTransform;
     [HideInInspector] public Transform iconTransform;
@@ -206,7 +206,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         collider = GetComponent<BoxCollider>();
         anchorTransform = new GameObject("Target Anchor").transform;
-        iconActivator = squadIcon.GetComponent<ObjectActivator>();
+        iconActivator = squadIcon.GetComponent<IconActivator>();
         iconTransform = squadIcon.transform;
         layoutTransform = squadLayout.transform;
         cardTransform = squadCard.transform;

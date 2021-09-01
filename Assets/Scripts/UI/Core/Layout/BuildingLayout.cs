@@ -5,7 +5,7 @@ using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using Slider = UnityEngine.UI.Slider;
 
-public class BuildingLayout : ObjectActivator
+public class BuildingLayout : MonoBehaviour
 {
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text label;
@@ -75,5 +75,10 @@ public class BuildingLayout : ObjectActivator
     {
         Settlement.Build(Building);
         ArmyManager.Instance.townWindow.OnUpdate();
+    }
+
+    public void SetActive(bool value)
+    {
+        gameObject.SetActive(value);
     }
 }

@@ -36,25 +36,6 @@ public class SaveManager : SingletonObject<SaveManager>
 
     public void LoadLevel()
     {
-        StartCoroutine(LoadAsyncLevel());
-    }
-    
-    private IEnumerator LoadAsyncLevel()
-    {
-        loadingScreen.SetActive(true);
-        
-        var operation = SceneManager.LoadSceneAsync("Campaign");
-        operation.allowSceneActivation = false;
-        
-        while (!operation.isDone) {
-            if (operation.progress < 0.9f) {
-                loadingSlider.value = operation.progress;
-            } else {              
-                operation.allowSceneActivation = true;             
-            }
-            yield return null;
-        }
-        
-        //loadingScreen.SetActive(false);
+        ChangeSceneAsync.Instance.ChangeScene("Campaign");
     }
 }

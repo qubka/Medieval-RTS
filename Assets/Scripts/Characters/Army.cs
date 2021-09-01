@@ -21,7 +21,7 @@ public class Army : MonoBehaviour, IGameObject
     private TMP_Text iconText;
     private GameObject armyBanner;
     [Space(10f)] 
-    [HideInInspector] public ObjectActivator armyIcon;
+    [HideInInspector] public IconActivator armyIcon;
     [HideInInspector] public Transform worldTransform;
     [HideInInspector] public Transform iconTransform;
     [HideInInspector] public Battle currentBattle;
@@ -61,7 +61,7 @@ public class Army : MonoBehaviour, IGameObject
         collider = GetComponent<Collider>();
         audio = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
-        armyIcon = Instantiate(Manager.global.armyIcon).GetComponent<ObjectActivator>();
+        armyIcon = Instantiate(Manager.global.armyIcon).GetComponent<IconActivator>();
         iconTransform = armyIcon.transform;
         worldTransform = transform;
     }
@@ -73,6 +73,9 @@ public class Army : MonoBehaviour, IGameObject
         //camController = Manager.camController;
         objectTable = ObjectTable.Instance;
         armyTable = ArmyTable.Instance;
+        
+        // Check troop size just in case
+        data.Validate();
         
         // Create bar if exist
         var house = data.leader.house;
@@ -99,11 +102,11 @@ public class Army : MonoBehaviour, IGameObject
         objectTable.Add(gameObject, this);
 
         // Parent a bar to the screen
-        var troopCount = data.TroopCount;
+        var troopSize = data.TroopSize;
         iconText = iconTransform.GetComponentInChildren<TMP_Text>();
         iconText.color = data.leader.IsPlayer ? Color.green : (Color) data.leader.faction.color;
-        iconText.text = troopCount.ToString();
-        lastTroopCount = troopCount;
+        iconText.text = troopSize.ToString();
+        lastTroopCount = troopSize;
         iconTransform.SetParent(Manager.holderCanvas, false);
         iconTransform.localScale = barScale;
 
@@ -213,10 +216,10 @@ public class Army : MonoBehaviour, IGameObject
         }
 
         if (isVisible) {
-            var troopCount = data.TroopCount;
-            if (lastTroopCount != troopCount) {
-                iconText.text = troopCount.ToString();
-                lastTroopCount = troopCount;
+            var troopSize = data.TroopSize;
+            if (lastTroopCount != troopSize) {
+                iconText.text = troopSize.ToString();
+                lastTroopCount = troopSize;
             }
             
             if (agent.velocity.SqMagnitude() > 0f) {
@@ -309,21 +312,17 @@ public class Army : MonoBehaviour, IGameObject
 
     public void OnPartyInteraction(Party enemy)
     {
-        if (data.leader.IsPlayer || enemy.leader.IsPlayer) {
-            
-        } else {
-            if (enemy.leader.id == data.leader.faction.id || FactionManager.IsAlliedWithFaction(enemy.leader.faction, data.leader.faction)) {
-                var battle = BattleTable.Instance.Values.FirstOrDefault(b => b.Contains(enemy));
-                if (battle) {
-                    battle.AddAsAlly(enemy, data);
-                }
-            } else if (FactionManager.IsAtWarAgainstFaction(enemy.leader.faction, data.leader.faction)) {
-                var battle = BattleTable.Instance.Values.FirstOrDefault(b => b.Contains(enemy));
-                if (battle) {
-                    battle.AddAsEnemy(enemy, data);
-                } else {
-                    Battle.Create(data, enemy);
-                }
+        if (enemy.leader.faction.id == data.leader.faction.id || FactionManager.IsAlliedWithFaction(enemy.leader.faction, data.leader.faction)) {
+            var battle = BattleTable.Instance.Values.FirstOrDefault(b => b.Contains(enemy));
+            if (battle) {
+                battle.AddAsAlly(enemy, data);
+            }
+        } else if (FactionManager.IsAtWarAgainstFaction(enemy.leader.faction, data.leader.faction)) {
+            var battle = BattleTable.Instance.Values.FirstOrDefault(b => b.Contains(enemy));
+            if (battle) {
+                battle.AddAsEnemy(enemy, data);
+            } else {
+                Battle.Create(data, enemy);
             }
         }
     }
@@ -407,7 +406,7 @@ public class Army : MonoBehaviour, IGameObject
                 .Append("</color>")
                 .AppendLine();
 
-            if (data.troops.Count > 0) {
+            if (data.TroopCount > 0) {
                 builder
                     .AppendLine()
                     .Append("<size=15>")
@@ -418,7 +417,7 @@ public class Army : MonoBehaviour, IGameObject
                     .AppendLine()
                     .Append("<color=#00ffffff>");
 
-                var dict = new Dictionary<Squadron, int>(data.troops.Count);
+                var dict = new Dictionary<Squadron, int>(data.TroopCount);
 
                 foreach (var troop in data.troops) {
                     var troopCount = troop.size;
@@ -531,11 +530,31 @@ public class Army : MonoBehaviour, IGameObject
         data.inBattle = value;
         currentBattle = battle;
         SetActive(!value);
+
+        // Happens when party after battle is run out of troops
+        if (value && data.leader.IsPlayer) {
+            ArmyManager.Instance.battleWindow.SetBattle(battle);
+        } else if (data.TroopCount == 0) {
+            switch (data.leader.type) {
+                case CharacterType.Player:
+                    // TODO: Implement ?
+                    break;
+                case CharacterType.Noble:
+                    data.Destroy();
+                    Destroy();
+                    break;
+                case CharacterType.Bandit:
+                case CharacterType.Peasant:
+                    data.Destroy(true);
+                    Destroy();
+                    break;
+            }
+        }
     }
 
     private void SetActive(bool value)
     {
-        tree.enabled = value;
+        if (tree) tree.enabled = value;
         agent.enabled = value;
         armyIcon.SetActive(value);
     }

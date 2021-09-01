@@ -80,7 +80,7 @@ public class Footstep : MonoBehaviour
                 .Append("</color>")
                 .AppendLine();
 
-            if (data.troops.Count > 0) {
+            if (data.TroopCount > 0) {
                 builder
                     .AppendLine()
                     .Append("<size=15>")
@@ -91,7 +91,7 @@ public class Footstep : MonoBehaviour
                     .AppendLine()
                     .Append("<color=#00ffffff>");
 
-                var dict = new Dictionary<Squadron, int>(data.troops.Count);
+                var dict = new Dictionary<Squadron, int>(data.TroopCount);
 
                 foreach (var troop in data.troops) {
                     var troopCount = troop.size;

@@ -684,6 +684,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5912642070094900575, guid: 06b2918a124d5134da37d6e3abb318e3, type: 3}
   m_PrefabInstance: {fileID: 727633449}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &727633453 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6737658886291514627, guid: 06b2918a124d5134da37d6e3abb318e3, type: 3}
+  m_PrefabInstance: {fileID: 727633449}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &739016997 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6321736474344641839, guid: bec3d139feea6024bb3ea22fc8903e68, type: 3}
@@ -706,6 +717,7 @@ GameObject:
   - component: {fileID: 998592748}
   - component: {fileID: 998592747}
   - component: {fileID: 998592750}
+  - component: {fileID: 998592751}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -775,6 +787,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 227885264}
   messageBox: {fileID: 5179341636149406801, guid: 06968431b0cdcfe44abe80c9e688ef91, type: 3}
+--- !u!114 &998592751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998592746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa908413a6ce4ef6ab6e6831ebadd8ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadingUI: {fileID: 727633452}
+  loadingBar: {fileID: 727633451}
+  loadingText: {fileID: 727633453}
 --- !u!1001 &1052690522
 PrefabInstance:
   m_ObjectHideFlags: 0

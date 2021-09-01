@@ -33,7 +33,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         foreach (var troop in player.troops) {
             AddLayout(troop);
         }
-        amount.text = player.troops.Count + "/" + Manager.global.maxTroops; 
+        amount.text = player.TroopCount + "/" + Manager.global.maxTroops; 
         enabled = true;
     }
 
@@ -76,6 +76,8 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         }
     }
 
+    #region Layout
+    
     public int SelectedCount()
     {
         return selectedTroops.Count;
@@ -132,7 +134,7 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         Game.Player.troops.Swap(newPos, oldPos);
     }
     
-    public void AddLayout(Troop troop)
+    private void AddLayout(Troop troop)
     {
         var cardObject = Instantiate(Manager.global.troopCard, Manager.cardCanvas);
         var layoutObject = Instantiate(Manager.global.troopLayout, Manager.layoutCanvas);
@@ -159,6 +161,10 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
         cardObject.transform.position = layoutTransform.position;
     }
 
+    #endregion
+    
+    #region Bar
+    
     // RemoveTroop
     public void Disband()
     {
@@ -169,27 +175,28 @@ public class ArmyManager : SingletonObject<ArmyManager>, IManager<Troop>
             troop.Destroy();
             selectedTroops.RemoveAt(i);
         }
-        amount.text = player.troops.Count + "/" + Manager.global.maxTroops; 
+        amount.text = player.TroopCount + "/" + Manager.global.maxTroops; 
     }
     
     public void Merge()
     {
-        
     }
     
     public void Garrison()
     {
     }
-
-    public void AddTroop(Troop troop)
+    
+    #endregion
+    
+    public void Recruit(Troop troop)
     {
         var player = Game.Player;
         player.troops.Add(troop);
         AddLayout(troop);
-        amount.text = player.troops.Count + "/" + Manager.global.maxTroops;
+        amount.text = player.TroopCount + "/" + Manager.global.maxTroops;
         player.leader.money -= troop.data.recruitCost;
     }
-    
+
     private void OnGUI()
     {
         if (GUI.Button(new Rect(Screen.width-200,200,200,50), "Spawn Bandits"))

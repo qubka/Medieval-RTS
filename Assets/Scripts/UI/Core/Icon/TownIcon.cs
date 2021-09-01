@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TownIcon : ObjectActivator
+public class TownIcon : IconActivator
 {
     [SerializeField] private TMP_Text text;
     [SerializeField] private Image background;
@@ -17,16 +17,10 @@ public class TownIcon : ObjectActivator
         text.color = color;
         text.text = settlement.name; // TODO: Translation
     }
-    
-    public void Enable()
+
+    public override void OnEnabled(bool value)
     {
-        icon.enabled = false;
-        text.enabled = true;
-    }
-    
-    public void Disable()
-    {
-        icon.enabled = true;
-        text.enabled = false;
+        icon.enabled = !value;
+        text.enabled = value;
     }
 }

@@ -1,8 +1,12 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using DigitalRuby.Tween;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleWindow : MonoBehaviour
@@ -23,6 +27,12 @@ public class BattleWindow : MonoBehaviour
     [SerializeField] private Slider slider;
     [Space]
     [SerializeField] private GameObject unitLayout;
+    [Space]
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private Slider loadingSlider;
+
+    private Battle battle;
+    private bool enable;
     
     [Serializable]
     public class Rect
@@ -38,53 +48,89 @@ public class BattleWindow : MonoBehaviour
         bottom.initial = bottom.transform.localPosition.y;
     }
 
-    public void SetParties(Party allies, Party enemies)
+    public void SetBattle(Battle battle)
     {
+        this.battle = battle;
+        
+        var allies = battle.attackers;
+        var enemies = battle.defenders; 
+        
         // Instantiate allied bar
-        alliesLeader.text = allies.leader.title.Length > 0 ? allies.leader.title + ' ' + allies.leader.name : allies.leader.name;
-        alliesAmount.text = allies.TroopCount.ToString();
+        var alliesPower = allies[0];//.FindStrongest();
+        //alliesLeader.text = alliesPower.leader.title.Length > 0 ? alliesPower.leader.title + ' ' + alliesPower.leader.name : alliesPower.leader.name;
+        alliesAmount.text = allies.Sum(p => p.TroopSize).ToString();
         //alliesPortrait.sprite = allies.leader.
+        
+        for (var i = alliesGrid.childCount - 1; i >= 0; i--) {
+            Destroy(alliesGrid.GetChild(i).gameObject);
+        }
 
-        while (alliesGrid.childCount > 0){
-            Destroy(alliesGrid.GetChild(0));
+        foreach (var party in allies) {
+            foreach (var troop in party.troops) {
+                Instantiate(unitLayout, alliesGrid).GetComponent<UnitLayout>().SetTroop(troop);
+            }
         }
-        
-        foreach (var troop in allies.troops) {
-            Instantiate(unitLayout, alliesGrid).GetComponent<UnitLayout>().SetTroop(troop);
-        }
-        
+
         // Instantiate enemy bar
-        enemiesLeader.text = enemies.leader.title.Length > 0 ? enemies.leader.title + ' ' + enemies.leader.name : enemies.leader.name;
-        enemiesAmount.text = enemies.TroopCount.ToString();
+        var enemiesPower = enemies[0];//.FindStrongest();
+        //enemiesLeader.text = enemiesPower.leader.title.Length > 0 ? enemiesPower.leader.title + ' ' + enemiesPower.leader.name : enemiesPower.leader.name;
+        enemiesAmount.text = enemies.Sum(p => p.TroopSize).ToString();
         //enemiesPortrait.sprite = enemies.leader.
-        
-        while (enemiesGrid.childCount > 0){
-            Destroy(enemiesGrid.GetChild(0));
+
+        for (var i = enemiesGrid.childCount - 1; i >= 0; i--) {
+            Destroy(enemiesGrid.GetChild(i).gameObject);
         }
-        
-        foreach (var troop in enemies.troops) {
-            Instantiate(unitLayout, enemiesGrid).GetComponent<UnitLayout>().SetTroop(troop);
+
+        foreach (var party in enemies) {
+            foreach (var troop in party.troops) {
+                Instantiate(unitLayout, enemiesGrid).GetComponent<UnitLayout>().SetTroop(troop);
+            }
         }
-        
+
         // Update slider like in CombatSliderController
-        slider.value = math.clamp((float) allies.TroopStrength / enemies.TroopStrength, 0.1f, 1.9f);
+        slider.value = math.clamp((float) allies.Sum(p => p.TroopStrength) / enemies.Sum(p => p.TroopStrength), 0.1f, 1.9f);
         
         // Enable it 
         Enable();
     }
 
+    public void Attack()
+    {
+        ChangeSceneAsync.Instance.ChangeScene("Combat");
+        if (battle) battle.Begin();
+    }
+
+    public void Retreat()
+    {
+        
+    }
+
     public void Enable()
     {
+        if (enable)
+            return;
+
         gameObject.Tween("LeftMove", left.transform.localPosition.x, left.initial + left.transform.sizeDelta.x - 7.5f, 0.5f, TweenScaleFunctions.CubicEaseInOut, LeftMove);
         gameObject.Tween("RightMove", right.transform.localPosition.x, right.initial - right.transform.sizeDelta.x + 7.5f, 0.5f, TweenScaleFunctions.CubicEaseInOut, RightMove);
         gameObject.Tween("BottomMove", bottom.transform.localPosition.y, bottom.initial + bottom.transform.sizeDelta.y, 0.5f, TweenScaleFunctions.CubicEaseInOut, BottomMove);
+        
+        TimeController.Instance.Lock();
+        
+        enable = true;
     }
     
     public void Disable()
     {
+        if (!enable)
+            return;
+
         gameObject.Tween("LeftMove", left.transform.localPosition.x, left.initial, 0.5f, TweenScaleFunctions.CubicEaseInOut, LeftMove);
         gameObject.Tween("RightMove", right.transform.localPosition.x, right.initial, 0.5f, TweenScaleFunctions.CubicEaseInOut, RightMove);
         gameObject.Tween("BottomMove", bottom.transform.localPosition.y, bottom.initial, 0.5f, TweenScaleFunctions.CubicEaseInOut, BottomMove);
+        
+        TimeController.Instance.Unlock();
+        
+        enable = false;
     }
     
     public void LeftMove(ITween<float> obj)

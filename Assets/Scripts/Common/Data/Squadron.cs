@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -59,9 +60,13 @@ public class Squadron : ScriptableObject
     public int morale;
     public bool chargeProtection;
 
+    [Header("Battle")] 
+    public UnitType type;
+    public UnitType advantage;
+
     public Stats Stats { get; private set; }
     public int TotalStats { get; private set; }
-
+    
     private void OnEnable()
     {
         var attack = meleeAttack;
@@ -73,4 +78,15 @@ public class Squadron : ScriptableObject
         Stats = new Stats(attack, defence, Mathf.RoundToInt(squadRunSpeed * 10f), morale, health);
         TotalStats = attack + defence + health;
     }
+}
+
+[Serializable]
+public enum UnitType
+{
+    Archers,
+    Pikemen,
+    Spearmen,
+    LightInfantry,
+    HeavyInfantry,
+    Cavalry
 }

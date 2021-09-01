@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-public static class CampaignTime
+public static class DateExtention
 {
     public static bool IsDay(this DateTime date)
     {

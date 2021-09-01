@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-//[ExecuteInEditMode]
+[ExecuteInEditMode]
 public class LightManager : SingletonObject<LightManager>
 {
    [SerializeField, Range(0, 24)] private float timeOfDay;

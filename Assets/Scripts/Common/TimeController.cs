@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Globalization;
+using BehaviorDesigner.Runtime;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class TimeController : SingletonObject<TimeController>
     [SerializeField] private TimeBar timeBar;
     [SerializeField] private TMP_Text timeLabel;
     [SerializeField] private Vector3Int startDate = new Vector3Int(1080, 1, 1);
+    [SerializeField] private bool locked;
     [HideInInspector] public DateTime dateTime;
     [HideInInspector] public string dateStamp;
     [HideInInspector] public int prevDay;
@@ -24,10 +26,17 @@ public class TimeController : SingletonObject<TimeController>
         dateStamp = DateStamp();
         prevDay = startDate.z;
         
-        timeLabel.text = dateStamp + DayTime();
+        Label();
     }
     
-    private IEnumerator Start()
+    private void Start()
+    {
+        if (!locked) {
+            StartCoroutine(Tick());
+        }
+    }
+
+    private IEnumerator Tick()
     {
         while (true) {
             OnUpdate();
@@ -41,9 +50,9 @@ public class TimeController : SingletonObject<TimeController>
         dateStamp = DateStamp();
         prevDay = save.prevDay;
         
-        timeLabel.text = dateStamp + DayTime();
+        Label();
     }
-
+    
     private void OnUpdate()
     {
         dateTime = dateTime.AddMinutes(1);
@@ -58,8 +67,8 @@ public class TimeController : SingletonObject<TimeController>
             dateStamp = DateStamp();
         }
         prevDay = day;
-        
-        timeLabel.text = dateStamp + DayTime();
+
+        Label();
     }
     
     private string DateStamp() => dateTime.ToString("d MMMM, yyyy", CultureInfo.InvariantCulture);
@@ -75,6 +84,13 @@ public class TimeController : SingletonObject<TimeController>
     {
         timeBar.isLocked = false;
         timeBar.Normal();
+    }
+
+    private void Label()
+    {
+        if (timeLabel) {
+            timeLabel.text = dateStamp + DayTime();
+        }
     }
 }
 

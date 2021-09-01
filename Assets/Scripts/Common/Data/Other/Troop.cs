@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class Troop : ISelectable
@@ -17,6 +19,8 @@ public class Troop : ISelectable
     [NonSerialized] public TroopCard card;
     [NonSerialized] public TroopLayout layout;
     private bool isSelect;
+    
+    public bool IsStrongAgainst(Troop troop) => data.advantage == troop.data.type;
     
     public void Destroy()
     {

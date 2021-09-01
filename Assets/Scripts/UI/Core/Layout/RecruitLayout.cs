@@ -37,7 +37,7 @@ public class RecruitLayout : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void Pressed()
     {
-        ArmyManager.Instance.AddTroop(Troop.Clone());
+        ArmyManager.Instance.Recruit(Troop.Clone());
         OnUpdate();
     }
 
@@ -48,7 +48,7 @@ public class RecruitLayout : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             cost.color = Color.red;
             portrait.material = gray;
             button.interactable = false;
-        } else if (player.troops.Count >= Manager.global.maxTroops) {
+        } else if (player.TroopCount >= Manager.global.maxTroops) {
             cost.color = Color.white;
             portrait.material = gray;
             button.interactable = false;

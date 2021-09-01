@@ -133,7 +133,7 @@ public class CameraController : MonoBehaviour
 	*/
 	
 	//TODO: Replace by Raw with smoothing
-	private Vector2 KeyboardInput => new Vector2(Input.GetAxisRaw(horizontalAxis), Input.GetAxisRaw(verticalAxis));
+	private Vector2 KeyboardInput => Time.timeScale <= 0f ? new Vector2(Input.GetAxisRaw(horizontalAxis), Input.GetAxisRaw(verticalAxis)) : new Vector2(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
 	private Vector2 MouseInput => Input.mousePosition;
 	private float ScrollWheel => -Input.GetAxis(zoomingAxis);
 	private Vector2 MouseAxis => new Vector2(Input.GetAxis(mouseHorizontalAxis), Input.GetAxis(mouseVerticalAxis));

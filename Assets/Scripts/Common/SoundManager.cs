@@ -101,11 +101,13 @@ public class SoundManager : SingletonObject<SoundManager>
 
     public void LateUpdate()
     {
-        var time = TimeController.Now.GetHourAndMinutes();
-        var volume = 1f - MathExtention.Clamp01(cameraController.DistToGround);
+        if (ambients.Length > 0) {
+            var time = TimeController.Now.GetHourAndMinutes();
+            var volume = 1f - MathExtention.Clamp01(cameraController.DistToGround);
 
-        foreach (var ambient in ambients) {
-            ambient.Update(time, volume);
+            foreach (var ambient in ambients) {
+                ambient.Update(time, volume);
+            }
         }
         
         foreach (var source in sources) {

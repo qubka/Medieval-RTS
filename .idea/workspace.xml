@@ -2,122 +2,50 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="83f5ce04-3629-4385-b6e7-cedc06030970" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/BuildingLayout.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/SquadDescription.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/TownController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/TownController.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/TweenToggle.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/TweenToggle.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/BattleEngine.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/BattleEngine.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Core/Extentions/PartyExtention.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Core/Extentions/PartyExtention.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Strategies.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Strategies.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Icon/IconActivator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Medieval RTS/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Medieval RTS/.idea/contentModel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/UI/Control bar/Ramge.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/UI/Control bar/Ramge.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Army.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Army.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Buildings/Village.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Buildings/Village.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Other/Campaign Manager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Other/Campaign Manager.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Squad.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Squad.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/AttributeLayout.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/AttributeLayout.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/BuildingIcon.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/BuildingIcon.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/InCampaignUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/InCampaignUI.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/InGameUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/InGameUI.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/SquadInfo.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/SquadInfo.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/StatsRadarChart.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/StatsRadarChart.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/UnitCard.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/UnitCard.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/UnitLayout.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/UnitLayout.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Barracks.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Barracks.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Forum.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Forum.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Granaries.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Granaries.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Market.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Market.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Orchards.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Orchards.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Siege Works.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Siege Works.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Training Field.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Training Field.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Walls.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Walls.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Water Supply.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Water Supply.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Workshops.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/City/Workshops.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Crop Farm.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Crop Farm.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Iron Mine.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Iron Mine.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Meat Farm.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Meat Farm.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Saw Mill.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Buildings/Village/Saw Mill.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Settlements/Beachscar.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Settlements/Beachscar.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Campaign/Tutorial 1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Campaign/Tutorial 1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Medieval RTS/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Medieval RTS/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/WorldUI/BattleIcon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/WorldUI/BattleIcon.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Bowmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Bowmen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Crossbowmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Crossbowmen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Halberdmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Halberdmen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Heavy Swordmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Heavy Swordmen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Horsemen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Horsemen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Light Axemen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Light Axemen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Light Swordmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Light Swordmen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Long Axemen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Long Axemen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Long Swordmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Long Swordmen.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Peasants/Farmer.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Peasants/Farmer.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Peasants/Woodman.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Peasants/Woodman.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Units/Spearmen.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Units/Spearmen.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Characters/Army.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Characters/Army.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Characters/Battle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Characters/Battle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Characters/Footstep.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Characters/Footstep.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Characters/Squad.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Characters/Squad.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Characters/Town.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Characters/Town.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/CampaignTime.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/CampaignTime.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Building.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Building.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Other/Pack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Other/Pack.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Serializable/Party.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Serializable/Party.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Serializable/Settlement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Serializable/Settlement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/EconomyManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/EconomyManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Manager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Manager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/SoundManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/SoundManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Core/ObjectActivator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Core/ObjectActivator.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Icon/IconActivator.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Other/Troop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Other/Troop.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Squadron.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Squadron.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Templates/Party.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Common/Data/Templates/Party.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ArmyManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ArmyManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/BinarySliderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/BinarySliderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/BinarySliderController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/BinarySliderController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/CombatSliderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/CombatSliderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/CombatSliderController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/CombatSliderController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/EventTriggerInvoker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/EventTriggerInvoker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/EventTriggerInvoker.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/EventTriggerInvoker.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ExitButtonController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/ExitButtonController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ExitButtonController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/ExitButtonController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/HideButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/HideButton.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/HideButton.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/HideButton.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/HighlightToggle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/HighlightToggle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/HighlightToggle.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/HighlightToggle.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/LayoutPursue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/LayoutPursue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/LayoutPursue.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ResourceBarController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/ResourceBarController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ResourceBarController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/ResourceBarController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ScrollController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/ScrollController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ScrollController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/ScrollController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderColorController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/SliderColorController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderPercentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/SliderPercentController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderPercentController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/SliderPercentController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderStepController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/SliderStepController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderStepController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/SliderStepController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderValueController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/SliderValueController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SliderValueController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/SliderValueController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SquadBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/SquadBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/SquadBar.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/SquadBar.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/TimeBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/TimeBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/TimeBar.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/TimeBar.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ToggleButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/ToggleButton.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/ToggleButton.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/ToggleButton.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/TownTab.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/TownTab.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/TownTab.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/TownTab.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/Transform.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Transform.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/Transform/LayoutExpander.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Transform/LayoutExpander.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/Transform/LayoutExpander.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Transform/LayoutExpander.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/Transform/TransformInRect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Transform/TransformInRect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/Transform/TransformInRect.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Transform/TransformInRect.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/UnitBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/UnitBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/UnitBar.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Bar/UnitBar.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/UnitLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/UnitLayout.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Controls/UnitLayout.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UnitManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UnitManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/AnimatedWindowController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/AnimatedWindowController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/AnimatedWindowController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/AnimatedWindowController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/AttributeLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/AttributeLayout.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/AttributeLayout.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/NationPickController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/NationPickController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/NationPickController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/NationPickController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/PopupWindowController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/PopupWindowController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/PopupWindowController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/PopupWindowController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/SquadDescription.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/SquadDescription.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/SquadDescription.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/SquadInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/SquadInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/SquadInfo.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/SquadInfo.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/StatsRadarChart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/StatsRadarChart.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/StatsRadarChart.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/StatsRadarChart.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/WindowController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/WindowController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Window/WindowController.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Other/WindowController.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Camera/CameraController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Camera/CameraController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Core/BattleWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/BattleWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Icon/BattleIcon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Icon/BattleIcon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Icon/TownIcon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Icon/TownIcon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Info/MoneyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Info/MoneyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/BuildingLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/BuildingLayout.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/RecruitLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Core/Layout/RecruitLayout.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/ApiUpdaterCheck.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0-prev.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/AssetImportWorker0.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logs/shadercompiler-AssetImportWorker0.log" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/shadercompiler-AssetImportWorker0.log" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -132,9 +60,14 @@
           <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/Textures/UI/Artworks/UI_icons/Classic/gray_101_three.png">
           <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/Characters/Army.cs">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -155,7 +88,35 @@
     <panes>
       <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Medieval RTS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Medieval RTS" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Medieval RTS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Medieval RTS" type="462c0819:PsiDirectoryNode" />
+              <item name="Assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Medieval RTS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Medieval RTS" type="462c0819:PsiDirectoryNode" />
+              <item name="Assets" type="462c0819:PsiDirectoryNode" />
+              <item name="Scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Medieval RTS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Medieval RTS" type="462c0819:PsiDirectoryNode" />
+              <item name="Assets" type="462c0819:PsiDirectoryNode" />
+              <item name="Scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="Characters" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="RunDashboard">
@@ -170,6 +131,9 @@
       </list>
     </option>
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="83f5ce04-3629-4385-b6e7-cedc06030970" name="Default Changelist" comment="" />
@@ -183,7 +147,7 @@
   <component name="ToolWindowManager">
     <frame x="580" y="220" width="1400" height="1000" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25373134" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26119402" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -216,6 +180,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Textures/UI/Artworks/UI_icons/Classic/gray_101_three.png">
       <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/Characters/Army.cs">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>

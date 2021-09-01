@@ -24,15 +24,17 @@ public class Party : ScriptableObject
 
     public static List<Party> All => Game.Parties;
     public int TroopStrength => troops.Sum(t => t.size * t.data.TotalStats);
-    public int TroopCount => troops.Sum(t => t.size);
+    public int TroopSize => troops.Sum(t => t.size);
+    public int TroopCount => troops.Count;
     public int TroopWage => -Convert.ToInt32(troops.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
+    public Troop RandomTroop => TroopCount > 0 ? troops[Random.Range(0, TroopCount)] : null;
 
     public static void CreatePeasant(Settlement settlement)
     {
         var leader = CreateInstance<Character>();
         leader.name = "Peasant Elder";
         leader.surname = leader.name;
-        leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
+        leader.id = Character.All.OrderByDescending(c => c.id).First().id + 1;
         leader.faction = settlement.ruler.faction;
         leader.type = CharacterType.Peasant;
         leader.home = settlement;
@@ -66,7 +68,7 @@ public class Party : ScriptableObject
         var leader = CreateInstance<Character>();
         leader.name = "Bandit Leader";
         leader.surname = leader.name;
-        leader.id = Character.All.OrderByDescending(c => c.id).First().id++;
+        leader.id = Character.All.OrderByDescending(c => c.id).First().id + 1;
         leader.faction = faction;
         leader.type = CharacterType.Bandit;
         
@@ -132,6 +134,38 @@ public class Party : ScriptableObject
             if (leader) leader = Character.All.First(c => c.id == leader.id);
             if (localSettlement) localSettlement = Settlement.All.First(s => s.id == localSettlement.id);
             if (targetSettlement) targetSettlement = Settlement.All.First(s => s.id == targetSettlement.id);
+        }
+    }
+    
+    // checks whether a specific type is present in the current army
+    public bool IsTroopExist(UnitType type)
+    {
+        return troops.Any(t => t.data.type == type);
+    }
+
+    public Troop GetRandomTroop(UnitType type)
+    {
+        if (!IsTroopExist(type)) {
+            Debug.Log("There are no troops of that type!");
+            return RandomTroop;
+        }
+
+        var troop = troops.Where(t => t.data.type == type).ToArray();
+        return troop.Length > 0 ? troop[Random.Range(0, troop.Length)] : null;
+    }
+
+    public void RemoveTroop(Troop troop)
+    {
+        troops.Remove(troop);
+    }
+
+    public void Validate()
+    {
+        for (var i = troops.Count - 1; i > -1; i--) {
+            var troop = troops[i];
+            if (troop.size <= 0) {
+                RemoveTroop(troop);
+            }
         }
     }
 }
