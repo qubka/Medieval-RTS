@@ -79,7 +79,7 @@ public static class Vector // MathExtension ?
 		return new Mesh { vertices = vertices, triangles = Triangles };
 	}
 
-	public static List<(Vector3, Vector3)> SplitLineToSegments(Vector3 start, Vector3 end, int segments, float space = 0f)
+	public static List<(Vector3, Vector3)> SplitLineToSegments(Vector3 start, Vector3 end, int segments)
 	{
 		var lines = new List<(Vector3, Vector3)>(segments);
 		if (segments <= 1) {

@@ -18,8 +18,8 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     public Squadron data;
     [Space]
     public int squadSize;
-    public List<GameObject> primaryPrefabs;
-    public List<GameObject> secondaryPrefabs;
+    public GameObject[] primaryPrefabs;
+    public GameObject[] secondaryPrefabs;
     public Team team;
     public FormationShape formationShape;
     [Space(10f)]
@@ -212,31 +212,37 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         cardTransform = squadCard.transform;
         worldTransform = transform;
         particleShape = particle.shape;
-        isRange = hasRange;
+        
         agent = gameObject.AddComponent<Agent>();
-        agent.maxSpeed = data.squadWalkSpeed;
-        agent.maxAccel = data.squadAccel;
         seek = gameObject.AddComponent<Seek>();
         flee = gameObject.AddComponent<Flee>();
-        flee.SetTarget(anchorTransform);
-        flee.enabled = false;       
-        circle = radiusCircle.GetComponent<Circle>();    
-        circle.radius = aggroDistance;
+        circle = radiusCircle.GetComponent<Circle>();  
         var sources = source.GetComponents<AudioSource>();
         mainAudio = sources[0];
         fightAudio = sources[1];
         runAudio = sources[2];
         chargeAudio = sources[3];
+        
         shakeRange *= shakeRange;
         removeRange *= removeRange;
-        
+    }
+
+    private void Start()
+    {
+        isRange = hasRange;
+        agent.maxSpeed = data.squadWalkSpeed;
+        agent.maxAccel = data.squadAccel;
+        flee.SetTarget(anchorTransform);
+        flee.enabled = false;
+        circle.radius = aggroDistance;
+
         // TODO: rework to be compatible with save system
         // Set the team properties
         //squadSize = data.squadSize;
         Stamina = initialStamina;
         Morale = initialMorale;
         unitSize = data.unitSize;
-        phalanxLength = math.max(unitSize.width, squadSize / 2f * unitSize.width);
+        phalanxLength = squadSize / unitSize.height * unitSize.width;
 
         // Set up the UI components
         var color = team.GetColor();
@@ -258,10 +264,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         // Set up lists
         units.Capacity = squadSize;
         positions.Capacity = squadSize;
-    }
-
-    private void Start()
-    {
+        
         // Get information from manager
         manager = SquadManager.Instance;
         objectTable = ObjectTable.Instance;
@@ -291,8 +294,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         // Load tranform data
         float4x4 local = worldTransform.localToWorldMatrix;
         var rot = worldTransform.rotation;
-        var color = team.GetColor();
-        
+
         // Add component data to squad
         squadEntity = entityManager.CreateEntity(squad);
         entityManager.SetName(squadEntity, "squad");
@@ -320,11 +322,11 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
 
             // Get random skin index
             var mount = data.animations.hasMount;
-            var skin = Random.Range(0, mount ? secondaryPrefabs.Count : primaryPrefabs.Count);
+            var skin = Random.Range(0, mount ? secondaryPrefabs.Length : primaryPrefabs.Length);
             
             // Create an unit entity
             var unitEntity = entityManager.CreateEntity(character);
-            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[mount ? Random.Range(0, primaryPrefabs.Count) : skin]);
+            var unitObject = Instantiate(isRange ? secondaryPrefabs[skin] : primaryPrefabs[mount ? Random.Range(0, primaryPrefabs.Length) : skin]);
             
             // Use unit components to store in the entity
             var trans = unitObject.transform;
@@ -431,6 +433,18 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         yield return new WaitForEndOfFrame();
         squadCard.SetActive(true);
         cardTransform.position = layoutTransform.position;
+    }
+    
+    public static Squad Create(Troop troop, Team team, Vector3 position, Quaternion rotation)
+    {
+        var squad = Instantiate(Manager.global.squadPrefab, position, rotation).GetComponent<Squad>();
+        squad.name = troop.data.name + " [" + team + "]f";
+        squad.team = team;
+        squad.data = troop.data;
+        squad.squadSize = troop.size;
+        squad.primaryPrefabs = troop.primaryPrefabs;
+        squad.secondaryPrefabs = troop.secondaryPrefabs;
+        return squad;
     }
     
     #endregion
@@ -814,7 +828,9 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     
     public void OnMeleeDamage()
     {
-        cardIndicator.SetActive(true);
+        if (state != SquadFSM.Retreat) {
+            cardIndicator.SetActive(true);
+        }
         if (meleeRoutine != null) StopCoroutine(meleeRoutine);
         meleeRoutine = StartCoroutine(MeleeEnd());
     }
@@ -822,7 +838,9 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
     private IEnumerator MeleeEnd()
     {
         yield return new WaitForSeconds(10f);
-        cardIndicator.SetActive(false);
+        if (state != SquadFSM.Retreat) {
+            cardIndicator.SetActive(false);
+        }
     }
      
     public void OnRangeDamage()
@@ -850,7 +868,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
             attributes.Add(Manager.WithoutAmmo);
         }
     }
-    
+
     #endregion
 
     #region Sounds
@@ -938,7 +956,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
 
     public Unit FindRandomTarget(Vector3 position)
     {
-        var squad = FindClosestEnemy(position);
+        var squad = enemy ? enemy : FindClosestEnemy(position);
         return squad ? squad.units[Random.Range(0, squad.unitCount)] : null;
     }
     
@@ -1302,6 +1320,10 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
             }
             
             if (isRange) {
+                if (touchEnemies) {
+                    SetRange(false);
+                }
+                
                 anchorTransform.position = enemy.centroid;
                 var movement = distance > data.rangeDistance * 0.95f;
                 agent.enabled = movement;

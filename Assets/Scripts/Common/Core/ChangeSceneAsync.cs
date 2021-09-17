@@ -7,12 +7,13 @@ using UnityEngine.UI;
 
 public class ChangeSceneAsync : SingletonObject<ChangeSceneAsync>
 {
+    private AsyncOperation loadingOperation;
     [SerializeField] private GameObject loadingUI;
     [SerializeField] private Slider loadingBar;
     [SerializeField] private TMP_Text loadingText;
 
     // the actual percentage while scene is fully loaded
-    private const float LOAD_READY_PERCENTAGE = 0.9f;
+    private const float LoadReadyPercentage = 0.9f;
 
     public void ChangeScene(string sceneName)
     {
@@ -24,21 +25,15 @@ public class ChangeSceneAsync : SingletonObject<ChangeSceneAsync>
     private IEnumerator LoadingSceneRealProgress(string sceneName) 
     {
         //yield return new WaitForSecondsRealtime(1f);
-        var operation = SceneManager.LoadSceneAsync(sceneName);
+        loadingOperation = SceneManager.LoadSceneAsync(sceneName);
         // disable scene activation while loading to prevent auto load
-        operation.allowSceneActivation = false;
+        loadingOperation.allowSceneActivation = false;
 
-        while (!operation.isDone) {
-            loadingBar.value = operation.progress;
-            if (operation.progress >= LOAD_READY_PERCENTAGE) {
-                loadingBar.value = 1f;
-                //loadingText.text = "PRESS SPACE TO CONTINUE";
-                /*if (Input.GetKeyDown(KeyCode.Space)) {
-                    operation.allowSceneActivation = true;
-                }*/ 
-                operation.allowSceneActivation = true;
+        while (!loadingOperation.isDone) {
+            loadingBar.value = MathExtention.Clamp01(loadingOperation.progress / LoadReadyPercentage);
+            if (Mathf.Approximately(loadingOperation.progress, LoadReadyPercentage)) {
+                loadingOperation.allowSceneActivation = true;
             }
-            Debug.Log(operation.progress);
             yield return null;
         }
     }

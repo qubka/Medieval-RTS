@@ -33,9 +33,4 @@ public class SaveManager : SingletonObject<SaveManager>
             Destroy(save);
         }
     }
-
-    public void LoadLevel()
-    {
-        ChangeSceneAsync.Instance.ChangeScene("Campaign");
-    }
 }

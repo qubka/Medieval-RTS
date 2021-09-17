@@ -70,7 +70,7 @@ public sealed class Events : SingletonObject<Events>
     
     public static void RemoveListeners(object o) => Instance.RemoveListenersInternal(o);
 
-    private void RemoveListenersInternal(object obj)
+    private void RemoveListenersInternal(object o)
     {
         //foreach (dynamic listener in _listeners)
          //   listener.ClearListeners(obj);

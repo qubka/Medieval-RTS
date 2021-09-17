@@ -19,6 +19,7 @@ public class Battle : MonoBehaviour, IGameObject
     [HideInInspector] public BattleIcon battleIcon;
     [HideInInspector] public Transform iconTransform;
     [HideInInspector] public Transform worldTransform;
+    [HideInInspector] public bool paused; // to instantiate
     
     [Header("Misc")]
     public float canvasHeight;
@@ -86,6 +87,9 @@ public class Battle : MonoBehaviour, IGameObject
 
     private void OnUpdate()
     {
+        if (paused)
+            return;
+        
         var distance = Vector.Distance(worldTransform.position, Game.Player.position);
         SetVisibility(distance <= (TimeController.Now.IsDay() ? 100f : 50f));
         battleIcon.OnUpdate(this);
@@ -93,6 +97,12 @@ public class Battle : MonoBehaviour, IGameObject
 
     private void OnFight()
     {
+        if (paused)
+            return;
+        
+        if (attackers.Any(p => p == Game.Player) || defenders.Any(p => p == Game.Player))
+            return;
+        
         // Do logic
         var attacker = attackers.FindStrongest();
         var defender = defenders.FindStrongest();
@@ -130,26 +140,12 @@ public class Battle : MonoBehaviour, IGameObject
             battleIcon.SetEnabled(cameraController.zoomPos < 0.5f);
         }
     }
-
-    public void Load(BattleSave save)
-    {
-        if (save != null) {
-            attackers = Party.All.Where(p => save.attackers.Contains(p.leader.id)).ToList();
-            defenders = Party.All.Where(p => save.defenders.Contains(p.leader.id)).ToList();
-        } else {
-            for (var i = 0; i < attackers.Count; i++) {
-                attackers[i] = Party.All.First(p => p.leader.id == attackers[i].leader.id);
-            }
-            for (var i = 0; i < defenders.Count; i++) {
-                defenders[i] = Party.All.First(p => p.leader.id == defenders[i].leader.id);
-            }
-        }
-    }
-
+    
     public void Destroy()
     {
         battleTable.Remove(gameObject);
         objectTable.Remove(gameObject);
+        Game.Battles.Remove(this);
         
         DestroyImmediate(battleIcon.gameObject);
         DestroyImmediate(gameObject);
@@ -183,6 +179,13 @@ public class Battle : MonoBehaviour, IGameObject
         additional.army.SetBattle(this);
     }
     
+    public static Battle Create(BattleSave save)
+    {
+        var obj = Instantiate(Manager.global.battlePrefab, save.position, Quaternion.identity).GetComponent<Battle>();
+        obj.paused = true;
+        return obj;
+    }
+    
     public static Battle Create(Party attacker, Party defender)
     {
         var position = (attacker.position + defender.position) / 2f;
@@ -192,7 +195,34 @@ public class Battle : MonoBehaviour, IGameObject
         battle.defenders.Add(defender);
         attacker.army.SetBattle(battle);
         defender.army.SetBattle(battle);
+        Game.Battles.Add(battle);
         return battle;
+    }
+    
+    public void Load(BattleSave save)
+    {
+        if (save != null) {
+            attackers = Party.All.Where(p => save.attackers.Contains(p.leader.id)).ToList();
+            defenders = Party.All.Where(p => save.defenders.Contains(p.leader.id)).ToList();
+        } else {
+            for (var i = 0; i < attackers.Count; i++) {
+                attackers[i] = Party.All.First(p => p.leader.id == attackers[i].leader.id);
+            }
+            for (var i = 0; i < defenders.Count; i++) {
+                defenders[i] = Party.All.First(p => p.leader.id == defenders[i].leader.id);
+            }
+        }
+    }
+
+    public void Load()
+    {
+        paused = false;
+        foreach (var party in attackers) {
+            party.army.SetBattle(this);
+        }
+        foreach (var party in defenders) {
+            party.army.SetBattle(this);
+        }
     }
     
     public void SetVisibility(bool value)
@@ -453,21 +483,29 @@ public class Battle : MonoBehaviour, IGameObject
 
     private void Exit()
     {
-        // stop
-        Destroy();
         foreach (var party in attackers) {
             party.army.SetBattle(null);
         }
         foreach (var party in defenders) {
             party.army.SetBattle(null);
         }
+        // stop
+        Destroy();
     }
 
     #endregion
 
-    public void Begin()
+    public void Combat()
     {
-        
+        global::Combat.attackers = attackers.ToArray();
+        global::Combat.defenders = defenders.ToArray();
+        ChangeSceneAsync.Instance.ChangeScene("Combat");
+    }
+
+    public void Retreat()
+    {
+        // TODO: Temp
+        Exit();
     }
 }
 

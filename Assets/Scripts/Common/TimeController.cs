@@ -10,7 +10,7 @@ public class TimeController : SingletonObject<TimeController>
     [SerializeField] private TimeBar timeBar;
     [SerializeField] private TMP_Text timeLabel;
     [SerializeField] private Vector3Int startDate = new Vector3Int(1080, 1, 1);
-    [SerializeField] private bool locked;
+    [SerializeField] private bool paused;
     [HideInInspector] public DateTime dateTime;
     [HideInInspector] public string dateStamp;
     [HideInInspector] public int prevDay;
@@ -31,7 +31,7 @@ public class TimeController : SingletonObject<TimeController>
     
     private void Start()
     {
-        if (!locked) {
+        if (!paused) {
             StartCoroutine(Tick());
         }
     }

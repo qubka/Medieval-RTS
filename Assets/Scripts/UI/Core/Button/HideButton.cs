@@ -41,7 +41,7 @@ public class HideButton : MonoBehaviour
             }
 
             var obj = trans.gameObject;
-            obj.Tween(obj.name + '_' + obj.GetInstanceID(), current, target, 1f, TweenScaleFunctions.CubicEaseOut, Movement);
+            obj.Tween(obj.name + '_' + obj.GetInstanceID(), current, target, 0.35f, TweenScaleFunctions.CubicEaseOut, Movement);
         }
     }
     

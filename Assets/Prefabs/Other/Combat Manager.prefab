@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 11429326}
   - component: {fileID: 2966289934880963638}
   - component: {fileID: 3693780334876467564}
+  - component: {fileID: 1410963458}
   - component: {fileID: 7014365690190988827}
   - component: {fileID: 2471739152849571765}
   - component: {fileID: -1217265927458176945}
   - component: {fileID: 3421342263865875661}
   - component: {fileID: 6200472781240704220}
-  - component: {fileID: 1410963458}
   m_Layer: 12
   m_Name: Combat Manager
   m_TagString: Untagged
@@ -97,6 +97,21 @@ MonoBehaviour:
   playRange: 150
   soundRange: 5
   ambients: []
+--- !u!114 &1410963458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef07066c2daf4aef8ac62716750afa69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeOfDay: 15.27
+  preset: {fileID: 11400000, guid: 98628e3ddfa4891479a7f3af5aaf7372, type: 2}
+  directionalLight: {fileID: 0}
 --- !u!114 &7014365690190988827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,18 +183,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 945ce7022854459d89c9fdb5ab3f8516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1410963458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 181632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef07066c2daf4aef8ac62716750afa69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeOfDay: 15
-  preset: {fileID: 11400000, guid: 98628e3ddfa4891479a7f3af5aaf7372, type: 2}
-  directionalLight: {fileID: 0}

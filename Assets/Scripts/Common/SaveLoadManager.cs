@@ -18,7 +18,7 @@ public class SaveLoadManager
     public static void LoadGame(string fileName)
     {
         file = new GameFile(fileName);
-        SaveManager.Instance.LoadLevel();
+        ChangeSceneAsync.Instance.ChangeScene("Campaign");
     }
     
     public static void SaveGame(string fileName)
@@ -69,7 +69,6 @@ public class SaveLoadManager
     
     public static string GetPath(string fileName) => Path.Combine(saveDirectory, fileName + fileType);
     public static string[] GetFiles() => Directory.Exists(saveDirectory) ? Directory.GetFiles(saveDirectory, '*' + fileType) : new string[0];
-
     private static byte[] Zip(string str)
     {
         using var output = new MemoryStream();
@@ -79,7 +78,6 @@ public class SaveLoadManager
         }
         return output.ToArray();
     }
-
     private static string UnZip(byte[] input)
     {
         using var inputStream = new MemoryStream(input);
@@ -100,6 +98,7 @@ public class ProgressSave {
     public PartySave[] parties;
     public SettlementSave[] settlements;
     public HouseSave[] houses;
+    public BattleSave[] battles;
 
     public ProgressSave(Game game) 
     {
@@ -111,5 +110,6 @@ public class ProgressSave {
         parties = game.parties.Select(p => new PartySave(p)).ToArray();
         settlements = game.settlements.Select(s => new SettlementSave(s)).ToArray();
         houses = game.houses.Select(h => new HouseSave(h)).ToArray();
+        battles = game.battles.Select(b => new BattleSave(b)).ToArray();
     }
 }

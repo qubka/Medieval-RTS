@@ -89,6 +89,7 @@
 	protected override void Awake()
 	{
 		base.Awake();
+		Combat.Init();
 		
 		eventSystem = EventSystem.current;
 		terrain = Terrain.activeTerrain;

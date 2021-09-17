@@ -78,8 +78,9 @@ MonoBehaviour:
     height: 2
     center: 0
     radius: 1
+  iconActivator: {fileID: 0}
   worldTransform: {fileID: 0}
-  camTransform: {fileID: 0}
+  cameraTransform: {fileID: 0}
   iconTransform: {fileID: 0}
   layoutTransform: {fileID: 0}
   cardTransform: {fileID: 0}
@@ -108,7 +109,7 @@ MonoBehaviour:
   radiusCircle: {fileID: 1572686340177436137}
   centerTransform: {fileID: 7594045245857739196}
   initialStamina: 100
-  initialMorale: 50
+  initialMorale: 100
   maximumShake: 0.5
   shakeRange: 50
   canvasHeight: 10

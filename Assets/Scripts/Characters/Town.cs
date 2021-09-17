@@ -82,8 +82,7 @@ public class Town : MonoBehaviour, IGameObject
         
         // Update a default ref to the valid one
         var settlement = Settlement.All.First(s => s.id == data.id);
-        data = settlement;
-        data.town = this;
+        Load(settlement);
 
         // Add a town to the tables
         TownTable.Instance.Add(gameObject, this);
@@ -112,7 +111,13 @@ public class Town : MonoBehaviour, IGameObject
             Instantiate(banner.clearArmy, trans);
         }
     }
-    
+
+    public void Load(Settlement settlement)
+    {
+        data = settlement;
+        data.town = this;
+    }
+
     public void Update()
     {
         // Only valid for market mode

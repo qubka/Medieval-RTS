@@ -210,7 +210,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 			}
 
 			if (onPlace.enabled) {
-				var segments = Vector.SplitLineToSegments(onPlace.startPos, onPlace.lastPos, selectedSquads.Count, 2f);
+				var segments = Vector.SplitLineToSegments(onPlace.startPos, onPlace.lastPos, selectedSquads.Count);
 				for (var i = 0; i < segments.Count; i++) {
 					var (start, end) = segments[i];
 					

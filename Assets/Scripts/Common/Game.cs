@@ -18,6 +18,7 @@ public class Game : SingletonObject<Game>
     public static List<Party> Parties => Instance.parties;
     public static List<Settlement> Settlements => Instance.settlements;
     public static List<House> Houses => Instance.houses;
+    public static List<Battle> Battles => Instance.battles;
     
     /* Serialization */
     
@@ -26,6 +27,7 @@ public class Game : SingletonObject<Game>
     [ReadOnly] public List<Party> parties;
     [ReadOnly] public List<Settlement> settlements;
     [ReadOnly] public List<House> houses;
+    [ReadOnly] public List<Battle> battles;
 
     protected override void Awake()
     {
@@ -58,6 +60,7 @@ public class Game : SingletonObject<Game>
         parties = save.parties.Select(Party.Create).ToList();
         settlements = save.settlements.Select(Settlement.Create).ToList();
         houses = save.houses.Select(House.Create).ToList();
+        battles = save.battles.Select(Battle.Create).ToList();
 
         // Loading
         for (var i = 0; i < factions.Count; i++) {
@@ -75,6 +78,9 @@ public class Game : SingletonObject<Game>
         for (var i = 0; i < houses.Count; i++) {
             houses[i].Load(save.houses[i]);
         }
+        for (var i = 0; i < battles.Count; i++) {
+            battles[i].Load(save.battles[i]);
+        }
     }
     
     public void CreateWorld()
@@ -85,6 +91,7 @@ public class Game : SingletonObject<Game>
         parties = Resources.LoadAll<Party>("Parties/").Select(Party.Copy).ToList();
         settlements = Resources.LoadAll<Settlement>("Settlements/").Select(Settlement.Copy).ToList();
         houses = Resources.LoadAll<House>("Houses/").Select(House.Copy).ToList();
+        battles = new List<Battle>();
 
         // Loading
         foreach (var faction in factions) {
@@ -108,7 +115,10 @@ public class Game : SingletonObject<Game>
     {
         foreach (var party in parties) {
             var army = Instantiate(Manager.global.armyPrefab, party.position, party.rotation).GetComponent<Army>();
-            army.data = party;
+            army.Load(party);
+        }
+        foreach (var battle in battles) {
+            battle.Load();
         }
     }
 }

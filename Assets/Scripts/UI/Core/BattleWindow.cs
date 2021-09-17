@@ -96,13 +96,13 @@ public class BattleWindow : MonoBehaviour
 
     public void Attack()
     {
-        ChangeSceneAsync.Instance.ChangeScene("Combat");
-        if (battle) battle.Begin();
+        if (battle) battle.Combat();
     }
 
     public void Retreat()
     {
-        
+        if (battle) battle.Retreat();
+        Disable();
     }
 
     public void Enable()

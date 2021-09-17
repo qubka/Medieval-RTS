@@ -27,9 +27,10 @@ public class Party : ScriptableObject
     public int TroopSize => troops.Sum(t => t.size);
     public int TroopCount => troops.Count;
     public int TroopWage => -Convert.ToInt32(troops.Sum(t => t.data.recruitCost * ((float) t.size / t.data.maxCount)));
+    public float TroopLength => troops.Sum(t => t.size / t.data.unitSize.height * t.data.unitSize.width);
     public Troop RandomTroop => TroopCount > 0 ? troops[Random.Range(0, TroopCount)] : null;
 
-    public static void CreatePeasant(Settlement settlement)
+    public static Army CreatePeasant(Settlement settlement)
     {
         var leader = CreateInstance<Character>();
         leader.name = "Peasant Elder";
@@ -56,11 +57,10 @@ public class Party : ScriptableObject
         Character.All.Add(leader);
 
         var town = settlement.town;
-        var army = Instantiate(Manager.global.armyPrefab, town.doorPosition, town.doorRotation).GetComponent<Army>();
-        army.data = party;
+        return Army.Create(party, town.doorPosition, town.doorRotation);
     }
 
-    public static void CreateBandit(Vector3 position)
+    public static Army CreateBandit(Vector3 position)
     {
         // Find marauder faction, should be this hardcoded?
         var faction = Faction.All.First(f => f.id == 0);
@@ -88,8 +88,7 @@ public class Party : ScriptableObject
 
         var randomPosition = Vector.GetRandomNavMeshPositionNearLocation(position, 20f);
         var randomRotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
-        var army = Instantiate(Manager.global.armyPrefab, randomPosition, randomRotation).GetComponent<Army>();
-        army.data = party;
+        return Army.Create(party, randomPosition, randomRotation);
     }
     
     public void Destroy(bool withLeader = false)

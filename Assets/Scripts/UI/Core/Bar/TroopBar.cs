@@ -11,7 +11,7 @@ public class TroopBar : BarBehavior
     {
         var manager = ArmyManager.Instance;
         var count = manager.SelectedCount();
-        if (count > 0) {
+        if (count > 0 && !Game.Player.inBattle) {
             var selected = manager.selectedTroops;
             SetInteractable(disband, true);
             SetInteractable(merge, count != 1 && selected.All(t => t.data == selected[0].data));

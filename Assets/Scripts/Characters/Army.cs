@@ -76,6 +76,7 @@ public class Army : MonoBehaviour, IGameObject
         
         // Check troop size just in case
         data.Validate();
+        //Load(data);
         
         // Create bar if exist
         var house = data.leader.house;
@@ -95,7 +96,7 @@ public class Army : MonoBehaviour, IGameObject
         }
         
         // Update a default ref to the valid one
-        data.army = this;
+        //data.army = this;
         
         // Add a army to the tables
         armyTable.Add(gameObject, this);
@@ -141,6 +142,13 @@ public class Army : MonoBehaviour, IGameObject
 
         // Call some repeat func
         StartCoroutine(Tick());
+    }
+
+    public static Army Create(Party party, Vector3 position, Quaternion rotation)
+    {
+        var army = Instantiate(Manager.global.armyPrefab, position, rotation).GetComponent<Army>();
+        army.Load(party);
+        return army;
     }
 
     public void Update()
@@ -548,6 +556,8 @@ public class Army : MonoBehaviour, IGameObject
                     data.Destroy(true);
                     Destroy();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -557,5 +567,11 @@ public class Army : MonoBehaviour, IGameObject
         if (tree) tree.enabled = value;
         agent.enabled = value;
         armyIcon.SetActive(value);
+    }
+
+    public void Load(Party party)
+    {
+        data = party;
+        data.army = this;
     }
 }

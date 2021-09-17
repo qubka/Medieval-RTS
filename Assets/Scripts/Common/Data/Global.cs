@@ -190,7 +190,21 @@ public class Global : ScriptableObject
     
     #endregion
     
+    #region Combat
+
+    [Header("Combat")]
+    public Vector3 team1Position;
+    public Quaternion team1Rotation;
+    public Vector3 team2Position;
+    public Quaternion team2Rotation;
+    
+    #endregion
+    
+    #region Other
+
     [Header("Other")]
     public GUIStyle rectangleStyle;
     public int maxTroops = 10;
+
+    #endregion
 }
