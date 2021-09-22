@@ -1341,7 +1341,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
                     seek.enabled = true;
                 }
                 
-                SetAdvantage(math.abs(targetDirection.y) > 1f ? targetDirection.y > 0f ? Advantage.Lower : Advantage.Upper : Advantage.None);
+                //SetAdvantage(math.abs(targetDirection.y) > 1f ? targetDirection.y > 0f ? Advantage.Lower : Advantage.Upper : Advantage.None);
                 Stamina -= meleeStamina;
             }
         } else {
@@ -1363,6 +1363,8 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
         var squad = FindClosestSquad(centroid);
         if (squad) {
             RetreatRotation(squad.centroid);
+        } else {
+            anchorTransform.position = centroid;
         }
         
         if (border.IsOutsideBorder(centroid)) {
@@ -1656,14 +1658,7 @@ public class Squad : MonoBehaviour, IGameObject, ISelectable
 
     public void OnMouseOver()
     {
-        if (manager.isActive) {
-            manager.hover = null;
-        } else {
-            if (manager.hover == null) {
-                manager.squadInfo.OnUpdate();
-            }
-            manager.hover = this;
-        }
+        manager.hover = (manager.isActive || manager.isPointingUI) ? null : this;
     }
 
     public void OnMouseExit()

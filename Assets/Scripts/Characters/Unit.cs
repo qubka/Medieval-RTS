@@ -1474,7 +1474,7 @@ public class Unit : MonoBehaviour
 	
 	#region Hover
 
-	private void OnMouseOver()
+	/*private void OnMouseOver()
 	{
 		squad.OnMouseOver();
 	}
@@ -1482,7 +1482,7 @@ public class Unit : MonoBehaviour
 	private void OnMouseExit()
 	{
 		squad.OnMouseExit();
-	}
+	}*/
 
 	#endregion
 

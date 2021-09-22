@@ -10,7 +10,7 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 	public SquadInfo squadInfo;
 
 	//variables not visible in the inspector
-	[HideInInspector] public Squad hover;
+	[HideInInspector] public Squad hover, infomater;
 	[HideInInspector] public List<Squad> selectedSquads = new List<Squad>();
 	private Dictionary<Squad, IMovement> movementGroup = new Dictionary<Squad, IMovement>();
 	private List<Formation> placedFormations = new List<Formation>();
@@ -40,7 +40,8 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 	private bool groundCast;
 	private bool pointerUI;
 	
-	public bool isActive => onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit || pointerUI;
+	public bool isActive => onDrag.enabled || onDraw.enabled || onSelect.enabled || onPlace.enabled || onShift.enabled || InvalidHit;
+	public bool isPointingUI => pointerUI;
 	private bool InvalidHit => !groundCast || border.IsOutsideBorder(groundHit.point) || Input.GetKey(Manager.global.stopKey);
 
 	private void Start()
@@ -465,6 +466,8 @@ public class SquadManager : SingletonObject<SquadManager>, IManager<Squad>
 		var hasUnits = selectedSquads.Count != 0;
 		if (hover) {
 			CursorManager.SetCursor(hover.team == Team.Enemy && hasUnits ? HasRange() ? Manager.global.rangeCursor : Manager.global.meleeCursor : Manager.global.lookCursor);
+		} else if (infomater) {
+			CursorManager.SetCursor(Manager.global.lookCursor);	
 		} else if (InvalidHit) {
 			CursorManager.SetCursor(Manager.global.invalidCursor);
 		} else if (onDrag.enabled) {

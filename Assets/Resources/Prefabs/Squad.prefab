@@ -188,7 +188,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -5792,6 +5792,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2947358682695094657}
     m_Modifications:
+    - target: {fileID: 3555647917030549214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3555647917030549214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4512846238213538214, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5884,6 +5892,14 @@ PrefabInstance:
       propertyPath: layoutTransform
       value: 
       objectReference: {fileID: 6464902127453613541}
+    - target: {fileID: 9221162128324540227, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9221162128324540227, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb8265829032b2d4da25a52cc9c5e7ff, type: 3}
 --- !u!114 &53074502980264524 stripped
@@ -6115,6 +6131,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2947358682695094657}
     m_Modifications:
+    - target: {fileID: -7503984346185401810, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
+      propertyPath: squad
+      value: 
+      objectReference: {fileID: 268292594806127551}
     - target: {fileID: 824315751627481963, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6205,11 +6225,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8281210735288856069, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8281210735288856069, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8298332230461461322, guid: 856804e6d35eb4b4397f96868cc87e3e, type: 3}
       propertyPath: squad

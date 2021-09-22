@@ -50,7 +50,7 @@ public class SquadInfo : Tooltip
     
     public void OnUpdate()
     {
-        var squad = SquadManager.Instance.hover;
+        var squad = SquadManager.Instance.infomater;
         if (squad) {
             switch (squad.state) {
                 case SquadFSM.Idle:
